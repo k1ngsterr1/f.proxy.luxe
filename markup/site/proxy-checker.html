@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="shortcut icon" href="img/favicon2.ico" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/slick.css">
+	<link rel="stylesheet" href="css/slick-theme.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/main.css">
+	<title>Proxy</title>
+</head>
+<body>
+	
+	
+	<header class="header">
+		<div class="container">
+			<div class="header-inner">
+				<a href="#" class="header-logo">
+					<img src="img/logo.png" alt="">
+				</a>
+				<div id="menu" class="header-mobmenu">
+					<nav class="header-menu">
+						<a class="nav-item" href="#">КУПИТЬ ПРОКСИ</a>
+						<a class="nav-item" href="#">ЦЕНЫ</a>
+						<a class="nav-item" href="#">ПАРТНЕРСКАЯ ПРОГРАММА</a>
+						<a class="nav-item" href="#">СТАТЬИ</a>
+						<a class="nav-item" href="#">FAQ</a>
+					</nav>
+					<div class="header-lang">
+						<a href="#" class="lang-item active"><img src="img/rus-lang.png" alt=""></a>
+						<a href="#" class="lang-item"><img src="img/eng-lang.png" alt=""></a>
+					</div>
+					<div class="header-btn">
+						<a href="#" class="btn-enter">
+							<img src="img/enter.svg" alt="">
+							<span>войти</span>
+						</a>
+						<a href="#" class="btn-reg">
+							<span>регистрация</span>
+						</a>
+					</div>
+				</div>
+				<div class="header-burger">
+					<div class="burger" id="openMenu">
+						<span></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<nav class="submenu">
+		<a href="#" class="submenu-item">Мой IP</a>
+		<a href="#" class="submenu-item">Прокси чекер</a>
+		<a href="#" class="submenu-item">Моя анонимность</a>
+		<a href="#" class="submenu-item">Проверка портов</a>
+		<a href="#" class="submenu-item">Whois</a>
+		<a href="#" class="submenu-item">Блэк листы</a>
+		<a href="#" class="submenu-item">Поддержка IPv6</a>
+		<a href="#" class="submenu-item">API</a>
+	</nav>
+
+	<main class="inner-page">
+		<section class="prcheck">
+			<div class="scontainer">
+				<h1 class="section-header"><span>ПРОКСИ ЧЕКЕР</span></h1>
+				<p class="prcheck-text">
+					Бесплатный онлайн сервис для проверки работоспособности прокси серверов. Анализ каждого прокси на доступность, тип и страну. <br>Возможность проверки анонимных (индивидуальных) прокси с авторизацией по логину и паролю. Проверка IPv6 прокси.
+				</p>
+				<div class="prcheck-inner">
+					<div class="prcheck-form">
+						<textarea class="prcheck-textarea" placeholder="Список прокси"></textarea>
+						<label class="checkbox">
+							<input class="checkbox-inp" type="checkbox">
+							<span class="checkbox-box"></span>
+							<span class="checkbox-text">
+								Определять локацию прокси
+							</span>
+						</label>
+					</div>
+					<div class="prcheck-info">
+						<h2 class="prcheck-header">В каком формате добавлять прокси в прокси-чекер?</h2>
+						<div class="separator"></div>
+						<p class="prcheck-rtext">Если у вас публичные прокси (без логина и пароля), то <span>IP:PORT</span> <br>Если у вас приватные прокси (с авторизацией по логину и паролю), то <span>IP:PORT:USER:PASS</span></p>
+						<p class="prcheck-rtext">P.S.: Если вы купили прокси у нас, то они приватные!</p>
+
+						<button class="btn">Проверить прокси</button>
+					</div>
+				</div>
+				<div class="prcheck-hint">
+					Возможности прокси чекера:
+				</div>
+				<div class="prcheck-scope">
+					<div><span>•</span> Проверка доступности IPv4 и IPv6 прокси</div>
+					<div><span>•</span> Возможность проверки анонимных прокси с авторизацией по логину и паролю</div>
+					<div><span>•</span> Проверка HTTP(-s) и SOCKS прокси</div>
+					<div><span>•</span> Автоматическое определение протокола Прокси</div>
+					<div><span>•</span> Автоматическое определение протокола прокси</div>
+					<div><span>•</span> Автоматическое определение протокола прокси</div>
+				</div>
+			</div>
+		</section>
+	</main>			
+	<div class="payment">
+		<img src="img/payment.png" alt="">
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-inner">
+				<div class="footer-logo">
+					<a href="#" class="footer-logo__link">
+						<img src="img/logo.png" alt="">
+					</a>
+					<p class="footer-logo__text">Индивидуальные  анонимные прокси</p>
+					<p class="footer-logo__text">© 2021 – 2022 «Proxy.Luxe»</p>
+				</div>
+				<div class="footer-menu">
+					<nav class="footer-menu__nav">
+						<a href="#">Купить прокси</a>
+						<a href="#">Цены</a>
+						<a href="#">FAQ</a>
+						<a href="#">Блог</a>
+						<a href="#">Мой IP</a>
+						<a href="#">Прокси чекер</a>
+						<a href="#">API</a>
+						<a href="#">Условия использования</a>
+						<a href="#">Реквизиты</a>
+					</nav>
+					<div class="footer-menu__info">
+						<a href="#">Политика конфиденциальности</a>
+						<div class="separator"></div>
+						<a href="#">Уведомление об ответственности</a>
+					</div>
+				</div>
+				<div class="footer-soc">
+					<p class="footer-soc__hint">Техническая поддержка:</p>
+					<a href="mailto:admin@proxy.luxe" class="footer-soc__link">admin@proxy.luxe</a>
+					<nav class="footer-soc__links">
+						<a href="#">
+							<img src="img/facebook-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/twitter-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/instagram-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/vk-icon.png" alt="">
+						</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+
+
+
+	<script src="js/jquery.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		$(".imain-slider").slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			dots: false,
+			arrows: true,
+			infinite: false
+		})
+		$(".imain-slider").on('init reInit afterChange', function(event, slick, currentSlide, nextSlide){
+		    //currentSlide is undefined on init -- set it to 0 in this case (currentSlide is 0 based)
+		    var i = (currentSlide ? currentSlide : 0) + 1;
+		    
+		    if (i < 10) {
+		    	$(".imain-status__count").text("0" + slick.slideCount)
+		    	$(".imain-status__current").text("0" + i)
+		    }
+		    else {
+		    	$(".imain-status__count").text(slick.slideCount)
+		    	$(".imain-status__current").text(i)
+		    }
+		    
+		});
+	</script>
+</html>

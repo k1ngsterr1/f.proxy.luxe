@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="shortcut icon" href="img/favicon2.ico" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/slick.css">
+	<link rel="stylesheet" href="css/slick-theme.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/main.css">
+	<title>Proxy</title>
+</head>
+<body>
+	
+	<div class="auth" id="auth-enter">
+		<h2 class="auth-header">войти</h2>
+		<div class="separator"></div>
+		<form action="#">
+			<input type="text" class="auth-inp auth-mail" placeholder="E-mail">
+			<input type="text" class="auth-inp auth-pass" placeholder="Пароль">
+			<div class="btn-wrap">
+				<button class="auth-btn btn">Войти</button>
+			</div>
+			<div class="btn-wrap">
+				<a href="#" class="auth-link">Забыли пароль?</a>
+			</div>
+		</form>
+	</div>
+
+	<div class="auth" id="auth-reg">
+		<h2 class="auth-header">РЕГИСТРАЦИЯ</h2>
+		<div class="separator"></div>
+		<form action="#">
+			<input type="text" class="auth-inp auth-mail" placeholder="E-mail">
+			<input type="text" class="auth-inp auth-pass" placeholder="Пароль">
+			<input type="text" class="auth-inp auth-pass" placeholder="Повторить пароль">
+			<div class="btn-wrap">
+				<button class="auth-btn btn">регистрация</button>
+			</div>
+			<div class="btn-wrap">
+				<a href="#" class="auth-link">Войти</a>
+			</div>
+		</form>
+	</div>
+	
+	<header class="header">
+		<div class="container">
+			<div class="header-inner">
+				<a href="#" class="header-logo">
+					<img src="img/logo.png" alt="">
+				</a>
+				<div id="menu" class="header-mobmenu">
+					<nav class="header-menu">
+						<a class="nav-item" href="#">КУПИТЬ ПРОКСИ</a>
+						<a class="nav-item" href="#">ЦЕНЫ</a>
+						<a class="nav-item" href="#">ПАРТНЕРСКАЯ ПРОГРАММА</a>
+						<a class="nav-item" href="#">СТАТЬИ</a>
+						<a class="nav-item" href="#">FAQ</a>
+					</nav>
+					<div class="header-lang">
+						<a href="#" class="lang-item active"><img src="img/rus-lang.png" alt=""></a>
+						<a href="#" class="lang-item"><img src="img/eng-lang.png" alt=""></a>
+					</div>
+					<div class="header-btn">
+						<a data-fancybox data-src="#auth-enter" href="javascript:;" class="btn-enter">
+							<img src="img/enter.svg" alt="">
+							<span>войти</span>
+						</a>
+						<a data-fancybox data-src="#auth-reg" href="javascript:;" class="btn-reg">
+							<span>регистрация</span>
+						</a>
+					</div>
+				</div>
+				<div class="header-burger">
+					<div class="burger" id="openMenu">
+						<span></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<nav class="submenu">
+		<a href="#" class="submenu-item">Мой IP</a>
+		<a href="#" class="submenu-item">Прокси чекер</a>
+		<a href="#" class="submenu-item">Моя анонимность</a>
+		<a href="#" class="submenu-item">Проверка портов</a>
+		<a href="#" class="submenu-item">Whois</a>
+		<a href="#" class="submenu-item">Блэк листы</a>
+		<a href="#" class="submenu-item">Поддержка IPv6</a>
+		<a href="#" class="submenu-item">API</a>
+	</nav>
+
+	<section class="imain">
+		<div class="imain-imgs">
+			<div class="imain-imgs__slide" style="background-image: url(img/imain-bg1.png); background-size: cover; background-repeat: no-repeat;"></div>
+			<div class="imain-imgs__slide" style="background-image: url(img/imain-bg2.png); background-size: cover; background-repeat: no-repeat;"></div>
+		</div>
+		<div class="container">
+			<div class="imain-slider">
+				<div class="imain-slide">
+					<h2 class="imain-header">КУПИТЬ ПРОКСИ</h2>
+					<p class="imain-text">индивидуальные АНОНИМНЫЕ ПРОКСИ</p>
+					<h3 class="imain-subheader">HTTPS/SOCKS5</h3>
+					<div class="imain-table">
+						<div>
+							<div>
+								<p class="imain-count">329122</p>
+								<p class="imain-hint">КЛИЕНТОВ ВЫБРАЛИ НАС</p>
+							</div>
+							<div>
+								<p class="imain-count">289596</p>
+								<p class="imain-hint">ПРОКСИ В РАБОТЕ</p>
+							</div>
+						</div>
+						<div>
+							<div>
+								<p class="imain-count">1158898</p>
+								<p class="imain-hint">ПРОДАННЫХ ПРОКСИ</p>
+							</div>
+							<div>
+								<p class="imain-count">3133702</p>
+								<p class="imain-hint">ЗАКАЗОВ ОБРАБОТАНО</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="imain-slide">
+					<h2 class="imain-header">КУПИТЬ ПРОКСИ</h2>
+					<p class="imain-text">индивидуальные АНОНИМНЫЕ ПРОКСИ</p>
+					<h3 class="imain-subheader">HTTPS/SOCKS5</h3>
+					<div class="imain-table">
+						<div>
+							<div>
+								<p class="imain-count">329122</p>
+								<p class="imain-hint">КЛИЕНТОВ ВЫБРАЛИ НАС</p>
+							</div>
+							<div>
+								<p class="imain-count">289596</p>
+								<p class="imain-hint">ПРОКСИ В РАБОТЕ</p>
+							</div>
+						</div>
+						<div>
+							<div>
+								<p class="imain-count">1158898</p>
+								<p class="imain-hint">ПРОДАННЫХ ПРОКСИ</p>
+							</div>
+							<div>
+								<p class="imain-count">3133702</p>
+								<p class="imain-hint">ЗАКАЗОВ ОБРАБОТАНО</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="imain-status">
+				<div class="imain-status__current">01</div> &nbsp;/&nbsp;
+				<div class="imain-status__count">02</div>
+			</div>
+		</div>
+	</section>
+	
+	<section class="buy section">
+		<div class="scontainer">
+			<h2 class="section-header">
+				КУПИТЬ ПРОКСИ <span>IPV4 / IPV6</span>
+			</h2>
+			<div class="buy-inner">
+				<div class="buy-col">
+					<div class="buy-item">
+						<h3 class="buy-item__header">
+							IPv4 ПРОКСИ <br>для <span>соц. сетей</span>
+						</h3>
+						<div class="separator"></div>
+						<p class="buy-item__about">Подходят для сайтов с поддержкой IPv6. Instagram, Facebook, YouTube, Google, Yandex. Поиск <a href="#">и другие</a></p>
+						<a href="#" class="buy-item__btn">Выдаются в одни руки</a>
+						<h4 class="buy-item__subheader">для какого сайта</h4>
+						<select class="buy-item__select">
+							<option value="1">Выберите соц.сеть</option>
+							<option value="2">vk</option>
+						</select>
+						<h4 class="buy-item__subheader">СТРАНА</h4>
+						<select class="buy-item__select">
+							<option value="1">Россия</option>
+							<option value="2">Россия</option>
+						</select>
+						<h4 class="buy-item__subheader">КОЛ-ВО</h4>
+						<select class="buy-item__select">
+							<option value="1">100</option>
+							<option value="2">100</option>
+						</select>
+						<h4 class="buy-item__subheader">ПЕРИОД</h4>
+						<select class="buy-item__select">
+							<option value="1">1 дня</option>
+							<option value="2">1 дня</option>
+						</select>
+						<h4 class="buy-item__subheader">ТИП</h4>
+						<select class="buy-item__select">
+							<option value="1">HTTPs / SOCKS5</option>
+							<option value="2">HTTPs / SOCKS5</option>
+						</select>
+						<h4 class="buy-item__subheader">ВАШ EMAIL</h4>
+						<select class="buy-item__select">
+							<option value="1">Напишите свою почту</option>
+							<option value="2">Напишите свою почту</option>
+						</select>
+						<div class="buy-item__price">
+							ЦЕНА
+							<span>3.00 руб.</span>
+						</div>
+						<a href="#" class="btn">
+							купить
+						</a>
+					</div>
+					<div class="buy-item">
+						<h3 class="buy-item__header buy-item__header--solo">
+							<span>IPv6</span> ПРОКСИ
+						</h3>
+						<div class="separator"></div>
+						<p class="buy-item__about">Подходят для сайтов с поддержкой IPv6. Instagram, Facebook, YouTube, Google, Yandex. Поиск <a href="#">и другие</a></p>
+						<a href="#" class="buy-item__btn">Выдаются в одни руки</a>
+						<h4 class="buy-item__subheader">СТРАНА</h4>
+						<select class="buy-item__select">
+							<option value="1">Россия</option>
+							<option value="2">Россия</option>
+						</select>
+						<h4 class="buy-item__subheader">КОЛ-ВО</h4>
+						<select class="buy-item__select">
+							<option value="1">100</option>
+							<option value="2">100</option>
+						</select>
+						<h4 class="buy-item__subheader">ПЕРИОД</h4>
+						<select class="buy-item__select">
+							<option value="1">1 дня</option>
+							<option value="2">1 дня</option>
+						</select>
+						<h4 class="buy-item__subheader">ТИП</h4>
+						<select class="buy-item__select">
+							<option value="1">HTTPs / SOCKS5</option>
+							<option value="2">HTTPs / SOCKS5</option>
+						</select>
+						<h4 class="buy-item__subheader">ВАШ EMAIL</h4>
+						<select class="buy-item__select">
+							<option value="1">Напишите свою почту</option>
+							<option value="2">Напишите свою почту</option>
+						</select>
+						<div class="buy-item__price buy-item__price--last">
+							ЦЕНА
+							<span>3.00 руб.</span>
+						</div>
+						<a href="#" class="btn">
+							купить
+						</a>
+					</div>
+				</div>
+				<div class="buy-col">
+					<div class="buy-item">
+						<h3 class="buy-item__header buy-item__header--solo">
+							<span>IPv4</span> ПРОКСИ
+						</h3>
+						<div class="separator"></div>
+						<p class="buy-item__about">Подходят для всех сайтов и любых целей. VK.com, Yandex, Google, OK.ru, Craigslist, OLX, Wordstat, Key Collector</p>
+						<a href="#" class="buy-item__btn">Выдаются в одни руки</a>
+						<h4 class="buy-item__subheader">СТРАНА</h4>
+						<select class="buy-item__select">
+							<option value="1">Россия</option>
+							<option value="2">Россия</option>
+						</select>
+						<h4 class="buy-item__subheader">КОЛ-ВО</h4>
+						<select class="buy-item__select">
+							<option value="1">100</option>
+							<option value="2">100</option>
+						</select>
+						<h4 class="buy-item__subheader">ПЕРИОД</h4>
+						<select class="buy-item__select">
+							<option value="1">1 дня</option>
+							<option value="2">1 дня</option>
+						</select>
+						<h4 class="buy-item__subheader">ТИП</h4>
+						<select class="buy-item__select">
+							<option value="1">HTTPs / SOCKS5</option>
+							<option value="2">HTTPs / SOCKS5</option>
+						</select>
+						<h4 class="buy-item__subheader">ВАШ EMAIL</h4>
+						<select class="buy-item__select">
+							<option value="1">Напишите свою почту</option>
+							<option value="2">Напишите свою почту</option>
+						</select>
+						<div class="buy-item__price">
+							ЦЕНА
+							<span>65.00 руб.</span>
+						</div>
+						<a href="#" class="btn">
+							купить
+						</a>
+					</div>
+					<div class="buy-item">
+						<h3 class="buy-item__header buy-item__header--solo">
+							<span>мобильные</span> ПРОКСИ
+						</h3>
+						<div class="separator"></div>
+						<p class="buy-item__about">Подходят для всех сайтов и любых целей. VK.com, Yandex, Google, OK.ru, Craigslist, OLX, Wordstat, Key Collector</p>
+						<a href="#" class="buy-item__btn">Выдаются в одни руки</a>
+						<h4 class="buy-item__subheader">Для какого сайта</h4>
+						<select class="buy-item__select">
+							<option value="1">Другие сайты</option>
+							<option value="2">Другие сайты</option>
+						</select>
+						<h4 class="buy-item__subheader">СТРАНА</h4>
+						<select class="buy-item__select">
+							<option value="1">Росиия</option>
+							<option value="2">Росиия</option>
+						</select>
+						<h4 class="buy-item__subheader">ОПЕРАТОР СОТОВОЙ СВЯЗИ</h4>
+						<select class="buy-item__select">
+							<option value="1">Выберите оператора</option>
+							<option value="2">Выберите оператора</option>
+						</select>
+						<h4 class="buy-item__subheader">КОЛ-ВО</h4>
+						<select class="buy-item__select">
+							<option value="1">100</option>
+							<option value="2">100</option>
+						</select>
+						<h4 class="buy-item__subheader">ПЕРИОД</h4>
+						<select class="buy-item__select">
+							<option value="1">1 дня</option>
+							<option value="2">1 дня</option>
+						</select>
+						<h4 class="buy-item__subheader">ТИП</h4>
+						<select class="buy-item__select">
+							<option value="1">HTTPs / SOCKS5</option>
+							<option value="2">HTTPs / SOCKS5</option>
+						</select>
+						<h4 class="buy-item__subheader">ВАШ EMAIL</h4>
+						<select class="buy-item__select">
+							<option value="1">Напишите свою почту</option>
+							<option value="2">Напишите свою почту</option>
+						</select>
+						<div class="buy-item__price">
+							ЦЕНА
+							<span>65.00 руб.</span>
+						</div>
+						<a href="#" class="btn">
+							купить
+						</a>
+					</div>
+				</div>
+				<div class="buy-col">
+					<div class="buy-item">
+						<h3 class="buy-item__header">
+							IPv4 ПРОКСИ <br>для <span>других целей</span>
+						</h3>
+						<div class="separator"></div>
+						<p class="buy-item__about">Подходят для всех сайтов кроме соц.сетей</p>
+						<a href="#" class="buy-item__btn">Выдаются в одни руки</a>
+						<h4 class="buy-item__subheader">для какого сайта</h4>
+						<select class="buy-item__select">
+							<option value="1">Другие сайты</option>
+							<option value="2">vk</option>
+						</select>
+						<h4 class="buy-item__subheader">СТРАНА</h4>
+						<select class="buy-item__select">
+							<option value="1">Россия</option>
+							<option value="2">Россия</option>
+						</select>
+						<h4 class="buy-item__subheader">КОЛ-ВО</h4>
+						<select class="buy-item__select">
+							<option value="1">100</option>
+							<option value="2">100</option>
+						</select>
+						<h4 class="buy-item__subheader">ПЕРИОД</h4>
+						<select class="buy-item__select">
+							<option value="1">1 дня</option>
+							<option value="2">1 дня</option>
+						</select>
+						<h4 class="buy-item__subheader">ТИП</h4>
+						<select class="buy-item__select">
+							<option value="1">HTTPs / SOCKS5</option>
+							<option value="2">HTTPs / SOCKS5</option>
+						</select>
+						<h4 class="buy-item__subheader">ВАШ EMAIL</h4>
+						<select class="buy-item__select">
+							<option value="1">Напишите свою почту</option>
+							<option value="2">Напишите свою почту</option>
+						</select>
+						<div class="buy-item__price">
+							ЦЕНА
+							<span>35.00 руб.</span>
+						</div>
+						<a href="#" class="btn">
+							купить
+						</a>
+					</div>
+					<div class="buy-item">
+						<h3 class="buy-item__header buy-item__header--solo">
+							<span>IPv4 Shared</span> ПРОКСИ
+						</h3>
+						<div class="separator"></div>
+						<p class="buy-item__about">Подходят для всех сайтов и любых целей. VK.com, Yandex, Google, OK.ru, Craigslist, OLX, Wordstat, Key Collector</p>
+						<a href="#" class="buy-item__btn">используют до 3-х человек</a>
+						<h4 class="buy-item__subheader">СТРАНА</h4>
+						<select class="buy-item__select">
+							<option value="1">Россия</option>
+							<option value="2">Россия</option>
+						</select>
+						<h4 class="buy-item__subheader">КОЛ-ВО</h4>
+						<select class="buy-item__select">
+							<option value="1">100</option>
+							<option value="2">100</option>
+						</select>
+						<h4 class="buy-item__subheader">ПЕРИОД</h4>
+						<select class="buy-item__select">
+							<option value="1">3 дня</option>
+							<option value="2">3 дня</option>
+						</select>
+						<h4 class="buy-item__subheader">ТИП</h4>
+						<select class="buy-item__select">
+							<option value="1">HTTPs / SOCKS5</option>
+							<option value="2">HTTPs / SOCKS5</option>
+						</select>
+						<h4 class="buy-item__subheader">ВАШ EMAIL</h4>
+						<select class="buy-item__select">
+							<option value="1">Напишите свою почту</option>
+							<option value="2">Напишите свою почту</option>
+						</select>
+						<div class="buy-item__price buy-item__price--last">
+							ЦЕНА
+							<span>27.00 руб.</span>
+						</div>
+						<a href="#" class="btn">
+							купить
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="buy-info">
+				<div>
+					<span>•</span> Всё автоматизированно
+				</div>
+				<div>
+					<span>•</span> Прокси выдаются автоматически, сразу после оплаты
+				</div>
+				<div>
+					<span>•</span> Наши прокси продаются исключительно в одни руки - это означает, что ими пользуетесь только Вы
+				</div>
+				<div>
+					<span>•</span> Наши прокси элитные и полностью анонимные
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section advantages">
+		<div class="container">
+			<h2 class="section-header">
+				<span>НАШИ ПРЕИМУЩЕСТВА</span>
+			</h2>
+			<div class="advantages-inner">
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem1.png" alt="">
+					</div>
+					<h3 class="adv-item__header">НИЗКИЕ ЦЕНЫ</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">У нас одни из самых низких цен на рынке.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem2.png" alt="">
+					</div>
+					<h3 class="adv-item__header">ВСЕ АВТОМАТИЗИРОВАНО</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Прокси активируются сразу же после оплаты.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem3.png" alt="">
+					</div>
+					<h3 class="adv-item__header">В ОДНИ РУКИ</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Продажа прокси ведется исключительно в одни руки.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem4.png" alt="">
+					</div>
+					<h3 class="adv-item__header">HTTPS / SOCKS5</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Прокси переключаются с HTTPS на SOCKS5 и обратно в личном кабинете.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem5.png" alt="">
+					</div>
+					<h3 class="adv-item__header">ПОКУПКА ОТ 1 IP</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Вы можете купить хоть один прокси, кол-во не имеет значения.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem6.png" alt="">
+					</div>
+					<h3 class="adv-item__header">НЕСКОЛЬКО ПЕРИОДОВ</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Возможность покупки прокси на 3 дня, 1 неделю, 2 недели, либо 1 месяц.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem7.png" alt="">
+					</div>
+					<h3 class="adv-item__header">API ДЛЯ РАЗРАБОТЧИКОВ</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Api позволит вам интегрировать покупку и продление прокси в ваш сервис.</p>
+				</div>
+				<div class="adv-item">
+					<div class="adv-item__img">
+						<img src="img/prem8.png" alt="">
+					</div>
+					<h3 class="adv-item__header">БЫСТРАЯ ПОДДЕРЖКА</h3>
+					<div class="adv-item__line"></div>
+					<p class="adv-item__text">Мы стараемся отвечать на все ваши вопросы как можно быстрее.</p>
+				</div>
+			</div>
+			<div class="advantages-hint">
+				БОЛЬШЕ <span>329 ТЫСЯЧ</span> КЛИЕНТОВ УЖЕ ВЫБРАЛИ НАС
+			</div>
+		</div>
+	</section>
+	
+	<section class="partners section">
+		<div class="scontainer">
+			<h2 class="section-header">ПАРТНЕРСКАЯ ПРОГРАММА</h2>
+			<div class="partners-inner">
+				<div class="partners-text">
+					<p>
+						Наша партнерская программа позволит 
+						<br>Вам зарабатывать 30% от всех платежей привлеченных Вами клиентов.
+						<br>Для участия в программе Вам всего лишь нужно:
+					</p>
+					<div class="separator"></div>
+					<h3 class="partners-header">Привлекать к нам новых клиентов <br>по реферальной ссылке </h3>
+					<p>
+						- зарегистрировавшийся по вашей ссылке <br>пользователь пожизненно закрепляется за Вами <br>и со всех его платежей вам будет идти процент;
+					</p>
+					<h3 class="partners-header">Распространять партнерский купон на скидку - </h3>
+					<p>
+						пользователь, использовавший ваш купон, получает  <br>5% скидку при покупке, а так же пожизненно закрепляется <br>за Вами и со всех его платежей вам будет идти процент.
+					</p>
+				</div>
+				<div class="partners-discount">
+					<div class="partners-num">
+						30
+						<div class="partners-num__percent">%</div>
+					</div>
+				</div>
+			</div>		
+			<h2 class="section-header partners-subheader">НАШИ ПАРТНЕРЫ УЖЕ ЗАРАБОТАЛИ <span>27 434 698,20 руб.</span></h2>
+			<p class="partners-hint">Партнерское вознаграждение можно выводить на WebMoney и Qiwi, <br>либо использовать на оплату любых услуг нашего сервиса.</p>
+			<div class="btn-wrap">
+				<a href="#" class="btn">Подробнее</a>
+			</div>
+			<div class="partners-list">
+				<div class="partners-item"><img src="img/partn1.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn2.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn3.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn4.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn5.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn6.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn7.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn8.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn9.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn10.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn11.png" alt=""></div>
+				<div class="partners-item"><img src="img/partn12.png" alt=""></div>
+			</div>
+		</div>
+	</section>
+	<section class="question section">
+		<div class="container">
+			<div class="question-inner">
+				<form class="question-form">
+					<input type="text" class="question-input" placeholder="Имя">
+					<input type="text" class="question-input" placeholder="E-mail">
+					<select class="question-select">
+						<option value="1">Тех. поддержка1</option>
+						<option value="2">Тех. поддержка2</option>
+					</select>
+					<textarea class="question-textarea" placeholder="Сообщение"></textarea>
+					<button class="question-btn btn-hover">ОТправить</button>
+				</form>
+				<div class="question-info">
+					<h2 class="question-header">ОСТАЛИСЬ ВОПРОСЫ?</h2>
+					<p class="question-text">Напишите нам и мы постараемся максимально <br>быстро вам помочь и проконсультировать.</p>
+					<div class="separator"></div>
+					<a href="#" class="question-chat question-link">
+						<span class="img-wrap">
+							<img src="img/chat-icon.png" alt="">
+						</span>
+						<span>Live Chat</span>
+					</a>
+					<a href="#" class="question-mail question-link">
+						<span class="img-wrap">
+							<img src="img/mail-icon.png" alt="">
+						</span>
+						<span>admin@proxy.luxe</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="about">
+		<div class="container">
+			<div class="about-item">
+				<p class="about-text about-text--gold">Наша компания уже более пяти лет занимается продажами анонимных прокси-серверов. Почему Вам стоит купить прокси у нас:</p>
+			</div>
+			<div class="about-item">
+				<p class="about-text">Высокое качество и скорость работы - прокси быстрые и стабильные;</p>
+				<p class="about-text">Полная анонимность - прокси полностью анонимные Большой выбор прокси для разных задач - индивидуальные прокси выдаются <br>строго в один руки; шаред прокси, пользуются до 3-х человек, мобильные прокси и приватные прокси с разделением доступов.</p>
+				<p class="about-text">Низкие цены - у нас одни из самых дешевых прокси на рынке IPv6 и IPv4 и мобильных прокси;</p>
+			</div>
+			<div class="about-item">
+				<p class="about-text about-text--gold">Полная автоматизация - мгновенная выдача и возможность продления в личном кабинете.</p>
+				<p class="about-text">Быстрая поддержка - мы проконсультируем Вас по техническим и рабочим вопросам, касаемо мобильных, IPv6 и IPv4 прокси. </p>
+				<p class="about-text">Связаться с нами можно по email, либо онлайн консультант;</p>
+			</div>
+			<div class="about-item">
+				<p class="about-text">Наши прокси подойдут Вам для работ на большинстве сайтах и решат Ваши задачи.</p>
+				<p class="about-text">Прокси IPv6 хорошо подходят для работы в социальных сетях, таких как: facebook, instagram, youtube и с множеством других сайтов, с поддержкой IPv6;</p>
+				<p class="about-text">Серверные прокси IPv4 и мобильные прокси, подойдут для работы с любыми сайтами и сервисами;</p>
+			</div>
+			<div class="about-item">
+				<p class="about-text about-text--gold">Наши недорогие и высокоскоростные прокси, позволят вам работать в сети комфортно и безопасно. Если вы еще задаетесь вопросом: </p>
+				<p class="about-text">Где купить прокси? - то ответ на него - PROXY.LUXE</p>
+			</div>
+		</div>
+	</div>
+	<div class="payment">
+		<img src="img/payment.png" alt="">
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-inner">
+				<div class="footer-logo">
+					<a href="#" class="footer-logo__link">
+						<img src="img/logo.png" alt="">
+					</a>
+					<p class="footer-logo__text">Индивидуальные  анонимные прокси</p>
+					<p class="footer-logo__text">© 2021 – 2022 «Proxy.Luxe»</p>
+				</div>
+				<div class="footer-menu">
+					<nav class="footer-menu__nav">
+						<a href="#">Купить прокси</a>
+						<a href="#">Цены</a>
+						<a href="#">FAQ</a>
+						<a href="#">Блог</a>
+						<a href="#">Мой IP</a>
+						<a href="#">Прокси чекер</a>
+						<a href="#">API</a>
+						<a href="#">Условия использования</a>
+						<a href="#">Реквизиты</a>
+					</nav>
+					<div class="footer-menu__info">
+						<a href="#">Политика конфиденциальности</a>
+						<div class="separator"></div>
+						<a href="#">Уведомление об ответственности</a>
+					</div>
+				</div>
+				<div class="footer-soc">
+					<p class="footer-soc__hint">Техническая поддержка:</p>
+					<a href="mailto:admin@proxy.luxe" class="footer-soc__link">admin@proxy.luxe</a>
+					<nav class="footer-soc__links">
+						<a href="#">
+							<img src="img/facebook-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/twitter-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/instagram-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/vk-icon.png" alt="">
+						</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+
+
+
+	<script src="js/jquery.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		$(".imain-slider").slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			dots: false,
+			arrows: true,
+			infinite: false,
+			asNavFor: $(".imain-imgs")
+		});
+		$(".imain-imgs").slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			dots: false,
+			arrows: false,
+			infinite: false,
+			fade: true,
+			asNavFor: $(".imain-slider")
+		})
+		$(".imain-slider").on('init reInit afterChange', function(event, slick, currentSlide, nextSlide){
+		    //currentSlide is undefined on init -- set it to 0 in this case (currentSlide is 0 based)
+		    var i = (currentSlide ? currentSlide : 0) + 1;
+		    
+		    if (i < 10) {
+		    	$(".imain-status__count").text("0" + slick.slideCount)
+		    	$(".imain-status__current").text("0" + i)
+		    }
+		    else {
+		    	$(".imain-status__count").text(slick.slideCount)
+		    	$(".imain-status__current").text(i)
+		    }
+		    
+		});
+	</script>
+</html>

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "logo": "Proxy Luxe",
+    "navMenu": [
+      "BUY PROXIES",
+      "PRICES",
+      "AFFILIATE PROGRAM",
+      "ARTICLES"
+    ],
+    "langSwitcher": {
+      "ru": "Russian",
+      "en": "English"
+    },
+    "auth": {
+      "enter": "login",
+      "register": "registration"
+    },
+    "SubMenu": [
+      "My IP",
+      "Proxy Checker",
+      "My Anonymity",
+      "Port Check",
+      "Whois",
+      "Blacklists",
+      "IPv6 Support",
+      "API"
+    ]
+  }
+}

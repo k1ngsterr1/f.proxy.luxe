@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="shortcut icon" href="img/favicon2.ico" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/slick.css">
+	<link rel="stylesheet" href="css/slick-theme.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/style.min.css">
+	<title>Proxy</title>
+</head>
+<body>
+	<div class="auth" id="auth-enter">
+		<h2 class="auth-header">войти</h2>
+		<div class="separator"></div>
+		<form action="#">
+			<input type="text" class="auth-inp auth-mail" placeholder="E-mail">
+			<input type="text" class="auth-inp auth-pass" placeholder="Пароль">
+			<div class="btn-wrap">
+				<button class="auth-btn btn">Войти</button>
+			</div>
+			<div class="btn-wrap">
+				<a href="#" class="auth-link">Забыли пароль?</a>
+			</div>
+		</form>
+	</div>
+
+	<div class="auth" id="auth-reg">
+		<h2 class="auth-header">РЕГИСТРАЦИЯ</h2>
+		<div class="separator"></div>
+		<form action="#">
+			<input type="text" class="auth-inp auth-mail" placeholder="E-mail">
+			<input type="text" class="auth-inp auth-pass" placeholder="Пароль">
+			<input type="text" class="auth-inp auth-pass" placeholder="Повторить пароль">
+			<div class="btn-wrap">
+				<button class="auth-btn btn">регистрация</button>
+			</div>
+			<div class="btn-wrap">
+				<a href="#" class="auth-link">Войти</a>
+			</div>
+		</form>
+	</div>
+	
+	<header class="header">
+		<div class="container">
+			<div class="header-inner">
+				<a href="#" class="header-logo">
+					<img src="img/logo.png" alt="">
+				</a>
+				<div id="menu" class="header-mobmenu">
+					<nav class="header-menu">
+						<a class="nav-item" href="#">КУПИТЬ ПРОКСИ</a>
+						<a class="nav-item" href="#">ЦЕНЫ</a>
+						<a class="nav-item" href="#">ПАРТНЕРСКАЯ ПРОГРАММА</a>
+						<a class="nav-item" href="#">СТАТЬИ</a>
+						<a class="nav-item" href="#">FAQ</a>
+					</nav>
+					<div class="header-lang">
+						<a href="#" class="lang-item active"><img src="img/rus-lang.png" alt=""></a>
+						<a href="#" class="lang-item"><img src="img/eng-lang.png" alt=""></a>
+					</div>
+					<div class="header-btn">
+						<a data-fancybox data-src="#auth-enter" href="javascript:;" class="btn-enter">
+							<img src="img/enter.svg" alt="">
+							<span>войти</span>
+						</a>
+						<a data-fancybox data-src="#auth-reg" href="javascript:;" class="btn-reg">
+							<span>регистрация</span>
+						</a>
+					</div>
+				</div>
+				<div class="header-burger">
+					<div class="burger" id="openMenu">
+						<span></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<nav class="submenu">
+		<a href="#" class="submenu-item">Мой IP</a>
+		<a href="#" class="submenu-item">Прокси чекер</a>
+		<a href="#" class="submenu-item">Моя анонимность</a>
+		<a href="#" class="submenu-item">Проверка портов</a>
+		<a href="#" class="submenu-item">Whois</a>
+		<a href="#" class="submenu-item">Блэк листы</a>
+		<a href="#" class="submenu-item">Поддержка IPv6</a>
+		<a href="#" class="submenu-item">API</a>
+	</nav>
+
+    <div class="header_offset"></div>
+
+    <div class="paymant_section">
+        <div class="mw">
+            <div class="cont">
+                <div class="sidebar">
+                    <div class="h5">
+                        ЛИЧНЫЙ КАБИНЕТ
+                    </div>
+
+                    <div class="balance">
+                        Баланс <span>1243.00₽</span>  
+                    </div>
+
+                    <div class="sidebar_nav">
+                        <ul>
+                            <li>
+                                <a href="">
+                                    Прокси
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    Заказы
+                                    <span class="num">
+                                        <span>3</span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    Платежи
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    Профиль
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    Партнерская программа
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    Разработчикам (API)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="">
+                                    Выход
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="main_cont">
+                    <div class="m_title">
+                        <h1 class="h1">
+                            <span>оплата заказа</span> / №345433
+                        </h1>
+                    </div>
+
+                    <div class="info_cont">
+                        <ul>
+                            <li>
+                                <b>
+                                    Номер заказа:
+                                </b>
+                                <span>345433</span>
+                            </li>
+                            <li>
+                                <b>
+                                    Дата заказа:
+                                </b>
+                                <span>2023-01-27 18:37:06</span>
+                            </li>
+                            <li>
+                                <b>
+                                    Тип заказа:
+                                </b>
+                                <span>Покупка</span>
+                            </li>
+                            <li>
+                                <b>
+                                    Кол-во IP:  
+                                </b>
+                                <input type="number" placeholder="1" value="1">
+                            </li>
+                            <li>
+                                <b>
+                                    Кол-во дней:
+                                </b>
+                                <input type="number" placeholder="3" value="3">
+                            </li>
+                            <li>
+                                <b>
+                                    Сумма заказа:
+                                </b>
+                                <span class="sum">3.60 ₽</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="coupon">
+                            <div class="h5">
+                                Купон на скидку:
+                            </div>
+                            
+                            <div class="form">
+                                <input type="text">
+                                <button class="btn_apply">применить</button>
+                            </div>
+                        </div>
+
+                        <div class="type_proxy">
+                            <label class="inp_checkbox">
+                                <input type="checkbox" checked value="HTTP(s)">
+                                <span class="inp"></span>
+                                <span class="txt">HTTP(s)</span>
+                            </label>
+                            <label class="inp_checkbox">
+                                <input type="checkbox" value="SOCKS5">
+                                <span class="inp"></span>
+                                <span class="txt">SOCKS5</span>
+                            </label>
+                        </div>
+
+                        <div class="info_txt">
+                            Тип прокси можно будет изменить в личном кабинете после покупки
+                        </div>
+
+                        <div class="btn_line">
+                            <button type="button" class="btn_next">
+                                продолжить
+                            </button>
+
+                            <button type="button" class="btn_cancel">
+                                отмена
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="payment">
+		<img src="img/payment.png" alt="">
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-inner">
+				<div class="footer-logo">
+					<a href="#" class="footer-logo__link">
+						<img src="img/logo.png" alt="">
+					</a>
+					<p class="footer-logo__text">Индивидуальные  анонимные прокси</p>
+					<p class="footer-logo__text">© 2021 – 2022 «Proxy.Luxe»</p>
+				</div>
+				<div class="footer-menu">
+					<nav class="footer-menu__nav">
+						<a href="#">Купить прокси</a>
+						<a href="#">Цены</a>
+						<a href="#">FAQ</a>
+						<a href="#">Блог</a>
+						<a href="#">Мой IP</a>
+						<a href="#">Прокси чекер</a>
+						<a href="#">API</a>
+						<a href="#">Условия использования</a>
+						<a href="#">Реквизиты</a>
+					</nav>
+					<div class="footer-menu__info">
+						<a href="#">Политика конфиденциальности</a>
+						<div class="separator"></div>
+						<a href="#">Уведомление об ответственности</a>
+					</div>
+				</div>
+				<div class="footer-soc">
+					<p class="footer-soc__hint">Техническая поддержка:</p>
+					<a href="mailto:admin@proxy.luxe" class="footer-soc__link">admin@proxy.luxe</a>
+					<nav class="footer-soc__links">
+						<a href="#">
+							<img src="img/facebook-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/twitter-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/instagram-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/vk-icon.png" alt="">
+						</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+
+
+
+	<script src="js/jquery.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="js/main.js"></script>
+	<script>
+		$(".imain-slider").slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			dots: false,
+			arrows: true,
+			infinite: false,
+			asNavFor: $(".imain-imgs")
+		});
+		$(".imain-imgs").slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			dots: false,
+			arrows: false,
+			infinite: false,
+			fade: true,
+			asNavFor: $(".imain-slider")
+		})
+		$(".imain-slider").on('init reInit afterChange', function(event, slick, currentSlide, nextSlide){
+		    //currentSlide is undefined on init -- set it to 0 in this case (currentSlide is 0 based)
+		    var i = (currentSlide ? currentSlide : 0) + 1;
+		    
+		    if (i < 10) {
+		    	$(".imain-status__count").text("0" + slick.slideCount)
+		    	$(".imain-status__current").text("0" + i)
+		    }
+		    else {
+		    	$(".imain-status__count").text(slick.slideCount)
+		    	$(".imain-status__current").text(i)
+		    }
+		    
+		});
+	</script>
+</html>

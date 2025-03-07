@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="shortcut icon" href="img/favicon2.ico" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/slick.css">
+	<link rel="stylesheet" href="css/slick-theme.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/main.css">
+	<title>Proxy</title>
+</head>
+<body>
+	
+	
+	<header class="header">
+		<div class="container">
+			<div class="header-inner">
+				<a href="#" class="header-logo">
+					<img src="img/logo.png" alt="">
+				</a>
+				<div id="menu" class="header-mobmenu">
+					<nav class="header-menu">
+						<a class="nav-item" href="#">КУПИТЬ ПРОКСИ</a>
+						<a class="nav-item" href="#">ЦЕНЫ</a>
+						<a class="nav-item" href="#">ПАРТНЕРСКАЯ ПРОГРАММА</a>
+						<a class="nav-item" href="#">СТАТЬИ</a>
+						<a class="nav-item" href="#">FAQ</a>
+					</nav>
+					<div class="header-lang">
+						<a href="#" class="lang-item active"><img src="img/rus-lang.png" alt=""></a>
+						<a href="#" class="lang-item"><img src="img/eng-lang.png" alt=""></a>
+					</div>
+					<div class="header-btn">
+						<a href="#" class="btn-enter">
+							<img src="img/enter.svg" alt="">
+							<span>войти</span>
+						</a>
+						<a href="#" class="btn-reg">
+							<span>регистрация</span>
+						</a>
+					</div>
+				</div>
+				<div class="header-burger">
+					<div class="burger" id="openMenu">
+						<span></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<nav class="submenu">
+		<a href="#" class="submenu-item">Мой IP</a>
+		<a href="#" class="submenu-item">Прокси чекер</a>
+		<a href="#" class="submenu-item">Моя анонимность</a>
+		<a href="#" class="submenu-item">Проверка портов</a>
+		<a href="#" class="submenu-item">Whois</a>
+		<a href="#" class="submenu-item">Блэк листы</a>
+		<a href="#" class="submenu-item">Поддержка IPv6</a>
+		<a href="#" class="submenu-item">API</a>
+	</nav>
+
+	<main class="inner-page">
+		<section class="myip">
+			<div class="scontainer">
+				<h1 class="section-header section-header--img">
+					<img src="img/geo.png" alt="">
+					ВАШ IP-АДРЕС: 
+					<span>&nbsp;98.175.117.89</span>
+				</h1>
+				<p class="myip-text">
+					С помощью данного сервиса вы можете узнать свой IP-адрес, а так же получить подробную информацию о нем. <br>Помимо информации об IP здесь отображаются данные, которые передает ваш браузер на сервер.
+				</p>
+				<div class="myip-inner">
+					<div class="myip-item">
+						<div class="myip-item__name">
+							IP
+						</div>
+						<div class="myip-item__text">
+							98.105.233.123
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Страна
+						</div>
+						<div class="myip-item__text myip-item__text--img">
+							<span>Russia (RU)</span>
+							<img src="img/rus-lang.png" alt="">
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Город
+						</div>
+						<div class="myip-item__text">
+							Moscow
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Почтовый индекс
+						</div>
+						<div class="myip-item__text">
+							460000
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Широта
+						</div>
+						<div class="myip-item__text">
+							51.7898
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Долгота
+						</div>
+						<div class="myip-item__text">
+							55.0984
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Время
+						</div>
+						<div class="myip-item__text">
+							04-09-2021, 13:25 (Asia/Yekaterinburg)
+						</div>
+					</div>
+					<div class="separator"></div>
+					<h2 class="myip-header">Сведения, предоставленные <br>вашим браузером:</h2>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							X-Forwarded-For
+						</div>
+						<div class="myip-item__text">
+							98.135.127.123, 185.26.97.85
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Connection
+						</div>
+						<div class="myip-item__text">
+							close
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							X-Forwarded-Proto
+						</div>
+						<div class="myip-item__text">
+							https
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Referer
+						</div>
+						<div class="myip-item__text">
+							https://proxy6.net/checker
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							User-Agent
+						</div>
+						<div class="myip-item__text">
+							Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Accept
+						</div>
+						<div class="myip-item__text">
+							text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Accept-Encoding
+						</div>
+						<div class="myip-item__text">
+							gzip, deflate, br
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Accept-Language
+						</div>
+						<div class="myip-item__text">
+							ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Accept-Charset
+						</div>
+						<div class="myip-item__text">
+							none
+						</div>
+					</div>
+					<div class="myip-item">
+						<div class="myip-item__name">
+							Cookie
+						</div>
+						<div class="myip-item__text">
+							PHPSESSID=67sg344kfn35ktmpslvbgha6k2e3; ref_url=https%3A%2F%2Fintex.ru%2F
+						</div>
+					</div>
+					<div class="myip-map" id="map">
+						
+					</div>
+				</div>	
+			</div>
+		</section>
+	</main>			
+	<div class="payment">
+		<img src="img/payment.png" alt="">
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<div class="footer-inner">
+				<div class="footer-logo">
+					<a href="#" class="footer-logo__link">
+						<img src="img/logo.png" alt="">
+					</a>
+					<p class="footer-logo__text">Индивидуальные  анонимные прокси</p>
+					<p class="footer-logo__text">© 2021 – 2022 «Proxy.Luxe»</p>
+				</div>
+				<div class="footer-menu">
+					<nav class="footer-menu__nav">
+						<a href="#">Купить прокси</a>
+						<a href="#">Цены</a>
+						<a href="#">FAQ</a>
+						<a href="#">Блог</a>
+						<a href="#">Мой IP</a>
+						<a href="#">Прокси чекер</a>
+						<a href="#">API</a>
+						<a href="#">Условия использования</a>
+						<a href="#">Реквизиты</a>
+					</nav>
+					<div class="footer-menu__info">
+						<a href="#">Политика конфиденциальности</a>
+						<div class="separator"></div>
+						<a href="#">Уведомление об ответственности</a>
+					</div>
+				</div>
+				<div class="footer-soc">
+					<p class="footer-soc__hint">Техническая поддержка:</p>
+					<a href="mailto:admin@proxy.luxe" class="footer-soc__link">admin@proxy.luxe</a>
+					<nav class="footer-soc__links">
+						<a href="#">
+							<img src="img/facebook-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/twitter-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/instagram-icon.png" alt="">
+						</a>
+						<a href="#">
+							<img src="img/vk-icon.png" alt="">
+						</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+
+
+
+	<script src="js/jquery.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB998msEJSpJZzVtG03uEhxjAq8Q_32rhg&amp;v=3.31&amp;language=ru&amp;libraries=places,geometry&amp;"></script>
+	<script src="js/main.js"></script>
+	<script>
+		$(".imain-slider").slick({
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			dots: false,
+			arrows: true,
+			infinite: false
+		})
+		$(".imain-slider").on('init reInit afterChange', function(event, slick, currentSlide, nextSlide){
+		    //currentSlide is undefined on init -- set it to 0 in this case (currentSlide is 0 based)
+		    var i = (currentSlide ? currentSlide : 0) + 1;
+		    
+		    if (i < 10) {
+		    	$(".imain-status__count").text("0" + slick.slideCount)
+		    	$(".imain-status__current").text("0" + i)
+		    }
+		    else {
+		    	$(".imain-status__count").text(slick.slideCount)
+		    	$(".imain-status__current").text(i)
+		    }
+		    
+		});
+	</script>
+</html>
