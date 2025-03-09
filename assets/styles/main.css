@@ -2,42 +2,54 @@
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Thin.ttf");
-  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"), url("fonts/CeraPro-Thin.woff") format("woff"), url("fonts/CeraPro-Thin.eot") format("eot");
+  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"),
+    url("fonts/CeraPro-Thin.woff") format("woff"),
+    url("fonts/CeraPro-Thin.eot") format("eot");
   font-weight: 100;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Light.ttf");
-  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"), url("fonts/CeraPro-Light.woff") format("woff"), url("fonts/CeraPro-Light.eot") format("eot");
+  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"),
+    url("fonts/CeraPro-Light.woff") format("woff"),
+    url("fonts/CeraPro-Light.eot") format("eot");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Regular.ttf");
-  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"), url("fonts/CeraPro-Regular.woff") format("woff"), url("fonts/CeraPro-Regular.eot") format("eot");
+  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"),
+    url("fonts/CeraPro-Regular.woff") format("woff"),
+    url("fonts/CeraPro-Regular.eot") format("eot");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Medium.ttf");
-  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"), url("fonts/CeraPro-Medium.woff") format("woff"), url("fonts/CeraPro-Medium.eot") format("eot");
+  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"),
+    url("fonts/CeraPro-Medium.woff") format("woff"),
+    url("fonts/CeraPro-Medium.eot") format("eot");
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Bold.ttf");
-  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"), url("fonts/CeraPro-Bold.woff") format("woff"), url("fonts/CeraPro-Bold.eot") format("eot");
+  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"),
+    url("fonts/CeraPro-Bold.woff") format("woff"),
+    url("fonts/CeraPro-Bold.eot") format("eot");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Black.ttf");
-  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"), url("fonts/CeraPro-Black.woff") format("woff"), url("fonts/CeraPro-Black.eot") format("eot");
+  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"),
+    url("fonts/CeraPro-Black.woff") format("woff"),
+    url("fonts/CeraPro-Black.eot") format("eot");
   font-weight: 900;
   font-style: normal;
 }
@@ -1129,8 +1141,13 @@ img {
   padding-left: 20px !important;
 }
 
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-  background-color: rgb(193.1059782609, 162.8994565217, 5.3940217391) !important;
+.select2-container--default
+  .select2-results__option--highlighted.select2-results__option--selectable {
+  background-color: rgb(
+    193.1059782609,
+    162.8994565217,
+    5.3940217391
+  ) !important;
   color: #fff;
 }
 
@@ -1210,11 +1227,15 @@ img {
   align-items: center;
   justify-content: space-between;
 }
-.blist-info__count, .blist-info__current, .blist-info__error {
+.blist-info__count,
+.blist-info__current,
+.blist-info__error {
   font-size: 15px;
   line-height: 17px;
 }
-.blist-info__count span, .blist-info__current span, .blist-info__error span {
+.blist-info__count span,
+.blist-info__current span,
+.blist-info__error span {
   font-weight: 700;
 }
 .blist-info__error span {
@@ -1698,7 +1719,7 @@ img {
 .prcheck .anon-item .astatus {
   display: inline-flex;
   padding: 6px 20px;
-  border-radius: 4PX;
+  border-radius: 4px;
   font-size: 15px;
   color: #fff;
   font-weight: 500;
@@ -1756,7 +1777,8 @@ img {
   text-transform: uppercase;
   font-weight: 400;
 }
-.prcheck-table th, .prcheck-table td {
+.prcheck-table th,
+.prcheck-table td {
   color: #999;
   font-size: 15px;
   line-height: 17px;
@@ -1831,7 +1853,8 @@ img {
     width: 100%;
     margin-top: 10px;
   }
-  .prcheck-table td, .prcheck-table th {
+  .prcheck-table td,
+  .prcheck-table th {
     font-size: 13px;
     padding: 7px 3px;
   }
@@ -2624,7 +2647,8 @@ img {
     width: 100%;
     flex-wrap: wrap;
   }
-  .header-btn .btn-enter, .header-btn .btn-reg {
+  .header-btn .btn-enter,
+  .header-btn .btn-reg {
     width: 100%;
   }
   .header-btn .btn-reg {
@@ -2676,7 +2700,9 @@ img {
     margin-top: -1.5px;
     border-radius: 3px;
   }
-  .header-burger .burger span, .header-burger .burger span::before, .header-burger .burger span::after {
+  .header-burger .burger span,
+  .header-burger .burger span::before,
+  .header-burger .burger span::after {
     display: block;
     width: 30px;
     height: 3px;
@@ -2692,7 +2718,8 @@ img {
     transition-duration: 0.3s;
     border-radius: 3px;
   }
-  .header-burger .burger span::before, .header-burger .burger span::after {
+  .header-burger .burger span::before,
+  .header-burger .burger span::after {
     position: absolute;
     content: "";
   }
@@ -2752,7 +2779,6 @@ img {
 .footer-logo__text {
   font-size: 15px;
   color: #777;
-  padding-left: 85px;
 }
 .footer-logo__text:last-child {
   margin-top: 5px;
@@ -2891,7 +2917,7 @@ img {
 
 body .fancybox__backdrop {
   background: #1e1e1e;
-  --fancybox-opacity: .9
+  --fancybox-opacity: 0.9;
 }
 
 body .fancybox__content > .f-button.is-close-btn {
