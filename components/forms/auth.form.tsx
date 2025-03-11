@@ -1,85 +1,69 @@
 "use client";
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { AuthService } from '@/services/auth.service';
 
-const validationSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Некорректный email')
-        .required('Обязательное поле'),
-    password: Yup.string()
-        .min(8, 'Пароль должен содержать минимум 6 символов')
-        .required('Обязательное поле')
-});
+import { useState } from "react";
+import { AuthService } from "@/services/auth.service";
+import { login } from "@/hooks/login";
+import { useAuthStore } from "@/store/use-auth-store";
 
 export const AuthForm = () => {
-    const authService = new AuthService();
+  const authService = new AuthService();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setToken } = useAuthStore();
 
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: ''
-        },
-        validationSchema,
-        onSubmit: async (values, { setSubmitting, setFieldError }) => {
-            try {
-                await authService.login({
-                    email: values.email,
-                    password: values.password
-                });
-            } catch (error) {
-                setFieldError('password', 'Неверный email или пароль');
-            } finally {
-                setSubmitting(false);
-            }
-        }
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
 
-    return (
-        <form onSubmit={formik.handleSubmit} className="auth-form">
-            <div className="form-group">
-                <input
-                    type="email"
-                    name="email"
-                    className={`auth-inp auth-mail ${
-                        formik.touched.email && formik.errors.email ? 'error' : ''
-                    }`}
-                    placeholder="E-mail"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                />
-                {formik.touched.email && formik.errors.email && (
-                    <div className="error-message">{formik.errors.email}</div>
-                )}
-            </div>
+    if (!email.includes("@")) {
+      setError("Некорректный email");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Пароль должен содержать минимум 8 символов");
+      return;
+    }
 
-            <div className="form-group">
-                <input
-                    type="password"
-                    name="password"
-                    className={`auth-inp auth-pass ${
-                        formik.touched.password && formik.errors.password ? 'error' : ''
-                    }`}
-                    placeholder="Пароль"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
-                />
-                {formik.touched.password && formik.errors.password && (
-                    <div className="error-message">{formik.errors.password}</div>
-                )}
-            </div>
+    setIsSubmitting(true);
 
-            <div className="btn-wrap">
-                <button
-                    type="submit"
-                    className="auth-btn btn"
-                    disabled={formik.isSubmitting}
-                >
-                    {formik.isSubmitting ? 'Вход...' : 'Войти'}
-                </button>
-            </div>
-        </form>
-    );
+    try {
+      const loginData = await login({ email, password });
+
+      setToken(loginData.accessToken);
+
+      localStorage.setItem("refreshToken", loginData.refreshToken);
+    } catch {
+      setError("Неверный email или пароль");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="auth-form">
+      <input
+        type="email"
+        className="auth-inp auth-mail"
+        placeholder="E-mail"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        className="auth-inp auth-pass"
+        placeholder="Пароль"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      {error && <div className="error-message">{error}</div>}
+
+      <div className="btn-wrap">
+        <button type="submit" className="auth-btn btn" disabled={isSubmitting}>
+          {isSubmitting ? "Вход..." : "Войти"}
+        </button>
+      </div>
+    </form>
+  );
 };
