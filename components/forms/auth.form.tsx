@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { AuthService } from "@/services/auth.service";
 import { login } from "@/hooks/login";
 import { useAuthStore } from "@/store/use-auth-store";
 
 export const AuthForm = () => {
-  const authService = new AuthService();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
