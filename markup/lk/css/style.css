@@ -43,13 +43,11 @@
 * {
   margin: 0;
   padding: 0;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   text-decoration: none;
   list-style: none;
   outline: none;
   font-family: "CeraPro", sans-serif;
-  -webkit-font-feature-settings: "pnum" on, "lnum" on;
   font-feature-settings: "pnum" on, "lnum" on;
 }
 
@@ -63,8 +61,6 @@ h1, h2, h3, h4, h5, h6, p, ul, hr {
 }
 
 a, input, button {
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
   transition: 0.5s;
 }
 a:hover, input:hover, button:hover {
@@ -102,32 +98,16 @@ select {
   position: fixed;
   bottom: 50px;
   right: 50px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: #fade4c;
   cursor: pointer;
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
   transition: 0.5s;
   display: none;
   z-index: 98;
   border-radius: 50%;
-  -webkit-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.5);
 }
 .scrollup img {
@@ -141,9 +121,6 @@ select {
   color: #fff;
 }
 .scrollup.active {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -213,22 +190,9 @@ select {
   resize: none;
 }
 .modal .m-content .c form .inp_line {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: space-between;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: space-between;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 .modal .m-content .c form .inp_line .inp_address {
@@ -285,25 +249,10 @@ select {
   padding: 0 2vh 80px;
 }
 .paymant_section .mw .cont {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-  -ms-flex-align: start;
   align-items: flex-start;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 .paymant_section .mw .cont .sidebar {
@@ -336,22 +285,9 @@ select {
   text-transform: uppercase;
   padding: 10px 24px;
   border: 1px solid transparent;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   border-radius: 30px;
   min-height: 50px;
@@ -363,22 +299,9 @@ select {
   height: 28px;
   min-width: 28px;
   margin-left: 10px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 .paymant_section .mw .cont .sidebar .sidebar_nav ul li a .num span {
@@ -418,22 +341,9 @@ select {
 }
 .paymant_section .mw .cont .main_cont .info_cont ul li {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   padding-bottom: 24px;
   margin-bottom: 24px;
@@ -462,16 +372,7 @@ select {
   font-family: "CeraPro";
   color: rgb(255, 255, 255);
 }
-.paymant_section .mw .cont .main_cont .info_cont ul li input::-webkit-input-placeholder {
-  color: rgb(255, 255, 255);
-}
 .paymant_section .mw .cont .main_cont .info_cont ul li input::-moz-placeholder {
-  color: rgb(255, 255, 255);
-}
-.paymant_section .mw .cont .main_cont .info_cont ul li input:-ms-input-placeholder {
-  color: rgb(255, 255, 255);
-}
-.paymant_section .mw .cont .main_cont .info_cont ul li input::-ms-input-placeholder {
   color: rgb(255, 255, 255);
 }
 .paymant_section .mw .cont .main_cont .info_cont ul li input::placeholder {
@@ -483,22 +384,9 @@ select {
   color: #fade4c;
 }
 .paymant_section .mw .cont .main_cont .info_cont .coupon {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   margin-top: 6px;
   margin-bottom: 40px;
@@ -511,22 +399,9 @@ select {
   white-space: nowrap;
 }
 .paymant_section .mw .cont .main_cont .info_cont .coupon .form {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   width: 100%;
   margin-left: 20px;
@@ -553,71 +428,32 @@ select {
   color: #000;
   text-transform: uppercase;
   padding: 18px 100px;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   background: #fade4c;
   border-radius: 5px;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
   border: none;
-  -webkit-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
   position: relative;
 }
 .paymant_section .mw .cont .main_cont .info_cont .coupon .form .btn_apply:hover {
   color: #000 !important;
   background: #f9d933;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
 }
 .paymant_section .mw .cont .main_cont .info_cont .type_proxy {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   margin-bottom: 30px;
 }
 .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   cursor: pointer;
   margin-right: 26px;
@@ -638,22 +474,9 @@ select {
   width: 21px;
   height: 21px;
   min-width: 21px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   position: relative;
   margin-right: 10px;
@@ -664,8 +487,6 @@ select {
   height: 8px;
   background: url("../img/check_dark.png") no-repeat center center/100% 100%;
   position: absolute;
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
   transition: 0.5s;
   opacity: 0;
 }
@@ -683,22 +504,9 @@ select {
   margin-bottom: 42px;
 }
 .paymant_section .mw .cont .main_cont .info_cont .btn_line {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_next {
@@ -711,25 +519,13 @@ select {
   color: #000;
   text-transform: uppercase;
   padding: 18px 100px;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   background: #fade4c;
   border-radius: 5px;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
   border: none;
-  -webkit-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
   position: relative;
   margin: 0 8px;
@@ -737,7 +533,6 @@ select {
 .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_next:hover {
   color: #000 !important;
   background: #f9d933;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
 }
 .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_cancel {
@@ -750,25 +545,13 @@ select {
   color: #fff;
   text-transform: uppercase;
   padding: 18px 100px;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   background: #ff4b55;
   border-radius: 5px;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(255, 75, 85, 0.35);
   box-shadow: 0px 0px 15px 5px rgba(255, 75, 85, 0.35);
   border: none;
-  -webkit-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
   position: relative;
   margin: 0 8px;
@@ -776,14 +559,14 @@ select {
 .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_cancel:hover {
   color: #fff !important;
   background: #fa343e;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(255, 75, 85, 0.45);
   box-shadow: 0px 0px 15px 5px rgba(255, 75, 85, 0.45);
 }
 
 .personal_account .mw {
   padding-bottom: 100px;
 }
-.personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+.personal_account .mw .cont .sidebar .balance,
+.personal_account .mw .cont .sidebar .exchange_rates {
   font-size: 16px;
   font-family: "CeraProBold";
   color: rgb(255, 255, 255);
@@ -795,29 +578,18 @@ select {
   border-radius: 30px;
   min-height: 50px;
   margin-left: -24px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   margin-bottom: 5px;
 }
-.personal_account .mw .cont .sidebar .balance span, .personal_account .mw .cont .sidebar .exchange_rates span {
+.personal_account .mw .cont .sidebar .balance span,
+.personal_account .mw .cont .sidebar .exchange_rates span {
   margin-left: 5px;
 }
-.personal_account .mw .cont .sidebar .balance span, .personal_account .mw .cont .sidebar .exchange_rates span {
+.personal_account .mw .cont .sidebar .balance span,
+.personal_account .mw .cont .sidebar .exchange_rates span {
   font-weight: normal;
   color: #fade4c;
 }
@@ -857,22 +629,9 @@ select {
   text-align: center;
 }
 .personal_account .mw .cont .main_cont .top_desc .send_again_c {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   width: 100%;
 }
@@ -906,25 +665,10 @@ select {
   padding-bottom: 40px;
 }
 .personal_account .mw .cont .main_cont .payment_method .methods {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-  -ms-flex-align: stretch;
   align-items: stretch;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -947,25 +691,10 @@ select {
   border: 1px solid rgba(75, 75, 75, 0.639);
   border-radius: 20px;
   padding: 26px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
   transition: 0.5s;
 }
 .personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont:hover {
@@ -973,22 +702,9 @@ select {
 }
 .personal_account .mw .cont .main_cont .payment_method .methods .method .img {
   height: 100px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   margin-bottom: 15px;
 }
@@ -1007,22 +723,9 @@ select {
 }
 .personal_account .mw .cont .main_cont .sum_line {
   margin-top: 50px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 .personal_account .mw .cont .main_cont .sum_line .h5 {
@@ -1033,22 +736,9 @@ select {
   white-space: nowrap;
 }
 .personal_account .mw .cont .main_cont .sum_line .form {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
   width: 100%;
   margin-left: 20px;
@@ -1075,32 +765,19 @@ select {
   color: #000;
   text-transform: uppercase;
   padding: 18px 100px;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   background: #fade4c;
   border-radius: 5px;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
   border: none;
-  -webkit-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
   position: relative;
 }
 .personal_account .mw .cont .main_cont .sum_line .form .btn_next:hover {
   color: #000 !important;
   background: #f9d933;
-  -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
 }
 
@@ -1112,8 +789,6 @@ select {
     padding: 0 4vh 80px;
   }
   .paymant_section .mw .cont {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .paymant_section .mw .cont .sidebar {
@@ -1173,8 +848,6 @@ select {
     width: 60%;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1185,8 +858,6 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .coupon .form {
     margin-left: 0;
     width: 100%;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon .form input {
@@ -1217,8 +888,6 @@ select {
     margin-bottom: 22px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_next {
@@ -1237,7 +906,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1289,8 +959,6 @@ select {
     font-size: 14px;
   }
   .personal_account .mw .cont .main_cont .sum_line {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1301,8 +969,6 @@ select {
   .personal_account .mw .cont .main_cont .sum_line .form {
     margin-left: 0;
     width: 100%;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .personal_account .mw .cont .main_cont .sum_line .form input {
@@ -1323,8 +989,6 @@ select {
     padding: 0 4vh 80px;
   }
   .paymant_section .mw .cont {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .paymant_section .mw .cont .sidebar {
@@ -1384,8 +1048,6 @@ select {
     width: 60%;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1396,8 +1058,6 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .coupon .form {
     margin-left: 0;
     width: 100%;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon .form input {
@@ -1428,9 +1088,6 @@ select {
     margin-bottom: 22px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line {
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
     justify-content: space-between;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_next {
@@ -1448,7 +1105,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1500,8 +1158,6 @@ select {
     font-size: 14px;
   }
   .personal_account .mw .cont .main_cont .sum_line {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1512,8 +1168,6 @@ select {
   .personal_account .mw .cont .main_cont .sum_line .form {
     margin-left: 0;
     width: 100%;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .personal_account .mw .cont .main_cont .sum_line .form input {
@@ -1583,8 +1237,6 @@ select {
     width: 60%;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1595,8 +1247,6 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .coupon .form {
     margin-left: 0;
     width: 100%;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon .form input {
@@ -1627,9 +1277,6 @@ select {
     margin-bottom: 22px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line {
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
     justify-content: space-between;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_next {
@@ -1647,7 +1294,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1699,8 +1347,6 @@ select {
     font-size: 14px;
   }
   .personal_account .mw .cont .main_cont .sum_line {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1711,8 +1357,6 @@ select {
   .personal_account .mw .cont .main_cont .sum_line .form {
     margin-left: 0;
     width: 100%;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
   .personal_account .mw .cont .main_cont .sum_line .form input {
@@ -1785,8 +1429,6 @@ select {
     width: 60%;
   }
   .paymant_section .mw .cont .main_cont .info_cont .coupon {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1823,9 +1465,6 @@ select {
     margin-bottom: 22px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line {
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
     justify-content: space-between;
   }
   .paymant_section .mw .cont .main_cont .info_cont .btn_line .btn_next {
@@ -1843,7 +1482,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1895,8 +1535,6 @@ select {
     font-size: 14px;
   }
   .personal_account .mw .cont .main_cont .sum_line {
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-bottom: 30px;
   }
@@ -1914,6 +1552,4 @@ select {
     max-width: 100%;
     padding: 12px 20px;
   }
-}
-
-/*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */

@@ -20,10 +20,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             style={{
               display: "flex",
               flexDirection: "row",
-              border: "2px solid red",
             }}
           >
-            {/* <div className="sidebar">
+            <div className="sidebar">
               <div className="h5">ЛИЧНЫЙ КАБИНЕТ</div>
 
               <ActiveLink href="/personal-account" activeClassName="active">
@@ -80,7 +79,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
               <div className="exchange_rates">курсы валют</div>
               <ExchangeRates />
-            </div> */}
+            </div>
             {children}
           </div>
         </div>

@@ -15,14 +15,6 @@ export const Header: FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useRouter();
 
-  useEffect(() => {
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, [token]);
-
   return (
     <>
       <header className="header">
@@ -69,7 +61,16 @@ export const Header: FC = () => {
                   />
                 </a>
               </div>
-              {isAuthenticated ? (
+              {token ? (
+                <div
+                  className="header-btn"
+                  onClick={() => navigate.push("/personal-account")}
+                >
+                  <a className="btn">
+                    <span>Личный кабинет</span>
+                  </a>
+                </div>
+              ) : (
                 <div className="header-btn">
                   <a
                     data-fancybox="auth"
@@ -95,20 +96,6 @@ export const Header: FC = () => {
                     <span>регистрация</span>
                   </a>
                 </div>
-              ) : (
-                <div
-                  className="header-btn"
-                  onClick={() => navigate.push("/personal-account")}
-                >
-                  <a
-                    className="btn-reg"
-                    style={{
-                      cursor: "pointer",
-                    }}
-                  >
-                    <span>Личный кабинет</span>
-                  </a>
-                </div>
               )}
             </div>
             <div className="header-burger">
@@ -119,29 +106,38 @@ export const Header: FC = () => {
           </div>
         </div>
       </header>
-      <nav className="submenu">
-        <Link href="/services/my-ip" className="submenu-item">
-          Мой IP
-        </Link>
-        <Link href="/services/proxy-checker" className="submenu-item">
-          Прокси чекер
-        </Link>
-        <Link href="/services/anonymity-checker" className="submenu-item">
-          Моя анонимность
-        </Link>
-        <Link href="/services/port-checker" className="submenu-item">
-          Проверка портов
-        </Link>
-        <Link href="/services/whois" className="submenu-item">
-          Whois
-        </Link>
-        <Link href="/services/black-lists" className="submenu-item">
-          Блэк листы
-        </Link>
-        <Link href="/services/ipv6-checker" className="submenu-item">
-          Поддержка IPv6
-        </Link>
-      </nav>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <nav className="submenu">
+          <Link href="/services/my-ip" className="submenu-item">
+            Мой IP
+          </Link>
+          <Link href="/services/proxy-checker" className="submenu-item">
+            Прокси чекер
+          </Link>
+          <Link href="/services/anonymity-checker" className="submenu-item">
+            Моя анонимность
+          </Link>
+          <Link href="/services/port-checker" className="submenu-item">
+            Проверка портов
+          </Link>
+          <Link href="/services/whois" className="submenu-item">
+            Whois
+          </Link>
+          <Link href="/services/black-lists" className="submenu-item">
+            Блэк листы
+          </Link>
+          <Link href="/services/ipv6-checker" className="submenu-item">
+            Поддержка IPv6
+          </Link>
+        </nav>
+      </div>
     </>
   );
 };

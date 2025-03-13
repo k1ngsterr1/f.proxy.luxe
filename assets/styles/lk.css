@@ -2497,7 +2497,6 @@ img {
   background: #fade4c;
   height: 50px;
   top: 166px;
-  right: calc((100vw - 1610px) / 2);
   border-radius: 25px;
   display: flex;
   align-items: center;

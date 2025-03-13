@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { login } from "@/hooks/login";
 import { useAuthStore } from "@/store/use-auth-store";
+// import { useAuthStore } from "@/store/use-auth-store";
 
 export const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { setToken } = useAuthStore();
+  const { saveAccessToken, saveRefreshToken } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,9 +30,8 @@ export const AuthForm = () => {
     try {
       const loginData = await login({ email, password });
 
-      setToken(loginData.accessToken);
-
-      localStorage.setItem("refreshToken", loginData.refreshToken);
+      saveAccessToken(loginData.accessToken);
+      saveRefreshToken(loginData.refreshToken);
     } catch {
       setError("Неверный email или пароль");
     } finally {

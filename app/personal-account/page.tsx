@@ -5,9 +5,14 @@ export default function PersonalAccount() {
   return (
     <div
       className="personal_account"
-      style={{ display: "flex", flexDirection: "row" }}
+      style={{ display: "flex", flexDirection: "row", width: "75%" }}
     >
-      <div className="main_cont">
+      <div
+        className="main_cont"
+        style={{
+          width: "100%",
+        }}
+      >
         <PayForm />
       </div>
     </div>

@@ -2,42 +2,54 @@
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Thin.ttf");
-  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"), url("fonts/CeraPro-Thin.woff") format("woff"), url("fonts/CeraPro-Thin.eot") format("eot");
+  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"),
+    url("fonts/CeraPro-Thin.woff") format("woff"),
+    url("fonts/CeraPro-Thin.eot") format("eot");
   font-weight: 100;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Light.ttf");
-  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"), url("fonts/CeraPro-Light.woff") format("woff"), url("fonts/CeraPro-Light.eot") format("eot");
+  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"),
+    url("fonts/CeraPro-Light.woff") format("woff"),
+    url("fonts/CeraPro-Light.eot") format("eot");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Regular.ttf");
-  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"), url("fonts/CeraPro-Regular.woff") format("woff"), url("fonts/CeraPro-Regular.eot") format("eot");
+  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"),
+    url("fonts/CeraPro-Regular.woff") format("woff"),
+    url("fonts/CeraPro-Regular.eot") format("eot");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Medium.ttf");
-  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"), url("fonts/CeraPro-Medium.woff") format("woff"), url("fonts/CeraPro-Medium.eot") format("eot");
+  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"),
+    url("fonts/CeraPro-Medium.woff") format("woff"),
+    url("fonts/CeraPro-Medium.eot") format("eot");
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Bold.ttf");
-  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"), url("fonts/CeraPro-Bold.woff") format("woff"), url("fonts/CeraPro-Bold.eot") format("eot");
+  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"),
+    url("fonts/CeraPro-Bold.woff") format("woff"),
+    url("fonts/CeraPro-Bold.eot") format("eot");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Black.ttf");
-  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"), url("fonts/CeraPro-Black.woff") format("woff"), url("fonts/CeraPro-Black.eot") format("eot");
+  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"),
+    url("fonts/CeraPro-Black.woff") format("woff"),
+    url("fonts/CeraPro-Black.eot") format("eot");
   font-weight: 900;
   font-style: normal;
 }
@@ -123,7 +135,7 @@ img {
   border-radius: 5px;
 }
 .nav-list a:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
 }
 
@@ -178,7 +190,7 @@ img {
   justify-content: center;
 }
 .btn:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
 }
 
@@ -186,7 +198,7 @@ img {
   transition: all 0.3s ease;
 }
 .btn-hover:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
 }
 
@@ -1075,8 +1087,9 @@ img {
   padding-left: 20px;
 }
 
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-  background: rgb(193.1059782609, 162.8994565217, 5.3940217391);
+.select2-container--default
+  .select2-results__option--highlighted.select2-results__option--selectable {
+  background: #c1a305;
   color: #fff;
 }
 
@@ -1459,7 +1472,7 @@ img {
   border-radius: 5px;
 }
 .prcheck .port-list a:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
 }
 .prcheck .anon {
@@ -1576,7 +1589,7 @@ img {
 .prcheck .anon-item .astatus {
   display: inline-flex;
   padding: 6px 20px;
-  border-radius: 4PX;
+  border-radius: 4px;
   font-size: 15px;
   color: #fff;
   font-weight: 500;
@@ -1597,7 +1610,7 @@ img {
   width: 85px;
 }
 .prcheck .anon-item .astatus--gold:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
 }
 .prcheck .anon-status {
@@ -2240,7 +2253,7 @@ img {
   height: 27px;
 }
 .header-btn .btn-enter:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
 }
 .header-btn .btn-reg {
@@ -2262,7 +2275,7 @@ img {
   height: 27px;
 }
 .header-btn .btn-reg:hover {
-  background: rgb(249.3070652174, 217.4266304348, 51.1929347826);
+  background: #f9d933;
   box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
 }
 .header-burger {
@@ -2276,7 +2289,6 @@ img {
   background: #fade4c;
   height: 50px;
   top: 166px;
-  right: calc((100vw - 1610px) / 2);
   border-radius: 25px;
   display: flex;
   align-items: center;
@@ -2376,7 +2388,8 @@ img {
     width: 100%;
     flex-wrap: wrap;
   }
-  .header-btn .btn-enter, .header-btn .btn-reg {
+  .header-btn .btn-enter,
+  .header-btn .btn-reg {
     width: 100%;
   }
   .header-btn .btn-reg {
@@ -2419,7 +2432,6 @@ img {
     margin-bottom: 9px;
     -webkit-user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
     position: absolute;
     top: 50%;
@@ -2428,23 +2440,20 @@ img {
     margin-top: -1.5px;
     border-radius: 3px;
   }
-  .header-burger .burger span, .header-burger .burger span::before, .header-burger .burger span::after {
+  .header-burger .burger span,
+  .header-burger .burger span::before,
+  .header-burger .burger span::after {
     display: block;
     width: 30px;
     height: 3px;
     background-color: #fff;
     outline: 1px solid transparent;
-    -webkit-transition-property: background-color, -webkit-transform;
-    -moz-transition-property: background-color, -moz-transform;
-    -o-transition-property: background-color, -o-transform;
     transition-property: background-color, transform;
-    -webkit-transition-duration: 0.3s;
-    -moz-transition-duration: 0.3s;
-    -o-transition-duration: 0.3s;
     transition-duration: 0.3s;
     border-radius: 3px;
   }
-  .header-burger .burger span::before, .header-burger .burger span::after {
+  .header-burger .burger span::before,
+  .header-burger .burger span::after {
     position: absolute;
     content: "";
   }
@@ -2458,17 +2467,9 @@ img {
     background-color: transparent;
   }
   .header-burger .burger.clicked span::before {
-    -webkit-transform: translateY(9px) rotate(45deg);
-    -moz-transform: translateY(9px) rotate(45deg);
-    -ms-transform: translateY(9px) rotate(45deg);
-    -o-transform: translateY(9px) rotate(45deg);
     transform: translateY(9px) rotate(45deg);
   }
   .header-burger .burger.clicked span::after {
-    -webkit-transform: translateY(-9px) rotate(-45deg);
-    -moz-transform: translateY(-9px) rotate(-45deg);
-    -ms-transform: translateY(-9px) rotate(-45deg);
-    -o-transform: translateY(-9px) rotate(-45deg);
     transform: translateY(-9px) rotate(-45deg);
   }
   .header-burger .burger:hover {
@@ -2636,6 +2637,4 @@ img {
   .footer-logo__text {
     padding-left: 0;
   }
-}
-
-/*# sourceMappingURL=main.css.map */
+} /*# sourceMappingURL=main.css.map */

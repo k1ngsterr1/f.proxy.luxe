@@ -1,48 +1,73 @@
-"use client";
+import reactQueryClient from "@/hooks/apiClient/query-client";
 import { create } from "zustand";
-import { useEffect } from "react";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-// Define the store type
 interface AuthState {
   token: string | null;
-  setToken: (token: string | null) => void;
-  clearToken: () => void;
+  role: string | null;
+  saveAccessToken: (token: string) => void;
+  removeAccessToken: () => void;
+  saveRefreshToken: (token: string) => void;
+  removeRefreshToken: () => void;
+  loadToken: () => Promise<string | null>;
+  saveRole: (role: string) => void;
+  removeRole: () => void;
 }
 
-// Create Zustand store with types
-export const useAuthStore = create<AuthState>((set) => ({
-  token: null, // Start with `null` to prevent SSR issues
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      token: null,
+      role: null,
 
-  setToken: (token) => {
-    if (typeof window !== "undefined") {
-      // Ensure it's running in the browser
-      if (token) {
-        localStorage.setItem("accessToken", token);
-      } else {
-        localStorage.removeItem("accessToken");
-      }
+      saveAccessToken: (token: string) => set({ token }),
+
+      removeAccessToken: () => {
+        set({ token: null });
+        localStorage.removeItem("auth-storage"); // ✅ Ensure full removal
+        reactQueryClient.resetQueries();
+        reactQueryClient.clear();
+      },
+
+      saveRefreshToken: (token: string) => set({ token }),
+
+      removeRefreshToken: () => {
+        set({ token: null });
+        localStorage.removeItem("auth-storage"); // ✅ Ensure full removal
+        reactQueryClient.resetQueries();
+        reactQueryClient.clear();
+      },
+
+      loadToken: async () => {
+        return get().token;
+      },
+
+      saveRole: (role: string) => {
+        set({ role });
+      },
+
+      removeRole: () => {
+        set({ role: null });
+
+        setTimeout(() => {
+          localStorage.removeItem("role");
+          localStorage.setItem(
+            "auth-storage",
+            JSON.stringify({ state: get(), version: 0 })
+          );
+        }, 0);
+
+        reactQueryClient.resetQueries();
+        reactQueryClient.clear();
+      },
+    }),
+    {
+      name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        token: state.token,
+        role: state.role,
+      }),
     }
-    set({ token });
-  },
-
-  clearToken: () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("accessToken");
-    }
-    set({ token: null });
-  },
-}));
-
-// Hook to load token from localStorage on the client
-export const useLoadAuth = () => {
-  const setToken = useAuthStore((state) => state.setToken);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("accessToken");
-      if (storedToken) {
-        setToken(storedToken);
-      }
-    }
-  }, [setToken]);
-};
+  )
+);
