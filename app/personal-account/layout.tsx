@@ -1,3 +1,4 @@
+"use client";
 import { PropsWithChildren } from "react";
 import "@/assets/styles/normalize.css";
 import "@/assets/styles/lk.css";
