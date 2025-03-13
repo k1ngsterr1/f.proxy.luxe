@@ -24,8 +24,6 @@ export const ResidentBuyForm: FC<ResidentBuyFormProps> = ({
 
   const fetchPrice = async () => {
     if (!amount || !tariff) return;
-    const result = await Services.Product.getCalcResident(amount, tariff);
-    if (!result) return;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error

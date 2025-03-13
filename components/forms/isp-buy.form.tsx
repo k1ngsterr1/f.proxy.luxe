@@ -27,8 +27,6 @@ export const IspBuyForm: FC<IspBuyFormProps> = ({
 
   const fetchPrice = async () => {
     if (!country || !amount || !period) return;
-    const result = await Services.Product.getCalc(country, period, amount);
-    if (!result) return;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
