@@ -19,15 +19,6 @@ export const BuySection: FC = () => {
 
   const [error, setError] = useState<boolean>(false);
 
-  const fetchReference = useCallback(async () => {
-    if (!reference) {
-      const result = await Services.Product.getReferences();
-      if (!result) {
-        setError(true);
-      }
-    }
-  }, []);
-
   const ispOnLoadedHandler = () => {
     setIspLoaded(true);
   };
@@ -39,10 +30,6 @@ export const BuySection: FC = () => {
   const residentOnLoadedHandler = () => {
     setResidentLoaded(true);
   };
-
-  useEffect(() => {
-    fetchReference();
-  }, []);
 
   if (reference && !error) {
     return (

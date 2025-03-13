@@ -49,8 +49,8 @@ export default function RootLayout({
             </div>
           </Fancybox>
         </Suspense>
-        <script src="https://www.cbr-xml-daily.ru/money.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+        {/* <script src="https://www.cbr-xml-daily.ru/money.js"></script> */}
+        {/* <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script> */}
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
       </body>
     </html>

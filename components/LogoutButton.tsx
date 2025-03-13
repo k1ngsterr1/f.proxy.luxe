@@ -1,7 +1,7 @@
 "use client";
 import { FC } from "react";
 import { useAuthStore } from "@/store/use-auth-store";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export const LogoutButton: FC = () => {
   const { removeAccessToken, removeRefreshToken } = useAuthStore();
