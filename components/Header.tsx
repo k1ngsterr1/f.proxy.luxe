@@ -9,6 +9,7 @@ import Enter from "../assets/images/enter.svg";
 import Link from "next/link";
 import { useAuthStore } from "@/store/use-auth-store";
 import { useRouter } from "next/navigation";
+import { BurgerMenu } from "./BurgerMenu";
 
 export const Header: FC = () => {
   const { token } = useAuthStore();
@@ -62,11 +63,8 @@ export const Header: FC = () => {
                 </a>
               </div>
               {token ? (
-                <div
-                  className="header-btn"
-                  onClick={() => navigate.push("/personal-account")}
-                >
-                  <a className="btn">
+                <div onClick={() => navigate.push("/personal-account")}>
+                  <a className="another-btn">
                     <span>Личный кабинет</span>
                   </a>
                 </div>
@@ -99,9 +97,7 @@ export const Header: FC = () => {
               )}
             </div>
             <div className="header-burger">
-              <div className="burger" id="openMenu">
-                <span></span>
-              </div>
+              <BurgerMenu />
             </div>
           </div>
         </div>

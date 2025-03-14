@@ -190,6 +190,28 @@ img {
   transition: all 0.3s ease;
   position: relative;
 }
+
+.another-btn {
+  font-family: "CeraPro", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  text-transform: uppercase;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fade4c;
+  border-radius: 25px;
+  box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.35);
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
 .btn-wrap {
   display: flex;
   justify-content: center;
@@ -254,7 +276,6 @@ img {
   background-position: center;
 }
 .imain-imgs .slick-list {
-  height: 100%;
   margin: 0 !important;
 }
 .imain-imgs .slick-track {
@@ -2484,6 +2505,7 @@ img {
 .header-lang .lang-item:hover {
   filter: grayscale(0);
 }
+
 .header-btn {
   display: flex;
   align-items: center;
@@ -2580,7 +2602,7 @@ img {
     padding: 30px 0;
   }
   .header-logo {
-    width: 145px;
+    width: 250px;
   }
   .header-mobmenu {
     width: calc(100% - 145px);

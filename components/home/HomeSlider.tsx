@@ -1,7 +1,7 @@
 "use client";
 
 import { StaticImageData } from "next/image";
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -13,16 +13,20 @@ const ImageSlide: FC<{ image: StaticImageData }> = ({ image }) => {
     <div
       className="imain-imgs__slide"
       style={{
+        top: 0,
+        width: "100%",
+        height: "100%",
+        position: "absolute",
         backgroundImage: `url(${image.src})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        height: "100%",
       }}
     />
   );
 };
 
 export const HomeSlider: FC = () => {
+  const [slide, setSlide] = useState(1);
   const sliderRef = useRef<Slider>(null);
   const imageSliderRef = useRef<Slider>(null);
   const currentRef = useRef<HTMLDivElement>(null);
@@ -30,20 +34,7 @@ export const HomeSlider: FC = () => {
 
   return (
     <section className="imain">
-      <Slider
-        className="imain-imgs"
-        slidesToShow={1}
-        slidesToScroll={1}
-        dots={false}
-        arrows={false}
-        infinite={false}
-        fade={true}
-        ref={imageSliderRef}
-      >
-        <ImageSlide image={BG1} />
-        <ImageSlide image={BG2} />
-      </Slider>
-
+      <ImageSlide image={slide === 1 ? BG1 : BG2} />
       <div className="container">
         <Slider
           className="imain-slider"
@@ -55,6 +46,7 @@ export const HomeSlider: FC = () => {
           fade={false}
           ref={sliderRef}
           afterChange={(currentSlide: number) => {
+            setSlide(currentSlide);
             const i = currentSlide + 1;
             const slideCount = 2;
             imageSliderRef.current?.slickGoTo(currentSlide);
