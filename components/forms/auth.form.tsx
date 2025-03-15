@@ -29,12 +29,9 @@ export const AuthForm = () => {
     try {
       const loginData = await login(values);
       saveAccessToken(loginData.accessToken);
-      saveRefreshToken(loginData.refreshToken);
-
-      // ✅ Close Fancybox popup
+      // saveRefreshToken(loginData.refreshToken);
       Fancybox.close();
 
-      // ✅ Redirect after login
       navigate.push("/personal-account");
     } catch {
       setErrors({ general: "Неверный email или пароль" });
