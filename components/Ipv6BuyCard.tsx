@@ -8,6 +8,7 @@ import { createOrder } from "@/hooks/create-order";
 import { productCalc } from "@/hooks/product-calc";
 import { CalcData } from "@/types/calc.types";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const API_KEY = "d03c0baa50128a51bb904a7b";
 const EXCHANGE_API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
@@ -19,6 +20,7 @@ export const IPV6BuyCard = () => {
   const [quantity, setQuantity] = useState<string>("10");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("1m");
+  const [isLoadingOrder, setIsLoadingOrder] = useState<boolean>(false);
   const [priceUSD, setPriceUSD] = useState<number | null>(null);
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
   const navigate = useRouter();
@@ -83,6 +85,7 @@ export const IPV6BuyCard = () => {
 
   const handleBuyClick = async () => {
     if (!preferences) return;
+    setIsLoadingOrder(true);
 
     const periodDays = "1m"; // Convert period to string
     const totalPrice = priceUSD ? Math.round(priceUSD) : 0; // Ensure integer value
@@ -108,6 +111,8 @@ export const IPV6BuyCard = () => {
     } catch (error) {
       console.error("Ошибка при создании заказа:", error);
       alert("Ошибка при создании заказа.");
+    } finally {
+      setIsLoadingOrder(false);
     }
   };
 
@@ -220,8 +225,6 @@ export const IPV6BuyCard = () => {
             </option>
           ))}
         </select>
-
-        {/* Display prices */}
         <div className="buy-item__price">
           ЦЕНА:{" "}
           {priceUSD !== null ? (
@@ -232,7 +235,7 @@ export const IPV6BuyCard = () => {
         </div>
 
         <button onClick={handleBuyClick} className="btn">
-          купить
+          {isLoadingOrder ? <>Обработка...</> : "Купить"}{" "}
         </button>
       </div>
     </div>

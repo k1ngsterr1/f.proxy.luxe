@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useProxyOrders } from "@/hooks/use-get-all-orders";
+import { useRouter } from "next/navigation";
 
 export default function OrdersPage() {
   const [showAlert, setShowAlert] = useState(true);
+  const navigate = useRouter();
   const { data: ordersData, isLoading, isError, error } = useProxyOrders();
 
   return (
@@ -201,6 +203,9 @@ export default function OrdersPage() {
                   </td>
                   {order.status === "PENDING" && (
                     <button
+                      onClick={() =>
+                        navigate.push(`/personal-account/orders/${order.id}`)
+                      }
                       style={{
                         marginRight: "8px",
                         marginTop: "12px",
