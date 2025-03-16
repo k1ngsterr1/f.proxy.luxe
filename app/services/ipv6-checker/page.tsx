@@ -28,7 +28,7 @@ export default function Page() {
     setResult(null);
 
     try {
-      const response = await checkIpv6();
+      const response: any = await checkIpv6();
 
       const data: IPv6CheckResponse = await response.json();
       setResult(data);
