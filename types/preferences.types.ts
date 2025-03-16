@@ -1,6 +1,6 @@
 export interface Country {
   id: string;
-  text: string;
+  name: string;
 }
 
 export interface Targets {

@@ -7,84 +7,88 @@ import { ExchangeRates } from "@/components/ExchangeRates";
 import { LogoutButton } from "@/components/LogoutButton";
 import { Balance } from "@/components/Balance";
 import ActiveLink from "@/components/ActiveLink";
+import { QueryClientProvider } from "@tanstack/react-query";
+import reactQueryClient from "@/hooks/apiClient/query-client";
 
 type RootLayoutProps = PropsWithChildren;
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
-      <div className="header_offset"></div>
-      <section className="personal_account paymant_section">
-        <div className="mw">
-          <div
-            className="cont"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <div className="sidebar">
-              <div className="h5">ЛИЧНЫЙ КАБИНЕТ</div>
+      <QueryClientProvider client={reactQueryClient}>
+        <div className="header_offset"></div>
+        <section className="personal_account paymant_section">
+          <div className="mw">
+            <div
+              className="cont"
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <div className="sidebar">
+                <div className="h5">ЛИЧНЫЙ КАБИНЕТ</div>
 
-              <ActiveLink href="/personal-account" activeClassName="active">
-                <Balance />
-              </ActiveLink>
+                <ActiveLink href="/personal-account" activeClassName="active">
+                  <Balance />
+                </ActiveLink>
 
-              <div className="sidebar_nav">
-                <ul>
-                  <li>
-                    <ActiveLink
-                      activeClassName="active"
-                      href="/personal-account/proxy"
-                    >
-                      Прокси
-                    </ActiveLink>
-                  </li>
-                  <li>
-                    <ActiveLink
-                      activeClassName="active"
-                      href="/personal-account/orders"
-                    >
-                      Заказы
-                    </ActiveLink>
-                  </li>
-                  <li>
-                    <ActiveLink
-                      activeClassName="active"
-                      href="/personal-account/payments"
-                    >
-                      Платежи
-                    </ActiveLink>
-                  </li>
-                  <li>
-                    <ActiveLink
-                      activeClassName="active"
-                      href="/personal-account/profile"
-                    >
-                      Профиль
-                    </ActiveLink>
-                  </li>
-                  <li>
-                    <ActiveLink
-                      activeClassName="active"
-                      href="/personal-account/partners"
-                    >
-                      Партнерская программа
-                    </ActiveLink>
-                  </li>
-                  <li>
-                    <LogoutButton />
-                  </li>
-                </ul>
+                <div className="sidebar_nav">
+                  <ul>
+                    <li>
+                      <ActiveLink
+                        activeClassName="active"
+                        href="/personal-account/proxy"
+                      >
+                        Прокси
+                      </ActiveLink>
+                    </li>
+                    <li>
+                      <ActiveLink
+                        activeClassName="active"
+                        href="/personal-account/orders"
+                      >
+                        Заказы
+                      </ActiveLink>
+                    </li>
+                    <li>
+                      <ActiveLink
+                        activeClassName="active"
+                        href="/personal-account/payments"
+                      >
+                        Платежи
+                      </ActiveLink>
+                    </li>
+                    <li>
+                      <ActiveLink
+                        activeClassName="active"
+                        href="/personal-account/profile"
+                      >
+                        Профиль
+                      </ActiveLink>
+                    </li>
+                    <li>
+                      <ActiveLink
+                        activeClassName="active"
+                        href="/personal-account/partners"
+                      >
+                        Партнерская программа
+                      </ActiveLink>
+                    </li>
+                    <li>
+                      <LogoutButton />
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="exchange_rates">курсы валют</div>
+                <ExchangeRates />
               </div>
-
-              <div className="exchange_rates">курсы валют</div>
-              <ExchangeRates />
+              {children}
             </div>
-            {children}
           </div>
-        </div>
-      </section>
+        </section>
+      </QueryClientProvider>
     </>
   );
 }

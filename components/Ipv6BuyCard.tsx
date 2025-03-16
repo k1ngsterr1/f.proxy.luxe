@@ -7,6 +7,7 @@ import { getPreferences } from "@/hooks/get-preferences";
 import { createOrder } from "@/hooks/create-order";
 import { productCalc } from "@/hooks/product-calc";
 import { CalcData } from "@/types/calc.types";
+import { useRouter } from "next/navigation";
 
 const API_KEY = "d03c0baa50128a51bb904a7b";
 const EXCHANGE_API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
@@ -14,11 +15,13 @@ const EXCHANGE_API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/U
 export const IPV6BuyCard = () => {
   const [preferences, setPreferences] = useState<Preferences | null>(null);
   const [country, setCountry] = useState<string>("");
+  const [countryId, setCountryId] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("10");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("1m");
   const [priceUSD, setPriceUSD] = useState<number | null>(null);
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
+  const navigate = useRouter();
 
   // Fetch preferences
   useEffect(() => {
@@ -27,7 +30,8 @@ export const IPV6BuyCard = () => {
         const data = await getPreferences();
         setPreferences(data);
         if (data?.ipv6?.country.length) {
-          setCountry(data.ipv6.country[0].text);
+          setCountryId(data.ipv6.country[0].id);
+          setCountry(data.ipv6.country[0].name);
         }
       } catch (error) {
         console.error("Ошибка загрузки настроек:", error);
@@ -57,10 +61,11 @@ export const IPV6BuyCard = () => {
 
     const calculatePrice = async () => {
       const calcData: CalcData = {
-        countryId: Number(country),
+        countryId: Number(countryId),
         periodId: period,
         quantity: Number(quantity),
         protocol: "HTTPS",
+        type: "ipv6",
         customTargetName: usage,
       };
 
@@ -79,12 +84,12 @@ export const IPV6BuyCard = () => {
   const handleBuyClick = async () => {
     if (!preferences) return;
 
-    const periodDays = period === "1w" ? "7" : "30"; // Convert period to string
+    const periodDays = "1m"; // Convert period to string
     const totalPrice = priceUSD ? Math.round(priceUSD) : 0; // Ensure integer value
     const proxyType = usage.includes("SOCKS5") ? "SOCKS5" : "HTTPS"; // Ensure valid proxyType
 
     const orderData = {
-      country,
+      country: country,
       quantity: Number(quantity),
       usage,
       period,
@@ -94,14 +99,25 @@ export const IPV6BuyCard = () => {
       type: "ipv6", // Ensure type is valid
     };
 
+    console.log("order data:", orderData);
+
     try {
       const response = await createOrder(orderData);
       console.log("Заказ успешно создан:", response);
-      alert("Заказ успешно создан!");
+      navigate.push("/personal-account/orders");
     } catch (error) {
       console.error("Ошибка при создании заказа:", error);
       alert("Ошибка при создании заказа.");
     }
+  };
+
+  const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = JSON.parse(e.target.value); // Convert back from JSON
+
+    console.log("Selected Country:", e.target.value);
+
+    setCountryId(selectedValue.id);
+    setCountry(selectedValue.name);
   };
 
   // Convert price to RUB
@@ -131,8 +147,8 @@ export const IPV6BuyCard = () => {
         </h4>
         <select
           className="buy-item__select"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
+          value={JSON.stringify({ id: countryId, name: country })} // Keep selection properly formatted
+          onChange={handleChangeCountry}
           disabled={!preferences}
           style={{
             backgroundColor: "#1E1E1E",
@@ -146,8 +162,8 @@ export const IPV6BuyCard = () => {
           }}
         >
           {preferences?.ipv6?.country.map((c: Country) => (
-            <option key={c.id} value={c.id}>
-              {c.text}
+            <option key={c.id} value={JSON.stringify(c)}>
+              {c.name}
             </option>
           ))}
         </select>
@@ -198,9 +214,9 @@ export const IPV6BuyCard = () => {
             cursor: "pointer",
           }}
         >
-          {preferences?.ipv6?.period.map((p) => (
+          {preferences?.ipv6?.period.map((p: any) => (
             <option key={p.id} value={p.id}>
-              {p.text}
+              {p.name}
             </option>
           ))}
         </select>

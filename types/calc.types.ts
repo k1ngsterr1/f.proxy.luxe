@@ -3,5 +3,6 @@ export interface CalcData {
   periodId: string;
   quantity: number;
   protocol: string;
+  type: string;
   customTargetName: string;
 }
