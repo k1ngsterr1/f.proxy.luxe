@@ -1,6 +1,7 @@
 "use client";
 import { FC, useState, useEffect } from "react";
 import { Services } from "@/services";
+import { getExchangeRate } from "@/hooks/get-exchange-rate";
 
 interface ExchangeRates {
   USD: string;
@@ -17,8 +18,13 @@ export const ExchangeRates: FC = () => {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const rates = await Services.Pay.getExchangeRates();
-        setExchangeRates(rates);
+        const data = await getExchangeRate();
+        setExchangeRates({
+          USD: data ? data.toString() : "100",
+          BTC: "0",
+          LTC: "0",
+          DOGE: "0",
+        });
       } catch (error) {
         console.error("Failed to fetch exchange rates", error);
       }

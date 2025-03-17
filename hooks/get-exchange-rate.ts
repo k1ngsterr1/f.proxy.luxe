@@ -11,7 +11,7 @@ export const getExchangeRate = async (): Promise<number | null> => {
       response.data.conversion_rates &&
       response.data.conversion_rates.RUB
     ) {
-      return response.data.conversion_rates.RUB; // Get USD to RUB rate
+      return response.data.conversion_rates.RUB;
     }
     throw new Error("RUB exchange rate not found");
   } catch (error) {

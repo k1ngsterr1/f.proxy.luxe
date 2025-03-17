@@ -26,7 +26,7 @@ export const RegisterForm = () => {
     { setSubmitting }: any
   ) => {
     try {
-      await register(values);
+      await register({ email: values.email, password: values.password });
       Fancybox.close(); // ✅ Close Fancybox on successful registration
     } catch (error) {
       console.error("Ошибка регистрации:", error);

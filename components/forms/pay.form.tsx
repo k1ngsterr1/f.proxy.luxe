@@ -10,6 +10,7 @@ import DogeCoin from "@/assets/images/dogetoin.png";
 import Payer from "@/assets/images/payeer.png";
 import Enot from "@/assets/images/enot.png";
 import Image from "next/image";
+import { useWebMoneyPayment } from "@/hooks/useWebmoneyPayment";
 
 const validationSchema = Yup.object({
   paymentMethod: Yup.string().required("Выберите способ оплаты"),
@@ -23,6 +24,7 @@ const validationSchema = Yup.object({
 });
 
 export const PayForm = () => {
+  const { processWebMoneyPayment } = useWebMoneyPayment();
   const formik = useFormik({
     initialValues: {
       paymentMethod: "",
@@ -30,8 +32,10 @@ export const PayForm = () => {
       agreed: false,
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form data", values);
+    onSubmit: async (values) => {
+      if (values.paymentMethod === "webmoney") {
+        await processWebMoneyPayment(values.paymentAmount);
+      }
     },
   });
 
@@ -44,7 +48,7 @@ export const PayForm = () => {
     >
       <div className="m_title">
         <h1 className="h1">
-          <span>ЛИЧНЫЙ КАБИНЕТ </span>/БАЛАНС
+          <span>ЛИЧНЫЙ КАБИНЕТ</span>/БАЛАНС
         </h1>
       </div>
       <div className="agree_faq">
@@ -72,7 +76,7 @@ export const PayForm = () => {
         <div className="methods">
           {[
             { id: "visa", img: Visa, text: "VISA/Mastercard/MIR" },
-            { id: "webmoney", img: WebMoney, text: "Webmoney (WMZ)" },
+            { id: "webmoney", img: WebMoney, text: "Webmoney (WMT)" },
             { id: "bitcoin", img: BitCoin, text: "Bitcoin (BTC)" },
             { id: "litecoin", img: LitCoin, text: "Litecoin (LTC)" },
             { id: "dogecoin", img: DogeCoin, text: "Dogecoin (DOGE)" },
