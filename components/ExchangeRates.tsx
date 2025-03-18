@@ -1,7 +1,6 @@
 "use client";
+import { getExchangeRate } from "@/entities/exchange-rates/api/get/get-exchange-rate.api";
 import { FC, useState, useEffect } from "react";
-import { Services } from "@/services";
-import { getExchangeRate } from "@/hooks/get-exchange-rate";
 
 interface ExchangeRates {
   USD: string;

@@ -10,7 +10,7 @@ import DogeCoin from "@/assets/images/dogetoin.png";
 import Payer from "@/assets/images/payeer.png";
 import Enot from "@/assets/images/enot.png";
 import Image from "next/image";
-import { useWebMoneyPayment } from "@/hooks/useWebmoneyPayment";
+import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmoney-payment";
 
 const validationSchema = Yup.object({
   paymentMethod: Yup.string().required("Выберите способ оплаты"),
@@ -112,6 +112,7 @@ export const PayForm = () => {
           <input
             name="paymentAmount"
             type="number"
+            max={1000}
             placeholder="10.000₽"
             value={formik.values.paymentAmount}
             onChange={formik.handleChange}

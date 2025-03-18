@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import { useAuthStore } from "@/store/use-auth-store";
+import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
 
 export const LogoutButton: FC = () => {

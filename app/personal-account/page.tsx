@@ -1,7 +1,7 @@
 "use client";
 import "@/assets/styles/style.css";
 import { PayForm } from "@/components/forms/pay.form";
-import { useAuthStore } from "@/store/use-auth-store";
+import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

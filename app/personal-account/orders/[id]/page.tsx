@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
 import { useOrderDetail } from "@/hooks/use-order-details";
-import { WebMoneyButton } from "@/components/WebMoney";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -432,11 +431,6 @@ export default function OrderDetailPage() {
               justifyContent: "flex-start",
             }}
           >
-            <WebMoneyButton
-              amount={order.totalPrice}
-              purse="T830321222093"
-              orderId={order.id}
-            />
             <button
               onClick={handleContinue}
               style={{

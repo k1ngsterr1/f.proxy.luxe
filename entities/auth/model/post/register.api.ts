@@ -1,0 +1,18 @@
+import { RegisterUser } from "@/interfaces/register.interface";
+import { apiClient } from "@/shared/config/apiClient";
+import axios from "axios";
+
+export const register = async (data: RegisterUser) => {
+  try {
+    console.log(data);
+    const response = await apiClient.post("/api/v1/auth/register", data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error("Registration failed with status:", error.response.status);
+    } else {
+      console.error("Registration error:", error);
+    }
+    throw error;
+  }
+};

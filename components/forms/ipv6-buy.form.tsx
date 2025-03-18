@@ -1,8 +1,7 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import Select from "@/components/Select";
-import { Option } from "@/interfaces/option.interface";
-import { Services } from "@/services";
+import { Option } from "@/shared/interfaces/option.interface";
 
 const protocols: Option[] = [
   { id: "HTTPS", text: "HTTPS" },
@@ -100,7 +99,14 @@ export const IpV6BuyForm: FC<Ipv6BuyFormProps> = ({
         onChange={periodChangeHandler}
         placeholder="Выбирите период"
       />
-      <h4 className="buy-item__subheader">Протокол</h4>
+      <h4
+        className="buy-item__subheader"
+        style={{
+          marginTop: 128,
+        }}
+      >
+        Протокол
+      </h4>
       <Select
         options={protocols}
         value={protocol}

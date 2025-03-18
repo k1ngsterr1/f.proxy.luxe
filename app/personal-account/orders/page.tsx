@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useProxyOrders } from "@/hooks/use-get-all-orders";
 import { useRouter } from "next/navigation";
+import { useProxyOrders } from "@/entities/orders/hooks/queries/use-get-proxy-orders.query";
 
 export default function OrdersPage() {
   const [showAlert, setShowAlert] = useState(true);

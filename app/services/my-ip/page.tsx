@@ -79,12 +79,6 @@ export default function MyIpClient() {
               <div className="myip-item__name">Страна</div>
               <div className="myip-item__text myip-item__text--img">
                 <span>{ipData.country}</span>
-                <Image
-                  src={RuFlag}
-                  width={RuFlag.width}
-                  height={RuFlag.height}
-                  alt=""
-                />
               </div>
             </div>
 
