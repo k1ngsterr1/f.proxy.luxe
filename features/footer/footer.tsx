@@ -36,7 +36,7 @@ export const Footer: FC = () => {
               <div className="footer-menu__info">
                 <Link href="/privacy-policy">Политика конфиденциальности</Link>
                 <div className="separator"></div>
-                <Link href="/notifications">
+                <Link href="/responsibility-principle">
                   Уведомление об ответственности
                 </Link>
               </div>

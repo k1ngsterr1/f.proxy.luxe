@@ -813,7 +813,7 @@ img {
   right: -20px;
 }
 .partners-num:after {
-  content: "30";
+  content: "15";
   position: absolute;
   top: 100px;
   left: 50px;

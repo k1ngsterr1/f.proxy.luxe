@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
-import { useOrderDetail } from "@/entities/orders/hooks/queries/use-get-order-details.query";
+import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -14,7 +14,7 @@ export default function OrderDetailPage() {
     isLoading,
     isError,
     error,
-  } = useOrderDetail(orderId as any);
+  } = useGetOrderDetails(orderId as any);
   const [showAlert, setShowAlert] = useState(true);
   const [couponCode, setCouponCode] = useState("");
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");

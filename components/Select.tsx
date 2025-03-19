@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useEffect, useRef } from "react";
-import { Option } from "@/interfaces/option.interface";
+import { Option } from "@/shared/interfaces/option.interface";
 
 interface SelectProps {
   options: Option[];

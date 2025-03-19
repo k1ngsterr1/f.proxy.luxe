@@ -1,6 +1,7 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import Select from "@/components/Select";
+import { Option } from "@/shared/interfaces/option.interface";
 
 interface IspBuyFormProps {
   countries: any[];

@@ -11,6 +11,7 @@ export interface Targets {
 export interface Period {
   id: string;
   text: string;
+  name: string;
 }
 
 export interface Amounts {

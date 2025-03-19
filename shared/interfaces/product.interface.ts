@@ -1,25 +1,25 @@
-import {Option} from "@/interfaces/option.interface";
+import { Option } from "@/shared/interfaces/option.interface";
 
 export interface ResponseReference {
-    status: "success",
-    isp: {
-        country: Option[];
-        period: Option[];
-        targets: Option[];
-    },
-    ipv6: {
-        country: Option[];
-        period: Option[];
-        targets: Option[];
-    },
-    resident: {
-        targets: Option[];
-        tariffs: Option[];
-    },
-    amounts: Option[];
+  status: "success";
+  isp: {
+    country: Option[];
+    period: Option[];
+    targets: Option[];
+  };
+  ipv6: {
+    country: Option[];
+    period: Option[];
+    targets: Option[];
+  };
+  resident: {
+    targets: Option[];
+    tariffs: Option[];
+  };
+  amounts: Option[];
 }
 
 export interface ResponseError {
-    status: "error",
-    message: string;
+  status: "error";
+  message: string;
 }
