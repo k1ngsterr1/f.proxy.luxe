@@ -9,8 +9,8 @@ import Enter from "@/assets/images/enter.svg";
 import Link from "next/link";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
-import { BurgerMenu } from "@/components/BurgerMenu";
 import { usePopupStore } from "@/shared/store/use-popup.store";
+import { BurgerMenu } from "@/features/menu/ui/burger-menu";
 
 export const Header: FC = () => {
   const { token } = useAuthStore();

@@ -42,7 +42,7 @@ export const RegisterAuthForm = () => {
   ) => {
     try {
       await register({ email: values.email, password: values.password });
-      closePopup("auth-enter");
+      closePopup("auth-reg");
       navigate.push("/verification-code");
     } catch (error: any) {
       console.error("Ошибка регистрации:", error);

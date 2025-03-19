@@ -24,7 +24,7 @@ export const VerificationPageBlock = () => {
             fontWeight: "bold",
           }}
         >
-          ИЗМЕНЕНИЕ ПАРОЛЯ
+          ПОДТВЕРЖДЕНИЕ АККАУНТА
         </h1>
       </div>
       <VerificationForm />

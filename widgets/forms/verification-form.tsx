@@ -27,8 +27,14 @@ export const VerificationForm = () => {
       return;
     }
 
-    mutate({ code: verificationCode });
-    navigate.push("/");
+    mutate(
+      { code: verificationCode },
+      {
+        onSuccess: () => {
+          navigate.push("/");
+        },
+      }
+    );
   };
 
   return (

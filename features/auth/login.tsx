@@ -33,9 +33,8 @@ export const LoginAuthForm = () => {
       event?.preventDefault();
       const loginData = await login(values);
       saveAccessToken(loginData.accessToken);
-      closePopup("auth-reg");
+      closePopup("auth-enter");
       navigate.push("/personal-account");
-      Fancybox.close();
     } catch {
       setErrors({ general: "Неверный email или пароль" });
     } finally {
