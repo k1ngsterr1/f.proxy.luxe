@@ -1,9 +1,9 @@
-import { RegisterAuthForm } from "@/features/auth/register";
+import { PrivacyBlock } from "@/widgets/blocks/privacy-page/privacy-block";
 
 export default function PrivacyPolicy() {
   return (
     <main className="inner-page">
-      <RegisterAuthForm />
+      <PrivacyBlock />
     </main>
   );
 }
