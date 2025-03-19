@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, FormEventHandler, useState } from "react";
-import { Option } from "@/interfaces/option.interface";
+import { Option } from "@/shared/interfaces/option.interface";
 import Select from "@/components/Select";
 
 const options: Option[] = [

@@ -1,8 +1,7 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import Select from "@/components/Select";
-import { Option } from "@/interfaces/option.interface";
-import { Services } from "@/services";
+import { Option } from "@/shared/interfaces/option.interface";
 
 interface ResidentBuyFormProps {
   targets: Option[];

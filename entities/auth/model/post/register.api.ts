@@ -1,4 +1,4 @@
-import { RegisterUser } from "@/interfaces/register.interface";
+import { RegisterUser } from "@/shared/interfaces/register.interface";
 import { apiClient } from "@/shared/config/apiClient";
 import axios from "axios";
 

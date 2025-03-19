@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getOrderById, OrderDetail } from "../../api/get/get-order-by-id.api";
 
-export const useOrderDetail = (orderId: string) => {
+export const useGetOrderDetails = (orderId: string) => {
   return useQuery<OrderDetail, Error>({
     queryKey: ["order", orderId],
     queryFn: () => getOrderById(orderId),

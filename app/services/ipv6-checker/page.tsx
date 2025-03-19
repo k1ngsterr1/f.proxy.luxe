@@ -1,5 +1,5 @@
 "use client";
-import { checkIpv6 } from "@/hooks/ipv6-check";
+import { checkIpv6 } from "@/entities/ipv6/api/get/ipv6-check.api";
 import { useState } from "react";
 
 interface IPv6CheckResponse {

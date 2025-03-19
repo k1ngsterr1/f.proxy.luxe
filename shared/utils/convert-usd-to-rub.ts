@@ -1,4 +1,4 @@
-import { getExchangeRate } from "@/hooks/get-exchange-rate";
+import { getExchangeRate } from "@/entities/exchange-rates/api/get/get-exchange-rate.api";
 
 export const convertUsdToRub = async (usdAmount: number): Promise<void> => {
   const exchangeRate = await getExchangeRate();
