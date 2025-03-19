@@ -4,17 +4,9 @@ import { FinishOrderDTO } from "@/shared/interfaces/order.interface";
 
 export const finishOrder = async (data: FinishOrderDTO): Promise<any> => {
   try {
-    console.log("data:", data);
-
-    const response = await apiClient.post(
-      "/api/v1/orders/finish",
-      { orderId: data },
-      {
-        headers: {
-          "Content-Type": "application/json", // 🔹 Explicitly enforcing JSON format
-        },
-      }
-    );
+    const response = await apiClient.post("/api/v1/orders/finish", {
+      orderId: data,
+    });
 
     return response.data;
   } catch (error) {

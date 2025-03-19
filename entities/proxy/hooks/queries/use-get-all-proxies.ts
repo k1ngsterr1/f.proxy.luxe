@@ -9,8 +9,6 @@ export const useProxyList = () => {
     queryKey: ["proxyList"],
     queryFn: getAllProxies,
     staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false, // Prevents refetching when switching tabs
-    refetchOnReconnect: false, // Prevents refetching on network reconnect
-    retry: 2,
+    retry: 0,
   });
 };
