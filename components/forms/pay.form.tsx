@@ -1,7 +1,8 @@
 "use client";
+
+import { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
 import Visa from "@/assets/images/visa.png";
 import WebMoney from "@/assets/images/webmoney.png";
 import BitCoin from "@/assets/images/bitcoin.png";
@@ -11,6 +12,7 @@ import Payer from "@/assets/images/payeer.png";
 import Enot from "@/assets/images/enot.png";
 import Image from "next/image";
 import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmoney-payment";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 const validationSchema = Yup.object({
   paymentMethod: Yup.string().required("Выберите способ оплаты"),
@@ -24,7 +26,9 @@ const validationSchema = Yup.object({
 });
 
 export const PayForm = () => {
+  const isMobile = useIsMobile();
   const { processWebMoneyPayment } = useWebMoneyPayment();
+
   const formik = useFormik({
     initialValues: {
       paymentMethod: "",
@@ -39,11 +43,19 @@ export const PayForm = () => {
     },
   });
 
+  // ✅ Show alert when checkbox is checked
+  useEffect(() => {
+    if (formik.values.agreed) {
+      alert("Вы подтвердили ознакомление с FAQ!");
+    }
+  }, [formik.values.agreed]);
+
   return (
     <form
       onSubmit={formik.handleSubmit}
       style={{
-        marginLeft: 64,
+        marginLeft: isMobile ? 0 : 64,
+        marginTop: isMobile ? 32 : 0,
       }}
     >
       <div className="m_title">
@@ -51,25 +63,7 @@ export const PayForm = () => {
           <span>ЛИЧНЫЙ КАБИНЕТ</span>/БАЛАНС
         </h1>
       </div>
-      <div className="agree_faq">
-        <label className="checkbox">
-          <input
-            className="checkbox-inp"
-            name="agreed"
-            type="checkbox"
-            checked={formik.values.agreed}
-            onChange={formik.handleChange}
-          />
-          <span className="checkbox-box"></span>
-          <span className="checkbox-text">
-            Я прочитал раздел FAQ. Я знаю, что покупаю и согласен с условиями
-            использования
-          </span>
-        </label>
-        {formik.touched.agreed && formik.errors.agreed ? (
-          <div className="error">{formik.errors.agreed}</div>
-        ) : null}
-      </div>
+
       <div className="payment_method">
         <div className="h5">Способ оплаты:</div>
 
@@ -117,14 +111,62 @@ export const PayForm = () => {
             value={formik.values.paymentAmount}
             onChange={formik.handleChange}
           />
+          {isMobile && (
+            <div className="agree_faq">
+              <label className="checkbox">
+                <input
+                  className="checkbox-inp"
+                  name="agreed"
+                  type="checkbox"
+                  checked={formik.values.agreed}
+                  onChange={formik.handleChange}
+                />
+                <span className="checkbox-box"></span>
+                <span className="checkbox-text">
+                  Я прочитал раздел FAQ. Я знаю, что покупаю и согласен с
+                  условиями использования
+                </span>
+              </label>
+              {formik.touched.agreed && formik.errors.agreed ? (
+                <div className="error">{formik.errors.agreed}</div>
+              ) : null}
+            </div>
+          )}
           <button type="submit" className="btn_next">
             продолжить
           </button>
         </div>
+
         {formik.touched.paymentAmount && formik.errors.paymentAmount ? (
           <div className="error">{formik.errors.paymentAmount}</div>
         ) : null}
       </div>
+      {!isMobile && (
+        <div
+          className="agree_faq"
+          style={{
+            marginLeft: 0,
+          }}
+        >
+          <label className="checkbox">
+            <input
+              className="checkbox-inp"
+              name="agreed"
+              type="checkbox"
+              checked={formik.values.agreed}
+              onChange={formik.handleChange}
+            />
+            <span className="checkbox-box"></span>
+            <span className="checkbox-text">
+              Я прочитал раздел FAQ. Я знаю, что покупаю и согласен с условиями
+              использования
+            </span>
+          </label>
+          {formik.touched.agreed && formik.errors.agreed ? (
+            <div className="error">{formik.errors.agreed}</div>
+          ) : null}
+        </div>
+      )}
     </form>
   );
 };

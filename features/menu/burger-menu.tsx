@@ -5,9 +5,12 @@ import { Menu, X } from "lucide-react";
 import { useMenuStore } from "@/shared/store/use-menu-store";
 import logo from "@/assets/images/logo.png";
 import Image from "next/image";
+import Link from "next/link";
+import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 
 export const BurgerMenu = () => {
   const { isOpen, toggle, close } = useMenuStore();
+  const { token } = useAuthStore();
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -182,26 +185,74 @@ export const BurgerMenu = () => {
             gap: "16px",
           }}
         >
-          <a
-            href="/login"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "16px 24px",
-              backgroundColor: "#f3d675",
-              color: "#000000",
-              borderRadius: "50px",
-              fontWeight: 600,
-              textDecoration: "none",
-              textTransform: "uppercase",
-              fontSize: "14px",
-              letterSpacing: "1px",
-              width: "100%",
-            }}
-          >
-            ЛИЧНЫЙ КАБИНЕТ
-          </a>
+          {token ? (
+            <>
+              {" "}
+              <Link
+                href="/login"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "16px 24px",
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                  borderRadius: "50px",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  fontSize: "14px",
+                  letterSpacing: "1px",
+                  width: "100%",
+                }}
+              >
+                ЛИЧНЫЙ КАБИНЕТ
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "16px 24px",
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                  borderRadius: "50px",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  fontSize: "14px",
+                  letterSpacing: "1px",
+                  width: "100%",
+                }}
+              >
+                ЛОГИН
+              </Link>
+              <Link
+                href="/login"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "16px 24px",
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                  borderRadius: "50px",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  fontSize: "14px",
+                  letterSpacing: "1px",
+                  width: "100%",
+                }}
+              >
+                РЕГИСТРАЦИЯ
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

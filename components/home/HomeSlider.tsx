@@ -5,8 +5,8 @@ import { FC, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
-import BG1 from "../../assets/images/imain-bg1.png";
-import BG2 from "../../assets/images/imain-bg2.png";
+import BG1 from "@/assets/images/imain-bg1.png";
+import BG2 from "@/assets/images/imain-bg2.png";
 
 const ImageSlide: FC<{ image: StaticImageData }> = ({ image }) => {
   return (
