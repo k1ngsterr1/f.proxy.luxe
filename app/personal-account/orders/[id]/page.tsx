@@ -25,10 +25,7 @@ export default function OrderDetailPage() {
     // Here you would typically call an API to apply the coupon
   };
 
-  const handleContinue = () => {
-    alert("Продолжение оформления заказа");
-    // Here you would typically redirect to payment or confirmation page
-  };
+  const handleContinue = () => {};
 
   // Format date to readable format
   const formatDate = (dateString: string) => {

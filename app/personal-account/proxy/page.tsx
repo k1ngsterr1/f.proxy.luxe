@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { MoreVertical } from "lucide-react";
+import { Loader2, MoreVertical } from "lucide-react";
+import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
+import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies";
 
 export default function ProxyPage() {
   const [showAlert, setShowAlert] = useState(true);
+  const { data: proxies, isLoading, isError, error } = useProxyList();
 
   return (
     <div
@@ -174,20 +177,67 @@ export default function ProxyPage() {
         </button>
       </div>
 
-      {/* Empty State */}
-      <div
-        style={{
-          backgroundColor: "rgba(243, 214, 117, 0.1)",
-          padding: "24px",
-          textAlign: "center",
-          borderRadius: "4px",
-          color: "#f3d675",
-          fontSize: "14px",
-          border: "1px solid rgba(243, 214, 117, 0.2)",
-        }}
-      >
-        Ничего не найдено...
-      </div>
+      {/* Loading State */}
+      {isLoading && (
+        <div
+          style={{
+            backgroundColor: "rgba(243, 214, 117, 0.1)",
+            padding: "24px",
+            textAlign: "center",
+            borderRadius: "4px",
+            color: "#f3d675",
+            fontSize: "14px",
+            border: "1px solid rgba(243, 214, 117, 0.2)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "12px",
+          }}
+        >
+          <Loader2 size={20} className="animate-spin" />
+          Загрузка прокси...
+        </div>
+      )}
+
+      {/* Error State */}
+      {isError && (
+        <div
+          style={{
+            backgroundColor: "rgba(255, 82, 82, 0.1)",
+            padding: "24px",
+            textAlign: "center",
+            borderRadius: "4px",
+            color: "#FF5252",
+            fontSize: "14px",
+            border: "1px solid rgba(255, 82, 82, 0.2)",
+          }}
+        >
+          Ошибка при загрузке списка прокси:{" "}
+          {error?.message || "Неизвестная ошибка"}
+        </div>
+      )}
+
+      {/* Proxy List */}
+      {!isLoading && !isError && proxies?.data !== undefined ? (
+        <ProxyList proxies={proxies.data} />
+      ) : (
+        !isLoading &&
+        !isError && (
+          <div
+            style={{
+              backgroundColor: "rgba(243, 214, 117, 0.1)",
+              padding: "24px",
+              textAlign: "center",
+              borderRadius: "4px",
+              color: "#f3d675",
+              fontSize: "14px",
+              border: "1px solid rgba(243, 214, 117, 0.2)",
+            }}
+          >
+            Ничего не найдено...
+          </div>
+        )
+      )}
     </div>
   );
 }
