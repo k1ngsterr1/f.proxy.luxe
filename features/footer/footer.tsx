@@ -26,12 +26,12 @@ export const Footer: FC = () => {
               <nav className="footer-menu__nav">
                 <Link href="/buy-proxy">Купить прокси</Link>
                 <Link href="/prices">Цены</Link>
-                <Link href="/partners">FAQ</Link>
-                <Link href="/blog">Блог</Link>
+                <Link href="/faq">FAQ</Link>
+                <Link href="/articles">Блог</Link>
                 <Link href="/services/my-ip">Мой IP</Link>
                 <Link href="/services/proxy-checker">Прокси чекер</Link>
-                <Link href="/conditions">Условия использования</Link>
-                <Link href="#">Реквизиты</Link>
+                {/* <Link href="/conditions">Условия использования</Link> */}
+                {/* <Link href="#">Реквизиты</Link> */}
               </nav>
               <div className="footer-menu__info">
                 <Link href="/privacy-policy">Политика конфиденциальности</Link>

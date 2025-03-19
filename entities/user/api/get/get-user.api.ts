@@ -5,7 +5,7 @@ import { UserRDO } from "@/shared/interfaces/user.interface";
 
 export const getUser = async (): Promise<UserRDO> => {
   try {
-    const response = await apiClient.post("/api/v1/user/me");
+    const response = await apiClient.get("/api/v1/user/me");
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

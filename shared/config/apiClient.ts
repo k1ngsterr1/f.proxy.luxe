@@ -2,8 +2,8 @@ import axios, { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 
-// const BASE_URL = "https://aproxyluxe-production.up.railway.app";
-const BASE_URL = "http://localhost:6001";
+const BASE_URL = "https://aproxyluxe-production.up.railway.app";
+// const BASE_URL = "http://localhost:6001";
 
 interface JwtPayload {
   exp: number;

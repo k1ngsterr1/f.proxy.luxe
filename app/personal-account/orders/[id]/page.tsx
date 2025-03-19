@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
 import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
+import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-order.mutation";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -18,16 +19,17 @@ export default function OrderDetailPage() {
   const [showAlert, setShowAlert] = useState(true);
   const [couponCode, setCouponCode] = useState("");
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
+  const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
 
   const handleApplyCoupon = () => {
     if (!couponCode) return;
     alert(`Применение купона: ${couponCode}`);
-    // Here you would typically call an API to apply the coupon
   };
 
-  const handleContinue = () => {};
+  const handleContinue = () => {
+    finishOrder(orderId);
+  };
 
-  // Format date to readable format
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("ru-RU");

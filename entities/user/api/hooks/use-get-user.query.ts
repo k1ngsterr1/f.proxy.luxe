@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { Preferences } from "@/shared/types/preferences.types";
 import { getUser } from "../get/get-user.api";
 import { UserRDO } from "@/shared/interfaces/user.interface";
 
-export const useGetUsers = () => {
+export const useGetUser = () => {
   return useQuery<UserRDO | null, Error>({
     queryKey: ["me"],
     queryFn: getUser,
