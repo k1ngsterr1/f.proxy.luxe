@@ -5,7 +5,7 @@ import Image from "next/image";
 import YandexMap from "@/components/YandexMap";
 import RuFlag from "@/assets/images/rus-lang.png";
 import Geo from "@/assets/images/geo.png";
-import { getMyIp } from "@/hooks/get-my-ip";
+import { getMyIp } from "@/entities/ip/api/get/get-my-ip.api";
 
 export interface IpData {
   ip: string;

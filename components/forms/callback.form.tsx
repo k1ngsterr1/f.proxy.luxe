@@ -1,10 +1,9 @@
 "use client";
 
 import { FC, FormEventHandler, useState } from "react";
-import { Option } from "@/interfaces/option.interface";
 import Select from "@/components/Select";
 
-const options: Option[] = [
+const options: any[] = [
   { id: "1", text: "Тех. поддержка1" },
   { id: "2", text: "Тех. поддержка2" },
 ];

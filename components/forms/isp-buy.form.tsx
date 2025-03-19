@@ -1,14 +1,12 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import Select from "@/components/Select";
-import { Option } from "@/interfaces/option.interface";
-import { Services } from "@/services";
 
 interface IspBuyFormProps {
-  countries: Option[];
-  targets: Option[];
-  amounts: Option[];
-  periods: Option[];
+  countries: any[];
+  targets: any[];
+  amounts: any[];
+  periods: any[];
   onLoaded: () => void;
 }
 

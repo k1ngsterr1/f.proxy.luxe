@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
-import { useOrderDetail } from "@/hooks/use-order-details";
+import { useOrderDetail } from "@/entities/orders/hooks/queries/use-get-order-details.query";
 
 export default function OrderDetailPage() {
   const { id } = useParams();

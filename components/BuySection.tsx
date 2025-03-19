@@ -5,8 +5,7 @@ import { ProxyBuyCard } from "@/components/ProxyBuyCard";
 import { IspBuyForm } from "@/components/forms/isp-buy.form";
 import { IpV6BuyForm } from "@/components/forms/ipv6-buy.form";
 import { ResidentBuyForm } from "@/components/forms/resident-buy.form";
-import { ResponseReference } from "@/interfaces/product.interface";
-import { Services } from "@/services";
+import { ResponseReference } from "@/shared/interfaces/product.interface";
 
 export const BuySection: FC = () => {
   const [reference, setReference] = useState<Omit<
