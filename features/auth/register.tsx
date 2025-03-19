@@ -1,11 +1,28 @@
 "use client";
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+  FormikHelpers,
+  FormikProps,
+} from "formik";
 import * as Yup from "yup";
-import { Fancybox } from "@fancyapps/ui";
-import { register } from "@/entities/auth/model/post/register.api";
+import { register } from "@/entities/auth/api/post/register.api";
+import { useRouter } from "next/navigation";
+import { usePopupStore } from "@/shared/store/use-popup.store";
+
+interface FormValues {
+  email: string;
+  password: string;
+  repeatPassword: string;
+  general?: string;
+}
 
 export const RegisterAuthForm = () => {
+  const navigate = useRouter();
+  const { closePopup } = usePopupStore();
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Некорректный email")
@@ -20,39 +37,59 @@ export const RegisterAuthForm = () => {
   });
 
   const handleSubmit = async (
-    values: { email: string; password: string },
-    { setSubmitting }: any
+    values: FormValues,
+    { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
     try {
       await register({ email: values.email, password: values.password });
-      Fancybox.close(); // ✅ Close Fancybox on successful registration
-    } catch (error) {
+      closePopup("auth-enter");
+      navigate.push("/verification-code");
+    } catch (error: any) {
       console.error("Ошибка регистрации:", error);
+
+      if (error.response && error.response.data) {
+        const { statusCode, message } = error.response.data;
+
+        if (statusCode === 400) {
+          if (message.includes("User with this email already exists")) {
+            setErrors({ email: "Пользователь с таким email уже существует" });
+          } else {
+            setErrors({ general: message || "Ошибка регистрации" });
+          }
+        } else {
+          setErrors({ general: "Неизвестная ошибка. Попробуйте снова." });
+        }
+      } else {
+        setErrors({ general: "Ошибка сети или сервера. Попробуйте позже." });
+      }
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Formik
-      initialValues={{ email: "", password: "" }}
+    <Formik<FormValues>
+      initialValues={{
+        email: "",
+        password: "",
+        repeatPassword: "",
+        general: "",
+      }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting, errors }: any) => (
-        <Form className="auth-form">
-          <Field
-            type="email"
-            name="email"
-            className="auth-inp auth-mail"
-            placeholder="E-mail"
-            style={errors.email ? { border: "2px solid red" } : {}}
-          />
-          <div
-            style={{
-              marginBottom: 12,
-            }}
-          >
+      {(formikProps: FormikProps<FormValues>) => {
+        const { isSubmitting, errors } = formikProps;
+
+        return (
+          <Form className="auth-form">
+            <Field
+              type="email"
+              name="email"
+              className="auth-inp auth-mail"
+              placeholder="E-mail"
+              style={errors.email ? { border: "2px solid red" } : {}}
+            />
             <ErrorMessage name="email">
               {(msg) => (
                 <div
@@ -66,50 +103,70 @@ export const RegisterAuthForm = () => {
                 </div>
               )}
             </ErrorMessage>
-          </div>
-          {/* Password Input */}
-          <Field
-            type="password"
-            name="password"
-            className="auth-inp auth-pass"
-            placeholder="Пароль"
-            style={errors.password ? { border: "2px solid red" } : {}}
-          />
-          <ErrorMessage name="password">
-            {(msg) => (
+
+            <Field
+              type="password"
+              name="password"
+              className="auth-inp auth-pass"
+              placeholder="Пароль"
+              style={errors.password ? { border: "2px solid red" } : {}}
+            />
+            <ErrorMessage name="password">
+              {(msg) => (
+                <div
+                  style={{
+                    color: "red",
+                    fontSize: "14px",
+                    marginBottom: "6px",
+                  }}
+                >
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
+
+            <Field
+              type="password"
+              name="repeatPassword"
+              className="auth-inp auth-pass"
+              placeholder="Повторите пароль"
+              style={errors.repeatPassword ? { border: "2px solid red" } : {}}
+            />
+            <ErrorMessage name="repeatPassword">
+              {(msg) => (
+                <div
+                  style={{
+                    color: "red",
+                    fontSize: "14px",
+                    marginBottom: "6px",
+                  }}
+                >
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
+
+            {/* General Error Message */}
+            {errors.general && (
               <div
-                style={{
-                  color: "red",
-                  fontSize: "14px",
-                  marginBottom: "6px",
-                }}
+                style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
               >
-                {msg}
+                {errors.general}
               </div>
             )}
-          </ErrorMessage>
 
-          {/* General Error Message */}
-          {errors.general && (
-            <div
-              style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
-            >
-              {errors.general}
+            <div className="btn-wrap">
+              <button
+                type="submit"
+                className="auth-btn btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Вход..." : "Войти"}
+              </button>
             </div>
-          )}
-
-          {/* Submit Button */}
-          <div className="btn-wrap">
-            <button
-              type="submit"
-              className="auth-btn btn"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Вход..." : "Войти"}
-            </button>
-          </div>
-        </Form>
-      )}
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

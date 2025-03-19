@@ -5,10 +5,14 @@ import * as Yup from "yup";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
 import { Fancybox } from "@fancyapps/ui";
-import { login } from "@/entities/auth/model/post/login.api";
+import { login } from "@/entities/auth/api/post/login.api";
+import Link from "next/link";
+import { useEffect } from "react";
+import { usePopupStore } from "@/shared/store/use-popup.store";
 
 export const LoginAuthForm = () => {
   const navigate = useRouter();
+  const { closePopup } = usePopupStore();
   const { saveAccessToken, saveRefreshToken } = useAuthStore();
 
   // ✅ Validation Schema
@@ -21,17 +25,17 @@ export const LoginAuthForm = () => {
       .required("Поле пароль обязательно"),
   });
 
-  // ✅ Handle Form Submission
   const handleSubmit = async (
     values: { email: string; password: string },
     { setSubmitting, setErrors }: any
   ) => {
     try {
+      event?.preventDefault();
       const loginData = await login(values);
       saveAccessToken(loginData.accessToken);
-      Fancybox.close();
-
+      closePopup("auth-reg");
       navigate.push("/personal-account");
+      Fancybox.close();
     } catch {
       setErrors({ general: "Неверный email или пароль" });
     } finally {
@@ -47,7 +51,6 @@ export const LoginAuthForm = () => {
     >
       {({ isSubmitting, errors }: any) => (
         <Form className="auth-form">
-          {/* Email Input */}
           <Field
             type="email"
             name="email"
@@ -74,7 +77,6 @@ export const LoginAuthForm = () => {
               )}
             </ErrorMessage>
           </div>
-          {/* Password Input */}
           <Field
             type="password"
             name="password"
@@ -95,8 +97,6 @@ export const LoginAuthForm = () => {
               </div>
             )}
           </ErrorMessage>
-
-          {/* General Error Message */}
           {errors.general && (
             <div
               style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
@@ -104,8 +104,16 @@ export const LoginAuthForm = () => {
               {errors.general}
             </div>
           )}
-
-          {/* Submit Button */}
+          <Link
+            href="/forgot-password"
+            style={{
+              marginTop: 4,
+              fontSize: 16,
+              color: "#fade4c",
+            }}
+          >
+            Забыли пароль?
+          </Link>
           <div className="btn-wrap">
             <button
               type="submit"

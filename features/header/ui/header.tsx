@@ -9,10 +9,12 @@ import Enter from "@/assets/images/enter.svg";
 import Link from "next/link";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
-import { BurgerMenu } from "@/features/menu/burger-menu";
+import { BurgerMenu } from "@/components/BurgerMenu";
+import { usePopupStore } from "@/shared/store/use-popup.store";
 
 export const Header: FC = () => {
   const { token } = useAuthStore();
+  const { openPopup } = usePopupStore();
   const navigate = useRouter();
 
   return (
@@ -70,9 +72,7 @@ export const Header: FC = () => {
               ) : (
                 <div className="header-btn">
                   <a
-                    data-fancybox="auth"
-                    href="#"
-                    data-src="#auth-enter"
+                    onClick={() => openPopup("auth-enter")}
                     className="btn-enter"
                   >
                     <Image
@@ -84,12 +84,7 @@ export const Header: FC = () => {
                     />
                     <span>войти</span>
                   </a>
-                  <a
-                    data-fancybox="reg"
-                    href="#"
-                    data-src="#auth-reg"
-                    className="btn-reg"
-                  >
+                  <a onClick={() => openPopup("auth-reg")} className="btn-reg">
                     <span>регистрация</span>
                   </a>
                 </div>

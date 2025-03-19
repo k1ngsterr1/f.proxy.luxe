@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
 import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
 import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-order.mutation";
+import { AlertMessage } from "@/shared/ui/alert";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -16,7 +17,6 @@ export default function OrderDetailPage() {
     isError,
     error,
   } = useGetOrderDetails(orderId as any);
-  const [showAlert, setShowAlert] = useState(true);
   const [couponCode, setCouponCode] = useState("");
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
@@ -44,46 +44,10 @@ export default function OrderDetailPage() {
         backgroundColor: "#000000",
       }}
     >
-      {/* Alert Banner */}
-      {showAlert && (
-        <div
-          style={{
-            backgroundColor: "rgba(243, 214, 117, 0.1)",
-            padding: "16px",
-            textAlign: "center",
-            marginBottom: "32px",
-            borderRadius: "4px",
-            border: "1px solid rgba(243, 214, 117, 0.2)",
-          }}
-        >
-          <div
-            style={{
-              color: "#f3d675",
-              fontSize: "14px",
-            }}
-          >
-            Вам необходимо{" "}
-            <span style={{ fontWeight: "500" }}>подтвердить свой email</span>{" "}
-            перейдя по ссылке, указанной в письме.{" "}
-            <button
-              onClick={() => setShowAlert(false)}
-              style={{
-                background: "none",
-                border: "none",
-                borderBottom: "1px dotted #f3d675",
-                color: "#f3d675",
-                cursor: "pointer",
-                padding: 0,
-                font: "inherit",
-              }}
-            >
-              Отправить еще раз
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Breadcrumb Navigation */}
+      <AlertMessage
+        type="warning"
+        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+      />
       <div
         style={{
           display: "flex",
@@ -116,8 +80,6 @@ export default function OrderDetailPage() {
           {orderId}
         </span>
       </div>
-
-      {/* Loading State */}
       {isLoading && (
         <div
           style={{
@@ -138,8 +100,6 @@ export default function OrderDetailPage() {
           Загрузка информации о заказе...
         </div>
       )}
-
-      {/* Error State */}
       {isError && (
         <div
           style={{
@@ -155,8 +115,6 @@ export default function OrderDetailPage() {
           Ошибка при загрузке заказа: {error?.message || "Неизвестная ошибка"}
         </div>
       )}
-
-      {/* Order Details */}
       {!isLoading && !isError && order && (
         <div
           style={{

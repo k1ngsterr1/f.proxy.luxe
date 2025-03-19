@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import { useMenuStore } from "@/shared/store/use-menu-store";
+import { useMenuStore } from "@/features/menu/store/use-menu-store";
 import logo from "@/assets/images/logo.png";
 import Image from "next/image";
 

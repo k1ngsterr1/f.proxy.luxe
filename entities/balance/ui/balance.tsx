@@ -12,7 +12,7 @@ export const Balance: FC = () => {
         <>Загрузка...</>
       ) : (
         <>
-          Баланс <span>{data?.balance} ₽</span>
+          Баланс <span>{data?.balance} $</span>
         </>
       )}
     </div>

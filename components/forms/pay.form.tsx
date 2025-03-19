@@ -43,13 +43,6 @@ export const PayForm = () => {
     },
   });
 
-  // ✅ Show alert when checkbox is checked
-  useEffect(() => {
-    if (formik.values.agreed) {
-      alert("Вы подтвердили ознакомление с FAQ!");
-    }
-  }, [formik.values.agreed]);
-
   return (
     <form
       onSubmit={formik.handleSubmit}

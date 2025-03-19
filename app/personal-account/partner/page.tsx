@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { Copy } from "lucide-react";
+import { AlertMessage } from "@/shared/ui/alert";
 
 export default function PartnerPage() {
-  const [showAlert, setShowAlert] = useState(true);
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    // You could add a toast notification here
   };
 
   return (
@@ -20,45 +18,10 @@ export default function PartnerPage() {
         backgroundColor: "#000000",
       }}
     >
-      {/* Alert Banner */}
-      {showAlert && (
-        <div
-          style={{
-            backgroundColor: "rgba(243, 214, 117, 0.1)",
-            padding: "16px",
-            textAlign: "center",
-            marginBottom: "32px",
-            borderRadius: "4px",
-            border: "1px solid rgba(243, 214, 117, 0.2)",
-          }}
-        >
-          <div
-            style={{
-              color: "#f3d675",
-              fontSize: "14px",
-            }}
-          >
-            Вам необходимо{" "}
-            <span style={{ fontWeight: "500" }}>подтвердить свой email</span>{" "}
-            перейдя по ссылке, указанной в письме.{" "}
-            <button
-              onClick={() => setShowAlert(false)}
-              style={{
-                background: "none",
-                border: "none",
-                borderBottom: "1px dotted #f3d675",
-                color: "#f3d675",
-                cursor: "pointer",
-                padding: 0,
-                font: "inherit",
-              }}
-            >
-              Отправить еще раз
-            </button>
-          </div>
-        </div>
-      )}
-
+      <AlertMessage
+        type="warning"
+        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+      />
       {/* Header and Description */}
       <div style={{ marginBottom: "32px" }}>
         <h1

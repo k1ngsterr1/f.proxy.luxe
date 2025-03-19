@@ -13,9 +13,13 @@ export default function PersonalAccount() {
 
   useEffect(() => {
     if (!token) {
-      navigate.push("/");
+      const timeout = setTimeout(() => {
+        navigate.push("/");
+      }, 1000);
+
+      return () => clearTimeout(timeout);
     }
-  }, [token]);
+  }, [token, navigate]);
 
   return (
     <div

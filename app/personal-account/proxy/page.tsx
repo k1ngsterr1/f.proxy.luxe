@@ -4,9 +4,9 @@ import { useState } from "react";
 import { Loader2, MoreVertical } from "lucide-react";
 import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies";
+import { AlertMessage } from "@/shared/ui/alert";
 
 export default function ProxyPage() {
-  const [showAlert, setShowAlert] = useState(true);
   const { data: proxies, isLoading, isError, error } = useProxyList();
 
   return (
@@ -18,46 +18,10 @@ export default function ProxyPage() {
         backgroundColor: "#000000",
       }}
     >
-      {/* Alert Banner */}
-      {showAlert && (
-        <div
-          style={{
-            backgroundColor: "rgba(243, 214, 117, 0.1)",
-            padding: "16px",
-            textAlign: "center",
-            marginBottom: "32px",
-            borderRadius: "4px",
-            border: "1px solid rgba(243, 214, 117, 0.2)",
-          }}
-        >
-          <div
-            style={{
-              color: "#f3d675",
-              fontSize: "14px",
-            }}
-          >
-            Вам необходимо{" "}
-            <span style={{ fontWeight: "500" }}>подтвердить свой email</span>{" "}
-            перейдя по ссылке, указанной в письме.{" "}
-            <button
-              onClick={() => setShowAlert(false)}
-              style={{
-                background: "none",
-                border: "none",
-                borderBottom: "1px dotted #f3d675",
-                color: "#f3d675",
-                cursor: "pointer",
-                padding: 0,
-                font: "inherit",
-              }}
-            >
-              Отправить еще раз
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Header Section */}
+      <AlertMessage
+        type="warning"
+        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+      />
       <div
         style={{
           display: "flex",
@@ -110,8 +74,6 @@ export default function ProxyPage() {
           </button>
         </div>
       </div>
-
-      {/* Action Buttons */}
       <div
         style={{
           display: "flex",
@@ -176,8 +138,6 @@ export default function ProxyPage() {
           <MoreVertical size={16} color="#f3d675" />
         </button>
       </div>
-
-      {/* Loading State */}
       {isLoading && (
         <div
           style={{

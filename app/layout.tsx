@@ -2,14 +2,11 @@ import { PropsWithChildren } from "react";
 import { Suspense } from "react";
 import "@/assets/styles/normalize.css";
 import "@/assets/styles/main.css";
-import Fancybox from "@/components/Fancybox";
-import { Header } from "@/features/header/header";
 import { Footer } from "@/features/footer/footer";
 import { LoginForm } from "@/widgets/forms/login-form";
 import { RegisterForm } from "@/widgets/forms/register-form";
-import { QueryClientProvider } from "@tanstack/react-query";
-import reactQueryClient from "@/shared/config/query-client";
 import { Loader } from "@/shared/ui/loader";
+import { Header } from "@/features/header/ui/header";
 
 export async function generateStaticParams() {
   return [{ lang: "en" }, { lang: "ru" }];
@@ -36,13 +33,11 @@ export default function RootLayout({
       </head>
       <body>
         <Suspense fallback={<Loader />}>
-          <Fancybox options={{}} delegate="">
-            <Header />
-            {children}
-            <Footer />
-            <LoginForm />
-            <RegisterForm />
-          </Fancybox>
+          <Header />
+          {children}
+          <Footer />
+          <LoginForm />
+          <RegisterForm />
         </Suspense>
         {/* <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> */}
       </body>
