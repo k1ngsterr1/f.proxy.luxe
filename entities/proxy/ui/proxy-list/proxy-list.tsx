@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   proxies: any[];
@@ -18,7 +18,7 @@ const ProxyList: React.FC<Props> = ({ proxies }: any) => {
           </tr>
         </thead>
         <tbody>
-          {proxies.map((proxy: any) => (
+          {proxies?.map((proxy: any) => (
             <tr key={proxy.id} className="border">
               <td className="border p-2 text-center">{proxy.ip}</td>
               <td className="border p-2 text-center">{proxy.protocol}</td>

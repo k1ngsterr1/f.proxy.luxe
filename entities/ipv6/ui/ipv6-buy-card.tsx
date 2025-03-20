@@ -2,75 +2,55 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalcData } from "@/shared/types/calc.types";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
-import { useCreateProductCalc } from "@/entities/product/hooks/mutations/use-create-product-calc.mutation";
-import { useGetExchangeRate } from "@/entities/exchange-rates/api/hooks/use-get-exchange-rate.query";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
 
 export const IPV6BuyCard = () => {
   const router = useRouter();
 
-  const { data: preferences } = useGetPreferences();
-  const { data: exchangeRate } = useGetExchangeRate();
-  const { mutate: calculatePrice, data: priceUSD } = useCreateProductCalc();
+  const { data: preferences, isLoading: isLoadingPreferences } =
+    useGetPreferences();
   const { mutate: createOrder, isPending: isLoadingOrder } = useCreateOrder();
 
   const [countryId, setCountryId] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("10");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
-  const [period, setPeriod] = useState<string>("1m");
 
+  // ✅ Ensure default country is set once preferences load
   useEffect(() => {
     if (!countryId && preferences?.ipv6?.country.length) {
       setCountryId(preferences.ipv6.country[0].id);
-      setCountry(preferences.ipv6.country[0].name);
     }
   }, [preferences]);
 
-  useEffect(() => {
-    if (countryId && period) {
-      handleCalculatePrice();
-    }
-  }, [countryId, period]);
-
+  // ✅ Handle Country Change
   const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = JSON.parse(e.target.value);
-    setCountryId(selected.id);
-    setCountry(selected.name);
+    setCountryId(e.target.value);
   };
 
-  const handleCalculatePrice = () => {
-    const calcData: CalcData = {
-      countryId: Number(countryId),
-      periodId: period,
-      quantity: Number(quantity),
-      protocol: "HTTPS",
-      type: "ipv6",
-      customTargetName: usage,
-    };
-    calculatePrice(calcData);
-  };
-
+  // ✅ Ensure order sends properly
   const handleBuyClick = () => {
+    if (!preferences) return; // ✅ Ensure preferences exist
+    const selectedCountry = preferences.ipv6.country.find(
+      (c) => c.id === countryId
+    );
+    if (!selectedCountry) return; // ✅ Ensure a valid country is selected
+
     const orderData = {
-      country,
+      country: selectedCountry.name,
       quantity: Number(quantity),
       usage,
-      period,
-      periodDays: "1m",
-      totalPrice: priceUSD ? Math.round(priceUSD) : 0,
+      period: "1m", // ✅ Always "1m"
+      periodDays: "1m", // ✅ Always "1m"
+      totalPrice: 0.08 * Number(quantity), // ✅ Static price remains the same
       proxyType: usage.includes("SOCKS5") ? "SOCKS5" : "HTTPS",
       type: "ipv6",
     };
+
     createOrder(orderData, {
       onSuccess: () => router.push("/personal-account/orders"),
     });
   };
-
-  const priceRUB =
-    priceUSD && exchangeRate ? (priceUSD * exchangeRate).toFixed(2) : null;
 
   return (
     <div className="buy-col">
@@ -83,12 +63,15 @@ export const IPV6BuyCard = () => {
         <a href="#" className="buy-item__btn">
           Выдаются в одни руки
         </a>
+
+        {/* ✅ Country Selection */}
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           СТРАНА
         </h4>
         <select
-          value={JSON.stringify({ id: countryId, name: country })}
+          value={countryId}
           onChange={handleChangeCountry}
+          disabled={isLoadingPreferences}
           style={{
             backgroundColor: "#1E1E1E",
             color: "#fff",
@@ -97,15 +80,17 @@ export const IPV6BuyCard = () => {
             width: "100%",
             borderRadius: "5px",
             appearance: "none",
-            cursor: "pointer",
+            cursor: isLoadingPreferences ? "not-allowed" : "pointer",
           }}
         >
           {preferences?.ipv6?.country.map((c) => (
-            <option key={c.id} value={JSON.stringify(c)}>
+            <option key={c.id} value={c.id}>
               {c.name}
             </option>
           ))}
         </select>
+
+        {/* ✅ Quantity Input */}
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           КОЛ-ВО
         </h4>
@@ -125,12 +110,12 @@ export const IPV6BuyCard = () => {
             cursor: "pointer",
           }}
         />
+
+        {/* ✅ Period is Fixed to "1m" */}
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           ПЕРИОД
         </h4>
-        <select
-          value={period}
-          onChange={(e) => setPeriod(e.target.value)}
+        <div
           style={{
             backgroundColor: "#1E1E1E",
             color: "#fff",
@@ -138,22 +123,21 @@ export const IPV6BuyCard = () => {
             padding: "10px",
             width: "100%",
             borderRadius: "5px",
-            appearance: "none",
-            cursor: "pointer",
+            textAlign: "center",
           }}
         >
-          {preferences?.ipv6?.period.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
+          1 месяц
+        </div>
+
+        {/* ✅ Static Price Display */}
         <div className="buy-item__price">
           ЦЕНА: <span>0.08$ / IP</span>
         </div>
+
+        {/* ✅ Buy Button */}
         <button
           onClick={handleBuyClick}
-          disabled={isLoadingOrder}
+          disabled={isLoadingOrder || isLoadingPreferences}
           className="btn"
         >
           {isLoadingOrder ? "Обработка..." : "Купить"}

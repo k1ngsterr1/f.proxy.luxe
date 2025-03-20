@@ -4,11 +4,11 @@ import {
   ProxyListResponse,
 } from "../../api/get/get-all-proxies";
 
-export const useProxyList = () => {
+export const useProxyList = (type: string) => {
   return useQuery<ProxyListResponse | undefined, Error>({
-    queryKey: ["proxyList"],
-    queryFn: getAllProxies,
+    queryKey: ["proxyList", type],
+    queryFn: () => getAllProxies(type),
     staleTime: 1000 * 60 * 5,
-    retry: 0,
+    retry: 1,
   });
 };

@@ -11,25 +11,40 @@ export interface Proxy {
 }
 
 export interface ProxyListResponse {
-  data: Proxy[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+  status: string; // ✅ Enforcing "success" or "error"
+  data: {
+    items: Proxy[]; // ✅ Matches RDO structure
+  };
 }
 
-export const getAllProxies = async (): Promise<
-  ProxyListResponse | undefined
-> => {
+export const getAllProxies = async (
+  type: string
+): Promise<ProxyListResponse> => {
   try {
-    const response = await apiClient.get("/api/v1/products/active-list");
-    return response.data;
+    const response = await apiClient.get(
+      `/api/v1/products/active-list/${type}`
+    );
+
+    // ✅ Ensure response follows the expected structure
+    return {
+      status: "success",
+      data: {
+        items: response.data?.items || [], // Default to empty array if no data
+      },
+    };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       console.error("Failed to fetch proxies:", error.response.status);
     } else {
       console.error("Fetch proxies error:", error);
     }
-    throw error;
+
+    // ✅ Return a consistent error response
+    return {
+      status: "error",
+      data: {
+        items: [],
+      },
+    };
   }
 };

@@ -1,27 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, MoreVertical } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies";
 import { AlertMessage } from "@/shared/ui/alert";
+import Link from "next/link";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 export default function ProxyPage() {
-  const { data: proxies, isLoading, isError, error } = useProxyList();
+  const [proxyType, setProxyType] = useState<"isp" | "ipv6" | "resident">(
+    "isp"
+  );
+  const { data } = useGetUser();
+  const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
+  const isMobile = useIsMobile();
 
   return (
     <div
       style={{
-        padding: "20px",
+        width: isMobile ? "100%" : "75%",
+        padding: "50px",
         maxWidth: "1200px",
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
+      {data?.isVerified === false && (
+        <AlertMessage
+          type="warning"
+          message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+        />
+      )}
+      {/* Header Section */}
       <div
         style={{
           display: "flex",
@@ -40,104 +52,53 @@ export default function ProxyPage() {
         >
           ПРОКСИ
         </h1>
-        <div
+        <Link
+          href="/personal-account"
           style={{
-            display: "flex",
-            gap: "8px",
+            padding: "8px 16px",
+            backgroundColor: "#f3d675",
+            borderRadius: "4px",
+            fontSize: "14px",
+            color: "#000000",
+            textDecoration: "none",
           }}
         >
-          <button
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#f3d675",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "14px",
-              color: "#000000",
-            }}
-          >
-            Пополнение баланса
-          </button>
-          <button
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "transparent",
-              border: "1px solid #f3d675",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "14px",
-              color: "#f3d675",
-            }}
-          >
-            Купить прокси
-          </button>
-        </div>
+          Пополнение баланса
+        </Link>
       </div>
+
+      {/* ✅ Proxy Type Selection Buttons */}
       <div
         style={{
           display: "flex",
-          gap: "8px",
-          marginBottom: "24px",
-          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "10px",
+          marginBottom: "20px",
         }}
       >
-        {[
-          { label: "Продлить", count: 0 },
-          { label: "Автопродление", count: 0 },
-          { label: "Изменить тип", count: 0 },
-          { label: "Привязка к IP" },
-          { label: "Экспорт" },
-          { label: "Блокнот" },
-        ].map((button, index) => (
+        {["isp", "ipv6", "resident"].map((type) => (
           <button
-            key={index}
+            key={type}
+            onClick={() => setProxyType(type as "isp" | "ipv6" | "resident")}
             style={{
-              padding: "8px 12px",
-              backgroundColor: "rgba(243, 214, 117, 0.1)",
-              border: "1px solid rgba(243, 214, 117, 0.2)",
+              padding: "10px 20px",
+              backgroundColor:
+                proxyType === type ? "#f3d675" : "rgba(243, 214, 117, 0.2)",
               borderRadius: "4px",
-              cursor: "pointer",
+              color: "#000000",
               fontSize: "14px",
-              color: "#f3d675",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              fontWeight: "400",
+              fontWeight: "bold",
+              cursor: "pointer",
+              border: "none",
+              transition: "background 0.2s",
             }}
           >
-            {button.label}
-            {typeof button.count === "number" && (
-              <span
-                style={{
-                  backgroundColor: "rgba(243, 214, 117, 0.2)",
-                  padding: "2px 6px",
-                  borderRadius: "4px",
-                  fontSize: "12px",
-                }}
-              >
-                {button.count}
-              </span>
-            )}
+            {type.toUpperCase()}
           </button>
         ))}
-        <button
-          style={{
-            padding: "8px",
-            backgroundColor: "rgba(243, 214, 117, 0.1)",
-            border: "1px solid rgba(243, 214, 117, 0.2)",
-            borderRadius: "4px",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "36px",
-            height: "36px",
-          }}
-        >
-          <MoreVertical size={16} color="#f3d675" />
-        </button>
       </div>
+
+      {/* ✅ Loading State */}
       {isLoading && (
         <div
           style={{
@@ -159,7 +120,7 @@ export default function ProxyPage() {
         </div>
       )}
 
-      {/* Error State */}
+      {/* ✅ Error State */}
       {isError && (
         <div
           style={{
@@ -177,9 +138,9 @@ export default function ProxyPage() {
         </div>
       )}
 
-      {/* Proxy List */}
-      {!isLoading && !isError && proxies?.data !== undefined ? (
-        <ProxyList proxies={proxies.data} />
+      {/* ✅ Proxy List Display */}
+      {!isLoading && !isError && proxies?.data.items.length ? (
+        <ProxyList proxies={proxies.data.items} />
       ) : (
         !isLoading &&
         !isError && (

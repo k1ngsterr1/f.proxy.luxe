@@ -72,7 +72,7 @@ export const IpV6BuyForm: FC<Ipv6BuyFormProps> = ({
       <Select
         options={countries.map((item) => ({
           id: item.id,
-          text: item.text.replace("Proxy of ", ""),
+          text: item.text,
         }))}
         value={country}
         onChange={countryChangeHandler}
