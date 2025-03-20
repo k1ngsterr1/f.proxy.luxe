@@ -5,6 +5,7 @@ import React, { useState } from "react";
 
 export const VerificationForm = () => {
   const [verificationCode, setVerificationCode] = useState("");
+  const email = localStorage.getItem("email");
   const navigate = useRouter();
 
   const {
@@ -28,7 +29,7 @@ export const VerificationForm = () => {
     }
 
     mutate(
-      { code: verificationCode },
+      { code: verificationCode, email: email },
       {
         onSuccess: () => {
           navigate.push("/");

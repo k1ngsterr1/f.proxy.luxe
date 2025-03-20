@@ -6,8 +6,8 @@ import React from "react";
 export const VerificationPageBlock = () => {
   return (
     <div
-      className="inner-page"
       style={{
+        paddingTop: 100,
         maxWidth: "600px",
         margin: "0 auto",
         backgroundColor: "#000000",

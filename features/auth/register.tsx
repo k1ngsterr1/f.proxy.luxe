@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { register } from "@/entities/auth/api/post/register.api";
 import { useRouter } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
+import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 
 interface FormValues {
   email: string;
@@ -23,6 +24,7 @@ interface FormValues {
 export const RegisterAuthForm = () => {
   const navigate = useRouter();
   const { closePopup } = usePopupStore();
+  const { saveAccessToken } = useAuthStore();
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Некорректный email")
@@ -41,7 +43,12 @@ export const RegisterAuthForm = () => {
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
     try {
-      await register({ email: values.email, password: values.password });
+      const registerData = await register({
+        email: values.email,
+        password: values.password,
+      });
+      localStorage.setItem("email", values.email);
+      saveAccessToken(registerData.accessToken);
       closePopup("auth-reg");
       navigate.push("/verification-code");
     } catch (error: any) {

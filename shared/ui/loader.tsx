@@ -37,7 +37,7 @@ export const Loader = ({
               left: 0,
               width: "100%",
               height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              backgroundColor: "rgba(0, 0, 0, 100)",
               zIndex: 9999,
             }
           : {

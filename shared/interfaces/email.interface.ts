@@ -5,4 +5,5 @@ export interface EmailDTO {
 
 export interface SendVerifyCodeDTO {
   code: string;
+  email: string | null;
 }
