@@ -1,12 +1,21 @@
+"use client";
+
 import { useSendVerifyCode } from "@/entities/auth/hooks/queries/use-send-verify.query";
 import { ArrowRight, KeyRound } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const VerificationForm = () => {
   const [verificationCode, setVerificationCode] = useState("");
-  const email = localStorage.getItem("email");
+  const [email, setEmail] = useState<string | null>(null); // ✅ State for email
   const navigate = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("email");
+      setEmail(storedEmail);
+    }
+  }, []);
 
   const {
     mutate,

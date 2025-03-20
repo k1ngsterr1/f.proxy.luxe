@@ -1,4 +1,4 @@
-import { RegisterAuthForm } from "@/features/auth/register";
+"use client";
 import { VerificationPageBlock } from "@/widgets/blocks/verification-page/verification-page";
 
 export default function VerificationCodePage() {
