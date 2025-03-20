@@ -17,15 +17,12 @@ export default function ProxyPage() {
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
   const isMobile = useIsMobile();
 
-  useEffect(() => {
-    console.log("Received proxies:", proxies);
-  }, [proxies]);
-
   return (
     <div
       style={{
         width: isMobile ? "100%" : "75%",
-        padding: "50px",
+        padding: isMobile ? 0 : "50px",
+        marginTop: isMobile ? 64 : 0,
         maxWidth: "1200px",
         margin: "0 auto",
         backgroundColor: "#000000",
