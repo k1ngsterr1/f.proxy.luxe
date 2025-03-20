@@ -3,10 +3,10 @@ import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 
 // DEV SERVER
-const BASE_URL = "https://aproxyluxe-production.up.railway.app";
+// const BASE_URL = "https://aproxyluxe-production.up.railway.app";
 
 // PROD SERVER
-// const BASE_URL = "https://api.proxy.luxe";
+const BASE_URL = "https://api.proxy.luxe";
 
 // LOCAL SERVER
 // const BASE_URL = "http://localhost:6001";
