@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
 import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
@@ -20,6 +20,7 @@ export default function OrderDetailPage() {
   const [couponCode, setCouponCode] = useState("");
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
+  const navigate = useRouter();
 
   const handleApplyCoupon = () => {
     if (!couponCode) return;
@@ -27,7 +28,11 @@ export default function OrderDetailPage() {
   };
 
   const handleContinue = () => {
-    finishOrder(orderId);
+    finishOrder(orderId, {
+      onSuccess: () => {
+        navigate.push("/personal-account/proxy");
+      },
+    });
   };
 
   const formatDate = (dateString: string) => {
