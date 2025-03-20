@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies";
@@ -16,6 +16,10 @@ export default function ProxyPage() {
   const { data } = useGetUser();
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    console.log("Received proxies:", proxies);
+  }, [proxies]);
 
   return (
     <div
@@ -137,9 +141,11 @@ export default function ProxyPage() {
           {error?.message || "Неизвестная ошибка"}
         </div>
       )}
-
-      {/* ✅ Proxy List Display */}
-      {!isLoading && !isError && proxies?.data.items.length ? (
+      {!isLoading &&
+      !isError &&
+      proxies?.data?.items &&
+      Array.isArray(proxies.data.items) &&
+      proxies.data.items.length > 0 ? (
         <ProxyList proxies={proxies.data.items} />
       ) : (
         !isLoading &&

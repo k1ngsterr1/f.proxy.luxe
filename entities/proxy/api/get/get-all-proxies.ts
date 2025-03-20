@@ -25,11 +25,10 @@ export const getAllProxies = async (
       `/api/v1/products/active-list/${type}`
     );
 
-    // ✅ Ensure response follows the expected structure
     return {
       status: "success",
       data: {
-        items: response.data?.items || [], // Default to empty array if no data
+        items: response.data?.data.items || [], // Default to empty array if no data
       },
     };
   } catch (error) {

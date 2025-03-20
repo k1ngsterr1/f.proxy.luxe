@@ -30,19 +30,22 @@ export const IPV6BuyCard = () => {
 
   // ✅ Ensure order sends properly
   const handleBuyClick = () => {
-    if (!preferences) return; // ✅ Ensure preferences exist
+    console.log("ref", preferences);
+
+    if (!preferences) return;
     const selectedCountry = preferences.ipv6.country.find(
       (c) => c.id === countryId
     );
-    if (!selectedCountry) return; // ✅ Ensure a valid country is selected
+
+    if (!selectedCountry) return;
 
     const orderData = {
       country: selectedCountry.name,
       quantity: Number(quantity),
       usage,
-      period: "1m", // ✅ Always "1m"
-      periodDays: "1m", // ✅ Always "1m"
-      totalPrice: 0.08 * Number(quantity), // ✅ Static price remains the same
+      period: "1m",
+      periodDays: "1m",
+      totalPrice: 0.08 * Number(quantity),
       proxyType: usage.includes("SOCKS5") ? "SOCKS5" : "HTTPS",
       type: "ipv6",
     };
@@ -110,8 +113,6 @@ export const IPV6BuyCard = () => {
             cursor: "pointer",
           }}
         />
-
-        {/* ✅ Period is Fixed to "1m" */}
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           ПЕРИОД
         </h4>
@@ -128,13 +129,10 @@ export const IPV6BuyCard = () => {
         >
           1 месяц
         </div>
-
-        {/* ✅ Static Price Display */}
         <div className="buy-item__price">
           ЦЕНА: <span>0.08$ / IP</span>
         </div>
 
-        {/* ✅ Buy Button */}
         <button
           onClick={handleBuyClick}
           disabled={isLoadingOrder || isLoadingPreferences}

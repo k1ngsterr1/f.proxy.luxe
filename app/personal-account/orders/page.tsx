@@ -5,9 +5,11 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useProxyOrders } from "@/entities/orders/hooks/queries/use-get-proxy-orders.query";
 import { AlertMessage } from "@/shared/ui/alert";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 export default function OrdersPage() {
   const navigate = useRouter();
+  const { data: user } = useGetUser();
   const { data: ordersData, isLoading, isError, error } = useProxyOrders();
 
   return (
@@ -19,10 +21,12 @@ export default function OrdersPage() {
         backgroundColor: "#000000",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
+      {user?.isVerified && (
+        <AlertMessage
+          type="warning"
+          message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+        />
+      )}
       <div
         style={{
           marginBottom: "24px",

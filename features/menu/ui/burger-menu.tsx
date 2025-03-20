@@ -260,19 +260,19 @@ export const BurgerMenu = () => {
 };
 
 const menuItems = [
-  { id: 1, label: "КУПИТЬ ПРОКСИ", href: "#" },
-  { id: 2, label: "ЦЕНЫ", href: "#" },
-  { id: 3, label: "ПАРТНЕРСКАЯ ПРОГРАММА", href: "#" },
-  { id: 4, label: "СТАТЬИ", href: "#" },
-  { id: 5, label: "FAQ", href: "#" },
+  { id: 1, label: "КУПИТЬ ПРОКСТИ", href: "/buy-proxy" },
+  { id: 2, label: "ЦЕНЫ", href: "/prices" },
+  { id: 3, label: "ПАРТНЕРСКАЯ ПРОГРАММА", href: "/partners" },
+  { id: 4, label: "СТАТЬИ", href: "/articles" },
+  { id: 5, label: "FAQ", href: "/faq" },
 ];
 
 const secondaryMenuItems = [
-  { id: 1, label: "МОЙ IP", href: "#" },
-  { id: 2, label: "ПРОКСИ ЧЕКЕР", href: "#" },
-  { id: 3, label: "МОЯ АНОНИМНОСТЬ", href: "#" },
-  { id: 4, label: "ПРОВЕРКА ПОРТОВ", href: "#" },
-  { id: 5, label: "WHOIS", href: "#" },
-  { id: 6, label: "БЛЭК ЛИСТЫ", href: "#" },
-  { id: 7, label: "ПОДДЕРЖКА IPV6", href: "#" },
+  { id: 1, label: "МОЙ IP", href: "/services/my-ip" },
+  { id: 2, label: "ПРОКСИ ЧЕКЕР", href: "/services/proxy-checker" },
+  { id: 3, label: "МОЯ АНОНИМНОСТЬ", href: "/services/anonimity-checker" },
+  { id: 4, label: "ПРОВЕРКА ПОРТОВ", href: "/services/port-checker" },
+  { id: 5, label: "WHOIS", href: "/services/whois" },
+  { id: 6, label: "БЛЭК ЛИСТЫ", href: "/services/black-lists" },
+  { id: 7, label: "ПОДДЕРЖКА IPV6", href: "/services/ipv6-checker" },
 ];

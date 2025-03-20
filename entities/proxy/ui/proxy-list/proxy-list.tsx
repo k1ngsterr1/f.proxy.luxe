@@ -1,34 +1,397 @@
-import React, { useEffect } from "react";
+"use client";
 
-interface Props {
-  proxies: any[];
+import type React from "react";
+import { useEffect } from "react";
+import { AlertCircle } from "lucide-react";
+
+interface Proxy {
+  id: string;
+  ip: string;
+  protocol: string;
+  port_http: number | string;
+  port_socks: number | string;
+  country: string;
 }
 
-const ProxyList: React.FC<Props> = ({ proxies }: any) => {
+export interface Props {
+  proxies: Proxy[] | undefined;
+}
+
+const ProxyList: React.FC<Props> = ({ proxies }) => {
+  useEffect(() => {
+    console.log("proxies", proxies);
+  }, [proxies]);
+
+  // Function to get protocol badge styles
+  const getProtocolStyles = (protocol: string): React.CSSProperties => {
+    const baseStyle: React.CSSProperties = {
+      display: "inline-flex",
+      alignItems: "center",
+      padding: "2px 8px",
+      borderRadius: "12px",
+      fontSize: "12px",
+      fontWeight: 500,
+      border: "1px solid",
+    };
+
+    switch (protocol.toLowerCase()) {
+      case "http":
+        return {
+          ...baseStyle,
+          backgroundColor: "rgba(243, 214, 117, 0.1)",
+          color: "#f3d675",
+          borderColor: "rgba(243, 214, 117, 0.3)",
+        };
+      case "https":
+        return {
+          ...baseStyle,
+          backgroundColor: "rgba(243, 214, 117, 0.15)",
+          color: "#f3d675",
+          borderColor: "rgba(243, 214, 117, 0.4)",
+        };
+      case "socks5":
+        return {
+          ...baseStyle,
+          backgroundColor: "rgba(243, 214, 117, 0.2)",
+          color: "#f3d675",
+          borderColor: "rgba(243, 214, 117, 0.5)",
+        };
+      default:
+        return {
+          ...baseStyle,
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          color: "#999999",
+          borderColor: "rgba(255, 255, 255, 0.2)",
+        };
+    }
+  };
+
+  // Get country flag emoji
+  const getCountryFlag = (countryCode: string) => {
+    // Simple implementation - in a real app you might want to use a library
+    // This converts country code to flag emoji for common countries
+    const countries: Record<string, string> = {
+      us: "🇺🇸",
+      uk: "🇬🇧",
+      ca: "🇨🇦",
+      au: "🇦🇺",
+      de: "🇩🇪",
+      fr: "🇫🇷",
+      jp: "🇯🇵",
+      cn: "🇨🇳",
+      ru: "🇷🇺",
+      br: "🇧🇷",
+      in: "🇮🇳",
+    };
+
+    const code = countryCode.toLowerCase();
+    return countries[code] || "🌐";
+  };
+
+  // Styles - Black and Gold theme
+  const cardStyle: React.CSSProperties = {
+    backgroundColor: "#000000",
+    borderRadius: "8px",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    overflow: "hidden",
+  };
+
+  const cardHeaderStyle: React.CSSProperties = {
+    padding: "16px 24px",
+    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+  };
+
+  const cardTitleStyle: React.CSSProperties = {
+    fontSize: "18px",
+    fontWeight: 600,
+    color: "#FFFFFF",
+    margin: 0,
+  };
+
+  const cardDescriptionStyle: React.CSSProperties = {
+    fontSize: "14px",
+    color: "#f3d675",
+    marginTop: "4px",
+    marginBottom: 0,
+  };
+
+  const cardContentStyle: React.CSSProperties = {
+    padding: "0", // Remove padding to allow table to fill the space
+  };
+
+  const tableContainerStyle: React.CSSProperties = {
+    maxHeight: "400px", // Fixed height for scrolling
+    overflow: "auto",
+    // Custom scrollbar for Firefox
+    scrollbarWidth: "thin",
+    scrollbarColor: "rgba(243, 214, 117, 0.3) rgba(0, 0, 0, 0.1)",
+  };
+
+  const tableStyle: React.CSSProperties = {
+    width: "100%",
+    borderCollapse: "separate",
+    borderSpacing: 0,
+  };
+
+  const tableHeadStyle: React.CSSProperties = {
+    backgroundColor: "rgba(0, 0, 0, 0.95)", // Slightly transparent to show content underneath
+    position: "sticky",
+    top: 0,
+    zIndex: 10, // Ensure header stays above table content
+    backdropFilter: "blur(4px)", // Add blur effect for modern browsers
+  };
+
+  const tableHeaderCellStyle: React.CSSProperties = {
+    padding: "12px 16px",
+    textAlign: "left",
+    fontSize: "12px",
+    fontWeight: 500,
+    color: "#f3d675",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+  };
+
+  const tableBodyStyle: React.CSSProperties = {};
+
+  const tableRowStyle: React.CSSProperties = {
+    borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+    transition: "background-color 0.2s",
+  };
+
+  const tableCellStyle: React.CSSProperties = {
+    padding: "12px 16px",
+    fontSize: "14px",
+    color: "#FFFFFF",
+  };
+
+  const tableCellEmphasisStyle: React.CSSProperties = {
+    ...tableCellStyle,
+    fontWeight: 500,
+    color: "#f3d675",
+  };
+
+  const tableCellMonoStyle: React.CSSProperties = {
+    ...tableCellStyle,
+    fontFamily: "monospace",
+  };
+
+  const countryContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+  };
+
+  const flagStyle: React.CSSProperties = {
+    marginRight: "8px",
+  };
+
+  // Loading skeleton styles
+  const skeletonStyle: React.CSSProperties = {
+    height: "16px",
+    backgroundColor: "rgba(243, 214, 117, 0.1)",
+    borderRadius: "4px",
+    animation: "pulse 1.5s ease-in-out infinite",
+  };
+
+  // Empty state styles
+  const emptyStateContainerStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "48px 16px",
+    textAlign: "center",
+  };
+
+  const emptyStateIconStyle: React.CSSProperties = {
+    width: "48px",
+    height: "48px",
+    color: "#f3d675",
+    marginBottom: "16px",
+  };
+
+  const emptyStateTitleStyle: React.CSSProperties = {
+    fontSize: "16px",
+    fontWeight: 500,
+    color: "#FFFFFF",
+    margin: 0,
+  };
+
+  const emptyStateDescriptionStyle: React.CSSProperties = {
+    fontSize: "14px",
+    color: "#999999",
+    marginTop: "4px",
+  };
+
+  // Custom scrollbar styles
+  const scrollbarStyles = `
+    /* Webkit browsers like Chrome/Safari/Edge */
+    .proxy-table-container::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    .proxy-table-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+    
+    .proxy-table-container::-webkit-scrollbar-thumb {
+      background: rgba(243, 214, 117, 0.3);
+      border-radius: 4px;
+    }
+    
+    .proxy-table-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(243, 214, 117, 0.5);
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.6;
+      }
+      50% {
+        opacity: 0.3;
+      }
+      100% {
+        opacity: 0.6;
+      }
+    }
+  `;
+
+  // Loading state
+  if (proxies === undefined) {
+    return (
+      <div style={cardStyle}>
+        <style>{scrollbarStyles}</style>
+        <div style={cardHeaderStyle}>
+          <h3 style={cardTitleStyle}>Список прокси</h3>
+          <p style={cardDescriptionStyle}>
+            Загрузка доступных прокси-серверов...
+          </p>
+        </div>
+        <div style={cardContentStyle}>
+          <div className="proxy-table-container" style={tableContainerStyle}>
+            <table style={tableStyle}>
+              <thead style={tableHeadStyle}>
+                <tr>
+                  <th style={tableHeaderCellStyle}>IP-адрес</th>
+                  <th style={tableHeaderCellStyle}>Протокол</th>
+                  <th style={tableHeaderCellStyle}>Порт HTTP</th>
+                  <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                  <th style={tableHeaderCellStyle}>Страна</th>
+                </tr>
+              </thead>
+              <tbody style={tableBodyStyle}>
+                {Array(10)
+                  .fill(0)
+                  .map((_, index) => (
+                    <tr key={index} style={tableRowStyle}>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "120px" }}></div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "80px" }}></div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "60px" }}></div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "60px" }}></div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "100px" }}></div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Empty state
+  if (proxies?.length === 0) {
+    return (
+      <div style={cardStyle}>
+        <div style={cardHeaderStyle}>
+          <h3 style={cardTitleStyle}>Список прокси</h3>
+          <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+        </div>
+        <div style={emptyStateContainerStyle}>
+          <AlertCircle style={emptyStateIconStyle} />
+          <h3 style={emptyStateTitleStyle}>Прокси не найдены</h3>
+          <p style={emptyStateDescriptionStyle}>
+            В данный момент нет доступных прокси-серверов.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4 border rounded-lg shadow-lg">
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-2">IP-адрес</th>
-            <th className="border p-2">Протокол</th>
-            <th className="border p-2">Порт HTTP</th>
-            <th className="border p-2">Порт SOCKS</th>
-            <th className="border p-2">Страна</th>
-          </tr>
-        </thead>
-        <tbody>
-          {proxies?.map((proxy: any) => (
-            <tr key={proxy.id} className="border">
-              <td className="border p-2 text-center">{proxy.ip}</td>
-              <td className="border p-2 text-center">{proxy.protocol}</td>
-              <td className="border p-2 text-center">{proxy.port_http}</td>
-              <td className="border p-2 text-center">{proxy.port_socks}</td>
-              <td className="border p-2 text-center">{proxy.country}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div style={cardStyle}>
+      <style>{scrollbarStyles}</style>
+      <div style={cardHeaderStyle}>
+        <h3 style={cardTitleStyle}>Список прокси</h3>
+        <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+      </div>
+      <div style={cardContentStyle}>
+        <div className="proxy-table-container" style={tableContainerStyle}>
+          <table style={tableStyle}>
+            <thead style={tableHeadStyle}>
+              <tr>
+                <th style={tableHeaderCellStyle}>IP-адрес</th>
+                <th style={tableHeaderCellStyle}>Протокол</th>
+                <th style={tableHeaderCellStyle}>Порт HTTP</th>
+                <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                <th style={tableHeaderCellStyle}>Страна</th>
+              </tr>
+            </thead>
+            <tbody style={tableBodyStyle}>
+              {proxies.map((proxy, index) => (
+                <tr
+                  key={proxy.id}
+                  style={
+                    index % 2 === 0
+                      ? tableRowStyle
+                      : {
+                          ...tableRowStyle,
+                          backgroundColor: "rgba(243, 214, 117, 0.03)",
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(243, 214, 117, 0.07)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      index % 2 === 0 ? "" : "rgba(243, 214, 117, 0.03)";
+                  }}
+                >
+                  <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
+                  <td style={tableCellStyle}>
+                    <span style={getProtocolStyles(proxy.protocol)}>
+                      {proxy.protocol.toUpperCase()}
+                    </span>
+                  </td>
+                  <td style={tableCellMonoStyle}>{proxy.port_http || "—"}</td>
+                  <td style={tableCellMonoStyle}>{proxy.port_socks || "—"}</td>
+                  <td style={tableCellStyle}>
+                    <div style={countryContainerStyle}>
+                      <span style={flagStyle}>
+                        {getCountryFlag(proxy.country)}
+                      </span>
+                      {proxy.country}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
