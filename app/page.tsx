@@ -3,23 +3,13 @@
 import { HomeSlider } from "@/components/home/HomeSlider";
 import { BuySection } from "@/components/BuySection";
 import Image from "next/image";
-import Prem1 from "@/assets/images/prem1.png";
-import Prem2 from "@/assets/images/prem2.png";
-import Prem3 from "@/assets/images/prem3.png";
-import Prem4 from "@/assets/images/prem4.png";
-import Prem5 from "@/assets/images/prem5.png";
-import Prem6 from "@/assets/images/prem6.png";
-import Prem7 from "@/assets/images/prem7.png";
-import Prem8 from "@/assets/images/prem8.png";
+
 import Chat from "@/assets/images/chat-icon.png";
 import Mail from "@/assets/images/mail-icon.png";
 import { CallbackForm } from "@/components/forms/callback.form";
-import { IPV6BuyCard } from "@/entities/ipv6/ui/ipv6-buy-card";
 import { QueryClientProvider } from "@tanstack/react-query";
 import reactQueryClient from "@/shared/config/query-client";
 import { AdvantagesBlock } from "@/widgets/blocks/home-page/advantages-block";
-import { ResidentalProxyBuyCard } from "@/entities/residental-proxy/ui/residental-proxy-buy-card";
-import { ISPBuyCard } from "@/entities/orders/isp-buy-card";
 import { BuyProxyBlock } from "@/widgets/blocks/home-page/buy-proxy-block";
 
 export default function Home() {

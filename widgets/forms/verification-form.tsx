@@ -1,11 +1,13 @@
 "use client";
 
 import { useSendVerifyCode } from "@/entities/auth/hooks/queries/use-send-verify.query";
+import { usePopupStore } from "@/shared/store/use-popup.store";
 import { ArrowRight, KeyRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export const VerificationForm = () => {
+  const { openPopup } = usePopupStore();
   const [verificationCode, setVerificationCode] = useState("");
   const [email, setEmail] = useState<string | null>(null); // ✅ State for email
   const navigate = useRouter();
@@ -42,6 +44,7 @@ export const VerificationForm = () => {
       {
         onSuccess: () => {
           navigate.push("/");
+          openPopup("auth-enter");
         },
       }
     );
