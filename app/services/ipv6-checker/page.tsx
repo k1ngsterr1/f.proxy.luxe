@@ -1,6 +1,8 @@
 "use client";
-import { checkIpv6 } from "@/entities/ipv6/api/get/ipv6-check.api";
+
+import { checkIpv6 } from "@/entities/ipv6/api/post/ipv6-check.api";
 import { useState } from "react";
+import { AlertCircle, CheckCircle, Loader } from "lucide-react";
 
 interface IPv6CheckResponse {
   domain: string;
@@ -28,9 +30,7 @@ export default function Page() {
     setResult(null);
 
     try {
-      const response: any = await checkIpv6();
-
-      const data: IPv6CheckResponse = await response.json();
+      const data: any = await checkIpv6(cleanDomain);
       setResult(data);
     } catch (err) {
       let errorMessage = "Произошла ошибка при проверке";
@@ -41,6 +41,18 @@ export default function Page() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Format the timestamp to a readable date
+  const formatDate = (timestamp: string) => {
+    if (!timestamp) return "";
+    return new Date(timestamp).toLocaleString("ru-RU", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
@@ -55,20 +67,181 @@ export default function Page() {
             поддержку доступа по IPv6.
           </p>
 
-          {/* Блок статуса */}
-          {isLoading && <div className="status-info">Проверка...</div>}
-          {error && <div className="status-info error">{error}</div>}
+          {/* Response Section - Styled with black and gold theme */}
+          {isLoading && (
+            <div
+              style={{
+                marginTop: 32,
+                backgroundColor: "rgba(243, 214, 117, 0.1)",
+                border: "1px solid rgba(243, 214, 117, 0.2)",
+                borderRadius: "8px",
+                padding: "16px",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                color: "#f3d675",
+              }}
+            >
+              <Loader size={20} className="animate-spin" />
+              <span>Проверка домена {domain}...</span>
+            </div>
+          )}
+
+          {error && (
+            <div
+              style={{
+                marginTop: 32,
+                backgroundColor: "rgba(255, 82, 82, 0.1)",
+                border: "1px solid rgba(255, 82, 82, 0.2)",
+                borderRadius: "8px",
+                padding: "16px",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                color: "#FF5252",
+              }}
+            >
+              <AlertCircle size={20} />
+              <span>{error}</span>
+            </div>
+          )}
+
           {result && (
             <div
-              className={`status-info ${result.hasIPv6 ? "success" : "error"}`}
+              style={{
+                marginTop: 32,
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                borderRadius: "8px",
+                border: "1px solid rgba(243, 214, 117, 0.2)",
+                overflow: "hidden",
+                marginBottom: "24px",
+              }}
             >
-              {result.hasIPv6
-                ? `Сайт ${
-                    result.domain
-                  } поддерживает IPv6. Адреса: ${result.ipv6Addresses.join(
-                    ", "
-                  )}`
-                : `Сайт ${result.domain} не поддерживает IPv6`}
+              {/* Header with domain and status */}
+              <div
+                style={{
+                  padding: "16px 20px",
+                  borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <span style={{ color: "#f3d675", marginRight: "8px" }}>
+                    Домен:
+                  </span>
+                  {result.domain}
+                </h2>
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    fontWeight: "500",
+                    backgroundColor: result.hasIPv6
+                      ? "rgba(76, 175, 80, 0.1)"
+                      : "rgba(255, 82, 82, 0.1)",
+                    color: result.hasIPv6 ? "#4CAF50" : "#FF5252",
+                    border: result.hasIPv6
+                      ? "1px solid rgba(76, 175, 80, 0.3)"
+                      : "1px solid rgba(255, 82, 82, 0.3)",
+                  }}
+                >
+                  {result.hasIPv6
+                    ? "ПОДДЕРЖИВАЕТ IPv6"
+                    : "НЕ ПОДДЕРЖИВАЕТ IPv6"}
+                </span>
+              </div>
+
+              {/* Result content */}
+              <div style={{ padding: "20px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {result.hasIPv6 ? (
+                    <CheckCircle size={24} color="#4CAF50" />
+                  ) : (
+                    <AlertCircle size={24} color="#FF5252" />
+                  )}
+                  <span
+                    style={{
+                      fontSize: "16px",
+                      color: result.hasIPv6 ? "#4CAF50" : "#FF5252",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {result.hasIPv6
+                      ? `Сайт ${result.domain} поддерживает IPv6`
+                      : `Сайт ${result.domain} не поддерживает IPv6`}
+                  </span>
+                </div>
+
+                {/* IPv6 Addresses */}
+                {result.hasIPv6 && result.ipv6Addresses.length > 0 && (
+                  <div
+                    style={{
+                      backgroundColor: "rgba(243, 214, 117, 0.05)",
+                      border: "1px solid rgba(243, 214, 117, 0.1)",
+                      borderRadius: "4px",
+                      padding: "16px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: "#f3d675",
+                        fontSize: "14px",
+                        marginBottom: "8px",
+                      }}
+                    >
+                      IPv6 адреса:
+                    </div>
+                    <ul style={{ margin: 0, padding: "0 0 0 20px" }}>
+                      {result.ipv6Addresses.map((address, index) => (
+                        <li
+                          key={index}
+                          style={{
+                            color: "#FFFFFF",
+                            fontSize: "14px",
+                            fontFamily: "monospace",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          {address}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Timestamp */}
+                <div
+                  style={{
+                    fontSize: "12px",
+                    color: "#999999",
+                    textAlign: "right",
+                    marginTop: "16px",
+                  }}
+                >
+                  Проверка выполнена: {formatDate(result.timestamp)}
+                </div>
+              </div>
             </div>
           )}
 
@@ -80,6 +253,11 @@ export default function Page() {
               placeholder="google.com"
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleCheck();
+                }
+              }}
             />
           </div>
           <div className="btn-wrap">

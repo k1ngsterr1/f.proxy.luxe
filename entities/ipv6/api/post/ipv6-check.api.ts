@@ -2,9 +2,11 @@ import axios from "axios";
 import { IpData } from "@/app/services/my-ip/page";
 import { apiClient } from "@/shared/config/apiClient";
 
-export const checkIpv6 = async (): Promise<IpData | null> => {
+export const checkIpv6 = async (domain: any): Promise<IpData | null> => {
   try {
-    const response = await apiClient.get("/api/v1/services/ipv6-checker/check");
+    const response = await apiClient.post("/api/v1/services/ipv6/check", {
+      domain: domain,
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

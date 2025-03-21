@@ -10,9 +10,19 @@ import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 export default function ProxyPage() {
-  const [proxyType, setProxyType] = useState<"isp" | "ipv6" | "resident">(
-    "isp"
+  const [proxy, setProxy] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("proxy");
+      setProxy(storedEmail);
+    }
+  }, []);
+
+  const [proxyType, setProxyType] = useState<any>(
+    proxy === null ? "isp" : proxy
   );
+
   const { data } = useGetUser();
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
   const isMobile = useIsMobile();
@@ -66,8 +76,6 @@ export default function ProxyPage() {
           Пополнение баланса
         </Link>
       </div>
-
-      {/* ✅ Proxy Type Selection Buttons */}
       <div
         style={{
           display: "flex",

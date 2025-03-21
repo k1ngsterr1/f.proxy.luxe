@@ -32,7 +32,8 @@ export default function OrderDetailPage() {
   const handleContinue = () => {
     finishOrder(orderId, {
       onSuccess: (order: any) => {
-        navigate.push(`/personal-account/proxy/${order.type}`);
+        localStorage.setItem("proxyType", order.type);
+        navigate.push(`/personal-account/proxy`);
       },
     });
   };

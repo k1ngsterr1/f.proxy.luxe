@@ -78,6 +78,26 @@ img {
   margin: 0 auto;
 }
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Media query for tablet and desktop */
+@media (min-width: 768px) {
+  .tab-content-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .scontainer {
   max-width: 1260px;
   width: 100%;
