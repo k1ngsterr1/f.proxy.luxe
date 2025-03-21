@@ -6,6 +6,7 @@ import YandexMap from "@/components/YandexMap";
 import RuFlag from "@/assets/images/rus-lang.png";
 import Geo from "@/assets/images/geo.png";
 import { getMyIp } from "@/entities/ip/api/get/get-my-ip.api";
+import { Loader } from "@/shared/ui/loader";
 
 export interface IpData {
   ip: string;
@@ -42,7 +43,7 @@ export default function MyIpClient() {
   }, []);
 
   if (loading) {
-    return <main className="inner-page">Загрузка...</main>;
+    return <Loader fullScreen />;
   }
 
   if (error) {

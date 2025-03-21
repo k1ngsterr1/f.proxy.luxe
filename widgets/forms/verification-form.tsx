@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 export const VerificationForm = () => {
   const { openPopup } = usePopupStore();
   const [verificationCode, setVerificationCode] = useState("");
-  const [email, setEmail] = useState<string | null>(null); // ✅ State for email
+  const [email, setEmail] = useState<string | null>(null);
   const navigate = useRouter();
 
   useEffect(() => {

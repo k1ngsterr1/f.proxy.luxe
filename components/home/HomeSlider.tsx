@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import BG1 from "@/assets/images/imain-bg1.png";
 import BG2 from "@/assets/images/imain-bg2.png";
+import { usePopupStore } from "@/shared/store/use-popup.store";
 
 const ImageSlide: FC<{ image: StaticImageData }> = ({ image }) => {
   return (
@@ -26,7 +27,8 @@ const ImageSlide: FC<{ image: StaticImageData }> = ({ image }) => {
 };
 
 export const HomeSlider: FC = () => {
-  const [slide, setSlide] = useState(1);
+  const [slide, setSlide] = useState(0);
+  const { openPopup } = usePopupStore();
   const sliderRef = useRef<Slider>(null);
   const imageSliderRef = useRef<Slider>(null);
   const currentRef = useRef<HTMLDivElement>(null);
@@ -34,7 +36,7 @@ export const HomeSlider: FC = () => {
 
   return (
     <section className="imain">
-      <ImageSlide image={slide === 1 ? BG1 : BG2} />
+      <ImageSlide image={slide === 0 ? BG1 : BG2} />
       <div className="container">
         <Slider
           className="imain-slider"
@@ -47,19 +49,6 @@ export const HomeSlider: FC = () => {
           ref={sliderRef}
           afterChange={(currentSlide: number) => {
             setSlide(currentSlide);
-            const i = currentSlide + 1;
-            const slideCount = 2;
-            imageSliderRef.current?.slickGoTo(currentSlide);
-            if (i < 10) {
-              if (countRef.current)
-                countRef.current.textContent = "0" + slideCount;
-              if (currentRef.current) currentRef.current.textContent = "0" + i;
-            } else {
-              if (countRef.current)
-                countRef.current.textContent = String(slideCount);
-              if (currentRef.current)
-                currentRef.current.textContent = String(i);
-            }
           }}
         >
           <div className="imain-slide">

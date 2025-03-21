@@ -1,141 +1,25 @@
 "use client";
 
 import { HomeSlider } from "@/components/home/HomeSlider";
-import { BuySection } from "@/components/BuySection";
-import Image from "next/image";
 
-import Chat from "@/assets/images/chat-icon.png";
-import Mail from "@/assets/images/mail-icon.png";
-import { CallbackForm } from "@/components/forms/callback.form";
 import { QueryClientProvider } from "@tanstack/react-query";
 import reactQueryClient from "@/shared/config/query-client";
 import { AdvantagesBlock } from "@/widgets/blocks/home-page/advantages-block";
 import { BuyProxyBlock } from "@/widgets/blocks/home-page/buy-proxy-block";
+import { BuyPromoBlock } from "@/widgets/blocks/home-page/buy-promo-block";
+import { PartnersBlock } from "@/widgets/blocks/home-page/partners-block";
+import { FaqBlock } from "@/widgets/blocks/home-page/faq-block";
 
 export default function Home() {
   return (
     <>
       <QueryClientProvider client={reactQueryClient}>
         <HomeSlider />
-        <section className="buy section">
-          <div className="scontainer">
-            <h2 className="section-header">
-              КУПИТЬ ПРОКСИ <span>ISP</span>, РЕЗИДЕНТНЫЕ{" "}
-              <span>IPV4 / IPV6</span>
-            </h2>
-            <BuySection />
-            <div className="buy-info">
-              <div>
-                <span>•</span> Всё автоматизированно
-              </div>
-              <div>
-                <span>•</span> Прокси выдаются автоматически, сразу после оплаты
-              </div>
-              <div>
-                <span>•</span> Наши прокси продаются исключительно в одни руки -
-                это означает, что ими пользуетесь только Вы
-              </div>
-              <div>
-                <span>•</span> Наши прокси элитные и полностью анонимные
-              </div>
-            </div>
-          </div>
-        </section>
+        <BuyPromoBlock />
         <BuyProxyBlock />
         <AdvantagesBlock />
-        <section className="partners section">
-          <div className="scontainer">
-            <h2 className="section-header">ПАРТНЕРСКАЯ ПРОГРАММА</h2>
-            <div className="partners-inner">
-              <div className="partners-text">
-                <p>
-                  Наша партнерская программа позволит
-                  <br />
-                  Вам зарабатывать 15% от всех платежей привлеченных Вами
-                  клиентов.
-                  <br />
-                  Для участия в программе Вам всего лишь нужно:
-                </p>
-                <div className="separator"></div>
-                <h3 className="partners-header">
-                  Привлекать к нам новых клиентов <br />
-                  по реферальной ссылке
-                </h3>
-                <p>
-                  - зарегистрировавшийся по вашей ссылке <br />
-                  пользователь пожизненно закрепляется за Вами <br />и со всех
-                  его платежей вам будет идти процент;
-                </p>
-                <h3 className="partners-header">
-                  Распространять партнерский купон на скидку -{" "}
-                </h3>
-                <p>
-                  пользователь, использовавший ваш купон, получает <br />
-                  5% скидку при покупке, а так же пожизненно закрепляется <br />
-                  за Вами и со всех его платежей вам будет идти процент.
-                </p>
-              </div>
-              <div className="partners-discount">
-                <div className="partners-num">
-                  15
-                  <div className="partners-num__percent">%</div>
-                </div>
-              </div>
-            </div>
-            <h2 className="section-header partners-subheader">
-              НАШИ ПАРТНЕРЫ УЖЕ ЗАРАБОТАЛИ <span>27 434 698,20 руб.</span>
-            </h2>
-            <p className="partners-hint">
-              Партнерское вознаграждение можно выводить на WebMoney и Qiwi,{" "}
-              <br />
-              либо использовать на оплату любых услуг нашего сервиса.
-            </p>
-            <div className="btn-wrap">
-              <a href="#" className="btn">
-                Подробнее
-              </a>
-            </div>
-          </div>
-        </section>
-        <section className="question section">
-          <div className="container">
-            <div className="question-inner">
-              <CallbackForm />
-              <div className="question-info">
-                <h2 className="question-header">ОСТАЛИСЬ ВОПРОСЫ?</h2>
-                <p className="question-text">
-                  Напишите нам и мы постараемся максимально <br />
-                  быстро вам помочь и проконсультировать.
-                </p>
-                <div className="separator"></div>
-                <a href="#" className="question-chat question-link">
-                  <span className="img-wrap">
-                    <Image
-                      src={Chat}
-                      alt=""
-                      layout="response"
-                      width={Chat.width}
-                      height={Chat.height}
-                    />
-                  </span>
-                  <span>Live Chat</span>
-                </a>
-                <a href="#" className="question-mail question-link">
-                  <span className="img-wrap">
-                    <Image
-                      src={Mail}
-                      alt=""
-                      layout="response"
-                      width={Mail.width}
-                      height={Mail.height}
-                    />
-                  </span>
-                  <span>admin@proxy.luxe</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PartnersBlock />
+        <FaqBlock />
         <div className="about">
           <div className="container">
             <div className="about-item">

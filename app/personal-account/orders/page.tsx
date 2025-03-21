@@ -21,7 +21,7 @@ export default function OrdersPage() {
         backgroundColor: "#000000",
       }}
     >
-      {user?.isVerified && (
+      {user?.isVerified === false && (
         <AlertMessage
           type="warning"
           message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
@@ -167,7 +167,7 @@ export default function OrdersPage() {
                     </span>
                   </td>
                   <td style={{ padding: "12px 16px", marginRight: "16px" }}>
-                    {order.totalPrice} ₽
+                    {order.totalPrice} $
                   </td>
                   {order.status === "PENDING" && (
                     <button

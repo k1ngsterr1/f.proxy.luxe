@@ -1,23 +1,20 @@
 "use client";
 
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { AlertMessage } from "@/shared/ui/alert";
-import { useState } from "react";
 
 export default function ResponsibilityBlock() {
   return (
     <div
       style={{
         padding: "20px",
+
         maxWidth: "1200px",
         margin: "0 auto",
         backgroundColor: "#000000",
         color: "#FFFFFF",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
       <div style={{ marginBottom: "32px" }}>
         <h1
           style={{

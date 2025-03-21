@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
+import { Orders } from "@/shared/types/order.types";
+import { ProxyOrder } from "@/entities/orders/api/get/get-all-orders.api";
 
 export const IPV6BuyCard = () => {
   const router = useRouter();
@@ -16,7 +18,6 @@ export const IPV6BuyCard = () => {
   const [quantity, setQuantity] = useState<string>("10");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
 
-  // ✅ Ensure default country is set once preferences load
   useEffect(() => {
     if (!countryId && preferences?.ipv6?.country.length) {
       setCountryId(preferences.ipv6.country[0].id);
@@ -30,14 +31,11 @@ export const IPV6BuyCard = () => {
 
   // ✅ Ensure order sends properly
   const handleBuyClick = () => {
-    console.log("ref", preferences);
+    const selectedCountry = preferences?.ipv6.country.find((c) => {
+      return c.id == countryId;
+    });
 
-    if (!preferences) return;
-    const selectedCountry = preferences.ipv6.country.find(
-      (c) => c.id === countryId
-    );
-
-    if (!selectedCountry) return;
+    if (!selectedCountry) return null;
 
     const orderData = {
       country: selectedCountry.name,
@@ -51,7 +49,8 @@ export const IPV6BuyCard = () => {
     };
 
     createOrder(orderData, {
-      onSuccess: () => router.push("/personal-account/orders"),
+      onSuccess: (order: any) =>
+        router.push(`/personal-account/orders/${order.id}`),
     });
   };
 
@@ -63,11 +62,7 @@ export const IPV6BuyCard = () => {
         <p className="buy-item__about">
           Подходят для сайтов с поддержкой IPv6. Кроме платёжных систем.
         </p>
-        <a href="#" className="buy-item__btn">
-          Выдаются в одни руки
-        </a>
-
-        {/* ✅ Country Selection */}
+        <a className="buy-item__btn">Выдаются в одни руки</a>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           СТРАНА
         </h4>

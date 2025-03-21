@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { Copy } from "lucide-react";
 import { AlertMessage } from "@/shared/ui/alert";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 export default function PartnerPage() {
+  const { data: user } = useGetUser();
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
@@ -18,10 +21,12 @@ export default function PartnerPage() {
         backgroundColor: "#000000",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
+      {user?.isVerified === false && (
+        <AlertMessage
+          type="warning"
+          message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+        />
+      )}
       {/* Header and Description */}
       <div style={{ marginBottom: "32px" }}>
         <h1

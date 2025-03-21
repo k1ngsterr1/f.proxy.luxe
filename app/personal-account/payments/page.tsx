@@ -1,10 +1,11 @@
 "use client";
 
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useState } from "react";
 
 export default function PaymentsPage() {
-  const [showAlert, setShowAlert] = useState(true);
+  const { data } = useGetUser();
 
   return (
     <div
@@ -15,10 +16,12 @@ export default function PaymentsPage() {
         backgroundColor: "#000000",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
+      {data?.isVerified === false && (
+        <AlertMessage
+          type="warning"
+          message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+        />
+      )}
       <div
         style={{
           marginBottom: "24px",

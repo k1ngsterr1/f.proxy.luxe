@@ -4,9 +4,9 @@ import "@/assets/styles/normalize.css";
 import "@/assets/styles/lk.css";
 import "@/assets/styles/style.css";
 import { ExchangeRates } from "@/components/ExchangeRates";
-import { LogoutButton } from "@/components/LogoutButton";
 import ActiveLink from "@/components/ActiveLink";
 import { Balance } from "@/entities/balance/ui/balance";
+import { LogoutButton } from "@/entities/auth/ui/logout/logout-button";
 
 export const Sidebar = () => {
   return (

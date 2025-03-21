@@ -1,11 +1,11 @@
 "use client";
 import "@/assets/styles/style.css";
-import { PayForm } from "@/components/forms/pay.form";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { AlertMessage } from "@/shared/ui/alert";
 import { Loader } from "@/shared/ui/loader";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { PayForm } from "@/widgets/forms/pay-form";
 import { useIsFetching } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

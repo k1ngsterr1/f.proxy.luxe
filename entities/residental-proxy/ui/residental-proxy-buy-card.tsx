@@ -16,9 +16,7 @@ export const ResidentalProxyBuyCard = () => {
         <p className="buy-item__about">
           Подходят для всех сайтов. Кроме платёжных систем. Выдаются в одни руки
         </p>
-        <a href="#" className="buy-item__btn">
-          Выдаются в одни руки
-        </a>
+        <a className="buy-item__btn">Выдаются в одни руки</a>
         <h4 className="buy-item__subheader">СТРАНА (ВЕСЬ МИР)</h4>
         <select
           className="buy-item__select"

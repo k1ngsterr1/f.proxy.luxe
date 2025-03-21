@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader } from "@/shared/ui/loader";
 import { useEffect, useState } from "react";
 import { UAParser } from "ua-parser-js";
 
@@ -200,7 +201,11 @@ export default function AnonymityChecker() {
   }, [ipData, userData]);
 
   if (loading) {
-    return <div>Загрузка...</div>;
+    return (
+      <>
+        <Loader fullScreen />
+      </>
+    );
   }
 
   if (error) {

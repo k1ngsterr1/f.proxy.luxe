@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { AlertMessage } from "@/shared/ui/alert";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 export default function ProfilePage() {
+  const { data } = useGetUser();
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -18,10 +20,12 @@ export default function ProfilePage() {
         backgroundColor: "#000000",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
+      {data?.isVerified === false && (
+        <AlertMessage
+          type="warning"
+          message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+        />
+      )}
       <div style={{ marginBottom: "32px" }}>
         <h1
           style={{
@@ -67,7 +71,7 @@ export default function ProfilePage() {
             />
             <input
               type="email"
-              value="ruslanmakhmatov@gmail.com"
+              value={data?.email}
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
@@ -152,7 +156,6 @@ export default function ProfilePage() {
             />
             <input
               type={showCurrentPassword ? "text" : "password"}
-              value="********"
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",

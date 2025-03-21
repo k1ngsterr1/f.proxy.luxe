@@ -2,6 +2,7 @@
 import { FC } from "react";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const LogoutButton: FC = () => {
   const { removeAccessToken, removeRefreshToken } = useAuthStore();
@@ -14,8 +15,8 @@ export const LogoutButton: FC = () => {
   };
 
   return (
-    <a href="#" onClick={handleLogout}>
+    <Link href="#" onClick={handleLogout}>
       Выход
-    </a>
+    </Link>
   );
 };

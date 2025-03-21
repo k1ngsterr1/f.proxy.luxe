@@ -34,7 +34,6 @@ export default function ProxyPage() {
           message="Вам необходимо подтвердить свой email введя код, указанной в письме."
         />
       )}
-      {/* Header Section */}
       <div
         style={{
           display: "flex",

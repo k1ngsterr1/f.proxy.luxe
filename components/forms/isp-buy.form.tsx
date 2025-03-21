@@ -89,7 +89,7 @@ export const IspBuyForm: FC<IspBuyFormProps> = ({
 
       <div className="buy-item__price">
         ЦЕНА
-        <span>{price} ₽</span>
+        <span>{price} $</span>
       </div>
       <a href="#" className="btn">
         купить

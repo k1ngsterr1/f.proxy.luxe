@@ -19,9 +19,7 @@ export const ProxyBuyCard: FC<ProxyBuyCardProps> = ({
         ></h3>
         <div className="separator"></div>
         <p className="buy-item__about">{description}</p>
-        <a href="#" className="buy-item__btn">
-          Выдаются в одни руки
-        </a>
+        <a className="buy-item__btn">Выдаются в одни руки</a>
         {children}
       </div>
     </div>

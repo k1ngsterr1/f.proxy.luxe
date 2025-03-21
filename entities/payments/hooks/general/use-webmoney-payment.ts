@@ -17,19 +17,16 @@ export const useWebMoneyPayment = () => {
         const userId = getUserIdFromToken();
         if (!userId) return;
 
-        const usdRate = await getExchangeRate();
-        const finalPrice = (Number(amount) / (usdRate ?? 100)).toFixed(2);
-
         const orderId = Math.floor(Math.random() * 1_000_000_000);
-        const description = `Пополнение баланса на ${amount}, руб`;
+        const description = `Пополнение баланса на ${amount}`;
 
         const fields = {
           LMI_PAYEE_PURSE: MERCHANT_WALLET,
-          LMI_PAYMENT_AMOUNT: finalPrice,
+          LMI_PAYMENT_AMOUNT: String(amount),
           LMI_PAYMENT_NO: orderId.toString(),
           LMI_PAYMENT_DESC: description,
           LMI_SIM_MODE: "0",
-          LMI_RESULT_URL: `${RESULT_URL}?userId=${userId}&amount=${finalPrice}`,
+          LMI_RESULT_URL: `${RESULT_URL}?userId=${userId}&amount=${amount}`,
         };
 
         submitWebMoneyForm(fields);

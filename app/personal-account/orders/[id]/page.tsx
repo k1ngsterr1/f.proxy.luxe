@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
 import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
 import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-order.mutation";
 import { AlertMessage } from "@/shared/ui/alert";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ export default function OrderDetailPage() {
     isError,
     error,
   } = useGetOrderDetails(orderId as any);
+  const { data: user } = useGetUser();
   const [couponCode, setCouponCode] = useState("");
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
@@ -29,8 +31,8 @@ export default function OrderDetailPage() {
 
   const handleContinue = () => {
     finishOrder(orderId, {
-      onSuccess: () => {
-        navigate.push("/personal-account/proxy");
+      onSuccess: (order: any) => {
+        navigate.push(`/personal-account/proxy/${order.type}`);
       },
     });
   };
@@ -49,10 +51,12 @@ export default function OrderDetailPage() {
         backgroundColor: "#000000",
       }}
     >
-      <AlertMessage
-        type="warning"
-        message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
-      />
+      {user?.isVerified === false && (
+        <AlertMessage
+          type="warning"
+          message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+        />
+      )}
       <div
         style={{
           display: "flex",
@@ -262,7 +266,7 @@ export default function OrderDetailPage() {
                     fontWeight: "bold",
                   }}
                 >
-                  {order.totalPrice} ₽
+                  {order.totalPrice} $
                 </td>
               </tr>
               <tr>
@@ -383,8 +387,6 @@ export default function OrderDetailPage() {
               Тип прокси можно будет изменить в личном кабинете после покупки.
             </p>
           </div>
-
-          {/* Continue Button */}
           <div
             style={{
               padding: "16px",
@@ -406,7 +408,7 @@ export default function OrderDetailPage() {
                 fontWeight: "500",
               }}
             >
-              Продолжить
+              Оплатить
             </button>
           </div>
         </div>
