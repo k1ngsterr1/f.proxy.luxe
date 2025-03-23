@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
-import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies";
+import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies.queries";
 import { AlertMessage } from "@/shared/ui/alert";
 import Link from "next/link";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
@@ -41,6 +41,7 @@ export default function ProxyPage() {
       {data?.isVerified === false && (
         <AlertMessage
           type="warning"
+          isEmail
           message="Вам необходимо подтвердить свой email введя код, указанной в письме."
         />
       )}
@@ -105,8 +106,6 @@ export default function ProxyPage() {
           </button>
         ))}
       </div>
-
-      {/* ✅ Loading State */}
       {isLoading && (
         <div
           style={{

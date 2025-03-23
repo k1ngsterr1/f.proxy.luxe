@@ -8,6 +8,7 @@ import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-orde
 import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-order.mutation";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { Button } from "@/shared/ui/button";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -55,6 +56,7 @@ export default function OrderDetailPage() {
       {user?.isVerified === false && (
         <AlertMessage
           type="warning"
+          isEmail
           message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
         />
       )}
@@ -303,28 +305,17 @@ export default function OrderDetailPage() {
                         fontSize: "14px",
                       }}
                     />
-                    <button
+                    <Button
+                      name="Применить"
                       onClick={handleApplyCoupon}
-                      style={{
-                        padding: "8px 16px",
-                        backgroundColor: "#f3d675",
-                        border: "none",
-                        borderRadius: "4px",
-                        color: "#000000",
-                        fontSize: "14px",
-                        cursor: "pointer",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Применить
-                    </button>
+                      variant="default"
+                    />
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
 
-          {/* Proxy Type Selection */}
           <div
             style={{
               padding: "16px",
@@ -396,21 +387,11 @@ export default function OrderDetailPage() {
               justifyContent: "flex-start",
             }}
           >
-            <button
+            <Button
               onClick={handleContinue}
-              style={{
-                padding: "10px 24px",
-                backgroundColor: "#f3d675",
-                border: "none",
-                borderRadius: "4px",
-                color: "#000000",
-                fontSize: "14px",
-                cursor: "pointer",
-                fontWeight: "500",
-              }}
-            >
-              Оплатить
-            </button>
+              name={isFinishing ? "Загрузка..." : "Оплатить"}
+              variant="medium"
+            />
           </div>
         </div>
       )}

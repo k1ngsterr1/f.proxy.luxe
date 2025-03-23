@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmoney-payment";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useState } from "react";
+import { Button } from "@/shared/ui/button";
 
 const validationSchema = Yup.object({
   paymentMethod: Yup.string().required("Выберите способ оплаты"),
@@ -182,18 +183,15 @@ export const PayForm = () => {
             onChange={formik.handleChange}
             // Keep required for this input as it's a standard input
           />
-
-          <button
+          <Button
             type="submit"
             className="btn_next"
-            disabled={isSubmitting}
             style={{
               opacity: isSubmitting ? 0.7 : 1,
               cursor: isSubmitting ? "not-allowed" : "pointer",
             }}
-          >
-            {isSubmitting ? "обработка..." : "продолжить"}
-          </button>
+            name={isSubmitting ? "обработка..." : "продолжить"}
+          />
         </div>
       </div>
 

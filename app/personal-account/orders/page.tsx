@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useProxyOrders } from "@/entities/orders/hooks/queries/use-get-proxy-orders.query";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { Button } from "@/shared/ui/button";
 
 export default function OrdersPage() {
   const navigate = useRouter();
@@ -15,6 +16,7 @@ export default function OrdersPage() {
   return (
     <div
       style={{
+        width: "100%",
         padding: "20px",
         maxWidth: "920px",
         margin: "0 auto",
@@ -24,11 +26,13 @@ export default function OrdersPage() {
       {user?.isVerified === false && (
         <AlertMessage
           type="warning"
+          isEmail
           message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
         />
       )}
       <div
         style={{
+          width: "100%",
           marginBottom: "24px",
         }}
       >
@@ -170,26 +174,13 @@ export default function OrdersPage() {
                     {order.totalPrice} $
                   </td>
                   {order.status === "PENDING" && (
-                    <button
+                    <Button
+                      variant="small"
+                      name="ОПЛАТИТЬ"
                       onClick={() =>
                         navigate.push(`/personal-account/orders/${order.id}`)
                       }
-                      style={{
-                        marginRight: "8px",
-                        marginTop: "12px",
-                        padding: "8px 16px",
-                        backgroundColor: "#f3d675",
-                        border: "none",
-                        borderRadius: "4px",
-                        color: "#000000",
-                        fontSize: "12px",
-                        fontWeight: "500",
-                        cursor: "pointer",
-                        transition: "background-color 0.2s",
-                      }}
-                    >
-                      ОПЛАТИТЬ
-                    </button>
+                    />
                   )}
                 </tr>
               ))}

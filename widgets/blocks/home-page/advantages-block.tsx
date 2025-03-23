@@ -37,7 +37,7 @@ const advantages = [
   },
   {
     image: Prem5,
-    title: "ПОКУПКА ОТ 1 IP",
+    title: "ПОКУПКА ОТ 1-ГО IP",
     description: "Вы можете купить хоть один прокси, кол-во не имеет значения.",
     altText: "Гибкие покупки",
   },

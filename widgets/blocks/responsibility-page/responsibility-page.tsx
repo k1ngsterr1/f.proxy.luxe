@@ -15,9 +15,10 @@ export default function ResponsibilityBlock() {
         color: "#FFFFFF",
       }}
     >
-      <div style={{ marginBottom: "32px" }}>
+      <div style={{ marginBottom: "32px", padding: 65 }}>
         <h1
           style={{
+            textAlign: "center",
             fontSize: "32px",
             margin: 0,
             color: "#FFFFFF",

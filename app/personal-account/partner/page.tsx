@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Copy } from "lucide-react";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { Button } from "@/shared/ui/button";
 
 export default function PartnerPage() {
   const { data: user } = useGetUser();
@@ -24,6 +25,7 @@ export default function PartnerPage() {
       {user?.isVerified === false && (
         <AlertMessage
           type="warning"
+          isEmail
           message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
         />
       )}
@@ -182,20 +184,7 @@ export default function PartnerPage() {
                 fontSize: "14px",
               }}
             />
-            <button
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#f3d675",
-                border: "none",
-                borderRadius: "4px",
-                color: "#000000",
-                fontSize: "14px",
-                cursor: "pointer",
-                fontWeight: "500",
-              }}
-            >
-              Создать
-            </button>
+            <Button name="Создать" variant="default" />
           </div>
         </div>
 
@@ -212,10 +201,10 @@ export default function PartnerPage() {
           >
             Для выплаты партнерского вознаграждения напишите заявку на{" "}
             <a
-              href="mailto:support@proxy6.net"
+              href="mailto:admin@proxy.luxe "
               style={{ color: "#f3d675", textDecoration: "none" }}
             >
-              support@proxy6.net
+              admin@proxy.luxe
             </a>{" "}
             с указанием кошелька для выплаты - WebMoney (WMZ), Payeer. Выплаты
             производятся каждые 7-14 дней.

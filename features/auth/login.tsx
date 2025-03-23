@@ -9,6 +9,7 @@ import { login } from "@/entities/auth/api/post/login.api";
 import Link from "next/link";
 import { useEffect } from "react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
+import { Button } from "@/shared/ui/button";
 
 export const LoginAuthForm = () => {
   const navigate = useRouter();
@@ -49,7 +50,13 @@ export const LoginAuthForm = () => {
       onSubmit={handleSubmit}
     >
       {({ isSubmitting, errors }: any) => (
-        <Form className="auth-form">
+        <Form
+          className="auth-form"
+          style={{
+            maxWidth: 920,
+            margin: "auto",
+          }}
+        >
           <Field
             type="email"
             name="email"
@@ -114,13 +121,15 @@ export const LoginAuthForm = () => {
             Забыли пароль?
           </Link>
           <div className="btn-wrap">
-            <button
+            <Button
               type="submit"
-              className="auth-btn btn"
+              variant="big"
+              style={{
+                marginTop: 16,
+              }}
               disabled={isSubmitting}
-            >
-              {isSubmitting ? "Вход..." : "Войти"}
-            </button>
+              name={isSubmitting ? "Вход..." : "Войти"}
+            />
           </div>
         </Form>
       )}

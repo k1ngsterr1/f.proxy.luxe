@@ -13,6 +13,7 @@ import { register } from "@/entities/auth/api/post/register.api";
 import { useRouter } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
+import { Button } from "@/shared/ui/button";
 
 interface FormValues {
   email: string;
@@ -163,13 +164,12 @@ export const RegisterAuthForm = () => {
             )}
 
             <div className="btn-wrap">
-              <button
+              <Button
                 type="submit"
-                className="auth-btn btn"
+                variant="big"
                 disabled={isSubmitting}
-              >
-                {isSubmitting ? "Вход..." : "Войти"}
-              </button>
+                name={isSubmitting ? "Вход..." : "Войти"}
+              />
             </div>
           </Form>
         );

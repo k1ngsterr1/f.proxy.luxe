@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui/button";
 import React from "react";
 
 export const ISPBuyCard = () => {
@@ -89,9 +90,7 @@ export const ISPBuyCard = () => {
           ЦЕНА
           <span>2.4$ / IP</span>
         </div>
-        <a href="#" className="btn">
-          купить
-        </a>
+        <Button className="btn" variant="big" name="Купить" />
       </div>
     </div>
   );

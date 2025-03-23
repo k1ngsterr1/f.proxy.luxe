@@ -2804,7 +2804,8 @@ img {
 }
 
 .footer {
-  padding: 65px 0;
+  padding-top: 65px;
+  padding-bottom: 16px;
 }
 .footer-inner {
   display: flex;

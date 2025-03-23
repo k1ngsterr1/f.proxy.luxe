@@ -47,10 +47,7 @@ export const Sidebar = () => {
             </ActiveLink>
           </li>
           <li>
-            <ActiveLink
-              activeClassName="active"
-              href="/personal-account/partners"
-            >
+            <ActiveLink activeClassName="active" href="/partners">
               Партнерская программа
             </ActiveLink>
           </li>

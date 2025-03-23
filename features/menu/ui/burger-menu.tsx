@@ -213,6 +213,7 @@ export const BurgerMenu = () => {
             <>
               <Link
                 href="/login"
+                onClick={() => close()}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -232,7 +233,8 @@ export const BurgerMenu = () => {
                 ЛОГИН
               </Link>
               <Link
-                href="/login"
+                href="/registration"
+                onClick={() => close()}
                 style={{
                   display: "flex",
                   alignItems: "center",

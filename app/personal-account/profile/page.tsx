@@ -14,8 +14,9 @@ export default function ProfilePage() {
   return (
     <div
       style={{
+        width: "100%",
         padding: "20px",
-        maxWidth: "1200px",
+        maxWidth: "920px",
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
@@ -23,6 +24,7 @@ export default function ProfilePage() {
       {data?.isVerified === false && (
         <AlertMessage
           type="warning"
+          isEmail
           message="Вам необходимо подтвердить свой email введя код, указанной в письме."
         />
       )}

@@ -3,6 +3,15 @@
 import { Loader } from "@/shared/ui/loader";
 import { useEffect, useState } from "react";
 import { UAParser } from "ua-parser-js";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import {
+  AlertCircle,
+  CheckCircle,
+  Globe,
+  Shield,
+  MapPin,
+  Lock,
+} from "lucide-react";
 
 interface IpData {
   ip: string;
@@ -45,6 +54,8 @@ export default function AnonymityChecker() {
   const [activeX, setActiveX] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [anonymityScore, setAnonymityScore] = useState(0);
+  const isMobile = useIsMobile();
 
   // Получаем данные о IP
   useEffect(() => {
@@ -193,27 +204,102 @@ export default function AnonymityChecker() {
     setActiveX(checkActiveX());
   }, []);
 
-  // Завершение загрузки
+  // Calculate anonymity score
   useEffect(() => {
     if (ipData && userData) {
+      let score = 100;
+
+      // Deduct points for each privacy issue
+      if (proxyData.isProxy) score -= 5;
+      if (proxyData.isVPN) score -= 5;
+      if (proxyData.isTor) score -= 5;
+      if (blacklistData.isBlacklisted) score -= 15;
+      if (webRTC) score -= 20;
+      if (flash) score -= 10;
+      if (java) score -= 10;
+      if (activeX) score -= 10;
+
+      // Ensure score is between 0 and 100
+      score = Math.max(0, Math.min(100, score));
+      setAnonymityScore(score);
+
       setLoading(false);
     }
-  }, [ipData, userData]);
+  }, [
+    ipData,
+    userData,
+    proxyData,
+    blacklistData,
+    webRTC,
+    flash,
+    java,
+    activeX,
+  ]);
 
   if (loading) {
-    return (
-      <>
-        <Loader fullScreen />
-      </>
-    );
+    return <Loader fullScreen />;
   }
 
   if (error) {
-    return <div>Ошибка: {error}</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          backgroundColor: "#000000",
+          color: "#FF5252",
+          padding: "20px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            backgroundColor: "rgba(255, 82, 82, 0.1)",
+            padding: "16px 24px",
+            borderRadius: "8px",
+            border: "1px solid rgba(255, 82, 82, 0.3)",
+          }}
+        >
+          <AlertCircle size={24} />
+          <span>Ошибка: {error}</span>
+        </div>
+      </div>
+    );
   }
 
   if (!ipData || !userData) {
-    return <div>Данные не найдены</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          backgroundColor: "#000000",
+          color: "#f3d675",
+          padding: "20px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            backgroundColor: "rgba(243, 214, 117, 0.1)",
+            padding: "16px 24px",
+            borderRadius: "8px",
+            border: "1px solid rgba(243, 214, 117, 0.2)",
+          }}
+        >
+          <AlertCircle size={24} />
+          <span>Данные не найдены</span>
+        </div>
+      </div>
+    );
   }
 
   // Разделяем координаты на широту и долготу
@@ -221,230 +307,1032 @@ export default function AnonymityChecker() {
     ? ipData.loc.split(",")
     : [null, null];
 
+  // Get anonymity level text and color
+  const getAnonymityLevel = () => {
+    if (anonymityScore >= 90) return { text: "Отличная", color: "#4CAF50" };
+    if (anonymityScore >= 70) return { text: "Хорошая", color: "#8BC34A" };
+    if (anonymityScore >= 50) return { text: "Средняя", color: "#FFC107" };
+    if (anonymityScore >= 30) return { text: "Низкая", color: "#FF9800" };
+    return { text: "Критическая", color: "#FF5252" };
+  };
+
+  const anonymityLevel = getAnonymityLevel();
+
   return (
-    <main className="inner-page">
-      <section className="prcheck">
-        <div className="scontainer">
-          <h1 className="section-header">
-            <span>ПРОВЕРКА АНОНИМНОСТИ</span>
+    <main
+      style={{
+        backgroundColor: "#000000",
+        color: "#FFFFFF",
+        paddingTop: isMobile ? 356 : 256,
+      }}
+    >
+      <section style={{ padding: isMobile ? "20px 16px" : "40px 20px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <h1
+            style={{
+              fontSize: isMobile ? "24px" : "32px",
+              fontWeight: "bold",
+              marginBottom: "16px",
+              color: "#FFFFFF",
+            }}
+          >
+            <span style={{ color: "#f3d675" }}>ПРОВЕРКА АНОНИМНОСТИ</span>
           </h1>
-          <p className="prcheck-text">
+
+          <p
+            style={{
+              fontSize: "14px",
+              lineHeight: "1.6",
+              marginBottom: "24px",
+              color: "#CCCCCC",
+            }}
+          >
             С помощью данного сервиса вы можете проверить, насколько вы анонимны
             в сети, насколько данные, предоставляемые вашим
             компьютером/браузером, совпадают с данными, предоставляемыми вашим
             IP-адресом.
           </p>
-          <div className="anon">
-            <div className="anon-inner">
-              <div className="anon-item anon-item--myip">
-                <div className="anon-item__row ccenter">
-                  <div className="atitle">
-                    Мой IP
-                    <span className="atitle-ip">{ipData.ip}</span>
-                    <a href="#" className="atitle-hideip">
-                      Скрыть IP
-                    </a>
+
+          {/* Anonymity Score Card */}
+          <div
+            style={{
+              backgroundColor: "rgba(243, 214, 117, 0.05)",
+              borderRadius: "8px",
+              border: "1px solid rgba(243, 214, 117, 0.2)",
+              padding: isMobile ? "16px" : "24px",
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: isMobile ? "center" : "space-between",
+              flexDirection: isMobile ? "column" : "row",
+              gap: isMobile ? "16px" : "0",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <Shield
+                size={isMobile ? 32 : 40}
+                style={{ color: anonymityLevel.color }}
+              />
+              <div>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    color: "#999999",
+                    marginBottom: "4px",
+                  }}
+                >
+                  Уровень анонимности:
+                </div>
+                <div
+                  style={{
+                    fontSize: isMobile ? "20px" : "24px",
+                    fontWeight: "bold",
+                    color: anonymityLevel.color,
+                  }}
+                >
+                  {anonymityLevel.text} ({anonymityScore}%)
+                </div>
+              </div>
+            </div>
+            <div>
+              <button
+                style={{
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                  border: "none",
+                  padding: "10px 16px",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <Lock size={16} />
+                Скрыть IP
+              </button>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: "24px",
+            }}
+          >
+            {/* Left Column - IP and System Information */}
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            >
+              {/* IP Information Card */}
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px",
+                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    backgroundColor: "rgba(243, 214, 117, 0.1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      fontWeight: "600",
+                      color: "#f3d675",
+                    }}
+                  >
+                    IP информация
+                  </h3>
+                </div>
+
+                <div style={{ padding: "16px" }}>
+                  {/* IP Address */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Мой IP
+                    </div>
+                    <div
+                      style={{
+                        color: "#f3d675",
+                        fontSize: "16px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {ipData.ip}
+                    </div>
                   </div>
-                  <div className="atext">
-                    <div className="astatus astatus--gold">Whois</div>
+
+                  {/* Hostname */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Хост
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                        {ipData.hostname || "Неизвестно"}
+                      </span>
+                      <a
+                        href="#"
+                        style={{
+                          backgroundColor: "rgba(243, 214, 117, 0.1)",
+                          color: "#f3d675",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          textDecoration: "none",
+                          border: "1px solid rgba(243, 214, 117, 0.2)",
+                        }}
+                      >
+                        Whois
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Country */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Страна
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                        {ipData.country} ({ipData.region})
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* City */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Город
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {ipData.city || "Неизвестно"}
+                    </div>
+                  </div>
+
+                  {/* Postal Code */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Почтовый индекс
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {ipData.postal || "Неизвестно"}
+                    </div>
+                  </div>
+
+                  {/* Coordinates */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Координаты
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                        {ipData.loc || "Неизвестно"}
+                      </span>
+                      <a
+                        href={`https://www.google.com/maps?q=${latitude},${longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          backgroundColor: "rgba(243, 214, 117, 0.1)",
+                          color: "#f3d675",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          textDecoration: "none",
+                          border: "1px solid rgba(243, 214, 117, 0.2)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                        }}
+                      >
+                        <MapPin size={12} />
+                        Карта
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="anon-item">
-                <div className="anon-item__row ccenter">
-                  <div className="atitle">Хост</div>
-                  <div className="atext atext--double">
-                    <span>{ipData.hostname || "Неизвестно"}</span>
-                    <a href="#" className="astatus astatus--gold">
-                      Whois
-                    </a>
+
+              {/* System Information Card */}
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px",
+                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    backgroundColor: "rgba(243, 214, 117, 0.1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      fontWeight: "600",
+                      color: "#f3d675",
+                    }}
+                  >
+                    Системная информация
+                  </h3>
+                </div>
+
+                <div style={{ padding: "16px" }}>
+                  {/* OS */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>ОС</div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {userData.os.name} {userData.os.version}
+                    </div>
                   </div>
-                </div>
-                <div className="anon-item__row ccenter">
-                  <div className="atitle">Страна</div>
-                  <div className="atext">
-                    <span>
-                      {ipData.country} ({ipData.region})
-                    </span>
-                    <img src="img/rus-lang.png" alt="" />
+
+                  {/* Browser */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Браузер
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {userData.browser.name} {userData.browser.version}
+                    </div>
                   </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Город</div>
-                  <div className="atext">{ipData.city || "Неизвестно"}</div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Почтовый индекс</div>
-                  <div className="atext">{ipData.postal || "Неизвестно"}</div>
-                </div>
-                <div className="anon-item__row ccenter">
-                  <div className="atitle">Координаты</div>
-                  <div className="atext atext--double">
-                    <span>{ipData.loc || "Неизвестно"}</span>
-                    <a href="#" className="astatus astatus--gold">
-                      Карта
-                    </a>
+
+                  {/* User Agent */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: isMobile ? "flex-start" : "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                      flexDirection: isMobile ? "column" : "row",
+                      gap: isMobile ? "8px" : "0",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      User Agent
+                    </div>
+                    <div
+                      style={{
+                        color: "#FFFFFF",
+                        fontSize: "12px",
+                        maxWidth: isMobile ? "100%" : "300px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: isMobile ? "normal" : "nowrap",
+                      }}
+                    >
+                      {navigator.userAgent}
+                    </div>
+                  </div>
+
+                  {/* Language */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Язык
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {navigator.language}
+                    </div>
+                  </div>
+
+                  {/* Screen */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Экран
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {window.screen.width}x{window.screen.height},{" "}
+                      {window.screen.colorDepth} бит
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="anon-item">
-                <div className="anon-item__row">
-                  <div className="atitle">ОС</div>
-                  <div className="atext">
-                    {userData.os.name} {userData.os.version}
+
+              {/* Time Information Card */}
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px",
+                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    backgroundColor: "rgba(243, 214, 117, 0.1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      fontWeight: "600",
+                      color: "#f3d675",
+                    }}
+                  >
+                    Временная информация
+                  </h3>
+                </div>
+
+                <div style={{ padding: "16px" }}>
+                  {/* Timezone */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Временная зона IP
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {ipData.timezone || "Неизвестно"}
+                    </div>
                   </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Браузер</div>
-                  <div className="atext">
-                    {userData.browser.name} {userData.browser.version}
+
+                  {/* IP Time */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Время IP
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {new Date().toLocaleString()}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="anon-item">
-                <div className="anon-item__row">
-                  <div className="atitle">Временная зона IP</div>
-                  <div className="atext">{ipData.timezone || "Неизвестно"}</div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Время IP</div>
-                  <div className="atext">{new Date().toLocaleString()}</div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Время системное</div>
-                  <div className="atext">{new Date().toLocaleString()}</div>
-                </div>
-              </div>
-              <div className="anon-item">
-                <div className="anon-item__row">
-                  <div className="atitle">UserAgent</div>
-                  <div className="atext">{navigator.userAgent}</div>
-                </div>
-                <div className="anon-item__row ccenter">
-                  <div className="atitle">UserAgent JS</div>
-                  <div className="atext">
-                    <div className="astatus astatus--green">Совпадает</div>
-                  </div>
-                </div>
-              </div>
-              <div className="anon-item">
-                <div className="anon-item__row">
-                  <div className="atitle">Язык</div>
-                  <div className="atext">{navigator.language}</div>
-                </div>
-                <div className="anon-item__row ccenter">
-                  <div className="atitle">Браузер</div>
-                  <div className="atext">
-                    <span>{navigator.language}</span>
-                    <img src="img/rus-lang.png" alt="" />
-                  </div>
-                </div>
-              </div>
-              <div className="anon-item">
-                <div className="anon-item__row">
-                  <div className="atitle">Экран</div>
-                  <div className="atext">
-                    {window.screen.width}x{window.screen.height},{" "}
-                    {window.screen.colorDepth} бит
+
+                  {/* System Time */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Время системное
+                    </div>
+                    <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
+                      {new Date().toLocaleString()}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="anon-inner">
-              <div className="anon-status anon-status--red">
-                Моя анонимность 80%
+
+            {/* Right Column - Anonymity Status */}
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+            >
+              {/* Anonymity Status Card */}
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px",
+                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    backgroundColor: "rgba(243, 214, 117, 0.1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      fontWeight: "600",
+                      color: "#f3d675",
+                    }}
+                  >
+                    Статус анонимности
+                  </h3>
+                </div>
+
+                <div style={{ padding: "16px" }}>
+                  {/* Proxy */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Прокси
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: proxyData.isProxy
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: proxyData.isProxy ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: proxyData.isProxy
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {proxyData.isProxy ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {proxyData.isProxy ? "Обнаружено" : "Не обнаружено"}
+                    </div>
+                  </div>
+
+                  {/* VPN */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      VPN
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: proxyData.isVPN
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: proxyData.isVPN ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: proxyData.isVPN
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {proxyData.isVPN ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {proxyData.isVPN ? "Обнаружено" : "Не обнаружено"}
+                    </div>
+                  </div>
+
+                  {/* Tor */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Tor
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: proxyData.isTor
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: proxyData.isTor ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: proxyData.isTor
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {proxyData.isTor ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {proxyData.isTor ? "Обнаружено" : "Не обнаружено"}
+                    </div>
+                  </div>
+
+                  {/* Blacklist */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Черный список
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: blacklistData.isBlacklisted
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: blacklistData.isBlacklisted
+                          ? "#FF5252"
+                          : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: blacklistData.isBlacklisted
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {blacklistData.isBlacklisted ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {blacklistData.isBlacklisted
+                        ? `Обнаружено (${blacklistData.reports} отчетов)`
+                        : "Не обнаружено"}
+                    </div>
+                  </div>
+
+                  {/* WebRTC */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      WebRTC
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: webRTC
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: webRTC ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: webRTC
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {webRTC ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {webRTC ? "Утечка" : "Защищено"}
+                    </div>
+                  </div>
+
+                  {/* Flash */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Flash
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: flash
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: flash ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: flash
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {flash ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {flash ? "Включен" : "Отключен"}
+                    </div>
+                  </div>
+
+                  {/* Java */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      Java
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: java
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: java ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: java
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {java ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {java ? "Включен" : "Отключен"}
+                    </div>
+                  </div>
+
+                  {/* ActiveX */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "12px 0",
+                    }}
+                  >
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      ActiveX
+                    </div>
+                    <div
+                      style={{
+                        backgroundColor: activeX
+                          ? "rgba(255, 82, 82, 0.1)"
+                          : "rgba(76, 175, 80, 0.1)",
+                        color: activeX ? "#FF5252" : "#4CAF50",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        border: activeX
+                          ? "1px solid rgba(255, 82, 82, 0.3)"
+                          : "1px solid rgba(76, 175, 80, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      {activeX ? (
+                        <AlertCircle size={12} />
+                      ) : (
+                        <CheckCircle size={12} />
+                      )}
+                      {activeX ? "Включен" : "Отключен"}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="anon-item anon-item--status">
-                <div className="anon-item__row">
-                  <div className="atitle">Прокси</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${
-                        proxyData.isProxy ? "red" : "green"
-                      }`}
-                    >
-                      {proxyData.isProxy ? "Yes" : "No"}
-                    </div>
+
+              {/* Recommendations Card */}
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px",
+                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    backgroundColor: "rgba(243, 214, 117, 0.1)",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "18px",
+                      fontWeight: "600",
+                      color: "#f3d675",
+                    }}
+                  >
+                    Рекомендации по улучшению анонимности
+                  </h3>
+                </div>
+
+                <div style={{ padding: "16px" }}>
+                  <ul
+                    style={{
+                      margin: 0,
+                      padding: "0 0 0 20px",
+                      color: "#FFFFFF",
+                    }}
+                  >
+                    {webRTC && (
+                      <li style={{ marginBottom: "8px" }}>
+                        <span style={{ color: "#f3d675" }}>
+                          Отключите WebRTC
+                        </span>{" "}
+                        в вашем браузере или используйте расширение для
+                        блокировки WebRTC утечек.
+                      </li>
+                    )}
+                    {(flash || java || activeX) && (
+                      <li style={{ marginBottom: "8px" }}>
+                        <span style={{ color: "#f3d675" }}>
+                          Отключите устаревшие технологии
+                        </span>{" "}
+                        (Flash, Java, ActiveX), которые могут представлять
+                        угрозу безопасности.
+                      </li>
+                    )}
+                    {!proxyData.isVPN && (
+                      <li style={{ marginBottom: "8px" }}>
+                        <span style={{ color: "#f3d675" }}>
+                          Используйте надежный VPN-сервис
+                        </span>{" "}
+                        для скрытия вашего реального IP-адреса.
+                      </li>
+                    )}
+                    <li style={{ marginBottom: "8px" }}>
+                      <span style={{ color: "#f3d675" }}>
+                        Используйте режим инкогнито
+                      </span>{" "}
+                      или приватный режим браузера для минимизации отслеживания.
+                    </li>
+                    <li style={{ marginBottom: "8px" }}>
+                      <span style={{ color: "#f3d675" }}>
+                        Установите расширения для блокировки рекламы и трекеров
+                      </span>
+                      , такие как uBlock Origin или Privacy Badger.
+                    </li>
+                    <li>
+                      <span style={{ color: "#f3d675" }}>
+                        Рассмотрите возможность использования Tor Browser
+                      </span>{" "}
+                      для максимальной анонимности.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Additional Resources */}
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  padding: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  flexDirection: isMobile ? "column" : "row",
+                }}
+              >
+                <Globe size={24} style={{ color: "#f3d675" }} />
+                <div>
+                  <div
+                    style={{
+                      color: "#FFFFFF",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    Нужна дополнительная защита?
+                  </div>
+                  <div style={{ color: "#999999", fontSize: "12px" }}>
+                    Используйте наши прокси-сервисы для повышения анонимности в
+                    сети.
                   </div>
                 </div>
-                <div className="anon-item__row">
-                  <div className="atitle">VPN</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${
-                        proxyData.isVPN ? "red" : "green"
-                      }`}
-                    >
-                      {proxyData.isVPN ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Tor</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${
-                        proxyData.isTor ? "red" : "green"
-                      }`}
-                    >
-                      {proxyData.isTor ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Черный список</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${
-                        blacklistData.isBlacklisted ? "red" : "green"
-                      }`}
-                    >
-                      {blacklistData.isBlacklisted ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">WebRTC</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${webRTC ? "red" : "green"}`}
-                    >
-                      {webRTC ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Flash</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${flash ? "red" : "green"}`}
-                    >
-                      {flash ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">Java</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${java ? "red" : "green"}`}
-                    >
-                      {java ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
-                <div className="anon-item__row">
-                  <div className="atitle">ActiveX</div>
-                  <div className="atext">
-                    <div
-                      className={`astatus astatus--${
-                        activeX ? "red" : "green"
-                      }`}
-                    >
-                      {activeX ? "Yes" : "No"}
-                    </div>
-                  </div>
-                </div>
+                <button
+                  style={{
+                    marginLeft: isMobile ? "0" : "auto",
+                    backgroundColor: "#f3d675",
+                    color: "#000000",
+                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: "4px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    width: isMobile ? "100%" : "auto",
+                    marginTop: isMobile ? "12px" : "0",
+                  }}
+                >
+                  Купить прокси
+                </button>
               </div>
             </div>
           </div>

@@ -28,7 +28,7 @@ export default function BuyProxy() {
               <div className="ibuy-text">
                 Если вам нужны прокси для другой страны, либо большее кол-во,
                 напишите нам:{" "}
-                <a href="amilto:support@proxy.luxe">support@proxy.luxe</a>
+                <a href="amilto:admin@proxy.luxe ">admin@proxy.luxe </a>
               </div>
             </div>
           </div>

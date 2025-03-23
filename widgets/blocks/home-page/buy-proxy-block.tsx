@@ -1,5 +1,5 @@
 import { IPV6BuyCard } from "@/entities/ipv6/ui/ipv6-buy-card";
-import { ISPBuyCard } from "@/entities/orders/isp-buy-card";
+import { ISPBuyCard } from "@/entities/isp/ui/isp-buy-card";
 import { ResidentalProxyBuyCard } from "@/entities/residental-proxy/ui/residental-proxy-buy-card";
 import React from "react";
 

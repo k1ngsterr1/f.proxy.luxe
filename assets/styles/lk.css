@@ -2711,9 +2711,6 @@ img {
   width: 100%;
 }
 
-.footer {
-  padding: 65px 0;
-}
 .footer-inner {
   display: flex;
   flex-wrap: wrap;

@@ -39,7 +39,7 @@ export default function Partners() {
             </div>
             <div>
               <span>•</span> Перевод вознаграждения на внутренний баланс, либо
-              вывод на WebMoney, Яндекс.Деньги;
+              вывод на WebMoney, Payeer;
             </div>
             <div>
               <span>•</span> Отсутствие минимальной суммы для вывода;

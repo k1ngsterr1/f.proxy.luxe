@@ -55,6 +55,7 @@ export default function PersonalAccount() {
               {data?.isVerified === false && (
                 <AlertMessage
                   type="warning"
+                  isEmail
                   message="Вам необходимо подтвердить свой email введя код, указанной в письме."
                 />
               )}

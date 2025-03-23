@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAllProxies,
   ProxyListResponse,
-} from "../../api/get/get-all-proxies";
+} from "../../api/get/get-all-proxies.api";
 
 export const useProxyList = (type: string) => {
   return useQuery<ProxyListResponse | undefined, Error>({

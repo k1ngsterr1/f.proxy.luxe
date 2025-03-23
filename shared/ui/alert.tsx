@@ -1,4 +1,7 @@
-import type React from "react";
+import React, { useEffect, useState } from "react";
+import { EmailDTO } from "@/shared/interfaces/email.interface";
+import { sendEmailCode } from "@/entities/auth/api/post/send-email-code.api";
+import { useRouter } from "next/navigation";
 
 type AlertType = "success" | "error" | "warning" | "info";
 
@@ -7,14 +10,29 @@ interface AlertMessageProps {
   message: React.ReactNode;
   show?: boolean;
   className?: string;
+  isEmail?: boolean;
 }
 
 export const AlertMessage: React.FC<AlertMessageProps> = ({
   type,
   message,
   show = true,
+  isEmail = false,
   className = "",
 }) => {
+  const navigate = useRouter();
+  const [email, setEmail] = useState<string | null>(null);
+  const [resendStatus, setResendStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEmail = localStorage.getItem("email");
+      setEmail(storedEmail);
+    }
+  }, []);
+
   if (!show) return null;
 
   const styles = {
@@ -40,6 +58,23 @@ export const AlertMessage: React.FC<AlertMessageProps> = ({
     },
   };
 
+  const handleResend = async () => {
+    if (!email) return;
+
+    const payload: EmailDTO = { email };
+
+    try {
+      setResendStatus("loading");
+      await sendEmailCode(payload);
+      setResendStatus("success");
+      navigate.push("/verification-code");
+    } catch (err) {
+      setResendStatus("error");
+    } finally {
+      setTimeout(() => setResendStatus("idle"), 3000);
+    }
+  };
+
   return (
     <div
       style={{
@@ -52,7 +87,29 @@ export const AlertMessage: React.FC<AlertMessageProps> = ({
       className={className}
       role={type === "error" ? "alert" : "status"}
     >
-      {message}
+      {message}{" "}
+      {isEmail && (
+        <button
+          onClick={handleResend}
+          disabled={resendStatus === "loading"}
+          style={{
+            textDecoration: "underline",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            paddingLeft: "8px",
+            color: styles[type].color,
+          }}
+        >
+          {resendStatus === "loading"
+            ? "Отправка..."
+            : resendStatus === "success"
+            ? "Отправлено ✅"
+            : resendStatus === "error"
+            ? "Ошибка 🔁"
+            : "Отправить снова"}
+        </button>
+      )}
     </div>
   );
 };
