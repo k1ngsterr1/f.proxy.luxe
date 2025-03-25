@@ -15,6 +15,7 @@ import { RegisterForm } from "@/widgets/forms/register-form";
 import { Loader } from "@/shared/ui/loader";
 import { NonAuthorizedPopup } from "@/entities/auth/ui/non-authorized-popup/non-authorized-popup";
 import ClientLayout from "./client-layout";
+import Script from "next/script";
 
 export default async function LocaleLayout({
   children,
@@ -39,6 +40,20 @@ export default async function LocaleLayout({
         <title>Proxy Luxe</title>
       </head>
       <body>
+        <Script id="chatra" strategy="afterInteractive">
+          {`
+            (function(d, w, c) {
+              w.ChatraID = 'GMyCm92jsrf54TFEN';
+              var s = d.createElement('script');
+              w[c] = w[c] || function() {
+                (w[c].q = w[c].q || []).push(arguments);
+              };
+              s.async = true;
+              s.src = 'https://call.chatra.io/chatra.js';
+              if (d.head) d.head.appendChild(s);
+            })(document, window, 'Chatra');
+          `}
+        </Script>
         <ClientLayout messages={messages} locale={locale}>
           <Suspense fallback={<Loader />}>
             <Header />
