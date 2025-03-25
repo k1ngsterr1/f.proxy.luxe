@@ -1,13 +1,16 @@
 import { Button } from "@/shared/ui/button";
-import React from "react";
+import React, { useState } from "react";
 
 export const ResidentalProxyBuyCard = () => {
+  const [goal, setGoal] = useState<string>("");
+
   return (
     <div className="buy-col">
       <div
         className="buy-item"
         style={{
-          height: 800,
+          height: 850,
+          minHeight: 800,
         }}
       >
         <h3 className="buy-item__header buy-item__header--solo">
@@ -107,6 +110,25 @@ export const ResidentalProxyBuyCard = () => {
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
+        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+          ЦЕЛЬ ИСПОЛЬЗОВАНИЯ
+        </h4>
+        <input
+          type="text"
+          value={goal}
+          min={10}
+          onChange={(e) => setGoal(e.target.value)}
+          style={{
+            backgroundColor: "#1E1E1E",
+            color: "#fff",
+            border: "1px solid #3E3E3E",
+            padding: "10px",
+            width: "100%",
+            borderRadius: "5px",
+            appearance: "none",
+            cursor: "pointer",
+          }}
+        />
         <div className="buy-item__price">
           ЦЕНА
           <span>2.4$ / IP</span>

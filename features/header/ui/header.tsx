@@ -11,8 +11,10 @@ import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { useRouter } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { BurgerMenu } from "@/features/menu/ui/burger-menu";
+import { useTranslations } from "next-intl";
 
 export const Header: FC = () => {
+  const i18n = useTranslations();
   const { token } = useAuthStore();
   const { openPopup } = usePopupStore();
   const navigate = useRouter();
@@ -28,23 +30,23 @@ export const Header: FC = () => {
             <div id="menu" className="header-mobmenu">
               <nav className="header-menu">
                 <Link className="nav-item" href="/buy-proxy">
-                  КУПИТЬ ПРОКСИ
+                  {i18n("header.buyProxy")}
                 </Link>
                 <Link className="nav-item" href="/prices">
-                  ЦЕНЫ
+                  {i18n("header.prices")}
                 </Link>
                 <Link className="nav-item" href="/partners">
-                  ПАРТНЕРСКАЯ ПРОГРАММА
+                  {i18n("header.partners")}
                 </Link>
                 <Link className="nav-item" href="/articles">
-                  СТАТЬИ
+                  {i18n("header.articles")}
                 </Link>
                 <Link className="nav-item" href="/faq">
-                  FAQ
+                  {i18n("header.faq")}
                 </Link>
               </nav>
               <div className="header-lang">
-                <a href="#" className="lang-item active">
+                <Link href="/ru" className="lang-item active">
                   <Image
                     src={RusFlag}
                     alt=""
@@ -52,8 +54,8 @@ export const Header: FC = () => {
                     width={40}
                     height={26}
                   />
-                </a>
-                <a href="#" className="lang-item">
+                </Link>
+                <Link href="/en" className="lang-item">
                   <Image
                     src={EngFlag}
                     alt=""
@@ -61,12 +63,12 @@ export const Header: FC = () => {
                     width={40}
                     height={26}
                   />
-                </a>
+                </Link>
               </div>
               {token ? (
                 <div onClick={() => navigate.push("/personal-account")}>
                   <a className="another-btn">
-                    <span>Личный кабинет</span>
+                    <span>{i18n("header.account")}</span>
                   </a>
                 </div>
               ) : (
@@ -82,10 +84,10 @@ export const Header: FC = () => {
                       width={27}
                       height={27}
                     />
-                    <span>войти</span>
+                    <span>{i18n("header.login")}</span>
                   </a>
                   <a onClick={() => openPopup("auth-reg")} className="btn-reg">
-                    <span>регистрация</span>
+                    <span>{i18n("header.register")}</span>
                   </a>
                 </div>
               )}

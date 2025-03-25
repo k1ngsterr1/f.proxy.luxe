@@ -1,9 +1,15 @@
+// next.config.ts
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+// 👇 This is your base config
+const baseConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
 };
 
-export default nextConfig;
+// 👇 Apply next-intl plugin
+const withNextIntl = createNextIntlPlugin();
+
+export default withNextIntl(baseConfig);

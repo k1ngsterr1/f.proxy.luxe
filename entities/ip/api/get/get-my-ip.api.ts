@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IpData } from "@/app/services/my-ip/page";
+import { IpData } from "@/app/[locale]/services/my-ip/page";
 import { apiClient } from "@/shared/config/apiClient";
 
 export const getMyIp = async (): Promise<IpData | null> => {

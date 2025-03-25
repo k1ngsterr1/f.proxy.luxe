@@ -1,0 +1,19 @@
+{
+  "header": {
+    "login": "Login",
+    "buyProxy": "BUY PROXY",
+    "prices": "PRICES",
+    "partners": "AFFILIATE PROGRAM",
+    "articles": "ARTICLES",
+    "faq": "FAQ",
+    "myIp": "My IP",
+    "proxyChecker": "Proxy Checker",
+    "anonymityChecker": "Anonymity Checker",
+    "portChecker": "Port Check",
+    "whois": "Whois",
+    "blackLists": "Blacklists",
+    "ipv6Checker": "IPv6 Support",
+    "register": "Register",
+    "account": "My Account"
+  }
+}

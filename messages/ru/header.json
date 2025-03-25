@@ -1,0 +1,19 @@
+{
+  "header": {
+    "login": "войти",
+    "buyProxy": "КУПИТЬ ПРОКСИ",
+    "prices": "ЦЕНЫ",
+    "partners": "ПАРТНЕРСКАЯ ПРОГРАММА",
+    "articles": "СТАТЬИ",
+    "faq": "FAQ",
+    "myIp": "Мой IP",
+    "proxyChecker": "Прокси чекер",
+    "anonymityChecker": "Моя анонимность",
+    "portChecker": "Проверка портов",
+    "whois": "Whois",
+    "blackLists": "Блэк листы",
+    "ipv6Checker": "Поддержка IPv6",
+    "register": "регистрация",
+    "account": "Личный кабинет"
+  }
+}

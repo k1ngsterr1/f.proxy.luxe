@@ -15,6 +15,7 @@ export const IPV6BuyCard = () => {
 
   const [countryId, setCountryId] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("10");
+  const [goal, setGoal] = useState<string>("");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export const IPV6BuyCard = () => {
     const orderData = {
       country: selectedCountry.name,
       quantity: Number(quantity),
+      goal: goal,
       usage,
       period: "1m",
       periodDays: "1m",
@@ -55,7 +57,7 @@ export const IPV6BuyCard = () => {
 
   return (
     <div className="buy-col">
-      <div className="buy-item" style={{ height: 800 }}>
+      <div className="buy-item" style={{ minHeight: 800, height: 850 }}>
         <h3 className="buy-item__header">IPv6 ПРОКСИ</h3>
         <div className="separator"></div>
         <p className="buy-item__about">
@@ -110,6 +112,7 @@ export const IPV6BuyCard = () => {
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           ПЕРИОД
         </h4>
+
         <div
           style={{
             backgroundColor: "#1E1E1E",
@@ -123,6 +126,25 @@ export const IPV6BuyCard = () => {
         >
           1 месяц
         </div>
+        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+          ЦЕЛЬ ИСПОЛЬЗОВАНИЯ
+        </h4>
+        <input
+          type="text"
+          value={goal}
+          min={10}
+          onChange={(e) => setGoal(e.target.value)}
+          style={{
+            backgroundColor: "#1E1E1E",
+            color: "#fff",
+            border: "1px solid #3E3E3E",
+            padding: "10px",
+            width: "100%",
+            borderRadius: "5px",
+            appearance: "none",
+            cursor: "pointer",
+          }}
+        />
         <div className="buy-item__price">
           ЦЕНА: <span>0.08$ / IP</span>
         </div>
