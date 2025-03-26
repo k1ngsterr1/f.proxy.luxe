@@ -32,8 +32,6 @@ export default async function LocaleLayout({
   // 2. Load translation messages for the current locale
   const messages = await getMessages();
 
-  console.log("messages:", messages);
-
   return (
     <html lang={locale}>
       <head>
