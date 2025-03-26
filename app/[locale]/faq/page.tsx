@@ -1,163 +1,147 @@
+import { useTranslations } from "next-intl";
+
 export default function Faq() {
+  const i18n = useTranslations();
   return (
     <main className="inner-page">
       <section className="faq">
         <div className="scontainer">
           <h1 className="section-header">
-            <span>ОБЩИЕ ВОПРОСЫ</span>
+            <span>{i18n("faq.faqtext1")}</span>
           </h1>
           <div className="faq-list">
             <ul>
               <li>
-                <a href="#">Зачем нужны прокси?</a>
+                <a href="#">{i18n("faq.faqtext2")}</a>
               </li>
               <li>
-                <a href="#">Сколько занимает выдача прокси после оплаты?</a>
+                <a href="#">{i18n("faq.faqtext3")}</a>
               </li>
               <li>
-                <a href="#">Чем отличаются ваши прокси от всех остальных?</a>
+                <a href="#">{i18n("faq.faqtext4")}</a>
               </li>
               <li>
-                <a href="#">Как продлить прокси?</a>
+                <a href="#">{i18n("faq.faqtext5")}</a>
               </li>
               <li>
-                <a href="#">25 порт открыт?</a>
+                <a href="#">{i18n("faq.faqtext6")}</a>
               </li>
               <li>
-                <a href="#">
-                  Доступны ли через прокси сайты из реестра запрещенных сайтов
-                  Роскомнадзора?
-                </a>
+                <a href="#">{i18n("faq.faqtext7")}</a>
               </li>
               <li>
-                <a href="#">Платежные системы доступны через прокси?</a>
+                <a href="#">{i18n("faq.faqtext8")}</a>
               </li>
               <li>
-                <a href="#">Доступен ли Steam через прокси?</a>
+                <a href="#">{i18n("faq.faqtext9")}</a>
               </li>
               <li>
-                <a href="#">
-                  Подходят ли прокси для БК (букмекерские конторы)?
-                </a>
+                <a href="#">{i18n("faq.faqtext10")}</a>
               </li>
               <li>
-                <a href="#">Спам в социальных сетях, приветствуется ли?</a>
+                <a href="#">{i18n("faq.faqtext11")}</a>
               </li>
               <li>
-                <a href="#">Какой минимальный срок аренды прокси?</a>
+                <a href="#">{i18n("faq.faqtext12")}</a>
               </li>
             </ul>
             <ul>
               <li>
-                <a href="#">Для каких сайтов подходят IPv6 прокси?</a>
+                <a href="#">{i18n("faq.faqtext13")}</a>
               </li>
               <li>
-                <a href="#">Подойдут ли IPv6 прокси для парсинга?</a>
+                <a href="#">{i18n("faq.faqtext14")}</a>
               </li>
               <li>
-                <a href="#">Чем IPv6 хуже IPv4 прокси?</a>
+                <a href="#">{i18n("faq.faqtext15")}</a>
               </li>
               <li>
-                <a href="#">Как выглядят IPv6 прокси?</a>
+                <a href="#">{i18n("faq.faqtext16")}</a>
               </li>
               <li>
-                <a href="#">Какая скорость у прокси?</a>
+                <a href="#">{i18n("faq.faqtext17")}</a>
               </li>
               <li>
-                <a href="#">В каком формате прокси?</a>
+                <a href="#">{i18n("faq.faqtext18")}</a>
               </li>
               <li>
-                <a href="#">Как происходит авторизация?</a>
+                <a href="#">{i18n("faq.faqtext19")}</a>
               </li>
               <li>
-                <a href="#">Как проверить работоспособность прокси?</a>
+                <a href="#">{i18n("faq.faqtext20")}</a>
               </li>
               <li>
-                <a href="#">
-                  Как проверить работает ли сайт или сервис с IPv6?
-                </a>
+                <a href="#">{i18n("faq.faqtext21")}</a>
               </li>
               <li>
-                <a href="#">Можно заменить прокси?</a>
+                <a href="#">{i18n("faq.faqtext22")}</a>
               </li>
               <li>
-                <a href="#">Возврат денежных средств</a>
+                <a href="#">{i18n("faq.faqtext23")}</a>
               </li>
             </ul>
           </div>
           <div className="faq-inner">
-            <h2 className="faq-header">Зачем нужны прокси?</h2>
+            <h2 className="faq-header">{i18n("faq.faqtext24")}</h2>
             <p className="faq-text">
-              <b>Смена IP и DNS</b> - Вы можете скрыть свой реальный IP адрес и
-              DNS просто подключив прокси;
+              <b>{i18n("faq.faqtext25")}</b>
+              {i18n("faq.faqtext26")}
               <br />
-              <b>Анонимность в сети</b> - Анонимное и безопасное использование
-              интернета, скрытие интернет активности от своего провайдера;
+              <b>{i18n("faq.faqtext27")}</b>
+              {i18n("faq.faqtext28")}
               <br />
-              <b>Обход блокировок</b> - Снятие ограничений сервисов по IP, GEO
-              данным, порту и протоколу. Ваш интернет становится свободным;
+              <b>{i18n("faq.faqtext29")}</b>
+              {i18n("faq.faqtext30")}
               <br />
-              <b>Защита от хакеров</b> - Атаки хакеров ложатся на наш
-              прокси-сервер. Злоумышленники не смогут узнать реальный IP.
+              <b>{i18n("faq.faqtext31")}</b>
+              {i18n("faq.faqtext32")}
             </p>
+
+            <h2 className="faq-header">{i18n("faq.faqtext33")}</h2>
+            <p className="faq-text">
+              <b>{i18n("faq.faqtext34")}</b> <br />
+              {i18n("faq.faqtext35")}
+            </p>
+
+            <h2 className="faq-header">{i18n("faq.faqtext36")}</h2>
+            <p className="faq-text">
+              {i18n("faq.faqtext37")}
+              <br />
+              {i18n("faq.faqtext38")}
+              <br />
+              {i18n("faq.faqtext39")}
+              <br />
+              {i18n("faq.faqtext40")}
+              <br />
+              {i18n("faq.faqtext41")}
+            </p>
+
+            <h2 className="faq-header">{i18n("faq.faqtext42")}</h2>
+            <p className="faq-text">
+              {i18n("faq.faqtext43")}
+              <span>&#34;{i18n("faq.faqtext44")}&#34;</span>
+              {i18n("faq.faqtext45")}
+              <span>&#34;{i18n("faq.faqtext46")}&#34;</span>
+              {i18n("faq.faqtext47")}
+            </p>
+
+            <h2 className="faq-header">{i18n("faq.faqtext48")}</h2>
+            <p className="faq-text">{i18n("faq.faqtext49")}</p>
 
             <h2 className="faq-header">
-              Сколько занимает выдача прокси после оплаты?
-            </h2>
-            <p className="faq-text">
-              <b>
-                Выдача прокси происходит в автоматическом режиме сразу после
-                оплаты.
-              </b>{" "}
-              <br />В случае, если в вашем кабинете не отобразились прокси сразу
-              - обратитесь в техподдержку.
-            </p>
-
-            <h2 className="faq-header">
-              Чем отличаются ваши прокси от всех остальных?
-            </h2>
-            <p className="faq-text">
-              Наши прокси предоставляются исключительно в одни руки - не
-              являются публичными. <br />
-              Приобретая IP адреса у нас, вы можете быть уверены, что
-              используете их только вы в своих целях. <br />
-              Наши прокси можно использовать для различных социальных сетей без
-              ограничения. <br />
-              Прокси расположены на не перегруженных серверах и скорость ответа
-              на много выше чем у конкурентов, <br />
-              что играет большую роль при сборе и фильтрации информации.
-            </p>
-
-            <h2 className="faq-header">Как продлить прокси?</h2>
-            <p className="faq-text">
-              В личном кабинете на вкладке <span>&#34;Мои прокси&#34;</span>,
-              отмечаете нужные прокси, нажимаете кнопку{" "}
-              <span>&#34;Продлить&#34;</span> и выбираете период продления.
-              Затем оплачиваете стоимость продления выбранных прокси.
-            </p>
-
-            <h2 className="faq-header">25 порт открыт?</h2>
-            <p className="faq-text">
-              Нет, 25 порт закрыт. Email рассылка запрещена.
-            </p>
-
-            <h2 className="faq-header">
-              Доступны ли через прокси сайты из реестра <br />
-              запрещенных сайтов Роскомнадзора?
-            </h2>
-            <p className="faq-text">
-              Нет, с 1 ноября 2017 года доступ к ним через прокси закрыт.
-            </p>
-
-            <h2 className="faq-header">
-              Платежные системы доступны через прокси?
-            </h2>
-            <p className="faq-text">
-              В нашей сети не работает Qiwi, Paypal, WebMoney и ЮMoney, так как
-              участились случаи мошенничества <br />с использованием прокси в
-              данных платежных системах. По решению суда нашу сеть заблокировали{" "}
+              {i18n("faq.faqtext50")}
               <br />
-              на этих сайтах, доступа к этим сайтам с прокси нет.
+              {i18n("faq.faqtext51")}
+            </h2>
+            <p className="faq-text">{i18n("faq.faqtext52")}</p>
+
+            <h2 className="faq-header">{i18n("faq.faqtext53")}</h2>
+            <p className="faq-text">
+              {i18n("faq.faqtext54")}
+              <br />
+              {i18n("faq.faqtext55")}
+              <br />
+              {i18n("faq.faqtext56")}
             </p>
           </div>
         </div>

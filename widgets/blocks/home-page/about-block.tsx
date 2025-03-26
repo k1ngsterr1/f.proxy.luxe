@@ -1,68 +1,45 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export const AboutBlock = () => {
+  const i18n = useTranslations("about");
+
   return (
     <div className="about">
       <div className="container">
         <div className="about-item">
-          <p className="about-text about-text--gold">
-            Наша компания с 2016 года занимается продажами анонимных
-            прокси-серверов. Почему Вам стоит купить прокси у нас:
-          </p>
+          <p className="about-text about-text--gold">{i18n("intro")}</p>
         </div>
+
         <div className="about-item">
+          <p className="about-text">{i18n("advantages.quality")}</p>
           <p className="about-text">
-            Высокое качество и скорость работы - прокси качественные быстрые и
-            стабильные;
+            {i18n("advantages.anonymity")}
+            <br />
+            {i18n("advantages.variety")}
+            <br />
+            {i18n("advantages.types")}
           </p>
-          <p className="about-text">
-            Полная анонимность - прокси полностью анонимные Большой <br />
-            выбор прокси для разных задач - индивидуальные прокси выдаются
-            строго в один руки; <br /> В продаже есть резидентные динамические
-            прокси и ISP статические прокси.
-          </p>
-          <p className="about-text">
-            Низкие цены - у нас одни из самых дешевых прокси на рынке IPv6 и
-            IPv4 прокси;
-          </p>
+          <p className="about-text">{i18n("advantages.prices")}</p>
         </div>
+
         <div className="about-item">
-          <p className="about-text about-text--gold">
-            Полная автоматизация - мгновенная выдача и возможность продления в
-            личном кабинете.
-          </p>
-          <p className="about-text">
-            Быстрая поддержка - мы проконсультируем Вас по техническим и рабочим
-            вопросам, касаемо наших прокси.
-          </p>
-          <p className="about-text">
-            Связаться с нами можно по email, telegram, либо через онлайн
-            консультант;
-          </p>
+          <p className="about-text about-text--gold">{i18n("automation")}</p>
+          <p className="about-text">{i18n("support")}</p>
+          <p className="about-text">{i18n("contacts")}</p>
         </div>
+
         <div className="about-item">
-          <p className="about-text">
-            Наши прокси подойдут Вам для работ на большинстве сайтах и решат
-            Ваши задачи.
-          </p>
-          <p className="about-text">
-            Прокси IPv6 хорошо подходят для работы в социальных сетях, таких
-            как: facebook, instagram, youtube и с множеством других сайтов, с
-            поддержкой IPv6;
-          </p>
-          <p className="about-text">
-            ISP прокси IPv4 и резидентные прокси, подойдут для работы с любыми
-            сайтами и сервисами, кроме платёжных систем;
-          </p>
+          <p className="about-text">{i18n("suitability.general")}</p>
+          <p className="about-text">{i18n("suitability.ipv6")}</p>
+          <p className="about-text">{i18n("suitability.isp")}</p>
         </div>
+
         <div className="about-item">
           <p className="about-text about-text--gold">
-            Наши недорогие и высокоскоростные прокси, позволят вам работать в
-            сети комфортно и безопасно. Если вы еще задаетесь вопросом:
+            {i18n("conclusion.intro")}
           </p>
-          <p className="about-text">
-            Где купить прокси? - то ответ на него - PROXY.LUXE
-          </p>
+          <p className="about-text">{i18n("conclusion.answer")}</p>
         </div>
       </div>
     </div>

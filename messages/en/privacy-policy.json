@@ -1,0 +1,57 @@
+{
+  "privacyPolicy": {
+    "header": "PRIVACY POLICY",
+    "section1": {
+      "title": "1. General Provisions",
+      "point1": "1.1. This Policy defines the procedure for processing and protecting information about individuals (hereinafter referred to as Users) by «PROXY.LUXE» company that may be received when the User uses services provided through the PROXY.LUXE website.",
+      "point2": "1.2. The purpose of this Policy is to ensure the protection of User information, including personal data, from unauthorized access and disclosure.",
+      "point3": "1.3. Relations related to the collection, storage, distribution and protection of information provided by the User are regulated by this Policy, other official documents of «PROXY.LUXE» company and the current legislation of the Russian Federation.",
+      "point4": "1.4. By registering on the Site and using the Site and Services, the User expresses full consent to the terms of this Policy.",
+      "point5": "1.5. In case of disagreement with the terms of this Policy, Users must refrain from using the Site and/or any Services available through the Site."
+    },
+    "section2": {
+      "title": "2. Purposes of Collection and Processing of Users' Personal Information",
+      "point1": "2.1. Processing of the User's personal data is carried out in accordance with the legislation of the Russian Federation.",
+      "point2": "Personal data of the User transmitted to «PROXY.LUXE» company are processed for the purpose of:",
+      "list": {
+        "item1": "Identification of the party within the framework of agreements and contracts with «PROXY.LUXE» company;",
+        "item2": "Providing services to the User;",
+        "item3": "Targeting of advertising materials;",
+        "item4": "Verification, research and analysis of data enabling to maintain, develop and improve Services and sections of the Site;",
+        "item5": "Conducting statistical and other research based on anonymized data."
+      }
+    },
+    "section3": {
+      "title": "3. Conditions for Processing Personal Information Provided by the User and Its Transfer to Third Parties",
+      "point1": "3.1. «PROXY.LUXE» company takes all necessary measures to protect the User's personal data from unauthorized access, modification, disclosure, blocking, destruction, unlawful actions.",
+      "point2": "3.2. «PROXY.LUXE» company has the right to transfer the User's personal data only to those employees, contractors and affiliated persons who need this information to provide services to the user or ensure the functioning of the Site and Services.",
+      "point3": "3.3. «PROXY.LUXE» company has the right to use the information provided by the User, including personal data, to ensure compliance with the requirements of the current legislation of the Russian Federation (including to prevent and/or suppress illegal and/or unlawful actions of Users). Disclosure of the information provided by the User may be made only in accordance with the current legislation of the Russian Federation at the request of the court, law enforcement agencies, as well as in other cases provided for by the legislation of the Russian Federation."
+    },
+    "section4": {
+      "title": "4. Use of the Site and Services",
+      "point1": "4.1. By using the Site and Services, the user confirms that:",
+      "list": {
+        "item1": "has the rights allowing him to register and use the Site Services;",
+        "item2": "indicates reliable information about himself in the required volumes for using the Site Services. Mandatory fields are marked in a special way, other information is provided by the User at his discretion;",
+        "item3": "is aware that information on the Site posted by the User about himself may become available to third parties, may be copied and distributed by them;",
+        "item4": "agrees with this Policy and accepts all the rights and obligations specified in it. It gives «PROXY.LUXE» company the right to collect, store, process and transfer to third parties personal data provided by the User."
+      },
+      "point2": "4.2. «PROXY.LUXE» company does not verify the accuracy of the information received, except in cases where such verification is necessary to fulfill obligations to provide the Service to the User."
+    },
+    "section5": {
+      "title": "5. Within the framework of this Policy, 'User's personal information' means:",
+      "point1": "5.1. Data that the user provides independently when using the Site and Services. Information that is included in the data, but is not limited to: name, surname, gender, mobile phone number, email address, marital status, date of birth, hometown, home address, education information, occupation.",
+      "point2": "5.2. Data transmitted to the Services in the process of their use using the software installed on the User's device. Including IP address, information from cookies, information about the user's browser (or other program used to access the Services), access time, address of the requested page.",
+      "point3": "5.3. Other information about the User, the collection and/or provision of which is defined in the Regulatory documents of individual Services of «PROXY.LUXE» company."
+    },
+    "section6": {
+      "title": "6. Changes to the Privacy Policy. Applicable Legislation",
+      "point1": "6.1. «PROXY.LUXE» company has the right to make changes to this Privacy Policy. After making changes, the date of update is indicated in the latest edition. The new version of the Policy comes into force from the moment it is posted, unless otherwise provided by the new version of the Policy.",
+      "point2": "6.2. This Policy and the relations between the User and «PROXY.LUXE» company arising in connection with the application of the Privacy Policy shall be governed by the law of the Russian Federation."
+    },
+    "section7": {
+      "title": "7. Feedback. Questions and Suggestions",
+      "point1": "7.1. All suggestions or questions regarding this Policy should be reported to the Support Service of «PROXY.LUXE» company."
+    }
+  }
+}

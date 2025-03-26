@@ -1,0 +1,25 @@
+{
+  "myIp": {
+    "header": "YOUR IP ADDRESS",
+    "description": {
+      "line1": "With this service you can find out your IP address and get detailed information about it.",
+      "line2": "In addition to IP information, the data that your browser sends to the server is displayed here."
+    },
+    "fields": {
+      "country": "Country",
+      "city": "City",
+      "postalCode": "Postal code",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "time": "Time"
+    },
+    "browserInfo": {
+      "title": "Information provided by your browser:"
+    },
+    "errors": {
+      "unknownError": "Unknown error",
+      "error": "Error",
+      "noData": "No data found"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "prices": {
+    "header": "PROXY PRICES",
+    "description": {
+      "line1": "Free tool that allows you to check if your or any other IP address is in anti-spam databases.",
+      "line2": "Will your email messages or forum chats be blocked? The check is performed against more than 50 databases that track blacklists of IP addresses."
+    },
+    "ipv6": {
+      "headerPrefix": "IPv6",
+      "header": "PROXY"
+    },
+    "ipv4": {
+      "headerPrefix": "IPv4",
+      "header": "PROXY"
+    },
+    "ipv4shared": {
+      "headerPrefix": "IPv4 SHARED",
+      "header": "PROXY"
+    },
+    "tableHeaders": {
+      "country": "COUNTRY",
+      "ipCount": "IP COUNT",
+      "singleIpCost": "SINGLE IP COST"
+    },
+    "duration": {
+      "3days": "3 days",
+      "1week": "1 week",
+      "2weeks": "2 weeks",
+      "1month": "1 month"
+    },
+    "ipRange": {
+      "1-9": "1 − 9"
+    },
+    "priceValues": {
+      "ipv6": {
+        "3days": "3.6 rub.",
+        "1week": "6.72 rub.",
+        "2weeks": "12.6 rub.",
+        "1month": "25.2 rub."
+      },
+      "ipv4": {
+        "3days": "3.6 rub.",
+        "1week": "6.72 rub.",
+        "2weeks": "12.6 rub.",
+        "1month": "25.2 rub."
+      },
+      "ipv4shared": {
+        "3days": "3.6 rub.",
+        "1week": "6.72 rub.",
+        "2weeks": "12.6 rub.",
+        "1month": "25.2 rub."
+      }
+    }
+  }
+}

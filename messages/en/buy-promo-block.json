@@ -1,0 +1,16 @@
+{
+  "buyPromo": {
+    "header": {
+      "part1": "BUY PROXY",
+      "isp": "ISP",
+      "part2": "RESIDENTIAL",
+      "ips": "IPV4 / IPV6"
+    },
+    "features": {
+      "1": "Fully automated",
+      "2": "Proxies are issued automatically immediately after payment",
+      "3": "Our proxies are sold exclusively for single-user access - this means only you will use them",
+      "4": "Our proxies are elite and completely anonymous"
+    }
+  }
+}

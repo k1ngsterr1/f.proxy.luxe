@@ -1,0 +1,52 @@
+{
+  "advantages": {
+    "header": "OUR ADVANTAGES",
+    "hint": {
+      "part1": "MORE THAN",
+      "highlight": "329 THOUSAND",
+      "part2": "CLIENTS HAVE ALREADY CHOSEN US"
+    },
+    "advantages": {
+      "lowPrices": {
+        "title": "LOW PRICES",
+        "description": "We have some of the lowest prices on the market.",
+        "altText": "Low prices"
+      },
+      "automation": {
+        "title": "FULLY AUTOMATED",
+        "description": "Proxies are activated immediately after payment.",
+        "altText": "Automatic activation"
+      },
+      "exclusive": {
+        "title": "EXCLUSIVE USE",
+        "description": "Proxies are sold exclusively for single-user access.",
+        "altText": "Exclusive proxies"
+      },
+      "protocols": {
+        "title": "HTTPS / SOCKS5",
+        "description": "Switch between HTTPS and SOCKS5 protocols in your account.",
+        "altText": "Protocol switching"
+      },
+      "flexiblePurchases": {
+        "title": "PURCHASE FROM 1 IP",
+        "description": "You can buy even one proxy - quantity doesn't matter.",
+        "altText": "Flexible purchases"
+      },
+      "periods": {
+        "title": "MULTIPLE PERIODS",
+        "description": "Option to buy proxies for 30, 60 or 90 days.",
+        "altText": "Flexible plans"
+      },
+      "api": {
+        "title": "API FOR DEVELOPERS",
+        "description": "API allows you to integrate proxy purchase and renewal into your service.",
+        "altText": "API integration"
+      },
+      "support": {
+        "title": "FAST SUPPORT",
+        "description": "We try to answer all your questions as quickly as possible.",
+        "altText": "Customer support"
+      }
+    }
+  }
+}

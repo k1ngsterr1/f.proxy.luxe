@@ -4,30 +4,28 @@ import Image from "next/image";
 import { BuyProxyBlock } from "@/widgets/blocks/home-page/buy-proxy-block";
 import { QueryClientProvider } from "@tanstack/react-query";
 import reactQueryClient from "@/shared/config/query-client";
+import { useTranslations } from "next-intl";
 
 export default function BuyProxy() {
+  const i18n = useTranslations();
   return (
     <QueryClientProvider client={reactQueryClient}>
       <main className="inner-page">
         <section className="ibuy">
           <div className="scontainer">
             <h1 className="section-header">
-              <span>Купить прокси</span>
+              <span>{i18n("buy-proxy.buy-proxy1")}</span>
             </h1>
             <div className="ibuy-info">
-              Наши прокси предоставляются исключительно в одни руки. Не являются
-              публичными - где доступ к ним может купить любой желающий. <br />
-              Приобретая IP адреса у нас, вы можете быть уверены, что
-              используете их только вы в своих целях, и никто кроме Вас ими не
-              пользуется.
+              {i18n("buy-proxy.iBuyInfo1")} <br />
+              {i18n("buy-proxy.iBuyInfo2")}
             </div>
             <div className="ibuy-footer">
               <div className="ibuy-img">
                 <Image src={MailGlow} alt="" />
               </div>
               <div className="ibuy-text">
-                Если вам нужны прокси для другой страны, либо большее кол-во,
-                напишите нам:{" "}
+                {i18n("buy-proxy.iBuyTest")}{" "}
                 <a href="amilto:admin@proxy.luxe ">admin@proxy.luxe </a>
               </div>
             </div>

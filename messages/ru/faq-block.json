@@ -1,0 +1,17 @@
+{
+  "faqBlock": {
+    "header": "ОСТАЛИСЬ ВОПРОСЫ?",
+    "description": {
+      "line1": "Напишите нам и мы постараемся максимально",
+      "line2": "быстро вам помочь и проконсультировать."
+    },
+    "chat": {
+      "label": "Live Chat",
+      "altText": "Иконка чата"
+    },
+    "email": {
+      "address": "admin@proxy.luxe",
+      "altText": "Иконка почты"
+    }
+  }
+}

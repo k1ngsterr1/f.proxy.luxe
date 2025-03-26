@@ -8,66 +8,67 @@ import Prem7 from "@/assets/images/prem7.png";
 import Prem8 from "@/assets/images/prem8.png";
 
 import { AdvantageCard } from "@/shared/ui/advantage-card";
-
-const advantages = [
-  {
-    image: Prem1,
-    title: "НИЗКИЕ ЦЕНЫ",
-    description: "У нас одни из самых низких цен на рынке.",
-    altText: "Дешевые цены",
-  },
-  {
-    image: Prem2,
-    title: "ВСЕ АВТОМАТИЗИРОВАНО",
-    description: "Прокси активируются сразу же после оплаты.",
-    altText: "Автоматическая активация",
-  },
-  {
-    image: Prem3,
-    title: "В ОДНИ РУКИ",
-    description: "Продажа прокси ведется исключительно в одни руки.",
-    altText: "Эксклюзивные прокси",
-  },
-  {
-    image: Prem4,
-    title: "HTTPS / SOCKS5",
-    description:
-      "Прокси переключаются с HTTPS на SOCKS5 и обратно в личном кабинете.",
-    altText: "Переключение прокси",
-  },
-  {
-    image: Prem5,
-    title: "ПОКУПКА ОТ 1-ГО IP",
-    description: "Вы можете купить хоть один прокси, кол-во не имеет значения.",
-    altText: "Гибкие покупки",
-  },
-  {
-    image: Prem6,
-    title: "НЕСКОЛЬКО ПЕРИОДОВ",
-    description: "Возможность покупки прокси на 30 дней, 60 дней либо 90 дней.",
-    altText: "Гибкие тарифы",
-  },
-  {
-    image: Prem7,
-    title: "API ДЛЯ РАЗРАБОТЧИКОВ",
-    description:
-      "Api позволит вам интегрировать покупку и продление прокси в ваш сервис.",
-    altText: "API интеграция",
-  },
-  {
-    image: Prem8,
-    title: "БЫСТРАЯ ПОДДЕРЖКА",
-    description: "Мы стараемся отвечать на все ваши вопросы как можно быстрее.",
-    altText: "Поддержка клиентов",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export const AdvantagesBlock = () => {
+  const i18n = useTranslations("advantages");
+
+  const advantages = [
+    {
+      image: Prem1,
+      title: i18n("advantages.lowPrices.title"),
+      description: i18n("advantages.lowPrices.description"),
+      altText: i18n("advantages.lowPrices.altText"),
+    },
+    {
+      image: Prem2,
+      title: i18n("advantages.automation.title"),
+      description: i18n("advantages.automation.description"),
+      altText: i18n("advantages.automation.altText"),
+    },
+    {
+      image: Prem3,
+      title: i18n("advantages.exclusive.title"),
+      description: i18n("advantages.exclusive.description"),
+      altText: i18n("advantages.exclusive.altText"),
+    },
+    {
+      image: Prem4,
+      title: i18n("advantages.protocols.title"),
+      description: i18n("advantages.protocols.description"),
+      altText: i18n("advantages.protocols.altText"),
+    },
+    {
+      image: Prem5,
+      title: i18n("advantages.flexiblePurchases.title"),
+      description: i18n("advantages.flexiblePurchases.description"),
+      altText: i18n("advantages.flexiblePurchases.altText"),
+    },
+    {
+      image: Prem6,
+      title: i18n("advantages.periods.title"),
+      description: i18n("advantages.periods.description"),
+      altText: i18n("advantages.periods.altText"),
+    },
+    {
+      image: Prem7,
+      title: i18n("advantages.api.title"),
+      description: i18n("advantages.api.description"),
+      altText: i18n("advantages.api.altText"),
+    },
+    {
+      image: Prem8,
+      title: i18n("advantages.support.title"),
+      description: i18n("advantages.support.description"),
+      altText: i18n("advantages.support.altText"),
+    },
+  ];
+
   return (
     <section className="section advantages">
       <div className="container">
         <h2 className="section-header">
-          <span>НАШИ ПРЕИМУЩЕСТВА</span>
+          <span>{i18n("header")}</span>
         </h2>
         <div className="advantages-inner">
           {advantages.map((adv, index) => (
@@ -75,7 +76,8 @@ export const AdvantagesBlock = () => {
           ))}
         </div>
         <div className="advantages-hint">
-          БОЛЬШЕ <span>329 ТЫСЯЧ</span> КЛИЕНТОВ УЖЕ ВЫБРАЛИ НАС
+          {i18n("hint.part1")} <span>{i18n("hint.highlight")}</span>{" "}
+          {i18n("hint.part2")}
         </div>
       </div>
     </section>

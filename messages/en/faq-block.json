@@ -1,0 +1,17 @@
+{
+  "faqBlock": {
+    "header": "ANY QUESTIONS LEFT?",
+    "description": {
+      "line1": "Write to us and we will try to help you",
+      "line2": "as quickly as possible and provide consultation."
+    },
+    "chat": {
+      "label": "Live Chat",
+      "altText": "Chat icon"
+    },
+    "email": {
+      "address": "admin@proxy.luxe",
+      "altText": "Mail icon"
+    }
+  }
+}

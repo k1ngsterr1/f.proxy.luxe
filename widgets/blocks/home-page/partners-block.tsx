@@ -1,55 +1,55 @@
 import { Button } from "@/shared/ui/button";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export const PartnersBlock = () => {
+  const i18n = useTranslations("partnersBlock");
   const navigate = useRouter();
 
   return (
     <section className="partners section">
       <div className="scontainer">
-        <h2 className="section-header">ПАРТНЕРСКАЯ ПРОГРАММА</h2>
+        <h2 className="section-header">{i18n("header")}</h2>
         <div className="partners-inner">
           <div className="partners-text">
             <p>
-              Наша партнерская программа позволит
+              {i18n("intro.line1")}
               <br />
-              Вам зарабатывать 15% от всех платежей привлеченных Вами клиентов.
+              {i18n("intro.line2")}
               <br />
-              Для участия в программе Вам всего лишь нужно:
+              {i18n("intro.line3")}
             </p>
             <div className="separator"></div>
             <h3 className="partners-header">
-              Привлекать к нам новых клиентов <br />
-              по реферальной ссылке
+              {i18n("steps.referral.line1")} <br />
+              {i18n("steps.referral.line2")}
             </h3>
             <p>
-              - зарегистрировавшийся по вашей ссылке <br />
-              пользователь пожизненно закрепляется за Вами <br />и со всех его
-              платежей вам будет идти процент;
+              {i18n("steps.referral.details.line1")} <br />
+              {i18n("steps.referral.details.line2")} <br />
+              {i18n("steps.referral.details.line3")}
             </p>
-            <h3 className="partners-header">
-              Распространять партнерский купон на скидку -{" "}
-            </h3>
+            <h3 className="partners-header">{i18n("steps.coupon.title")}</h3>
             <p>
-              пользователь, использовавший ваш купон, получает <br />
-              5% скидку при покупке, а так же пожизненно закрепляется <br />
-              за Вами и со всех его платежей вам будет идти процент.
+              {i18n("steps.coupon.details.line1")} <br />
+              {i18n("steps.coupon.details.line2")} <br />
+              {i18n("steps.coupon.details.line3")}
             </p>
           </div>
           <div className="partners-discount">
             <div className="partners-num">
-              15
+              {i18n("percentage.value")}
               <div className="partners-num__percent">%</div>
             </div>
           </div>
         </div>
         <h2 className="section-header partners-subheader">
-          НАШИ ПАРТНЕРЫ УЖЕ ЗАРАБОТАЛИ <span>27 434 698,20 руб.</span>
+          {i18n("earnings.line1")} <span>{i18n("earnings.amount")}</span>
         </h2>
         <p className="partners-hint">
-          Партнерское вознаграждение можно выводить на WebMoney и Qiwi, <br />
-          либо использовать на оплату любых услуг нашего сервиса.
+          {i18n("payout.line1")} <br />
+          {i18n("payout.line2")}
         </p>
         <div
           style={{
@@ -58,7 +58,10 @@ export const PartnersBlock = () => {
             justifyContent: "center",
           }}
         >
-          <Button name="Подробнее" onClick={() => navigate.push("/faq")} />
+          <Button
+            name={i18n("detailsButton")}
+            onClick={() => navigate.push("/faq")}
+          />
         </div>
       </div>
     </section>

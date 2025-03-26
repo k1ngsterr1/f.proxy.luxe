@@ -1,0 +1,41 @@
+{
+  "partnersBlock": {
+    "header": "PARTNER PROGRAM",
+    "intro": {
+      "line1": "Our partner program will allow you",
+      "line2": "to earn 15% from all payments of clients you refer.",
+      "line3": "To participate in the program you just need:"
+    },
+    "steps": {
+      "referral": {
+        "line1": "Attract new clients to us",
+        "line2": "using your referral link",
+        "details": {
+          "line1": "- user registered via your link",
+          "line2": "is permanently assigned to you",
+          "line3": "and you'll receive percentage from all their payments"
+        }
+      },
+      "coupon": {
+        "title": "Distribute partner discount coupon -",
+        "details": {
+          "line1": "user who uses your coupon gets",
+          "line2": "5% discount when purchasing, and is also",
+          "line3": "permanently assigned to you for future commissions"
+        }
+      }
+    },
+    "percentage": {
+      "value": "15"
+    },
+    "earnings": {
+      "line1": "OUR PARTNERS HAVE ALREADY EARNED",
+      "amount": "27,434,698.20 RUB"
+    },
+    "payout": {
+      "line1": "Partner rewards can be withdrawn to WebMoney and Qiwi,",
+      "line2": "or used to pay for any services on our platform"
+    },
+    "detailsButton": "Details"
+  }
+}

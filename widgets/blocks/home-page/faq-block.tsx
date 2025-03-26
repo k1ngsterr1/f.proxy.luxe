@@ -5,6 +5,7 @@ import Image from "next/image";
 import Chat from "@/assets/images/chat-icon.png";
 import Mail from "@/assets/images/mail-icon.png";
 import { CallbackForm } from "@/components/forms/callback.form";
+import { useTranslations } from "next-intl";
 
 declare global {
   interface Window {
@@ -13,6 +14,8 @@ declare global {
 }
 
 export const FaqBlock = () => {
+  const i18n = useTranslations("faqBlock");
+
   const openChatra = () => {
     if (typeof window !== "undefined" && typeof window.Chatra === "function") {
       window.Chatra("openChat", true);
@@ -25,10 +28,10 @@ export const FaqBlock = () => {
         <div className="question-inner">
           <CallbackForm />
           <div className="question-info">
-            <h2 className="question-header">ОСТАЛИСЬ ВОПРОСЫ?</h2>
+            <h2 className="question-header">{i18n("header")}</h2>
             <p className="question-text">
-              Напишите нам и мы постараемся максимально <br />
-              быстро вам помочь и проконсультировать.
+              {i18n("description.line1")} <br />
+              {i18n("description.line2")}
             </p>
             <div className="separator"></div>
             <button
@@ -50,28 +53,28 @@ export const FaqBlock = () => {
                     background: "transparent",
                   }}
                   src={Chat}
-                  alt="Chat"
+                  alt={i18n("chat.altText")}
                   layout="responsive"
                   width={Chat.width}
                   height={Chat.height}
                 />
               </span>
-              <span>Live Chat</span>
+              <span>{i18n("chat.label")}</span>
             </button>
             <a
-              href="mailto:admin@proxy.luxe"
+              href={`mailto:${i18n("email.address")}`}
               className="question-mail question-link"
             >
               <span className="img-wrap">
                 <Image
                   src={Mail}
-                  alt="Mail"
+                  alt={i18n("email.altText")}
                   layout="responsive"
                   width={Mail.width}
                   height={Mail.height}
                 />
               </span>
-              <span>admin@proxy.luxe</span>
+              <span>{i18n("email.address")}</span>
             </a>
           </div>
         </div>

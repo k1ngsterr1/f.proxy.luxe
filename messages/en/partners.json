@@ -1,0 +1,31 @@
+{
+  "partners": {
+    "header": "Partnership Program",
+    "description": "Our partnership program allows you to earn 15% from all payments made by clients you refer.",
+    "participation": "To participate in the program, you just need:",
+    "step1": "Attract new clients using a referral link",
+    "step1Description": "a user registered via your link is permanently assigned to you and you will receive a percentage of all their payments",
+    "step2": "Distribute a partner coupon for a discount",
+    "step2Description": "a user who uses your coupon receives a 5% discount when purchasing, and is also permanently assigned to you and you will receive a percentage of all their payments",
+    "reward": "Partner rewards can be withdrawn to WebMoney and YooMoney, or used to pay for any services of our platform.",
+    "benefitsHeader": "Benefits of our partnership program:",
+    "benefit1": "High commission rate: 15%",
+    "benefit2": "Transfer rewards to an internal balance or withdraw via WebMoney, Payeer",
+    "benefit3": "No minimum withdrawal amount",
+    "benefit4": "Daily payout orders",
+    "distributionMethodsHeader": "Ways to distribute referral links:",
+    "distributionMethod1": "Thematic forums",
+    "distributionMethod1Description": "Perhaps the simplest way to promote your referral links. There are three options: adding a referral link to your profile (in the 'site' field), placing the referral link in your signature",
+    "distributionMethod2": "Social networks",
+    "distributionMethod2Description": "An interesting and simple way to advertise referral links. You create your page or group on a social network where you place the referral link. After that, you promote the group by attracting new users. Accordingly, as you gain more followers or subscribers, you get more clicks on your referral links",
+    "distributionMethod3": "Website or blog",
+    "distributionMethod3Description": "One of the most effective methods is placing links on your personal website or blog. You can also create a separate page with referral links on your site and offer users to register. They don't lose anything from this, and you receive a certain percentage. Make a review of the project you participate in on your resource and also provide a referral link to invite other participants",
+    "distributionMethod4": "Email newsletters",
+    "distributionMethod4Description": "Create your own mailing list (this can be done for free in a specialized email newsletter service) on a specific topic and start attracting referrals",
+    "distributionMethod5": "Video tutorials",
+    "distributionMethod5Description": "Create a video tutorial on how to earn in our system, provide an invitation link, increase the number of views of your video",
+    "rulesHeader": "Rules:",
+    "rule": "Registration of multi-accounts for the purpose of receiving partner payments is prohibited, i.e., you cannot be a referral to yourself",
+    "bannersHeader": "Our banners:"
+  }
+}

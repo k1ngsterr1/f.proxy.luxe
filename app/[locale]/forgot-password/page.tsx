@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { ChangePasswordForm } from "@/widgets/forms/change-password-form";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useTranslations } from "next-intl";
 
 export default function ChangePasswordPage() {
   const isMobile = useIsMobile();
-
+  const i18n = useTranslations();
   return (
     <div
       className="inner-page"
@@ -28,7 +29,7 @@ export default function ChangePasswordPage() {
             fontWeight: "bold",
           }}
         >
-          ИЗМЕНЕНИЕ ПАРОЛЯ
+          {i18n("forgot-password.changePassword")}
         </h1>
       </div>
       <ChangePasswordForm />
@@ -40,8 +41,7 @@ export default function ChangePasswordPage() {
           textAlign: "center",
         }}
       >
-        Если вы не запрашивали изменение пароля, пожалуйста, свяжитесь с нами по
-        адресу{" "}
+        {i18n("forgot-password.changePasswordEmail")}{" "}
         <a
           href="mailto:support@proxy.luxe"
           style={{

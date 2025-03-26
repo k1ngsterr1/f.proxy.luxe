@@ -1,4 +1,4 @@
-"use client"; // Указываем, что это клиентский компонент
+"use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -7,6 +7,7 @@ import RuFlag from "@/assets/images/rus-lang.png";
 import Geo from "@/assets/images/geo.png";
 import { getMyIp } from "@/entities/ip/api/get/get-my-ip.api";
 import { Loader } from "@/shared/ui/loader";
+import { useTranslations } from "next-intl";
 
 export interface IpData {
   ip: string;
@@ -22,6 +23,7 @@ export interface IpData {
 }
 
 export default function MyIpClient() {
+  const i18n = useTranslations("myIp");
   const [ipData, setIpData] = useState<IpData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,10 +32,11 @@ export default function MyIpClient() {
     const fetchData = async () => {
       try {
         const ip = await getMyIp();
-        console.log("ip:", ip);
         setIpData(ip);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+        setError(
+          err instanceof Error ? err.message : i18n("errors.unknownError")
+        );
       } finally {
         setLoading(false);
       }
@@ -47,11 +50,15 @@ export default function MyIpClient() {
   }
 
   if (error) {
-    return <main className="inner-page">Ошибка: {error}</main>;
+    return (
+      <main className="inner-page">
+        {i18n("errors.error")}: {error}
+      </main>
+    );
   }
 
   if (!ipData) {
-    return <main className="inner-page">Данные не найдены</main>;
+    return <main className="inner-page">{i18n("errors.noData")}</main>;
   }
 
   return (
@@ -60,60 +67,53 @@ export default function MyIpClient() {
         <div className="scontainer">
           <h1 className="section-header section-header--img">
             <Image src={Geo} alt="" width={Geo.width} height={Geo.height} />
-            ВАШ IP-АДРЕС:
-            <span>&nbsp;{ipData.ip}</span>
+            {i18n("header")}:<span>&nbsp;{ipData.ip}</span>
           </h1>
           <p className="myip-text">
-            С помощью данного сервиса вы можете узнать свой IP-адрес, а также
-            получить подробную информацию о нем. <br />
-            Помимо информации об IP здесь отображаются данные, которые передает
-            ваш браузер на сервер.
+            {i18n("description.line1")} <br />
+            {i18n("description.line2")}
           </p>
           <div className="myip-inner">
-            {/* Основная информация об IP */}
             <div className="myip-item">
               <div className="myip-item__name">IP</div>
               <div className="myip-item__text">{ipData.ip}</div>
             </div>
 
             <div className="myip-item">
-              <div className="myip-item__name">Страна</div>
+              <div className="myip-item__name">{i18n("fields.country")}</div>
               <div className="myip-item__text myip-item__text--img">
                 <span>{ipData.country}</span>
               </div>
             </div>
 
             <div className="myip-item">
-              <div className="myip-item__name">Город</div>
+              <div className="myip-item__name">{i18n("fields.city")}</div>
               <div className="myip-item__text">{ipData.city}</div>
             </div>
 
             <div className="myip-item">
-              <div className="myip-item__name">Почтовый индекс</div>
+              <div className="myip-item__name">{i18n("fields.postalCode")}</div>
               <div className="myip-item__text">{ipData.postalCode}</div>
             </div>
 
             <div className="myip-item">
-              <div className="myip-item__name">Широта</div>
+              <div className="myip-item__name">{i18n("fields.latitude")}</div>
               <div className="myip-item__text">{ipData.latitude}</div>
             </div>
 
             <div className="myip-item">
-              <div className="myip-item__name">Долгота</div>
+              <div className="myip-item__name">{i18n("fields.longitude")}</div>
               <div className="myip-item__text">{ipData.longitude}</div>
             </div>
 
             <div className="myip-item">
-              <div className="myip-item__name">Время</div>
+              <div className="myip-item__name">{i18n("fields.time")}</div>
               <div className="myip-item__text">{ipData.time}</div>
             </div>
 
             <div className="separator"></div>
 
-            <h2 className="myip-header">
-              Сведения, предоставленные <br />
-              вашим браузером:
-            </h2>
+            <h2 className="myip-header">{i18n("browserInfo.title")}</h2>
 
             {Object.entries(ipData.headers).map(([header, value]) => (
               <div className="myip-item" key={header}>

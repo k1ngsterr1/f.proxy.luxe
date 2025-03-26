@@ -1,0 +1,24 @@
+{
+  "about": {
+    "intro": "Our company has been selling anonymous proxy servers since 2016. Why you should buy proxies from us:",
+    "advantages": {
+      "quality": "High quality and speed - proxies are high-quality, fast and stable;",
+      "anonymity": "Complete anonymity - proxies are completely anonymous",
+      "variety": "Wide selection of proxies for different tasks - individual proxies are issued strictly to one user;",
+      "types": "We sell residential dynamic proxies and ISP static proxies.",
+      "prices": "Low prices - we have some of the cheapest proxies on the market for IPv6 and IPv4 proxies;"
+    },
+    "automation": "Full automation - instant issuance and renewal possibility in your personal account.",
+    "support": "Fast support - we will advise you on technical and operational issues regarding our proxies.",
+    "contacts": "You can contact us by email, telegram, or through the online consultant;",
+    "suitability": {
+      "general": "Our proxies will suit you for working on most sites and will solve your tasks.",
+      "ipv6": "IPv6 proxies are well suited for working on social networks such as: facebook, instagram, youtube and many other sites with IPv6 support;",
+      "isp": "ISP IPv4 proxies and residential proxies are suitable for working with any sites and services, except payment systems;"
+    },
+    "conclusion": {
+      "intro": "Our inexpensive and high-speed proxies will allow you to work online comfortably and safely. If you're still wondering:",
+      "answer": "Where to buy proxies? - the answer is PROXY.LUXE"
+    }
+  }
+}

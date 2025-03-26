@@ -2,8 +2,10 @@
 
 import { FC, useState } from "react";
 import { ResponseReference } from "@/shared/interfaces/product.interface";
+import { useTranslations } from "next-intl";
 
 export const BuyPromoBlock: FC = () => {
+  const i18n = useTranslations("buyPromo");
   const [reference, setReference] = useState<Omit<
     ResponseReference,
     "status"
@@ -13,23 +15,16 @@ export const BuyPromoBlock: FC = () => {
     <section className="buy section">
       <div className="scontainer">
         <h2 className="section-header">
-          КУПИТЬ ПРОКСИ <span>ISP</span>, РЕЗИДЕНТНЫЕ <span>IPV4 / IPV6</span>
+          {i18n("header.part1")} <span>{i18n("header.isp")}</span>,{" "}
+          {i18n("header.part2")} <span>{i18n("header.ips")}</span>
         </h2>
 
         <div className="buy-info">
-          <div>
-            <span>•</span> Всё автоматизированно
-          </div>
-          <div>
-            <span>•</span> Прокси выдаются автоматически, сразу после оплаты
-          </div>
-          <div>
-            <span>•</span> Наши прокси продаются исключительно в одни руки - это
-            означает, что ими пользуетесь только Вы
-          </div>
-          <div>
-            <span>•</span> Наши прокси элитные и полностью анонимные
-          </div>
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item}>
+              <span>•</span> {i18n(`features.${item}`)}
+            </div>
+          ))}
         </div>
       </div>
     </section>
