@@ -3,6 +3,6 @@ export interface Orders {
   quantity: number;
   periodDays: string;
   totalPrice: number;
-  proxyType: string;
+  proxyType?: string;
   type: string;
 }
