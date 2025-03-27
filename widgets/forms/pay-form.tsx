@@ -46,7 +46,7 @@ export const PayForm = () => {
       paymentAmount: "",
       agreed: false,
     },
-    validationSchema,
+    // validationSchema,
     validateOnMount: false,
     validateOnChange: true,
     validateOnBlur: true,
