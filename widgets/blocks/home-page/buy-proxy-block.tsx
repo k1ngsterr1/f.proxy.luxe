@@ -10,9 +10,6 @@ export const BuyProxyBlock = () => {
   return (
     <section className="ibuy">
       <div className="scontainer">
-        <h1 className="section-header">
-          <span>{i18n("buy-proxy1")}</span>
-        </h1>
         <div className="buy-inner">
           <ISPBuyCard />
           <ResidentalProxyBuyCard />

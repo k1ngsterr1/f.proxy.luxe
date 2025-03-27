@@ -6,3 +6,7 @@ export interface SendVerifyCodeDTO {
   code: string;
   email: string | null;
 }
+
+export interface SendResetEmailDTO {
+  email: string;
+}
