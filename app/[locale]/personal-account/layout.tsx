@@ -1,25 +1,24 @@
 // app/layouts/root-layout.tsx
-"use client";
-
 import { PropsWithChildren } from "react";
 import "@/assets/styles/normalize.css";
 import "@/assets/styles/lk.css";
 import "@/assets/styles/style.css";
-import { QueryClientProvider } from "@tanstack/react-query";
-import reactQueryClient from "@/shared/config/query-client";
 import { Sidebar } from "@/features/sidebar/sidebar";
 import ClientLayout from "../client-layout";
+import { getMessages } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+import { notFound } from "next/navigation";
 
-interface RootLayoutProps extends PropsWithChildren {
-  messages: Record<string, any>;
-  locale: "ru" | "en";
-}
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  messages,
-  locale,
-}: RootLayoutProps) {
+  params,
+}: {
+  children: React.ReactNode;
+  params: { locale: "en" | "ru" };
+}) {
+  const locale = params.locale;
+  const messages = await getMessages();
+
   return (
     <>
       <div className="header_offset"></div>
@@ -29,12 +28,10 @@ export default function RootLayout({
             className="cont"
             style={{ display: "flex", flexDirection: "row" }}
           >
-            <QueryClientProvider client={reactQueryClient}>
-              <ClientLayout messages={messages} locale={locale}>
-                <Sidebar />
-                {children}
-              </ClientLayout>
-            </QueryClientProvider>
+            <ClientLayout messages={messages} locale={locale}>
+              <Sidebar />
+              {children}
+            </ClientLayout>
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { checkIpv6 } from "@/entities/ipv6/api/post/ipv6-check.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertCircle, CheckCircle, Loader } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -64,9 +64,7 @@ export default function Page() {
           <h1 className="section-header">
             <span>{t("title")}</span>
           </h1>
-          <p className="prcheck-text">
-            {t("description")}
-          </p>
+          <p className="prcheck-text">{t("description")}</p>
 
           {/* Response Section - Styled with black and gold theme */}
           {isLoading && (
@@ -189,11 +187,11 @@ export default function Page() {
                   >
                     {result.hasIPv6
                       ? t("result.summary.supported", { domain: result.domain })
-                      : t("result.summary.notSupported", { domain: result.domain })}
+                      : t("result.summary.notSupported", {
+                          domain: result.domain,
+                        })}
                   </span>
                 </div>
-
-                {/* IPv6 Addresses */}
                 {result.hasIPv6 && result.ipv6Addresses.length > 0 && (
                   <div
                     style={{

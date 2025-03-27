@@ -17,24 +17,21 @@ import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
 
-const PayFormValidation = () => {
-  const i18n = useTranslations("forms.payment.errors");
-  
-  return Yup.object({
-    paymentMethod: Yup.string().required(i18n("selectPaymentMethod")),
-    paymentAmount: Yup.number()
-      .typeError(i18n("invalidAmount"))
-      .min(1, i18n("minAmount"))
-      .max(1000, i18n("maxAmount"))
-      .required(i18n("enterAmount")),
-    agreed: Yup.boolean().oneOf(
-      [true],
-      i18n("agreeToTerms")
-    ),
-  });
-};
+// const PayFormValidation = () => {
+//   const i18n = useTranslations("forms.payment.errors");
 
-const validationSchema = PayFormValidation();
+//   return Yup.object({
+//     paymentMethod: Yup.string().required(i18n("selectPaymentMethod")),
+//     paymentAmount: Yup.number()
+//       .typeError(i18n("invalidAmount"))
+//       .min(1, i18n("minAmount"))
+//       .max(1000, i18n("maxAmount"))
+//       .required(i18n("enterAmount")),
+//     agreed: Yup.boolean().oneOf([true], i18n("agreeToTerms")),
+//   });
+// };
+
+// const validationSchema = PayFormValidation();
 
 export const PayForm = () => {
   const isMobile = useIsMobile();
@@ -68,9 +65,7 @@ export const PayForm = () => {
       } catch (error) {
         console.error("Payment processing error:", error);
         alert(
-          error instanceof Error
-            ? error.message
-            : errorI18n("generalError")
+          error instanceof Error ? error.message : errorI18n("generalError")
         );
       } finally {
         setIsSubmitting(false);
@@ -222,9 +217,7 @@ export const PayForm = () => {
             // Remove required attribute
           />
           <span className="checkbox-box"></span>
-          <span className="checkbox-text">
-            {i18n("agreement")}
-          </span>
+          <span className="checkbox-text">{i18n("agreement")}</span>
         </label>
       </div>
     </form>

@@ -264,19 +264,54 @@ export const BurgerMenu = () => {
 };
 
 const menuItems = [
-  { id: 1, label: "КУПИТЬ ПРОКСТИ", href: "/buy-proxy", i18nKey: "header.buyProxy" },
+  {
+    id: 1,
+    label: "КУПИТЬ ПРОКСТИ",
+    href: "/buy-proxy",
+    i18nKey: "header.buyProxy",
+  },
   { id: 2, label: "ЦЕНЫ", href: "/prices", i18nKey: "header.prices" },
-  { id: 3, label: "ПАРТНЕРСКАЯ ПРОГРАММА", href: "/partners", i18nKey: "header.partners" },
+  {
+    id: 3,
+    label: "ПАРТНЕРСКАЯ ПРОГРАММА",
+    href: "/partners",
+    i18nKey: "header.partners",
+  },
   { id: 4, label: "СТАТЬИ", href: "/articles", i18nKey: "header.articles" },
   { id: 5, label: "FAQ", href: "/faq", i18nKey: "header.faq" },
 ];
 
 const secondaryMenuItems = [
   { id: 1, label: "МОЙ IP", href: "/services/my-ip", i18nKey: "nav-bar.my-ip" },
-  { id: 2, label: "ПРОКСИ ЧЕКЕР", href: "/services/proxy-checker", i18nKey: "nav-bar.proxy-checker" },
-  { id: 3, label: "МОЯ АНОНИМНОСТЬ", href: "/services/anonimity-checker", i18nKey: "nav-bar.anonimity-checker" },
-  { id: 4, label: "ПРОВЕРКА ПОРТОВ", href: "/services/port-checker", i18nKey: "nav-bar.port-checker" },
+  {
+    id: 2,
+    label: "ПРОКСИ ЧЕКЕР",
+    href: "/services/proxy-checker",
+    i18nKey: "nav-bar.proxy-checker",
+  },
+  {
+    id: 3,
+    label: "МОЯ АНОНИМНОСТЬ",
+    href: "/services/anonymity-checker",
+    i18nKey: "nav-bar.anonymity-checker",
+  },
+  {
+    id: 4,
+    label: "ПРОВЕРКА ПОРТОВ",
+    href: "/services/port-checker",
+    i18nKey: "nav-bar.port-checker",
+  },
   { id: 5, label: "WHOIS", href: "/services/whois", i18nKey: "nav-bar.whois" },
-  { id: 6, label: "БЛЭК ЛИСТЫ", href: "/services/black-lists", i18nKey: "nav-bar.black-lists" },
-  { id: 7, label: "ПОДДЕРЖКА IPV6", href: "/services/ipv6-checker", i18nKey: "nav-bar.ipv6-checker" },
+  {
+    id: 6,
+    label: "БЛЭК ЛИСТЫ",
+    href: "/services/black-lists",
+    i18nKey: "nav-bar.black-lists",
+  },
+  {
+    id: 7,
+    label: "ПОДДЕРЖКА IPV6",
+    href: "/services/ipv6-checker",
+    i18nKey: "nav-bar.ipv6-checker",
+  },
 ];
