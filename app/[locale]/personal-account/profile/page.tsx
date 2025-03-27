@@ -10,8 +10,6 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useSendResetEmail } from "@/entities/auth/hooks/mutations/use-reset-email.mutations";
 import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-password.mutation";
 
-// Import the hooks for sending reset email and changing password
-
 export default function ProfilePage() {
   const { data } = useGetUser();
   const [emailCode, setEmailCode] = useState("");
@@ -125,18 +123,14 @@ export default function ProfilePage() {
           message="Вам необходимо подтвердить свой email введя код, указанной в письме."
         />
       )}
-
       {error && <AlertMessage type="error" message={error} />}
-
       {success && <AlertMessage type="success" message={success} />}
-
       {sendResetEmailMutationIsSuccess && (
         <AlertMessage
           type="success"
           message="Код для сброса пароля отправлен на вашу почту"
         />
       )}
-
       {sendResetEmailMutationIsError && (
         <AlertMessage
           type="error"
@@ -147,7 +141,6 @@ export default function ProfilePage() {
           }
         />
       )}
-
       <div style={{ marginBottom: "32px" }}>
         <h1
           style={{
@@ -160,8 +153,6 @@ export default function ProfilePage() {
           ПРОФИЛЬ
         </h1>
       </div>
-
-      {/* Form */}
       <form onSubmit={handleSubmit}>
         {/* Email Field */}
         <div style={{ marginBottom: "24px" }}>
@@ -448,8 +439,6 @@ export default function ProfilePage() {
             Минимум 8 символов, включая буквы и цифры
           </div>
         </div>
-
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isChangingPassword}
