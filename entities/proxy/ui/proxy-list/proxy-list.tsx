@@ -11,6 +11,8 @@ interface Proxy {
   port_http: number | string;
   port_socks: number | string;
   country: string;
+  login: string;
+  password: string;
 }
 
 export interface Props {
@@ -94,13 +96,23 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
   const exportToTxt = () => {
     if (!proxies || proxies.length === 0) return;
 
-    let content = "# Proxy List Export\n";
-    content += "# Format: IP:HTTP_PORT:SOCKS_PORT:PROTOCOL:COUNTRY\n\n";
+    let content = "#Proxy\n";
 
     proxies.forEach((proxy) => {
-      content += `${proxy.ip}:${proxy.port_http || "-"}:${
-        proxy.port_socks || "-"
-      }:${proxy.protocol}:${proxy.country}\n`;
+      const ip = proxy.ip;
+      const port = proxy.port_http || proxy.port_socks || "-";
+      const login = proxy.login || "user";
+      const password = proxy.password || "pass";
+
+      // Format 1
+      content += "#1: IP:PORT:LOGIN:PASSWORD\n";
+      content += `${ip}:${port}:${login}:${password}\n\n`;
+
+      // Format 2
+      content += "#2: LOGIN:PASSWORD@IP:PORT\n";
+      content += `${login}:${password}@${ip}:${port}\n`;
+
+      content += "\n";
     });
 
     const blob = new Blob([content], { type: "text/plain" });
@@ -118,7 +130,20 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
   const exportToJson = () => {
     if (!proxies || proxies.length === 0) return;
 
-    const content = JSON.stringify(proxies, null, 2);
+    const enhancedProxies = proxies.map((proxy) => {
+      const ip = proxy.ip;
+      const port = proxy.port_http || proxy.port_socks || "-";
+      const login = proxy.login || "user";
+      const password = proxy.password || "pass";
+
+      return {
+        ...proxy,
+        format1: `${ip}:${port}:${login}:${password}`,
+        format2: `${login}:${password}@${ip}:${port}`,
+      };
+    });
+
+    const content = JSON.stringify(enhancedProxies, null, 2);
     const blob = new Blob([content], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -477,6 +502,8 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                 <th style={tableHeaderCellStyle}>Протокол</th>
                 <th style={tableHeaderCellStyle}>Порт HTTP</th>
                 <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                <th style={tableHeaderCellStyle}>Логин</th>
+                <th style={tableHeaderCellStyle}>Пароль</th>
                 <th style={tableHeaderCellStyle}>Страна</th>
               </tr>
             </thead>
@@ -509,6 +536,8 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                   </td>
                   <td style={tableCellMonoStyle}>{proxy.port_http || "—"}</td>
                   <td style={tableCellMonoStyle}>{proxy.port_socks || "—"}</td>
+                  <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
+                  <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
                   <td style={tableCellStyle}>
                     <div style={countryContainerStyle}>
                       <span style={flagStyle}>
