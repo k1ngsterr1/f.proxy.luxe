@@ -16,7 +16,6 @@ export default function Prices() {
   return (
     <main
       style={{
-        backgroundColor: "#0f0f0f",
         color: "#f5f5f5",
         marginTop: 256,
         minHeight: "100vh",
