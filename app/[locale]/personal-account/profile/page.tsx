@@ -7,6 +7,10 @@ import { Eye, EyeOff, Mail, Lock, KeyRound, ArrowRight } from "lucide-react";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useSendResetEmail } from "@/entities/auth/hooks/mutations/use-reset-email.mutations";
+import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-password.mutation";
+
+// Import the hooks for sending reset email and changing password
 
 export default function ProfilePage() {
   const { data } = useGetUser();
@@ -16,10 +20,19 @@ export default function ProfilePage() {
   const [showEmailCode, setShowEmailCode] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const isMobile = useIsMobile();
+
+  const {
+    mutate: sendResetEmail,
+    isPending: isSendingResetEmail,
+    isSuccess: sendResetEmailMutationIsSuccess,
+    isError: sendResetEmailMutationIsError,
+    error: sendResetEmailMutationError,
+  } = useSendResetEmail();
+  const { mutate: changePassword, isPending: isChangingPassword } =
+    useChangePassword();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,26 +58,53 @@ export default function ProfilePage() {
       return;
     }
 
-    try {
-      setIsSubmitting(true);
+    if (newPassword && emailCode) {
+      changePassword(
+        {
+          code: emailCode,
+          newPassword: newPassword as any,
+          confirmPassword: confirmPassword as any,
+          email: data?.email as any,
+        },
+        {
+          onSuccess: () => {
+            // Success message
+            setSuccess("Пароль успешно изменен");
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Success message
-      setSuccess("Профиль успешно обновлен");
-
-      // Reset form fields
-      if (newPassword) {
-        setNewPassword("");
-        setConfirmPassword("");
-        setEmailCode("");
-      }
-    } catch (err) {
-      setError("Произошла ошибка при обновлении профиля");
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
+            // Reset form fields
+            setNewPassword("");
+            setConfirmPassword("");
+            setEmailCode("");
+          },
+          onError: (err) => {
+            if (err instanceof Error) {
+              // Check if the error contains validation messages
+              if (err.message && err.message.includes("[")) {
+                try {
+                  // Try to parse the error message as JSON
+                  const validationErrors = JSON.parse(err.message);
+                  if (Array.isArray(validationErrors)) {
+                    // Join all validation errors into a single message
+                    setError(validationErrors.join(", "));
+                  } else {
+                    setError(err.message);
+                  }
+                } catch {
+                  // If parsing fails, just use the error message
+                  setError(err.message);
+                }
+              } else {
+                setError(
+                  err.message || "Произошла ошибка при обновлении профиля"
+                );
+              }
+            } else {
+              setError("Произошла ошибка при обновлении профиля");
+            }
+            console.error(err);
+          },
+        }
+      );
     }
   };
 
@@ -89,6 +129,24 @@ export default function ProfilePage() {
       {error && <AlertMessage type="error" message={error} />}
 
       {success && <AlertMessage type="success" message={success} />}
+
+      {sendResetEmailMutationIsSuccess && (
+        <AlertMessage
+          type="success"
+          message="Код для сброса пароля отправлен на вашу почту"
+        />
+      )}
+
+      {sendResetEmailMutationIsError && (
+        <AlertMessage
+          type="error"
+          message={
+            sendResetEmailMutationError instanceof Error
+              ? sendResetEmailMutationError.message
+              : "Ошибка при отправке кода сброса пароля"
+          }
+        />
+      )}
 
       <div style={{ marginBottom: "32px" }}>
         <h1
@@ -150,6 +208,67 @@ export default function ProfilePage() {
           </div>
           <div style={{ color: "#f3d675", fontSize: "12px" }}>
             Для изменения e-mail укажите код из письма
+          </div>
+          <div style={{ marginTop: "8px" }}>
+            <button
+              type="button"
+              onClick={() => {
+                if (data?.email) {
+                  sendResetEmail(
+                    { email: data.email },
+                    {
+                      onError: (err) => {
+                        console.error("Error sending reset email:", err);
+                      },
+                    }
+                  );
+                }
+              }}
+              disabled={isSendingResetEmail}
+              style={{
+                backgroundColor: isSendingResetEmail
+                  ? "rgba(243, 214, 117, 0.5)"
+                  : "rgba(243, 214, 117, 0.2)",
+                border: "1px solid rgba(243, 214, 117, 0.3)",
+                color: "#f3d675",
+                padding: "6px 12px",
+                borderRadius: "4px",
+                fontSize: "12px",
+                cursor: isSendingResetEmail ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              {isSendingResetEmail ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-black"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    style={{ width: "12px", height: "12px", color: "#f3d675" }}
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Отправка...
+                </>
+              ) : (
+                "Отправить код на почту"
+              )}
+            </button>
           </div>
         </div>
 
@@ -333,25 +452,25 @@ export default function ProfilePage() {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isChangingPassword}
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             padding: "10px 24px",
-            backgroundColor: isSubmitting
+            backgroundColor: isChangingPassword
               ? "rgba(243, 214, 117, 0.5)"
               : "#f3d675",
             border: "none",
             borderRadius: "4px",
             color: "#000000",
             fontSize: "14px",
-            cursor: isSubmitting ? "not-allowed" : "pointer",
+            cursor: isChangingPassword ? "not-allowed" : "pointer",
             fontWeight: "500",
             gap: "8px",
           }}
         >
-          {isSubmitting ? (
+          {isChangingPassword ? (
             <>
               <svg
                 className="animate-spin -ml-1 mr-3 h-5 w-5 text-black"

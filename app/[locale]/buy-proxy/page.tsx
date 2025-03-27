@@ -16,6 +16,7 @@ export default function BuyProxy() {
             <h1 className="section-header">
               <span>{i18n("buy-proxy.buy-proxy1")}</span>
             </h1>
+            <BuyProxyBlock />
             <div className="ibuy-info">
               {i18n("buy-proxy.iBuyInfo1")} <br />
               {i18n("buy-proxy.iBuyInfo2")}
@@ -31,7 +32,6 @@ export default function BuyProxy() {
             </div>
           </div>
         </section>
-        <BuyProxyBlock />
       </main>
     </QueryClientProvider>
   );
