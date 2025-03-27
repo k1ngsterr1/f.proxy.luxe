@@ -5,9 +5,11 @@ import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-orde
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { Button } from "@/shared/ui/button";
 import React, { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export const ISPBuyCard = () => {
   const router = useRouter();
+  const i18n = useTranslations("proxy-cards.isp");
   const [countryId, setCountryId] = useState<string>("1");
   const [quantity, setQuantity] = useState<string>("1");
   const [period, setPeriod] = useState<string>("1m");
@@ -54,18 +56,17 @@ export const ISPBuyCard = () => {
     <div className="buy-col">
       <div className="buy-item" style={{ height: 850, minHeight: 800 }}>
         <h3 className="buy-item__header">
-          ISP IPv4 ПРОКСИ <br />
-          СТАТИЧЕСКИЕ
+          {i18n("title")}
         </h3>
         <div className="separator"></div>
         <p className="buy-item__about">
-          Подходят для всех сайтов. Кроме платёжных систем. Выдаются в одни руки
+          {i18n("description")}
         </p>
         <a href="#" className="buy-item__btn">
-          Выдаются в одни руки
+          {i18n("issued")}
         </a>
 
-        <h4 className="buy-item__subheader">СТРАНА</h4>
+        <h4 className="buy-item__subheader">{i18n("country")}</h4>
         <select
           value={countryId}
           onChange={handleChangeCountry}
@@ -80,7 +81,7 @@ export const ISPBuyCard = () => {
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          КОЛ-ВО
+          {i18n("quantity")}
         </h4>
         <select
           value={quantity}
@@ -91,18 +92,18 @@ export const ISPBuyCard = () => {
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          ПЕРИОД
+          {i18n("period")}
         </h4>
         <select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
           style={selectStyle}
         >
-          <option value="1m">1 месяц</option>
+          <option value="1m">{i18n("month")}</option>
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          ЦЕЛЬ ИСПОЛЬЗОВАНИЯ
+          {i18n("usage")}
         </h4>
         <input
           type="text"
@@ -112,12 +113,12 @@ export const ISPBuyCard = () => {
         />
 
         <div className="buy-item__price">
-          ЦЕНА <span>2.4$ / IP</span>
+          {i18n("price")} <span>2.4$ / IP</span>
         </div>
         <Button
           className="btn"
           variant="big"
-          name="Купить"
+          name={i18n("buy")}
           onClick={handleBuyClick}
         />
       </div>

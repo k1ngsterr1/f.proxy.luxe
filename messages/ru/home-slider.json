@@ -1,0 +1,13 @@
+{
+  "homeSlider": {
+    "header": "КУПИТЬ ПРОКСИ",
+    "text": "ИНДИВИДУАЛЬНЫЕ РЕЗИДЕНТНЫЕ ПРОКСИ",
+    "subheader": "HTTPS/SOCKS5",
+    "stats": {
+      "clients": "КЛИЕНТОВ ВЫБРАЛИ НАС",
+      "activeProxies": "ПРОКСИ В РАБОТЕ",
+      "soldProxies": "ПРОДАННЫХ ПРОКСИ",
+      "ordersProcessed": "ЗАКАЗОВ ОБРАБОТАНО"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "forms": {
+    "login": {
+      "title": "Login",
+      "button": "Login"
+    },
+    "register": {
+      "title": "Register",
+      "button": "Create Account"
+    },
+    "verification": {
+      "title": "Account Verification",
+      "codeLabel": "Verification Code:",
+      "codePlaceholder": "Enter code from email",
+      "codeHelp": "Enter the 6-digit code we sent to your email",
+      "confirmButton": "CONFIRM",
+      "processing": "PROCESSING...",
+      "success": "Code successfully confirmed!",
+      "errors": {
+        "required": "Please enter the verification code",
+        "length": "Verification code must be at least 6 characters"
+      }
+    },
+    "payment": {
+      "title": "PERSONAL ACCOUNT/BALANCE",
+      "paymentMethod": "Payment Method:",
+      "paymentAmount": "Payment Amount:",
+      "continue": "continue",
+      "processing": "processing...",
+      "agreement": "I have read the FAQ section. I know what I'm buying and agree to the terms of use",
+      "errors": {
+        "selectPaymentMethod": "Select a payment method",
+        "enterAmount": "Enter payment amount",
+        "invalidAmount": "Enter a valid amount",
+        "minAmount": "Minimum amount is $1",
+        "maxAmount": "Maximum amount is $1000",
+        "agreeToTerms": "You must confirm that you have read the FAQ",
+        "generalError": "An error occurred while processing the payment. Please try again later."
+      }
+    },
+    "callback": {
+      "name": {
+        "placeholder": "Name"
+      },
+      "support": {
+        "placeholder": "Select technical support",
+        "option1": "Tech. Support 1",
+        "option2": "Tech. Support 2"
+      },
+      "message": {
+        "placeholder": "Message"
+      },
+      "submit": "Send"
+    }
+  }
+}

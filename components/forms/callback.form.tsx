@@ -3,16 +3,19 @@
 import { FC, FormEventHandler, useState } from "react";
 import { Option } from "@/shared/interfaces/option.interface";
 import Select from "@/components/Select";
+import { useTranslations } from "next-intl";
 
-const options: any[] = [
-  { id: "1", text: "Тех. поддержка1" },
-  { id: "2", text: "Тех. поддержка2" },
+const getOptions = (i18n: any) => [
+  { id: "1", text: i18n("support.option1") },
+  { id: "2", text: i18n("support.option2") },
 ];
 
 export const CallbackForm: FC = () => {
+  const i18n = useTranslations("forms.callback");
   const [technicalSupport, setTechnicalSupport] = useState<
     string | undefined
   >();
+  const options = getOptions(i18n);
 
   const technicalSupportOnChange = (value: string) => {
     setTechnicalSupport(value);
@@ -28,7 +31,7 @@ export const CallbackForm: FC = () => {
         name="name"
         type="text"
         className="question-input"
-        placeholder="Имя"
+        placeholder={i18n("name.placeholder")}
         required
       />
       <input
@@ -41,16 +44,16 @@ export const CallbackForm: FC = () => {
       <Select
         options={options}
         onChange={technicalSupportOnChange}
-        placeholder="Выберите тех. поддержку"
+        placeholder={i18n("support.placeholder")}
       />
       <textarea
         name="message"
         className="question-textarea"
-        placeholder="Сообщение"
+        placeholder={i18n("message.placeholder")}
         required
       ></textarea>
       <button type="submit" className="question-btn btn-hover">
-        Отправить
+        {i18n("submit")}
       </button>
     </form>
   );

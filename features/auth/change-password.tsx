@@ -2,6 +2,7 @@ import type React from "react";
 
 import { useState } from "react";
 import { Eye, EyeOff, Lock, KeyRound, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export const ChangePasswordAuthForm = () => {
   const [showAlert, setShowAlert] = useState(true);
@@ -13,6 +14,8 @@ export const ChangePasswordAuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const i18n = useTranslations("auth.changePassword");
+  const validationI18n = useTranslations("validation");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,22 +23,22 @@ export const ChangePasswordAuthForm = () => {
 
     // Validate inputs
     if (!verificationCode) {
-      setError("Пожалуйста, введите код подтверждения");
+      setError(validationI18n("confirmPassword.required"));
       return;
     }
 
     if (!newPassword) {
-      setError("Пожалуйста, введите новый пароль");
+      setError(i18n("errors.enterPassword"));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Пароли не совпадают");
+      setError(validationI18n("confirmPassword.match"));
       return;
     }
 
     if (newPassword.length < 8) {
-      setError("Пароль должен содержать не менее 8 символов");
+      setError(validationI18n("password.minLength"));
       return;
     }
 
@@ -113,7 +116,7 @@ export const ChangePasswordAuthForm = () => {
             />
           </div>
           <div style={{ color: "#999999", fontSize: "12px", marginTop: "4px" }}>
-            Код подтверждения был отправлен на ваш email
+            {i18n("emailSent")}
           </div>
         </div>
 
@@ -127,7 +130,7 @@ export const ChangePasswordAuthForm = () => {
               fontSize: "14px",
             }}
           >
-            Новый пароль: <span style={{ color: "#f3d675" }}>*</span>
+            {i18n("newPassword")} <span style={{ color: "#f3d675" }}>*</span>
           </label>
           <div style={{ position: "relative" }}>
             <Lock
@@ -144,7 +147,7 @@ export const ChangePasswordAuthForm = () => {
               type={showNewPassword ? "text" : "password"}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Введите новый пароль"
+              placeholder={i18n("newPasswordPlaceholder")}
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
@@ -175,7 +178,7 @@ export const ChangePasswordAuthForm = () => {
             </button>
           </div>
           <div style={{ color: "#999999", fontSize: "12px", marginTop: "4px" }}>
-            Минимум 8 символов, включая буквы и цифры
+            {i18n("passwordRequirements")}
           </div>
         </div>
 
@@ -206,7 +209,7 @@ export const ChangePasswordAuthForm = () => {
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Повторите новый пароль"
+              placeholder={i18n("confirmPasswordPlaceholder")}
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",

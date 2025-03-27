@@ -1,0 +1,87 @@
+{
+  "title": "ANONYMITY CHECKER",
+  "description": "With this service, you can check how anonymous you are on the internet, and how the data provided by your computer/browser matches the data provided by your IP address.",
+  "anonymityLevel": "Anonymity level",
+  "hideIp": "Hide IP",
+  "unknownValue": "Unknown",
+  "systemInfo": {
+    "title": "System Information",
+    "os": "OS",
+    "browser": "Browser",
+    "userAgent": "User Agent",
+    "language": "Language",
+    "screen": "Screen",
+    "bits": "bits"
+  },
+  "timeInfo": {
+    "title": "Time Information"
+  },
+  "errors": {
+    "loadingError": "Error loading data",
+    "unknownError": "Unknown error",
+    "proxyCheckError": "Error checking proxy/VPN/Tor",
+    "blacklistCheckError": "Error checking blacklist",
+    "errorPrefix": "Error",
+    "dataNotFound": "Data not found"
+  },
+  "anonymityLevels": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "medium": "Medium",
+    "low": "Low",
+    "critical": "Critical"
+  },
+  "ipInfo": {
+    "title": "IP Information",
+    "ip": "IP Address",
+    "country": "Country",
+    "city": "City",
+    "region": "Region",
+    "host": "Host",
+    "postalCode": "Postal code",
+    "coordinates": "Coordinates",
+    "timezone": "IP Timezone",
+    "ipTime": "IP Time",
+    "systemTime": "System Time",
+    "map": "Map",
+    "whois": "Whois"
+  },
+  "anonymityStatus": {
+    "title": "Anonymity Status",
+    "proxy": "Proxy",
+    "vpn": "VPN",
+    "tor": "Tor",
+    "blacklist": "Blacklist",
+    "webRTC": "WebRTC",
+    "flash": "Flash",
+    "java": "Java",
+    "activeX": "ActiveX",
+    "detected": "Detected",
+    "notDetected": "Not Detected",
+    "leaking": "Leaking",
+    "protected": "Protected",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "blacklistReports": "reports"
+  },
+  "recommendations": {
+    "title": "Recommendations for improving anonymity",
+    "disableWebRTC": "Disable WebRTC",
+    "webRTCDescription": "in your browser or use an extension to block WebRTC leaks.",
+    "disableLegacyTech": "Disable legacy technologies",
+    "legacyTechDescription": "(Flash, Java, ActiveX) which may pose security threats.",
+    "useVPN": "Use a reliable VPN service",
+    "vpnDescription": "to hide your real IP address.",
+    "useIncognito": "Use incognito mode",
+    "incognitoDescription": "or private browsing mode to minimize tracking.",
+    "useAdBlockers": "Install ad blockers and tracker blockers",
+    "adBlockersDescription": " such as uBlock Origin or Privacy Badger.",
+    "useTor": "Consider using Tor Browser",
+    "torDescription": "for maximum anonymity."
+  },
+  "additionalProtection": {
+    "needMore": "Need additional protection?",
+    "description": "Use our proxy services to increase your anonymity online.",
+    "buyProxy": "Buy proxy"
+  }
+}

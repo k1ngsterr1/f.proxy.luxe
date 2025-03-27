@@ -3,6 +3,7 @@
 import { checkIpv6 } from "@/entities/ipv6/api/post/ipv6-check.api";
 import { useState } from "react";
 import { AlertCircle, CheckCircle, Loader } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface IPv6CheckResponse {
   domain: string;
@@ -12,6 +13,7 @@ interface IPv6CheckResponse {
 }
 
 export default function Page() {
+  const t = useTranslations("ipv6");
   const [domain, setDomain] = useState<string>("");
   const [result, setResult] = useState<IPv6CheckResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +21,7 @@ export default function Page() {
 
   const handleCheck = async () => {
     if (!domain) {
-      setError("Пожалуйста, введите домен");
+      setError(t("errors.empty"));
       return;
     }
 
@@ -33,7 +35,7 @@ export default function Page() {
       const data: any = await checkIpv6(cleanDomain);
       setResult(data);
     } catch (err) {
-      let errorMessage = "Произошла ошибка при проверке";
+      let errorMessage = t("errors.request");
       if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -46,7 +48,7 @@ export default function Page() {
   // Format the timestamp to a readable date
   const formatDate = (timestamp: string) => {
     if (!timestamp) return "";
-    return new Date(timestamp).toLocaleString("ru-RU", {
+    return new Date(timestamp).toLocaleString(undefined, {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -60,11 +62,10 @@ export default function Page() {
       <section className="prcheck">
         <div className="scontainer">
           <h1 className="section-header">
-            ПРОВЕРИТЬ ПОДДЕРЖКУ <span>САЙТОМ IPV6</span>
+            <span>{t("title")}</span>
           </h1>
           <p className="prcheck-text">
-            С помощью данного сервиса вы можете проверить любой сайт на
-            поддержку доступа по IPv6.
+            {t("description")}
           </p>
 
           {/* Response Section - Styled with black and gold theme */}
@@ -84,7 +85,7 @@ export default function Page() {
               }}
             >
               <Loader size={20} className="animate-spin" />
-              <span>Проверка домена {domain}...</span>
+              <span>{t("form.checking")}</span>
             </div>
           )}
 
@@ -138,7 +139,7 @@ export default function Page() {
                   }}
                 >
                   <span style={{ color: "#f3d675", marginRight: "8px" }}>
-                    Домен:
+                    {t("result.domain")}
                   </span>
                   {result.domain}
                 </h2>
@@ -159,8 +160,8 @@ export default function Page() {
                   }}
                 >
                   {result.hasIPv6
-                    ? "ПОДДЕРЖИВАЕТ IPv6"
-                    : "НЕ ПОДДЕРЖИВАЕТ IPv6"}
+                    ? t("result.status.supported")
+                    : t("result.status.notSupported")}
                 </span>
               </div>
 
@@ -187,8 +188,8 @@ export default function Page() {
                     }}
                   >
                     {result.hasIPv6
-                      ? `Сайт ${result.domain} поддерживает IPv6`
-                      : `Сайт ${result.domain} не поддерживает IPv6`}
+                      ? t("result.summary.supported", { domain: result.domain })
+                      : t("result.summary.notSupported", { domain: result.domain })}
                   </span>
                 </div>
 
@@ -210,7 +211,7 @@ export default function Page() {
                         marginBottom: "8px",
                       }}
                     >
-                      IPv6 адреса:
+                      {t("result.addresses")}
                     </div>
                     <ul style={{ margin: 0, padding: "0 0 0 20px" }}>
                       {result.ipv6Addresses.map((address, index) => (
@@ -239,18 +240,18 @@ export default function Page() {
                     marginTop: "16px",
                   }}
                 >
-                  Проверка выполнена: {formatDate(result.timestamp)}
+                  {t("result.timestamp")} {formatDate(result.timestamp)}
                 </div>
               </div>
             </div>
           )}
 
           <div className="ipvs">
-            <div className="ipvs-hint">http(s)://</div>
+            <div className="ipvs-hint">{t("form.hint")}</div>
             <input
               type="text"
               className="ipvs-inp"
-              placeholder="google.com"
+              placeholder={t("form.placeholder")}
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
               onKeyDown={(e) => {
@@ -262,7 +263,7 @@ export default function Page() {
           </div>
           <div className="btn-wrap">
             <button className="btn" onClick={handleCheck} disabled={isLoading}>
-              {isLoading ? "Проверка..." : "Проверить"}
+              {isLoading ? t("form.checking") : t("form.check")}
             </button>
           </div>
         </div>

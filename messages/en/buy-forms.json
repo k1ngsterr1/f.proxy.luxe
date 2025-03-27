@@ -1,0 +1,15 @@
+{
+  "buyForms": {
+    "common": {
+      "selectCountry": "Select country",
+      "selectPlan": "Select plan",
+      "selectPurpose": "Select purpose of use",
+      "selectPeriod": "Select period",
+      "selectProtocol": "Select protocol",
+      "selectSupport": "Select tech support"
+    },
+    "proxyCard": {
+      "limitedAvailability": "Limited availability"
+    }
+  }
+}

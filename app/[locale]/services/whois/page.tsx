@@ -2,6 +2,7 @@
 
 import { postWhoIs } from "@/entities/whois/api/post/post-whois.api";
 import { type ChangeEvent, type FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 
 // Replace the WhoisData interface with this one to match your actual response structure
 interface WhoisData {
@@ -33,6 +34,7 @@ interface WhoisData {
 }
 
 export default function Whois() {
+  const t = useTranslations("whois");
   const [ip, setIp] = useState<string>("");
   const [data, setData] = useState<WhoisData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,7 +53,7 @@ export default function Whois() {
     const query = ip.trim();
 
     if (!query) {
-      setError("Пожалуйста, введите IP или домен");
+      setError(t("errors.empty"));
       return;
     }
 
@@ -60,7 +62,7 @@ export default function Whois() {
       const result = await postWhoIs(query);
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+      setError(err instanceof Error ? err.message : t("errors.unknown"));
     } finally {
       setLoading(false);
     }
@@ -75,22 +77,21 @@ export default function Whois() {
       <section className="blist">
         <div className="scontainer">
           <h1 className="section-header">
-            <span>WHOIS</span>
+            <span>{t("title")}</span>
           </h1>
           <p className="blist-text">
-            Whois сервис (или whois service) - простой и бесплатный
-            инструмент...
+            {t("description")}
           </p>
 
           <form action="#" className="blist-form" onSubmit={handleSubmit}>
-            <p className="blist-hint">IP адрес</p>
+            <p className="blist-hint">{t("form.hint")}</p>
             <div className="btn-wrap">
               <input
                 type="text"
                 className="blist-inp"
                 onChange={onChangeHandler}
                 value={ip}
-                placeholder="Введите IP или домен"
+                placeholder={t("form.placeholder")}
               />
             </div>
             <div className="btn-wrap">
@@ -99,7 +100,7 @@ export default function Whois() {
                 className="blist-btn btn"
                 disabled={loading}
               >
-                {loading ? "Загрузка..." : "Проверить"}
+                {loading ? t("form.loading") : t("form.submit")}
               </button>
             </div>
           </form>
@@ -143,7 +144,7 @@ export default function Whois() {
                   }}
                 >
                   <span style={{ color: "#f3d675", marginRight: "8px" }}>
-                    IP:
+                    {t("fields.ip")}:
                   </span>
                   {data.domain}
                 </h2>
@@ -188,7 +189,7 @@ export default function Whois() {
                     transition: "all 0.2s",
                   }}
                 >
-                  Основная информация
+                  {t("tabs.general")}
                 </button>
                 <button
                   onClick={() => setActiveTab("technical")}
@@ -207,7 +208,7 @@ export default function Whois() {
                     transition: "all 0.2s",
                   }}
                 >
-                  Техническая информация
+                  {t("tabs.technical")}
                 </button>
                 <button
                   onClick={() => setActiveTab("contact")}
@@ -226,7 +227,7 @@ export default function Whois() {
                     transition: "all 0.2s",
                   }}
                 >
-                  Контактная информация
+                  {t("tabs.contact")}
                 </button>
               </div>
 
@@ -257,7 +258,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        IP адрес:
+                        {t("fields.ip")}:
                       </div>
                       <div
                         style={{
@@ -284,7 +285,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Хост:
+                        {t("fields.host")}:
                       </div>
                       <div
                         style={{
@@ -311,7 +312,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Статус:
+                        {t("fields.status")}:
                       </div>
                       <div
                         style={{
@@ -338,7 +339,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Диапазон IP:
+                        {t("fields.range")}:
                       </div>
                       <div
                         style={{
@@ -378,7 +379,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Сетевое имя:
+                        {t("fields.netname")}:
                       </div>
                       <div
                         style={{
@@ -405,7 +406,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Описание:
+                        {t("fields.descr")}:
                       </div>
                       <div
                         style={{
@@ -433,7 +434,7 @@ export default function Whois() {
                           marginBottom: "8px",
                         }}
                       >
-                        Маршрут:
+                        {t("fields.route")}:
                       </div>
                       <div
                         style={{
@@ -442,8 +443,8 @@ export default function Whois() {
                           fontWeight: "500",
                         }}
                       >
-                        <div>Маршрут: {data.route.route}</div>
-                        <div>Происхождение: {data.route.origin}</div>
+                        <div>{t("fields.route")}: {data.route.route}</div>
+                        <div>{t("fields.origin")}: {data.route.origin}</div>
                       </div>
                     </div>
                     <div
@@ -461,7 +462,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Источник:
+                        {t("fields.source")}:
                       </div>
                       <div
                         style={{
@@ -488,7 +489,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Геолокация:
+                        {t("fields.geolocation")}:
                       </div>
                       <div
                         style={{
@@ -528,7 +529,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Администратор:
+                        {t("fields.admin")}:
                       </div>
                       <div
                         style={{
@@ -555,7 +556,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Технический контакт:
+                        {t("fields.tech")}:
                       </div>
                       <div
                         style={{
@@ -583,7 +584,7 @@ export default function Whois() {
                           marginBottom: "8px",
                         }}
                       >
-                        Контактное лицо:
+                        {t("fields.person")}:
                       </div>
                       <div
                         style={{
@@ -592,10 +593,10 @@ export default function Whois() {
                           fontWeight: "500",
                         }}
                       >
-                        <div>Имя: {data.person.name}</div>
-                        <div>Адрес: {data.person.address}</div>
-                        <div>Телефон: {data.person.phone}</div>
-                        <div>NIC Handle: {data.person.nicHdl}</div>
+                        <div>{t("fields.name")}: {data.person.name}</div>
+                        <div>{t("fields.address")}: {data.person.address}</div>
+                        <div>{t("fields.phone")}: {data.person.phone}</div>
+                        <div>{t("fields.nic")}: {data.person.nicHdl}</div>
                       </div>
                     </div>
                     <div
@@ -613,7 +614,7 @@ export default function Whois() {
                           marginBottom: "4px",
                         }}
                       >
-                        Регистрант:
+                        {t("fields.registrant")}:
                       </div>
                       <div
                         style={{
@@ -643,7 +644,7 @@ export default function Whois() {
                       marginBottom: "8px",
                     }}
                   >
-                    Поддерживается:
+                    {t("fields.maintained")}:
                   </div>
                   <div
                     style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}

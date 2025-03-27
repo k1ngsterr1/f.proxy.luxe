@@ -1,0 +1,15 @@
+{
+  "buyForms": {
+    "common": {
+      "selectCountry": "Выберите страну",
+      "selectPlan": "Выберите тарифный план",
+      "selectPurpose": "Выберите цель использования",
+      "selectPeriod": "Выберите период",
+      "selectProtocol": "Выберите протокол",
+      "selectSupport": "Выберите тех. поддержку"
+    },
+    "proxyCard": {
+      "limitedAvailability": "Выдаются в одни руки"
+    }
+  }
+}

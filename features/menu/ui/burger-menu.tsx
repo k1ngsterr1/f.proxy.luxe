@@ -7,10 +7,12 @@ import logo from "@/assets/images/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
+import { useTranslations } from "next-intl";
 
 export const BurgerMenu = () => {
   const { isOpen, toggle, close } = useMenuStore();
   const { token } = useAuthStore();
+  const i18n = useTranslations();
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -130,7 +132,7 @@ export const BurgerMenu = () => {
                   }}
                   onClick={close}
                 >
-                  {item.label}
+                  {i18n(item.i18nKey)}
                 </a>
               </li>
             ))}
@@ -170,7 +172,7 @@ export const BurgerMenu = () => {
                   }}
                   onClick={close}
                 >
-                  {item.label}
+                  {i18n(item.i18nKey)}
                 </a>
               </li>
             ))}
@@ -206,7 +208,7 @@ export const BurgerMenu = () => {
                   width: "100%",
                 }}
               >
-                ЛИЧНЫЙ КАБИНЕТ
+                {i18n("header.account")}
               </Link>
             </>
           ) : (
@@ -230,7 +232,7 @@ export const BurgerMenu = () => {
                   width: "100%",
                 }}
               >
-                ЛОГИН
+                {i18n("header.login")}
               </Link>
               <Link
                 href="/registration"
@@ -251,7 +253,7 @@ export const BurgerMenu = () => {
                   width: "100%",
                 }}
               >
-                РЕГИСТРАЦИЯ
+                {i18n("header.register")}
               </Link>
             </>
           )}
@@ -262,19 +264,19 @@ export const BurgerMenu = () => {
 };
 
 const menuItems = [
-  { id: 1, label: "КУПИТЬ ПРОКСТИ", href: "/buy-proxy" },
-  { id: 2, label: "ЦЕНЫ", href: "/prices" },
-  { id: 3, label: "ПАРТНЕРСКАЯ ПРОГРАММА", href: "/partners" },
-  { id: 4, label: "СТАТЬИ", href: "/articles" },
-  { id: 5, label: "FAQ", href: "/faq" },
+  { id: 1, label: "КУПИТЬ ПРОКСТИ", href: "/buy-proxy", i18nKey: "header.buyProxy" },
+  { id: 2, label: "ЦЕНЫ", href: "/prices", i18nKey: "header.prices" },
+  { id: 3, label: "ПАРТНЕРСКАЯ ПРОГРАММА", href: "/partners", i18nKey: "header.partners" },
+  { id: 4, label: "СТАТЬИ", href: "/articles", i18nKey: "header.articles" },
+  { id: 5, label: "FAQ", href: "/faq", i18nKey: "header.faq" },
 ];
 
 const secondaryMenuItems = [
-  { id: 1, label: "МОЙ IP", href: "/services/my-ip" },
-  { id: 2, label: "ПРОКСИ ЧЕКЕР", href: "/services/proxy-checker" },
-  { id: 3, label: "МОЯ АНОНИМНОСТЬ", href: "/services/anonimity-checker" },
-  { id: 4, label: "ПРОВЕРКА ПОРТОВ", href: "/services/port-checker" },
-  { id: 5, label: "WHOIS", href: "/services/whois" },
-  { id: 6, label: "БЛЭК ЛИСТЫ", href: "/services/black-lists" },
-  { id: 7, label: "ПОДДЕРЖКА IPV6", href: "/services/ipv6-checker" },
+  { id: 1, label: "МОЙ IP", href: "/services/my-ip", i18nKey: "nav-bar.my-ip" },
+  { id: 2, label: "ПРОКСИ ЧЕКЕР", href: "/services/proxy-checker", i18nKey: "nav-bar.proxy-checker" },
+  { id: 3, label: "МОЯ АНОНИМНОСТЬ", href: "/services/anonimity-checker", i18nKey: "nav-bar.anonimity-checker" },
+  { id: 4, label: "ПРОВЕРКА ПОРТОВ", href: "/services/port-checker", i18nKey: "nav-bar.port-checker" },
+  { id: 5, label: "WHOIS", href: "/services/whois", i18nKey: "nav-bar.whois" },
+  { id: 6, label: "БЛЭК ЛИСТЫ", href: "/services/black-lists", i18nKey: "nav-bar.black-lists" },
+  { id: 7, label: "ПОДДЕРЖКА IPV6", href: "/services/ipv6-checker", i18nKey: "nav-bar.ipv6-checker" },
 ];

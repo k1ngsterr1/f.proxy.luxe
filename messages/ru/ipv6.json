@@ -1,0 +1,29 @@
+{
+    "ipv6": {
+        "title": "ПРОВЕРИТЬ ПОДДЕРЖКУ САЙТОМ IPV6",
+        "description": "С помощью данного сервиса вы можете проверить любой сайт на поддержку доступа по IPv6.",
+        "form": {
+            "placeholder": "google.com",
+            "check": "Проверить",
+            "checking": "Проверка...",
+            "hint": "http(s)://"
+        },
+        "errors": {
+            "empty": "Пожалуйста, введите домен",
+            "request": "Произошла ошибка при проверке"
+        },
+        "result": {
+            "domain": "Домен:",
+            "status": {
+                "supported": "ПОДДЕРЖИВАЕТ IPv6",
+                "notSupported": "НЕ ПОДДЕРЖИВАЕТ IPv6"
+            },
+            "summary": {
+                "supported": "Сайт {domain} поддерживает IPv6",
+                "notSupported": "Сайт {domain} не поддерживает IPv6"
+            },
+            "addresses": "IPv6 адреса:",
+            "timestamp": "Проверка выполнена:"
+        }
+    }
+}

@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
 import { Button } from "@/shared/ui/button";
+import { useTranslations } from "next-intl";
 
 export const IPV6BuyCard = () => {
   const router = useRouter();
+  const i18n = useTranslations("proxy-cards.ipv6");
 
   const { data: preferences, isLoading: isLoadingPreferences } =
     useGetPreferences();
@@ -58,14 +60,14 @@ export const IPV6BuyCard = () => {
   return (
     <div className="buy-col">
       <div className="buy-item" style={{ minHeight: 800, height: 850 }}>
-        <h3 className="buy-item__header">IPv6 ПРОКСИ</h3>
+        <h3 className="buy-item__header">{i18n("title")}</h3>
         <div className="separator"></div>
         <p className="buy-item__about">
-          Подходят для сайтов с поддержкой IPv6. Кроме платёжных систем.
+          {i18n("description")}
         </p>
-        <a className="buy-item__btn">Выдаются в одни руки</a>
+        <a className="buy-item__btn">{i18n("issued")}</a>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          СТРАНА
+          {i18n("country")}
         </h4>
         <select
           value={countryId}
@@ -91,7 +93,7 @@ export const IPV6BuyCard = () => {
 
         {/* ✅ Quantity Input */}
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          КОЛ-ВО
+          {i18n("quantity")}
         </h4>
         <input
           type="number"
@@ -110,7 +112,7 @@ export const IPV6BuyCard = () => {
           }}
         />
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          ПЕРИОД
+          {i18n("period")}
         </h4>
 
         <div
@@ -124,10 +126,10 @@ export const IPV6BuyCard = () => {
             textAlign: "center",
           }}
         >
-          1 месяц
+          {i18n("month")}
         </div>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          ЦЕЛЬ ИСПОЛЬЗОВАНИЯ
+          {i18n("usage")}
         </h4>
         <input
           type="text"
@@ -146,14 +148,14 @@ export const IPV6BuyCard = () => {
           }}
         />
         <div className="buy-item__price">
-          ЦЕНА: <span>0.08$ / IP</span>
+          {i18n("price")}: <span>0.08$ / IP</span>
         </div>
         <Button
           onClick={handleBuyClick}
           disabled={isLoadingOrder || isLoadingPreferences}
           className="btn"
           variant="big"
-          name={isLoadingOrder ? "Обработка..." : "Купить"}
+          name={isLoadingOrder ? i18n("processing") : i18n("buy")}
         />
       </div>
     </div>

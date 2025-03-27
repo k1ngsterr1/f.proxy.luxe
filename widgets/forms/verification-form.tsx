@@ -5,12 +5,14 @@ import { usePopupStore } from "@/shared/store/use-popup.store";
 import { ArrowRight, KeyRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export const VerificationForm = () => {
   const { openPopup } = usePopupStore();
   const [verificationCode, setVerificationCode] = useState("");
   const [email, setEmail] = useState<string | null>(null);
   const navigate = useRouter();
+  const i18n = useTranslations("forms.verification");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -30,12 +32,12 @@ export const VerificationForm = () => {
     e.preventDefault();
 
     if (!verificationCode) {
-      alert("Пожалуйста, введите код подтверждения");
+      alert(i18n("errors.required"));
       return;
     }
 
     if (verificationCode.length < 6) {
-      alert("Код подтверждения должен содержать не менее 6 символов");
+      alert(i18n("errors.length"));
       return;
     }
 
@@ -69,7 +71,7 @@ export const VerificationForm = () => {
               fontSize: "14px",
             }}
           >
-            Код подтверждения: <span style={{ color: "#f3d675" }}>*</span>
+            {i18n("codeLabel")} <span style={{ color: "#f3d675" }}>*</span>
           </label>
           <div style={{ position: "relative" }}>
             <KeyRound
@@ -86,7 +88,7 @@ export const VerificationForm = () => {
               type="text"
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder="Введите код из письма"
+              placeholder={i18n("codePlaceholder")}
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
@@ -100,21 +102,21 @@ export const VerificationForm = () => {
             />
           </div>
           <div style={{ color: "#999999", fontSize: "12px", marginTop: "4px" }}>
-            Введите 6-значный код, который мы отправили на ваш email
+            {i18n("codeHelp")}
           </div>
         </div>
 
-        {/* Ошибка */}
+        {/* Error */}
         {error instanceof Error && (
           <p style={{ color: "red", fontSize: "14px", marginBottom: "8px" }}>
             {error.message}
           </p>
         )}
 
-        {/* Успешное сообщение */}
+        {/* Success message */}
         {isSuccess && (
           <p style={{ color: "green", fontSize: "14px", marginBottom: "8px" }}>
-            Код успешно подтверждён!
+            {i18n("success")}
           </p>
         )}
 
@@ -160,11 +162,11 @@ export const VerificationForm = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              ОБРАБОТКА...
+              {i18n("processing")}
             </>
           ) : (
             <>
-              ПОДТВЕРДИТЬ <ArrowRight size={16} style={{ marginLeft: "8px" }} />
+              {i18n("confirmButton")} <ArrowRight size={16} style={{ marginLeft: "8px" }} />
             </>
           )}
         </button>

@@ -5,6 +5,7 @@ import type React from "react";
 import { postBlacklists } from "@/entities/blacklists/api/post-blacklists.api";
 import { useState } from "react";
 import { AlertCircle, CheckCircle, Loader } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface BlacklistResult {
   ip: string;
@@ -15,6 +16,7 @@ interface BlacklistResult {
 }
 
 export default function BlackListPage() {
+  const t = useTranslations("blacklist");
   const [ip, setIP] = useState<string>("");
   const [result, setResult] = useState<BlacklistResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -30,12 +32,12 @@ export default function BlackListPage() {
     e.preventDefault();
 
     if (!ip) {
-      setError("Пожалуйста, введите IP-адрес");
+      setError(t("errors.empty"));
       return;
     }
 
     if (!validateIP(ip)) {
-      setError("Введите корректный IPv4-адрес");
+      setError(t("errors.invalid"));
       return;
     }
 
@@ -47,7 +49,7 @@ export default function BlackListPage() {
       const data: BlacklistResult = await postBlacklists(ip);
       setResult(data);
     } catch (err) {
-      let errorMessage = "Произошла ошибка при проверке";
+      let errorMessage = t("errors.request");
       if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -59,7 +61,7 @@ export default function BlackListPage() {
 
   // Format the timestamp to a readable date
   const formatDate = (timestamp: string) => {
-    return new Date(timestamp).toLocaleString("ru-RU", {
+    return new Date(timestamp).toLocaleString(undefined, {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -73,27 +75,22 @@ export default function BlackListPage() {
       <section className="blist">
         <div className="scontainer">
           <h1 className="section-header">
-            <span>ЧЕРНЫЙ СПИСОК</span>
+            <span>{t("title")}</span>
           </h1>
 
           <p className="blist-text">
-            Бесплатный инструмент, с помощью которого вы можете проверить
-            наличие вашего, либо любого другого IP-адреса в базах данных
-            антиспама. <br />
-            Будут ли заблокированы ваши электронные сообщения или чаты форума?
-            Проверка происходит по более 50 базам, которые отслеживают черные
-            списки IP-адресов.
+            {t("description")}
           </p>
 
           <form onSubmit={handleSubmit} className="blist">
-            <p className="blist-hint">IP адрес</p>
+            <p className="blist-hint">{t("form.ipAddress")}</p>
             <div className="btn-wrap">
               <input
                 type="text"
                 className="blist-inp"
                 value={ip}
                 onChange={(e) => setIP(e.target.value)}
-                placeholder="98.108.185.177"
+                placeholder={t("form.placeholder")}
                 style={{
                   backgroundColor: "rgba(243, 214, 117, 0.1)",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
@@ -133,10 +130,10 @@ export default function BlackListPage() {
                     }}
                   >
                     <Loader size={16} className="animate-spin" />
-                    Проверка...
+                    {t("form.checking")}
                   </span>
                 ) : (
-                  "Проверить"
+                  t("form.check")
                 )}
               </button>
             </div>
@@ -159,7 +156,7 @@ export default function BlackListPage() {
               }}
             >
               <Loader size={24} className="animate-spin" />
-              <span>Проверка IP-адреса...</span>
+              <span>{t("form.checking")}</span>
             </div>
           )}
 
@@ -233,7 +230,7 @@ export default function BlackListPage() {
                       : "1px solid rgba(76, 175, 80, 0.3)",
                   }}
                 >
-                  {result.isListed ? "В черном списке" : "Не в черном списке"}
+                  {result.isListed ? t("result.status.listed") : t("result.status.notListed")}
                 </span>
               </div>
 
@@ -260,8 +257,8 @@ export default function BlackListPage() {
                     }}
                   >
                     {result.isListed
-                      ? `IP ${result.ip} найден в ${result.blacklistCount} чёрных списках`
-                      : `IP ${result.ip} не найден в чёрных списках`}
+                      ? t("result.summary.listed", { ip: result.ip, count: result.blacklistCount })
+                      : t("result.summary.notListed", { ip: result.ip })}
                   </span>
                 </div>
 
@@ -283,7 +280,7 @@ export default function BlackListPage() {
                         color: "#FFFFFF",
                       }}
                     >
-                      Найден в следующих списках:
+                      {t("result.blacklists")}
                     </h3>
                     <ul
                       style={{
@@ -316,7 +313,7 @@ export default function BlackListPage() {
                     marginTop: "16px",
                   }}
                 >
-                  Проверка выполнена: {formatDate(result.timestamp)}
+                  {t("result.timestamp")} {formatDate(result.timestamp)}
                 </div>
               </div>
             </div>

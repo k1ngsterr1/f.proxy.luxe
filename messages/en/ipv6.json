@@ -1,0 +1,29 @@
+{
+    "ipv6": {
+        "title": "CHECK WEBSITE FOR IPV6 SUPPORT",
+        "description": "Use this service to check if a website supports IPv6 access.",
+        "form": {
+            "placeholder": "google.com",
+            "check": "Check",
+            "checking": "Checking...",
+            "hint": "http(s)://"
+        },
+        "errors": {
+            "empty": "Please enter a domain",
+            "request": "An error occurred during the check"
+        },
+        "result": {
+            "domain": "Domain:",
+            "status": {
+                "supported": "SUPPORTS IPv6",
+                "notSupported": "DOES NOT SUPPORT IPv6"
+            },
+            "summary": {
+                "supported": "The site {domain} supports IPv6",
+                "notSupported": "The site {domain} does not support IPv6"
+            },
+            "addresses": "IPv6 addresses:",
+            "timestamp": "Check completed:"
+        }
+    }
+}

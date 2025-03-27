@@ -11,6 +11,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useTranslations } from "next-intl";
 
 interface ProxyResult {
   ip: string;
@@ -26,6 +27,7 @@ interface ProxyResult {
 }
 
 export default function ProxyCheckerPage() {
+  const i18n = useTranslations("proxyChecker");
   const [proxyList, setProxyList] = useState<string>("");
   const [checkLocation, setCheckLocation] = useState<boolean>(false);
   const [results, setResults] = useState<ProxyResult[]>([]);
@@ -35,7 +37,7 @@ export default function ProxyCheckerPage() {
 
   const handleCheckProxies = async () => {
     if (!proxyList) {
-      setError("Пожалуйста, введите список прокси");
+      setError(i18n("errors.emptyList"));
       return;
     }
 
@@ -45,7 +47,7 @@ export default function ProxyCheckerPage() {
       .filter(Boolean);
 
     if (proxies.length === 0) {
-      setError("Список прокси пуст или некорректный");
+      setError(i18n("errors.invalidList"));
       return;
     }
 
@@ -61,8 +63,8 @@ export default function ProxyCheckerPage() {
 
       setResults(response); // если response = ProxyResult[]
     } catch (err) {
-      console.error("Ошибка запроса:", err);
-      setError("Произошла ошибка при проверке прокси");
+      console.error("Request error:", err);
+      setError(i18n("errors.checkError"));
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +95,7 @@ export default function ProxyCheckerPage() {
               color: "#FFFFFF",
             }}
           >
-            <span style={{ color: "#f3d675" }}>ПРОКСИ ЧЕКЕР</span>
+            <span style={{ color: "#f3d675" }}>{i18n("title")}</span>
           </h1>
 
           <p
@@ -104,11 +106,9 @@ export default function ProxyCheckerPage() {
               color: "#CCCCCC",
             }}
           >
-            Бесплатный онлайн сервис для проверки работоспособности прокси
-            серверов. Анализ каждого прокси на доступность, тип и страну.{" "}
+            {i18n("description.line1")}{" "}
             {!isMobile && <br />}
-            Возможность проверки анонимных (индивидуальных) прокси с
-            авторизацией по логину и паролю. Проверка IPv6 прокси.
+            {i18n("description.line2")}
           </p>
 
           <div
@@ -129,7 +129,7 @@ export default function ProxyCheckerPage() {
               style={{ display: "flex", flexDirection: "column", gap: "16px" }}
             >
               <textarea
-                placeholder="Список прокси (каждый прокси с новой строки)"
+                placeholder={i18n("form.proxyListPlaceholder")}
                 value={proxyList}
                 onChange={(e) => setProxyList(e.target.value)}
                 style={{
@@ -193,7 +193,7 @@ export default function ProxyCheckerPage() {
                   </div>
                 </div>
                 <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                  Определять локацию прокси
+                  {i18n("form.determineLocation")}
                 </span>
               </label>
             </div>
@@ -210,7 +210,7 @@ export default function ProxyCheckerPage() {
                   marginBottom: "8px",
                 }}
               >
-                В каком формате добавлять прокси в прокси-чекер?
+                {i18n("form.formatTitle")}
               </h2>
 
               <div
@@ -229,13 +229,12 @@ export default function ProxyCheckerPage() {
                   marginBottom: "8px",
                 }}
               >
-                Если у вас публичные прокси (без логина и пароля), то{" "}
+                {i18n("form.formatPublic")}{" "}
                 <span style={{ color: "#f3d675", fontWeight: "500" }}>
                   IP:PORT
                 </span>{" "}
                 <br />
-                Если у вас приватные прокси (с авторизацией по логину и паролю),
-                то{" "}
+                {i18n("form.formatPrivate")}{" "}
                 <span style={{ color: "#f3d675", fontWeight: "500" }}>
                   IP:PORT:USER:PASS
                 </span>
@@ -249,7 +248,7 @@ export default function ProxyCheckerPage() {
                   marginBottom: isMobile ? "16px" : "24px",
                 }}
               >
-                P.S.: Если вы купили прокси у нас, то они приватные!
+                {i18n("form.privateNote")}
               </p>
 
               <button
@@ -277,10 +276,10 @@ export default function ProxyCheckerPage() {
                 {isLoading ? (
                   <>
                     <Loader size={16} className="animate-spin" />
-                    Проверка...
+                    {i18n("form.checking")}
                   </>
                 ) : (
-                  "Проверить прокси"
+                  i18n("form.checkButton")
                 )}
               </button>
             </div>
@@ -338,7 +337,7 @@ export default function ProxyCheckerPage() {
                     color: "#f3d675",
                   }}
                 >
-                  Результаты проверки
+                  {i18n("results.title")}
                 </h3>
                 <div
                   style={{
@@ -357,7 +356,7 @@ export default function ProxyCheckerPage() {
                   >
                     <CheckCircle size={16} color="#4CAF50" />
                     <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                      {activeProxies} активных
+                      {activeProxies} {i18n("results.activeCount")}
                     </span>
                   </div>
                   <div
@@ -369,7 +368,7 @@ export default function ProxyCheckerPage() {
                   >
                     <XCircle size={16} color="#FF5252" />
                     <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                      {totalProxies - activeProxies} неактивных
+                      {totalProxies - activeProxies} {i18n("results.inactiveCount")}
                     </span>
                   </div>
                   <div
@@ -382,7 +381,7 @@ export default function ProxyCheckerPage() {
                       fontWeight: "500",
                     }}
                   >
-                    {successRate}% успешных
+                    {successRate}% {i18n("results.successRate")}
                   </div>
                 </div>
               </div>
@@ -407,26 +406,26 @@ export default function ProxyCheckerPage() {
                       <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
-                        IP:Порт
+                        {i18n("results.ipPort")}
                       </th>
                       <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
-                        Статус
+                        {i18n("results.status")}
                       </th>
                       {!isMobile && (
-                        <th style={{ padding: "12px 16px" }}>Протокол</th>
+                        <th style={{ padding: "12px 16px" }}>{i18n("results.protocol")}</th>
                       )}
                       {checkLocation && !isMobile && (
-                        <th style={{ padding: "12px 16px" }}>Страна</th>
+                        <th style={{ padding: "12px 16px" }}>{i18n("results.country")}</th>
                       )}
                       {!isMobile && (
-                        <th style={{ padding: "12px 16px" }}>Время отклика</th>
+                        <th style={{ padding: "12px 16px" }}>{i18n("results.responseTime")}</th>
                       )}
                       <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
-                        {isMobile ? "Детали" : "Дополнительно"}
+                        {isMobile ? i18n("results.details") : i18n("results.additional")}
                       </th>
                     </tr>
                   </thead>
@@ -481,7 +480,7 @@ export default function ProxyCheckerPage() {
                             ) : (
                               <XCircle size={isMobile ? 10 : 12} />
                             )}
-                            {result.isActive ? "Активен" : "Неактивен"}
+                            {result.isActive ? i18n("results.active") : i18n("results.inactive")}
                           </div>
                         </td>
                         {!isMobile && (
@@ -518,7 +517,7 @@ export default function ProxyCheckerPage() {
                             style={{ padding: "12px 16px", color: "#FFFFFF" }}
                           >
                             {result.responseTime
-                              ? `${result.responseTime} мс`
+                              ? `${result.responseTime} ${i18n("results.ms")}`
                               : "—"}
                           </td>
                         )}
@@ -543,7 +542,7 @@ export default function ProxyCheckerPage() {
                                 </div>
                               )}
                               {result.responseTime && (
-                                <div>{result.responseTime} мс</div>
+                                <div>{result.responseTime} {i18n("results.ms")}</div>
                               )}
                             </div>
                           ) : result.error ? (
@@ -586,7 +585,7 @@ export default function ProxyCheckerPage() {
                 marginBottom: "16px",
               }}
             >
-              Возможности прокси чекера:
+              {i18n("features.title")}
             </h3>
 
             <div
@@ -600,12 +599,12 @@ export default function ProxyCheckerPage() {
               }}
             >
               {[
-                "Проверка доступности IPv4 и IPv6 прокси",
-                "Возможность проверки анонимных прокси с авторизацией по логину и паролю",
-                "Проверка HTTP(-s) и SOCKS прокси",
-                "Автоматическое определение протокола прокси",
-                "Определение страны прокси-сервера",
-                "Измерение времени отклика прокси",
+                i18n("features.ipv4ipv6"),
+                i18n("features.anonymousProxy"),
+                i18n("features.httpSocks"),
+                i18n("features.autoProtocol"),
+                i18n("features.country"),
+                i18n("features.responseTime"),
               ].map((feature, index) => (
                 <div
                   key={index}
@@ -648,7 +647,6 @@ export default function ProxyCheckerPage() {
               ))}
             </div>
 
-            {/* Info Box */}
             <div
               style={{
                 backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -672,9 +670,7 @@ export default function ProxyCheckerPage() {
                     marginBottom: "8px",
                   }}
                 >
-                  Наш прокси чекер позволяет быстро проверить работоспособность
-                  ваших прокси серверов. Вы можете проверить как публичные, так
-                  и приватные прокси с авторизацией.
+                  {i18n("info.description")}
                 </p>
                 <p
                   style={{
@@ -682,8 +678,7 @@ export default function ProxyCheckerPage() {
                     fontSize: isMobile ? "12px" : "14px",
                   }}
                 >
-                  Для получения наиболее точных результатов рекомендуем
-                  проверять не более 50 прокси за один раз.
+                  {i18n("info.recommendation")}
                 </p>
               </div>
             </div>

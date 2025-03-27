@@ -1,0 +1,29 @@
+{
+    "blacklist": {
+        "title": "BLACKLIST CHECK",
+        "description": "A free tool to check whether your or any other IP address is listed in anti-spam databases. Will your email or forum messages be blocked? The check runs against over 50 databases monitoring IP blacklists.",
+        "form": {
+            "ipAddress": "IP Address",
+            "placeholder": "Enter IP address",
+            "check": "Check",
+            "checking": "Checking IP address..."
+        },
+        "errors": {
+            "empty": "Please enter an IP address",
+            "invalid": "Enter a valid IPv4 address",
+            "request": "An error occurred during the check"
+        },
+        "result": {
+            "status": {
+                "listed": "Blacklisted",
+                "notListed": "Not blacklisted"
+            },
+            "summary": {
+                "listed": "IP {{ip}} found in {{count}} blacklists",
+                "notListed": "IP {{ip}} not found in any blacklists"
+            },
+            "blacklists": "Found in the following lists:",
+            "timestamp": "Check completed:"
+        }
+    }
+}

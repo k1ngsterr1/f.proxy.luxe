@@ -1,0 +1,13 @@
+{
+  "homeSlider": {
+    "header": "BUY PROXY",
+    "text": "INDIVIDUAL RESIDENTIAL PROXIES",
+    "subheader": "HTTPS/SOCKS5",
+    "stats": {
+      "clients": "CLIENTS CHOSE US",
+      "activeProxies": "PROXIES IN OPERATION",
+      "soldProxies": "PROXIES SOLD",
+      "ordersProcessed": "ORDERS PROCESSED"
+    }
+  }
+}

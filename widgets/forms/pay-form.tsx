@@ -15,24 +15,33 @@ import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmon
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useState } from "react";
 import { Button } from "@/shared/ui/button";
+import { useTranslations } from "next-intl";
 
-const validationSchema = Yup.object({
-  paymentMethod: Yup.string().required("Выберите способ оплаты"),
-  paymentAmount: Yup.number()
-    .typeError("Введите корректную сумму")
-    .min(1, "Минимальная сумма 1$")
-    .max(1000, "Максимальная сумма 1000$")
-    .required("Введите сумму платежа"),
-  agreed: Yup.boolean().oneOf(
-    [true],
-    "Вы должны подтвердить ознакомление с FAQ"
-  ),
-});
+const PayFormValidation = () => {
+  const i18n = useTranslations("forms.payment.errors");
+  
+  return Yup.object({
+    paymentMethod: Yup.string().required(i18n("selectPaymentMethod")),
+    paymentAmount: Yup.number()
+      .typeError(i18n("invalidAmount"))
+      .min(1, i18n("minAmount"))
+      .max(1000, i18n("maxAmount"))
+      .required(i18n("enterAmount")),
+    agreed: Yup.boolean().oneOf(
+      [true],
+      i18n("agreeToTerms")
+    ),
+  });
+};
+
+const validationSchema = PayFormValidation();
 
 export const PayForm = () => {
   const isMobile = useIsMobile();
   const { processWebMoneyPayment } = useWebMoneyPayment();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const i18n = useTranslations("forms.payment");
+  const errorI18n = useTranslations("forms.payment.errors");
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +70,7 @@ export const PayForm = () => {
         alert(
           error instanceof Error
             ? error.message
-            : "Произошла ошибка при обработке платежа. Пожалуйста, попробуйте позже."
+            : errorI18n("generalError")
         );
       } finally {
         setIsSubmitting(false);
@@ -75,36 +84,36 @@ export const PayForm = () => {
 
     // Check for payment method
     if (!formik.values.paymentMethod) {
-      alert("Выберите способ оплаты");
+      alert(errorI18n("selectPaymentMethod"));
       return;
     }
 
     // Check for agreement
     if (!formik.values.agreed) {
-      alert("Вы должны подтвердить ознакомление с FAQ");
+      alert(errorI18n("agreeToTerms"));
       return;
     }
 
     // Check for payment amount
     if (!formik.values.paymentAmount) {
-      alert("Введите сумму платежа");
+      alert(errorI18n("enterAmount"));
       return;
     }
 
     // If we have a payment amount, validate it
     const amount = Number(formik.values.paymentAmount);
     if (isNaN(amount)) {
-      alert("Введите корректную сумму");
+      alert(errorI18n("invalidAmount"));
       return;
     }
 
     if (amount < 1) {
-      alert("Минимальная сумма 1$");
+      alert(errorI18n("minAmount"));
       return;
     }
 
     if (amount > 1000) {
-      alert("Максимальная сумма 1000$");
+      alert(errorI18n("maxAmount"));
       return;
     }
 
@@ -123,13 +132,13 @@ export const PayForm = () => {
     >
       <div className="m_title">
         <h1 className="h1">
-          <span>ЛИЧНЫЙ КАБИНЕТ</span>/БАЛАНС
+          <span>{i18n("title")}</span>
         </h1>
       </div>
 
       <div className="payment_method">
         <div className="h5">
-          Способ оплаты: <span style={{ color: "#f3d675" }}>*</span>
+          {i18n("paymentMethod")} <span style={{ color: "#f3d675" }}>*</span>
         </div>
 
         <div className="methods">
@@ -169,7 +178,7 @@ export const PayForm = () => {
 
       <div className="sum_line">
         <div className="h5">
-          Сумма платежа: <span style={{ color: "#f3d675" }}>*</span>
+          {i18n("paymentAmount")} <span style={{ color: "#f3d675" }}>*</span>
         </div>
 
         <div className="form">
@@ -190,7 +199,7 @@ export const PayForm = () => {
               opacity: isSubmitting ? 0.7 : 1,
               cursor: isSubmitting ? "not-allowed" : "pointer",
             }}
-            name={isSubmitting ? "обработка..." : "продолжить"}
+            name={isSubmitting ? i18n("processing") : i18n("continue")}
           />
         </div>
       </div>
@@ -214,8 +223,7 @@ export const PayForm = () => {
           />
           <span className="checkbox-box"></span>
           <span className="checkbox-text">
-            Я прочитал раздел FAQ. Я знаю, что покупаю и согласен с условиями
-            использования
+            {i18n("agreement")}
           </span>
         </label>
       </div>

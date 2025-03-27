@@ -1,0 +1,40 @@
+{
+  "proxy-cards": {
+    "isp": {
+      "title": "ISP IPv4 PROXY STATIC",
+      "description": "Suitable for all sites. Except payment systems. Issued to one user",
+      "issued": "Issued to one user",
+      "country": "COUNTRY",
+      "quantity": "QUANTITY",
+      "period": "PERIOD",
+      "month": "1 month",
+      "usage": "USAGE PURPOSE",
+      "price": "PRICE",
+      "buy": "Buy"
+    },
+    "residential": {
+      "title": "RESIDENTIAL IPv4 PROXY DYNAMIC",
+      "description": "Suitable for all sites. Except payment systems. Issued to one user",
+      "issued": "Issued to one user",
+      "country": "COUNTRY (WORLDWIDE)",
+      "quantity": "QUANTITY (NO LIMIT)",
+      "plan": "TARIFF PLAN (GB)",
+      "usage": "USAGE PURPOSE",
+      "price": "PRICE",
+      "buy": "Buy"
+    },
+    "ipv6": {
+      "title": "IPv6 PROXY",
+      "description": "Suitable for sites with IPv6 support. Except payment systems.",
+      "issued": "Issued to one user",
+      "country": "COUNTRY",
+      "quantity": "QUANTITY",
+      "period": "PERIOD",
+      "month": "1 month",
+      "usage": "USAGE PURPOSE",
+      "price": "PRICE",
+      "processing": "Processing...",
+      "buy": "Buy"
+    }
+  }
+}

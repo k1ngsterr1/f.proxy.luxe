@@ -1,0 +1,18 @@
+{
+  "partner": {
+    "description": {
+      "title": "Partner Program",
+      "intro": "Attract new clients to us through a referral link",
+      "benefits": [
+        "users registered through your link are permanently assigned to you",
+        "users who used your coupon receive a 5% discount on their purchase"
+      ]
+    },
+    "payments": {
+      "instructions": "To receive partner rewards, submit a request to",
+      "paymentMethods": "indicating the wallet for payment - WebMoney (WMZ), Payeer. Payments",
+      "restrictions": "It is forbidden to register multiple accounts in order to receive partner",
+      "selfReferral": "payments, i.e., you cannot be a referral to yourself."
+    }
+  }
+}

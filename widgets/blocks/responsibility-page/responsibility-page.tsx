@@ -2,8 +2,10 @@
 
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { AlertMessage } from "@/shared/ui/alert";
+import { useTranslations } from "next-intl";
 
 export default function ResponsibilityBlock() {
+  const i18n = useTranslations("pages.responsibility");
   return (
     <div
       style={{
@@ -25,7 +27,7 @@ export default function ResponsibilityBlock() {
             fontWeight: "bold",
           }}
         >
-          ИНФОРМАЦИЯ О WEBMONEY TRANSFER
+          {i18n("title")}
         </h1>
       </div>
       <div
@@ -40,19 +42,10 @@ export default function ResponsibilityBlock() {
       >
         <div style={{ marginBottom: "24px" }}>
           <p style={{ marginBottom: "16px" }}>
-            Предлагаемые товары и услуги предоставляются не по заказу лица либо
-            предприятия, эксплуатирующего систему WebMoney Transfer. Мы являемся
-            независимым предприятием, оказывающим услуги, и самостоятельно
-            принимаем решения о ценах и предложениях. Предприятия,
-            эксплуатирующие систему WebMoney Transfer, не получают комиссионных
-            вознаграждений или иных вознаграждений за участие в предоставлении
-            услуг и не несут никакой ответственности за нашу деятельность.
+            {i18n("disclaimer1")}
           </p>
           <p>
-            Аттестация, произведенная со стороны WebMoney Transfer, лишь
-            подтверждает наши реквизиты для связи и удостоверяет личность. Она
-            осуществляется по нашему желанию и не означает, что мы каким-либо
-            образом связаны с продажами операторов системы WebMoney.
+            {i18n("disclaimer2")}
           </p>
         </div>
 

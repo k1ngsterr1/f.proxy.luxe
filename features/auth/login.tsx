@@ -10,20 +10,23 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { Button } from "@/shared/ui/button";
+import { useTranslations } from "next-intl";
 
 export const LoginAuthForm = () => {
   const navigate = useRouter();
   const { closePopup } = usePopupStore();
   const { saveAccessToken, saveRefreshToken } = useAuthStore();
+  const i18n = useTranslations();
+  const validationI18n = useTranslations("validation");
 
   // ✅ Validation Schema
   const validationSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Некорректный email")
-      .required("Поле email обязательно"),
+      .email(validationI18n("email.invalid"))
+      .required(validationI18n("email.required")),
     password: Yup.string()
-      .min(8, "Пароль должен содержать минимум 8 символов")
-      .required("Поле пароль обязательно"),
+      .min(8, validationI18n("password.minLength"))
+      .required(validationI18n("password.required")),
   });
 
   const handleSubmit = async (
@@ -37,7 +40,7 @@ export const LoginAuthForm = () => {
       closePopup("auth-enter");
       navigate.push("/personal-account");
     } catch {
-      setErrors({ general: "Неверный email или пароль" });
+      setErrors({ general: validationI18n("general.invalidCredentials") });
     } finally {
       setSubmitting(false);
     }
@@ -87,7 +90,7 @@ export const LoginAuthForm = () => {
             type="password"
             name="password"
             className="auth-inp auth-pass"
-            placeholder="Пароль"
+            placeholder="Password"
             style={errors.password ? { border: "2px solid red" } : {}}
           />
           <ErrorMessage name="password">
@@ -118,7 +121,7 @@ export const LoginAuthForm = () => {
               color: "#fade4c",
             }}
           >
-            Забыли пароль?
+            {i18n("forgot-password.title")}
           </Link>
           <div className="btn-wrap">
             <Button
@@ -128,7 +131,7 @@ export const LoginAuthForm = () => {
                 marginTop: 16,
               }}
               disabled={isSubmitting}
-              name={isSubmitting ? "Вход..." : "Войти"}
+              name={isSubmitting ? i18n("auth.login.processing") : i18n("auth.login.button")}
             />
           </div>
         </Form>

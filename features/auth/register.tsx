@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { Button } from "@/shared/ui/button";
+import { useTranslations } from "next-intl";
 
 interface FormValues {
   email: string;
@@ -26,17 +27,19 @@ export const RegisterAuthForm = () => {
   const navigate = useRouter();
   const { closePopup } = usePopupStore();
   const { saveAccessToken } = useAuthStore();
+  const i18n = useTranslations();
+  const validationI18n = useTranslations("validation");
   const validationSchema = Yup.object().shape({
     email: Yup.string()
-      .email("Некорректный email")
-      .required("Поле email обязательно"),
+      .email(validationI18n("email.invalid"))
+      .required(validationI18n("email.required")),
     password: Yup.string()
-      .min(8, "Пароль должен содержать минимум 8 символов")
-      .matches(/[a-zA-Z]/, "Пароль должен содержать хотя бы одну букву")
-      .required("Поле пароль обязательно"),
+      .min(8, validationI18n("password.minLength"))
+      .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+      .required(validationI18n("password.required")),
     repeatPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Пароли не совпадают")
-      .required("Повторите пароль"),
+      .oneOf([Yup.ref("password")], validationI18n("confirmPassword.match"))
+      .required(validationI18n("confirmPassword.required")),
   });
 
   const handleSubmit = async (
@@ -60,15 +63,15 @@ export const RegisterAuthForm = () => {
 
         if (statusCode === 400) {
           if (message.includes("User with this email already exists")) {
-            setErrors({ email: "Пользователь с таким email уже существует" });
+            setErrors({ email: "User with this email already exists" });
           } else {
-            setErrors({ general: message || "Ошибка регистрации" });
+            setErrors({ general: message || "Registration error" });
           }
         } else {
-          setErrors({ general: "Неизвестная ошибка. Попробуйте снова." });
+          setErrors({ general: "Unknown error. Please try again." });
         }
       } else {
-        setErrors({ general: "Ошибка сети или сервера. Попробуйте позже." });
+        setErrors({ general: "Network or server error. Please try later." });
       }
     } finally {
       setSubmitting(false);
@@ -116,7 +119,7 @@ export const RegisterAuthForm = () => {
               type="password"
               name="password"
               className="auth-inp auth-pass"
-              placeholder="Пароль"
+              placeholder="Password"
               style={errors.password ? { border: "2px solid red" } : {}}
             />
             <ErrorMessage name="password">
@@ -137,7 +140,7 @@ export const RegisterAuthForm = () => {
               type="password"
               name="repeatPassword"
               className="auth-inp auth-pass"
-              placeholder="Повторите пароль"
+              placeholder="Confirm password"
               style={errors.repeatPassword ? { border: "2px solid red" } : {}}
             />
             <ErrorMessage name="repeatPassword">
@@ -168,7 +171,7 @@ export const RegisterAuthForm = () => {
                 type="submit"
                 variant="big"
                 disabled={isSubmitting}
-                name={isSubmitting ? "Вход..." : "Войти"}
+                name={isSubmitting ? i18n("auth.register.processing") : i18n("auth.register.button")}
               />
             </div>
           </Form>

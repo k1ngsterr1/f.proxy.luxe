@@ -114,7 +114,7 @@ export const Header: FC = () => {
             {i18n("nav-bar.proxy-checker")}
           </Link>
           <Link href="/services/anonymity-checker" className="submenu-item">
-            {i18n("nav-bar.anonimity-checker")}
+            {i18n("nav-bar.anonymity-checker")}
           </Link>
           <Link href="/services/port-checker" className="submenu-item">
             {i18n("nav-bar.port-checker")}

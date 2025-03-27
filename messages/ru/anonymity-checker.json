@@ -1,0 +1,87 @@
+{
+    "title": "ПРОВЕРКА АНОНИМНОСТИ",
+    "description": "С помощью данного сервиса вы можете проверить, насколько вы анонимны в сети, насколько данные, предоставляемые вашим компьютером/браузером, совпадают с данными, предоставляемыми вашим IP-адресом.",
+    "anonymityLevel": "Уровень анонимности",
+    "hideIp": "Скрыть IP",
+    "unknownValue": "Неизвестно",
+    "systemInfo": {
+        "title": "Системная информация",
+        "os": "ОС",
+        "browser": "Браузер",
+        "userAgent": "User Agent",
+        "language": "Язык",
+        "screen": "Экран",
+        "bits": "бит"
+    },
+    "timeInfo": {
+        "title": "Временная информация"
+    },
+    "errors": {
+        "loadingError": "Ошибка при загрузке данных",
+        "unknownError": "Неизвестная ошибка",
+        "proxyCheckError": "Ошибка при проверке прокси/VPN/Tor",
+        "blacklistCheckError": "Ошибка при проверке черного списка",
+        "errorPrefix": "Ошибка",
+        "dataNotFound": "Данные не найдены"
+    },
+    "anonymityLevels": {
+        "excellent": "Отличная",
+        "good": "Хорошая",
+        "medium": "Средняя",
+        "low": "Низкая",
+        "critical": "Критическая"
+    },
+    "ipInfo": {
+        "title": "IP информация",
+        "ip": "Мой IP",
+        "country": "Страна",
+        "city": "Город",
+        "region": "Регион",
+        "host": "Хост",
+        "postalCode": "Почтовый индекс",
+        "coordinates": "Координаты",
+        "timezone": "Временная зона IP",
+        "ipTime": "Время IP",
+        "systemTime": "Время системное",
+        "map": "Карта",
+        "whois": "Whois"
+    },
+    "anonymityStatus": {
+        "title": "Статус анонимности",
+        "proxy": "Прокси",
+        "vpn": "VPN",
+        "tor": "Tor",
+        "blacklist": "Черный список",
+        "webRTC": "WebRTC",
+        "flash": "Flash",
+        "java": "Java",
+        "activeX": "ActiveX",
+        "detected": "Обнаружено",
+        "notDetected": "Не обнаружено",
+        "leaking": "Утечка",
+        "protected": "Защищено",
+        "enabled": "Включен",
+        "disabled": "Отключен",
+        "blacklistReports": "отчетов"
+    },
+    "recommendations": {
+        "title": "Рекомендации по улучшению анонимности",
+        "disableWebRTC": "Отключите WebRTC",
+        "webRTCDescription": "в вашем браузере или используйте расширение для блокировки WebRTC утечек.",
+        "disableLegacyTech": "Отключите устаревшие технологии",
+        "legacyTechDescription": "(Flash, Java, ActiveX), которые могут представлять угрозу безопасности.",
+        "useVPN": "Используйте надежный VPN-сервис",
+        "vpnDescription": "для скрытия вашего реального IP-адреса.",
+        "useIncognito": "Используйте режим инкогнито",
+        "incognitoDescription": "или приватный режим браузера для минимизации отслеживания.",
+        "useAdBlockers": "Установите расширения для блокировки рекламы и трекеров",
+        "adBlockersDescription": ", такие как uBlock Origin или Privacy Badger.",
+        "useTor": "Рассмотрите возможность использования Tor Browser",
+        "torDescription": "для максимальной анонимности."
+    },
+    "additionalProtection": {
+        "needMore": "Нужна дополнительная защита?",
+        "description": "Используйте наши прокси-сервисы для повышения анонимности в сети.",
+        "buyProxy": "Купить прокси"
+    }
+}

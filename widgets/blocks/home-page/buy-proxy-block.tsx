@@ -2,13 +2,16 @@ import { IPV6BuyCard } from "@/entities/ipv6/ui/ipv6-buy-card";
 import { ISPBuyCard } from "@/entities/isp/ui/isp-buy-card";
 import { ResidentalProxyBuyCard } from "@/entities/residental-proxy/ui/residental-proxy-buy-card";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export const BuyProxyBlock = () => {
+  const i18n = useTranslations("buy-proxy");
+
   return (
     <section className="ibuy">
       <div className="scontainer">
         <h1 className="section-header">
-          <span>Купить прокси</span>
+          <span>{i18n("buy-proxy1")}</span>
         </h1>
         <div className="buy-inner">
           <ISPBuyCard />

@@ -1,7 +1,9 @@
 import { Button } from "@/shared/ui/button";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export const ResidentalProxyBuyCard = () => {
+  const i18n = useTranslations("proxy-cards.residential");
   const [goal, setGoal] = useState<string>("");
 
   return (
@@ -14,14 +16,14 @@ export const ResidentalProxyBuyCard = () => {
         }}
       >
         <h3 className="buy-item__header buy-item__header--solo">
-          РЕЗИДЕНТНЫЕ IPv4 ПРОКСИ ДИНАМИЧЕСКИЕ
+          {i18n("title")}
         </h3>
         <div className="separator"></div>
         <p className="buy-item__about">
-          Подходят для всех сайтов. Кроме платёжных систем. Выдаются в одни руки
+          {i18n("description")}
         </p>
-        <a className="buy-item__btn">Выдаются в одни руки</a>
-        <h4 className="buy-item__subheader">СТРАНА (ВЕСЬ МИР)</h4>
+        <a className="buy-item__btn">{i18n("issued")}</a>
+        <h4 className="buy-item__subheader">{i18n("country")}</h4>
         <select
           className="buy-item__select"
           style={{
@@ -35,8 +37,8 @@ export const ResidentalProxyBuyCard = () => {
             cursor: "pointer", // Pointer cursor
           }}
         >
-          <option value="1">Россия</option>
-          <option value="2">Россия</option>
+          <option value="1">Russia</option>
+          <option value="2">Russia</option>
         </select>
         <h4
           className="buy-item__subheader"
@@ -44,7 +46,7 @@ export const ResidentalProxyBuyCard = () => {
             marginTop: 16,
           }}
         >
-          КОЛ-ВО (НЕТ ОГРАНИЧЕНИЯ)
+          {i18n("quantity")}
         </h4>
         <select
           className="buy-item__select"
@@ -68,7 +70,7 @@ export const ResidentalProxyBuyCard = () => {
             marginTop: 16,
           }}
         >
-          ТАРИФНЫЙ ПЛАН (GB)
+          {i18n("plan")}
         </h4>
         <select
           className="buy-item__select"
@@ -92,7 +94,7 @@ export const ResidentalProxyBuyCard = () => {
             marginTop: 16,
           }}
         >
-          ЦЕЛЬ ИСПОЛЬЗОВАНИЯ
+          {i18n("usage")}
         </h4>
         <select
           className="buy-item__select"
@@ -111,7 +113,7 @@ export const ResidentalProxyBuyCard = () => {
           <option value="2">2</option>
         </select>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          ЦЕЛЬ ИСПОЛЬЗОВАНИЯ
+          {i18n("usage")}
         </h4>
         <input
           type="text"
@@ -130,10 +132,10 @@ export const ResidentalProxyBuyCard = () => {
           }}
         />
         <div className="buy-item__price">
-          ЦЕНА
+          {i18n("price")}
           <span>2.4$ / IP</span>
         </div>
-        <Button className="btn" variant="big" name="Купить" />
+        <Button className="btn" variant="big" name={i18n("buy")} />
       </div>
     </div>
   );

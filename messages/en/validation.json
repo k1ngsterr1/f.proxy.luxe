@@ -1,0 +1,23 @@
+{
+  "validation": {
+    "email": {
+      "invalid": "Invalid email",
+      "required": "Email field is required"
+    },
+    "password": {
+      "minLength": "Password must be at least 8 characters",
+      "required": "Password field is required"
+    },
+    "confirmPassword": {
+      "match": "Passwords must match",
+      "required": "Confirm password field is required"
+    },
+    "name": {
+      "required": "Name field is required"
+    },
+    "general": {
+      "invalidCredentials": "Invalid email or password",
+      "serverError": "Server error occurred. Please try again later."
+    }
+  }
+}

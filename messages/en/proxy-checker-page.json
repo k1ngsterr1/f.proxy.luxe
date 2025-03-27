@@ -1,0 +1,53 @@
+{
+  "proxyChecker": {
+    "title": "PROXY CHECKER",
+    "description": {
+      "line1": "Free online service for checking the functionality of proxy servers. Analysis of each proxy for availability, type, and country.",
+      "line2": "Ability to check anonymous (individual) proxies with login and password authorization. IPv6 proxy checking."
+    },
+    "info": {
+      "description": "Our proxy checker allows you to quickly check the functionality of your proxy servers. You can check both public and private proxies with authorization.",
+      "recommendation": "For the most accurate results, we recommend checking no more than 50 proxies at a time."
+    },
+    "form": {
+      "proxyListPlaceholder": "List of proxies (each proxy on a new line)",
+      "determineLocation": "Determine proxy location",
+      "formatTitle": "In what format to add proxies to the proxy checker?",
+      "formatPublic": "If you have public proxies (without login and password), then",
+      "formatPrivate": "If you have private proxies (with login and password authorization), then",
+      "privateNote": "P.S.: If you bought proxies from us, they are private!",
+      "checking": "Checking...",
+      "checkButton": "Check proxies"
+    },
+    "results": {
+      "title": "Check Results",
+      "ipPort": "IP:Port",
+      "status": "Status",
+      "protocol": "Protocol",
+      "country": "Country",
+      "responseTime": "Response Time",
+      "details": "Details",
+      "additional": "Additional",
+      "active": "Active",
+      "inactive": "Inactive",
+      "ms": "ms",
+      "activeCount": "active",
+      "inactiveCount": "inactive",
+      "successRate": "successful"
+    },
+    "features": {
+      "title": "Proxy checker features:",
+      "ipv4ipv6": "Checking availability of IPv4 and IPv6 proxies",
+      "anonymousProxy": "Ability to check anonymous proxies with login and password authorization",
+      "httpSocks": "Checking HTTP(-s) and SOCKS proxies",
+      "autoProtocol": "Automatic detection of proxy protocol",
+      "country": "Determining the country of the proxy server",
+      "responseTime": "Measuring proxy response time"
+    },
+    "errors": {
+      "emptyList": "Please enter a list of proxies",
+      "invalidList": "The proxy list is empty or invalid",
+      "checkError": "An error occurred while checking proxies"
+    }
+  }
+}

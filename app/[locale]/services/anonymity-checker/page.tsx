@@ -4,6 +4,7 @@ import { Loader } from "@/shared/ui/loader";
 import { useEffect, useState } from "react";
 import { UAParser } from "ua-parser-js";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useTranslations } from "next-intl";
 import {
   AlertCircle,
   CheckCircle,
@@ -37,6 +38,7 @@ interface BlacklistData {
 }
 
 export default function AnonymityChecker() {
+  const t = useTranslations();
   const [ipData, setIpData] = useState<IpData | null>(null);
   const [userData, setUserData] = useState<any>(null);
   const [proxyData, setProxyData] = useState<ProxyData>({
@@ -65,12 +67,12 @@ export default function AnonymityChecker() {
           "https://ipinfo.io/json?token=d81de8201144f2"
         );
         if (!response.ok) {
-          throw new Error("Ошибка при загрузке данных");
+          throw new Error(t("errors.loadingError"));
         }
         const data = await response.json();
         setIpData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+        setError(err instanceof Error ? err.message : t("errors.unknownError"));
       }
     };
 
@@ -105,7 +107,7 @@ export default function AnonymityChecker() {
           isTor: data.tor === 1,
         });
       } catch (err) {
-        console.error("Ошибка при проверке прокси/VPN/Tor:", err);
+        console.error(t("errors.proxyCheckError"), err);
       }
     };
 
@@ -133,7 +135,7 @@ export default function AnonymityChecker() {
           reports: data.data.totalReports,
         });
       } catch (err) {
-        console.error("Ошибка при проверке черного списка:", err);
+        console.error(t("errors.blacklistCheckError"), err);
       }
     };
 
@@ -265,7 +267,7 @@ export default function AnonymityChecker() {
           }}
         >
           <AlertCircle size={24} />
-          <span>Ошибка: {error}</span>
+          <span>{t("errors.errorPrefix")}: {error}</span>
         </div>
       </div>
     );
@@ -296,7 +298,7 @@ export default function AnonymityChecker() {
           }}
         >
           <AlertCircle size={24} />
-          <span>Данные не найдены</span>
+          <span>{t("errors.dataNotFound")}</span>
         </div>
       </div>
     );
@@ -309,11 +311,11 @@ export default function AnonymityChecker() {
 
   // Get anonymity level text and color
   const getAnonymityLevel = () => {
-    if (anonymityScore >= 90) return { text: "Отличная", color: "#4CAF50" };
-    if (anonymityScore >= 70) return { text: "Хорошая", color: "#8BC34A" };
-    if (anonymityScore >= 50) return { text: "Средняя", color: "#FFC107" };
-    if (anonymityScore >= 30) return { text: "Низкая", color: "#FF9800" };
-    return { text: "Критическая", color: "#FF5252" };
+    if (anonymityScore >= 90) return { text: t("anonymityLevels.excellent"), color: "#4CAF50" };
+    if (anonymityScore >= 70) return { text: t("anonymityLevels.good"), color: "#8BC34A" };
+    if (anonymityScore >= 50) return { text: t("anonymityLevels.medium"), color: "#FFC107" };
+    if (anonymityScore >= 30) return { text: t("anonymityLevels.low"), color: "#FF9800" };
+    return { text: t("anonymityLevels.critical"), color: "#FF5252" };
   };
 
   const anonymityLevel = getAnonymityLevel();
@@ -336,7 +338,7 @@ export default function AnonymityChecker() {
               color: "#FFFFFF",
             }}
           >
-            <span style={{ color: "#f3d675" }}>ПРОВЕРКА АНОНИМНОСТИ</span>
+            <span style={{ color: "#f3d675" }}>{t("title")}</span>
           </h1>
 
           <p
@@ -347,10 +349,7 @@ export default function AnonymityChecker() {
               color: "#CCCCCC",
             }}
           >
-            С помощью данного сервиса вы можете проверить, насколько вы анонимны
-            в сети, насколько данные, предоставляемые вашим
-            компьютером/браузером, совпадают с данными, предоставляемыми вашим
-            IP-адресом.
+            {t("description")}
           </p>
 
           {/* Anonymity Score Card */}
@@ -381,7 +380,7 @@ export default function AnonymityChecker() {
                     marginBottom: "4px",
                   }}
                 >
-                  Уровень анонимности:
+                  {t("anonymityLevel")}:
                 </div>
                 <div
                   style={{
@@ -411,7 +410,7 @@ export default function AnonymityChecker() {
                 }}
               >
                 <Lock size={16} />
-                Скрыть IP
+                {t("hideIp")}
               </button>
             </div>
           </div>
@@ -451,7 +450,7 @@ export default function AnonymityChecker() {
                       color: "#f3d675",
                     }}
                   >
-                    IP информация
+                    {t("ipInfo.title")}
                   </h3>
                 </div>
 
@@ -467,7 +466,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Мой IP
+                      {t("ipInfo.ip")}
                     </div>
                     <div
                       style={{
@@ -491,7 +490,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Хост
+                      {t("ipInfo.host")}
                     </div>
                     <div
                       style={{
@@ -501,7 +500,7 @@ export default function AnonymityChecker() {
                       }}
                     >
                       <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                        {ipData.hostname || "Неизвестно"}
+                        {ipData.hostname || t("unknownValue")}
                       </span>
                       <a
                         href="#"
@@ -515,7 +514,7 @@ export default function AnonymityChecker() {
                           border: "1px solid rgba(243, 214, 117, 0.2)",
                         }}
                       >
-                        Whois
+                        {t("ipInfo.whois")}
                       </a>
                     </div>
                   </div>
@@ -531,7 +530,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Страна
+                      {t("ipInfo.country")}
                     </div>
                     <div
                       style={{
@@ -557,10 +556,10 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Город
+                      {t("ipInfo.city")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                      {ipData.city || "Неизвестно"}
+                      {ipData.city || t("unknownValue")}
                     </div>
                   </div>
 
@@ -575,10 +574,10 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Почтовый индекс
+                      {t("ipInfo.postalCode")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                      {ipData.postal || "Неизвестно"}
+                      {ipData.postal || t("unknownValue")}
                     </div>
                   </div>
 
@@ -592,7 +591,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Координаты
+                      {t("ipInfo.coordinates")}
                     </div>
                     <div
                       style={{
@@ -602,7 +601,7 @@ export default function AnonymityChecker() {
                       }}
                     >
                       <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                        {ipData.loc || "Неизвестно"}
+                        {ipData.loc || t("unknownValue")}
                       </span>
                       <a
                         href={`https://www.google.com/maps?q=${latitude},${longitude}`}
@@ -622,7 +621,7 @@ export default function AnonymityChecker() {
                         }}
                       >
                         <MapPin size={12} />
-                        Карта
+                        {t("ipInfo.map")}
                       </a>
                     </div>
                   </div>
@@ -653,7 +652,7 @@ export default function AnonymityChecker() {
                       color: "#f3d675",
                     }}
                   >
-                    Системная информация
+                    {t("systemInfo.title")}
                   </h3>
                 </div>
 
@@ -668,7 +667,7 @@ export default function AnonymityChecker() {
                       borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
                     }}
                   >
-                    <div style={{ color: "#999999", fontSize: "14px" }}>ОС</div>
+                    <div style={{ color: "#999999", fontSize: "14px" }}>{t("systemInfo.os")}</div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {userData.os.name} {userData.os.version}
                     </div>
@@ -685,7 +684,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Браузер
+                      {t("systemInfo.browser")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {userData.browser.name} {userData.browser.version}
@@ -705,7 +704,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      User Agent
+                      {t("systemInfo.userAgent")}
                     </div>
                     <div
                       style={{
@@ -732,7 +731,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Язык
+                      {t("systemInfo.language")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {navigator.language}
@@ -749,11 +748,11 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Экран
+                      {t("systemInfo.screen")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {window.screen.width}x{window.screen.height},{" "}
-                      {window.screen.colorDepth} бит
+                      {window.screen.colorDepth} {t("systemInfo.bits")}
                     </div>
                   </div>
                 </div>
@@ -783,7 +782,7 @@ export default function AnonymityChecker() {
                       color: "#f3d675",
                     }}
                   >
-                    Временная информация
+                    {t("timeInfo.title")}
                   </h3>
                 </div>
 
@@ -799,10 +798,10 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Временная зона IP
+                      {t("ipInfo.timezone")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                      {ipData.timezone || "Неизвестно"}
+                      {ipData.timezone || t("unknownValue")}
                     </div>
                   </div>
 
@@ -817,7 +816,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Время IP
+                      {t("ipInfo.ipTime")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {new Date().toLocaleString()}
@@ -834,7 +833,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Время системное
+                      {t("ipInfo.systemTime")}
                     </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {new Date().toLocaleString()}
@@ -872,7 +871,7 @@ export default function AnonymityChecker() {
                       color: "#f3d675",
                     }}
                   >
-                    Статус анонимности
+                    {t("anonymityStatus.title")}
                   </h3>
                 </div>
 
@@ -888,7 +887,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Прокси
+                      {t("anonymityStatus.proxy")}
                     </div>
                     <div
                       style={{
@@ -913,7 +912,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {proxyData.isProxy ? "Обнаружено" : "Не обнаружено"}
+                      {proxyData.isProxy ? t("anonymityStatus.detected") : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -928,7 +927,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      VPN
+                      {t("anonymityStatus.vpn")}
                     </div>
                     <div
                       style={{
@@ -953,7 +952,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {proxyData.isVPN ? "Обнаружено" : "Не обнаружено"}
+                      {proxyData.isVPN ? t("anonymityStatus.detected") : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -968,7 +967,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Tor
+                      {t("anonymityStatus.tor")}
                     </div>
                     <div
                       style={{
@@ -993,7 +992,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {proxyData.isTor ? "Обнаружено" : "Не обнаружено"}
+                      {proxyData.isTor ? t("anonymityStatus.detected") : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -1008,7 +1007,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Черный список
+                      {t("anonymityStatus.blacklist")}
                     </div>
                     <div
                       style={{
@@ -1036,8 +1035,8 @@ export default function AnonymityChecker() {
                         <CheckCircle size={12} />
                       )}
                       {blacklistData.isBlacklisted
-                        ? `Обнаружено (${blacklistData.reports} отчетов)`
-                        : "Не обнаружено"}
+                        ? `${t("anonymityStatus.detected")} (${blacklistData.reports} ${t("anonymityStatus.blacklistReports")})`
+                        : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -1052,7 +1051,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      WebRTC
+                      {t("anonymityStatus.webRTC")}
                     </div>
                     <div
                       style={{
@@ -1077,7 +1076,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {webRTC ? "Утечка" : "Защищено"}
+                      {webRTC ? t("anonymityStatus.leaking") : t("anonymityStatus.protected")}
                     </div>
                   </div>
 
@@ -1092,7 +1091,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Flash
+                      {t("anonymityStatus.flash")}
                     </div>
                     <div
                       style={{
@@ -1117,7 +1116,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {flash ? "Включен" : "Отключен"}
+                      {flash ? t("anonymityStatus.enabled") : t("anonymityStatus.disabled")}
                     </div>
                   </div>
 
@@ -1132,7 +1131,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      Java
+                      {t("anonymityStatus.java")}
                     </div>
                     <div
                       style={{
@@ -1157,7 +1156,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {java ? "Включен" : "Отключен"}
+                      {java ? t("anonymityStatus.enabled") : t("anonymityStatus.disabled")}
                     </div>
                   </div>
 
@@ -1171,7 +1170,7 @@ export default function AnonymityChecker() {
                     }}
                   >
                     <div style={{ color: "#999999", fontSize: "14px" }}>
-                      ActiveX
+                      {t("anonymityStatus.activeX")}
                     </div>
                     <div
                       style={{
@@ -1196,7 +1195,7 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {activeX ? "Включен" : "Отключен"}
+                      {activeX ? t("anonymityStatus.enabled") : t("anonymityStatus.disabled")}
                     </div>
                   </div>
                 </div>
@@ -1226,7 +1225,7 @@ export default function AnonymityChecker() {
                       color: "#f3d675",
                     }}
                   >
-                    Рекомендации по улучшению анонимности
+                    {t("recommendations.title")}
                   </h3>
                 </div>
 
@@ -1241,46 +1240,44 @@ export default function AnonymityChecker() {
                     {webRTC && (
                       <li style={{ marginBottom: "8px" }}>
                         <span style={{ color: "#f3d675" }}>
-                          Отключите WebRTC
+                          {t("recommendations.disableWebRTC")}
                         </span>{" "}
-                        в вашем браузере или используйте расширение для
-                        блокировки WebRTC утечек.
+                        {t("recommendations.webRTCDescription")}
                       </li>
                     )}
                     {(flash || java || activeX) && (
                       <li style={{ marginBottom: "8px" }}>
                         <span style={{ color: "#f3d675" }}>
-                          Отключите устаревшие технологии
+                          {t("recommendations.disableLegacyTech")}
                         </span>{" "}
-                        (Flash, Java, ActiveX), которые могут представлять
-                        угрозу безопасности.
+                        {t("recommendations.legacyTechDescription")}
                       </li>
                     )}
                     {!proxyData.isVPN && (
                       <li style={{ marginBottom: "8px" }}>
                         <span style={{ color: "#f3d675" }}>
-                          Используйте надежный VPN-сервис
+                          {t("recommendations.useVPN")}
                         </span>{" "}
-                        для скрытия вашего реального IP-адреса.
+                        {t("recommendations.vpnDescription")}
                       </li>
                     )}
                     <li style={{ marginBottom: "8px" }}>
                       <span style={{ color: "#f3d675" }}>
-                        Используйте режим инкогнито
+                        {t("recommendations.useIncognito")}
                       </span>{" "}
-                      или приватный режим браузера для минимизации отслеживания.
+                      {t("recommendations.incognitoDescription")}
                     </li>
                     <li style={{ marginBottom: "8px" }}>
                       <span style={{ color: "#f3d675" }}>
-                        Установите расширения для блокировки рекламы и трекеров
+                        {t("recommendations.useAdBlockers")}
                       </span>
-                      , такие как uBlock Origin или Privacy Badger.
+                      {t("recommendations.adBlockersDescription")}
                     </li>
                     <li>
                       <span style={{ color: "#f3d675" }}>
-                        Рассмотрите возможность использования Tor Browser
+                        {t("recommendations.useTor")}
                       </span>{" "}
-                      для максимальной анонимности.
+                      {t("recommendations.torDescription")}
                     </li>
                   </ul>
                 </div>
@@ -1309,11 +1306,10 @@ export default function AnonymityChecker() {
                       marginBottom: "4px",
                     }}
                   >
-                    Нужна дополнительная защита?
+                    {t("additionalProtection.needMore")}
                   </div>
                   <div style={{ color: "#999999", fontSize: "12px" }}>
-                    Используйте наши прокси-сервисы для повышения анонимности в
-                    сети.
+                    {t("additionalProtection.description")}
                   </div>
                 </div>
                 <button
@@ -1331,7 +1327,7 @@ export default function AnonymityChecker() {
                     marginTop: isMobile ? "12px" : "0",
                   }}
                 >
-                  Купить прокси
+                  {t("additionalProtection.buyProxy")}
                 </button>
               </div>
             </div>

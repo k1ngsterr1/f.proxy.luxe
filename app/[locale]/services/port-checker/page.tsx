@@ -3,6 +3,7 @@
 import { postPortChecker } from "@/entities/port-checker/api/port-checker.api";
 import { type FormEvent, useState } from "react";
 import { AlertCircle, Loader, Lock, Unlock } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PortCheckResult {
   ip: string;
@@ -13,6 +14,7 @@ interface PortCheckResult {
 }
 
 export default function PortChecker() {
+  const t = useTranslations("portChecker");
   const [ip, setIP] = useState<string>("");
   const [port, setPort] = useState<string>("");
   const [result, setResult] = useState<PortCheckResult | null>(null);
@@ -23,18 +25,18 @@ export default function PortChecker() {
     e.preventDefault();
 
     if (!ip || !port) {
-      setError("Пожалуйста, заполните IP и порт");
+      setError(t("errors.fillFields"));
       return;
     }
 
     const portNumber = Number.parseInt(port, 10);
     if (isNaN(portNumber)) {
-      setError("Порт должен быть числом");
+      setError(t("errors.portMustBeNumber"));
       return;
     }
 
     if (portNumber < 1 || portNumber > 65535) {
-      setError("Порт должен быть в диапазоне от 1 до 65535");
+      setError(t("errors.portRange"));
       return;
     }
 
@@ -49,7 +51,7 @@ export default function PortChecker() {
       });
       setResult(data);
     } catch (err) {
-      let errorMessage = "Произошла ошибка при проверке порта";
+      let errorMessage = t("errors.checkError");
       if (err instanceof Error) {
         errorMessage = err.message;
       }
@@ -77,19 +79,11 @@ export default function PortChecker() {
       <section className="prcheck">
         <div className="scontainer">
           <h1 className="section-header">
-            <span>ПРОВЕРКА ПОРТОВ</span>
+            <span>{t("title")}</span>
           </h1>
 
           <p className="prcheck-text">
-            Простой и бесплатный онлайн-инструмент для проверки открытых портов
-            на вашем, либо удаленном компьютере / устройстве, будет полезен при
-            тестировании настройки перенаправления портов на машине. Например,
-            если вы столкнулись с проблемой подключения к программе (электронная
-            почта, IM-клиент и т.д.), Возможно, что порт, требуемый приложением,
-            блокируется брандмауэром или интернет-провайдером, в таких случаях
-            этот инструмент может помочь вам в диагностике проблемы. Это также
-            может быть полезно по соображениям безопасности, если вы
-            беспокоитесь о том, открыт или закрыт конкретный порт.
+            {t("description")}
           </p>
 
           <div className="port" style={{ marginTop: "24px" }}>
@@ -118,7 +112,7 @@ export default function PortChecker() {
                     marginBottom: "8px",
                   }}
                 >
-                  IP адрес
+                  {t("form.ipAddress")}
                 </p>
                 <input
                   name="ip"
@@ -153,7 +147,7 @@ export default function PortChecker() {
                     marginBottom: "8px",
                   }}
                 >
-                  Порт
+                  {t("form.port")}
                 </p>
                 <input
                   name="port"
@@ -199,10 +193,10 @@ export default function PortChecker() {
                 {isLoading ? (
                   <>
                     <Loader size={16} className="animate-spin" />
-                    Проверка...
+                    {t("status.checking")}
                   </>
                 ) : (
-                  "Проверить"
+                  t("form.check")
                 )}
               </button>
             </form>
@@ -224,7 +218,7 @@ export default function PortChecker() {
                 }}
               >
                 <Loader size={24} className="animate-spin" />
-                <span>Проверка порта...</span>
+                <span>{t("status.checking")}</span>
               </div>
             )}
 
@@ -278,11 +272,11 @@ export default function PortChecker() {
                     }}
                   >
                     <span style={{ color: "#f3d675", marginRight: "8px" }}>
-                      IP:
+                      IP
                     </span>
                     {result.ip}
                     <span style={{ color: "#f3d675", margin: "0 8px" }}>
-                      Порт:
+                      {t("results.port")}:
                     </span>
                     {result.port}
                   </h2>
@@ -304,7 +298,7 @@ export default function PortChecker() {
                           : "1px solid rgba(255, 82, 82, 0.3)",
                     }}
                   >
-                    {result.status === "open" ? "ОТКРЫТ" : "ЗАКРЫТ"}
+                    {result.status === "open" ? t("results.open") : t("results.closed")}
                   </span>
                 </div>
 
@@ -330,12 +324,11 @@ export default function PortChecker() {
                         fontWeight: "500",
                       }}
                     >
-                      Порт {result.port} на IP {result.ip}{" "}
-                      {result.status === "open" ? "ОТКРЫТ" : "ЗАКРЫТ"}
+                      {t("results.port")} {result.port} {t("results.on")} {result.ip}{" "}
+                      {result.status === "open" ? t("results.open") : t("results.closed")}
                     </span>
                   </div>
 
-                  {/* Response time */}
                   <div
                     style={{
                       backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -352,7 +345,7 @@ export default function PortChecker() {
                         marginBottom: "4px",
                       }}
                     >
-                      Время отклика:
+                      {t("results.responseTime")}
                     </div>
                     <div
                       style={{
@@ -361,11 +354,10 @@ export default function PortChecker() {
                         fontWeight: "500",
                       }}
                     >
-                      {result.responseTime} мс
+                      {result.responseTime} {t("results.ms")}
                     </div>
                   </div>
 
-                  {/* Timestamp */}
                   <div
                     style={{
                       fontSize: "12px",
@@ -374,7 +366,7 @@ export default function PortChecker() {
                       marginTop: "16px",
                     }}
                   >
-                    Проверка выполнена: {formatDate(result.timestamp)}
+                    {t("results.checkCompleted")}: {formatDate(result.timestamp)}
                   </div>
                 </div>
               </div>

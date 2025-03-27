@@ -1,0 +1,35 @@
+{
+  "portChecker": {
+    "title": "PORT CHECKER",
+    "description": "A simple and free online tool for checking open ports on your local or remote computer/device. It can be useful for testing port forwarding settings on your machine. For example, if you're having trouble connecting to a program (email, IM client, etc.), the port required by the application may be blocked by a firewall or internet provider. In such cases, this tool can help you diagnose the issue. It may also be useful for security reasons if you're concerned about whether a specific port is open or closed.",
+    "form": {
+      "ipAddress": "IP address",
+      "port": "Port",
+      "check": "Check",
+      "checking": "Checking..."
+    },
+    "errors": {
+      "fillFields": "Please fill in the IP and port",
+      "portMustBeNumber": "Port must be a number",
+      "portRange": "Port must be in the range from 1 to 65535",
+      "checkError": "An error occurred while checking the port"
+    },
+    "results": {
+      "on": "on",
+      "ip": "IP:",
+      "port": "Port",
+      "open": "OPEN",
+      "closed": "CLOSED",
+      "portStatus": {
+        "open": "Port {port} on IP {ip} is OPEN",
+        "closed": "Port {port} on IP {ip} is CLOSED"
+      },
+      "responseTime": "Response time:",
+      "ms": "ms",
+      "checkCompleted": "Check completed"
+    },
+    "status": {
+      "checking": "Checking port..."
+    }
+  }
+}

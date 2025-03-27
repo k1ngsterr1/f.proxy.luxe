@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import BG1 from "@/assets/images/imain-bg1.png";
 import BG2 from "@/assets/images/imain-bg2.png";
 import { usePopupStore } from "@/shared/store/use-popup.store";
+import { useTranslations } from "next-intl";
 
 const ImageSlide: FC<{ image: StaticImageData }> = ({ image }) => {
   return (
@@ -33,6 +34,7 @@ export const HomeSlider: FC = () => {
   const imageSliderRef = useRef<Slider>(null);
   const currentRef = useRef<HTMLDivElement>(null);
   const countRef = useRef<HTMLDivElement>(null);
+  const i18n = useTranslations("homeSlider");
 
   return (
     <section className="imain">
@@ -52,55 +54,55 @@ export const HomeSlider: FC = () => {
           }}
         >
           <div className="imain-slide">
-            <h2 className="imain-header">КУПИТЬ ПРОКСИ</h2>
-            <p className="imain-text">ИНДИВИДУАЛЬНЫЕ РЕЗИДЕНТНЫЕ ПРОКСИ</p>
-            <h3 className="imain-subheader">HTTPS/SOCKS5</h3>
+            <h2 className="imain-header">{i18n("header")}</h2>
+            <p className="imain-text">{i18n("text")}</p>
+            <h3 className="imain-subheader">{i18n("subheader")}</h3>
             <div className="imain-table">
               <div>
                 <div>
                   <p className="imain-count">329122</p>
-                  <p className="imain-hint">КЛИЕНТОВ ВЫБРАЛИ НАС</p>
+                  <p className="imain-hint">{i18n("stats.clients")}</p>
                 </div>
                 <div>
                   <p className="imain-count">289596</p>
-                  <p className="imain-hint">ПРОКСИ В РАБОТЕ</p>
+                  <p className="imain-hint">{i18n("stats.activeProxies")}</p>
                 </div>
               </div>
               <div>
                 <div>
                   <p className="imain-count">1158898</p>
-                  <p className="imain-hint">ПРОДАННЫХ ПРОКСИ</p>
+                  <p className="imain-hint">{i18n("stats.soldProxies")}</p>
                 </div>
                 <div>
                   <p className="imain-count">3133702</p>
-                  <p className="imain-hint">ЗАКАЗОВ ОБРАБОТАНО</p>
+                  <p className="imain-hint">{i18n("stats.ordersProcessed")}</p>
                 </div>
               </div>
             </div>
           </div>
           <div className="imain-slide">
-            <h2 className="imain-header">КУПИТЬ ПРОКСИ</h2>
-            <p className="imain-text">ИНДИВИДУАЛЬНЫЕ РЕЗИДЕНТНЫЕ ПРОКСИ</p>
-            <h3 className="imain-subheader">HTTPS/SOCKS5</h3>
+            <h2 className="imain-header">{i18n("header")}</h2>
+            <p className="imain-text">{i18n("text")}</p>
+            <h3 className="imain-subheader">{i18n("subheader")}</h3>
             <div className="imain-table">
               <div>
                 <div>
                   <p className="imain-count">329122</p>
-                  <p className="imain-hint">КЛИЕНТОВ ВЫБРАЛИ НАС</p>
+                  <p className="imain-hint">{i18n("stats.clients")}</p>
                 </div>
                 <div>
                   <p className="imain-count">289596</p>
-                  <p className="imain-hint">ПРОКСИ В РАБОТЕ</p>
+                  <p className="imain-hint">{i18n("stats.activeProxies")}</p>
                 </div>
               </div>
               <div>
                 <div>
                   <p className="imain-count">1158898</p>
-                  <p className="imain-hint">ПРОДАННЫХ ПРОКСИ</p>
+                  <p className="imain-hint">{i18n("stats.soldProxies")}</p>
                 </div>
                 <div>
                   <p className="imain-count">3133702</p>
-                  <p className="imain-hint">ЗАКАЗОВ ОБРАБОТАНО</p>
+                  <p className="imain-hint">{i18n("stats.ordersProcessed")}</p>
                 </div>
               </div>
             </div>

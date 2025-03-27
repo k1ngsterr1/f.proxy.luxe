@@ -2,17 +2,19 @@
 
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { FC, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export const Balance: FC = () => {
   const { data, isLoading } = useGetUser();
+  const i18n = useTranslations("pages.balance");
 
   return (
     <div className="balance">
       {isLoading ? (
-        <>Загрузка...</>
+        <>{i18n("loading")}</>
       ) : (
         <>
-          Баланс <span>{data?.balance} $</span>
+          {i18n("balance")} <span>{data?.balance} $</span>
         </>
       )}
     </div>

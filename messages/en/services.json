@@ -1,0 +1,33 @@
+{
+  "services": {
+    "common": {
+      "checkCompleted": "Check completed:",
+      "postalCode": "Postal code"
+    },
+    "ipv6Checker": {
+      "description": "With this service, you can check any website for IPv6 support"
+    },
+    "portChecker": {
+      "description1": "on your or remote computer/device, will be useful when",
+      "description2": "if you have encountered a problem connecting to a program (email",
+      "description3": "may be useful for security reasons if you"
+    },
+    "blackLists": {
+      "description1": "A free tool with which you can check",
+      "description2": "the presence of your or any other IP address in databases",
+      "description3": "Will your electronic messages or forum chats be blocked?"
+    },
+    "proxyChecker": {
+      "note": "P.S.: If you bought proxies from us, they are private!",
+      "description": "your proxy servers. You can check both public and"
+    },
+    "anonymityChecker": {
+      "description1": "With this service, you can check how anonymous you are",
+      "description2": "on the network, how much the data provided by your",
+      "description3": "computer/browser matches the data provided by your",
+      "browserTip1": "in your browser or use an extension for",
+      "browserTip2": "to hide your real IP address.",
+      "useOurServices": "Use our proxy services to increase anonymity in"
+    }
+  }
+}

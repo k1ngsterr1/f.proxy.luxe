@@ -1,0 +1,42 @@
+{
+    "whois": {
+        "title": "WHOIS",
+        "description": "The WHOIS service is a simple and free tool to get information about an IP address or domain.",
+        "form": {
+            "hint": "IP address",
+            "placeholder": "Enter IP or domain",
+            "submit": "Check",
+            "loading": "Loading..."
+        },
+        "errors": {
+            "empty": "Please enter IP or domain",
+            "unknown": "Unknown error"
+        },
+        "tabs": {
+            "general": "General Information",
+            "technical": "Technical Information",
+            "contact": "Contact Information"
+        },
+        "fields": {
+            "ip": "IP Address",
+            "host": "Host",
+            "status": "Status",
+            "range": "IP Range",
+            "netname": "Netname",
+            "descr": "Description",
+            "route": "Route",
+            "origin": "Origin",
+            "source": "Source",
+            "geolocation": "Geolocation",
+            "admin": "Admin Contact",
+            "tech": "Technical Contact",
+            "person": "Contact Person",
+            "name": "Name",
+            "address": "Address",
+            "phone": "Phone",
+            "nic": "NIC Handle",
+            "registrant": "Registrant",
+            "maintained": "Maintained by"
+        }
+    }
+}
