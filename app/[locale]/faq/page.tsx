@@ -367,10 +367,7 @@ export default function Faq() {
           <div
             className="faq-list"
             style={{
-              display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "40px",
-              marginBottom: "60px",
               backgroundColor: "rgba(243, 214, 117, 0.03)",
               borderRadius: "12px",
               border: "1px solid rgba(243, 214, 117, 0.1)",
@@ -582,9 +579,8 @@ export default function Faq() {
                 fontSize: "16px",
               }}
             >
-              {i18n("faq.notFoundQuestion")}{" "}
               <a
-                href="mailto:support@proxy.luxe"
+                href="mailto:admint@proxy.luxe"
                 style={{
                   color: "#f3d675",
                   textDecoration: "none",
@@ -600,7 +596,7 @@ export default function Faq() {
                   e.currentTarget.style.borderBottomColor = "#f3d675";
                 }}
               >
-                support@proxy.luxe
+                admin@proxy.luxe
               </a>
             </p>
           </div>

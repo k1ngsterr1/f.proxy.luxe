@@ -1,0 +1,13 @@
+{
+  "sidebar": {
+    "title": "PERSONAL ACCOUNT",
+    "menu": {
+      "proxy": "Proxies",
+      "orders": "Orders",
+      "payments": "Payments",
+      "profile": "Profile",
+      "partners": "Affiliate Program"
+    },
+    "exchangeRates": "exchange rates"
+  }
+}

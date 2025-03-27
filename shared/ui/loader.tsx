@@ -1,15 +1,15 @@
 "use client";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 interface LoaderProps {
   size?: "small" | "medium" | "large";
-  text?: string;
   fullScreen?: boolean;
 }
 
 export const Loader = ({
   size = "medium",
-  text = "Загрузка...",
+
   fullScreen = false,
 }: LoaderProps) => {
   const sizeMap = {
@@ -17,6 +17,8 @@ export const Loader = ({
     medium: { outer: 50, inner: 25 },
     large: { outer: 70, inner: 35 },
   };
+
+  const i18n = useTranslations("pages");
 
   const dimensions = sizeMap[size];
 
@@ -79,21 +81,18 @@ export const Loader = ({
           }}
         />
       </div>
-      {text && (
-        <div
-          style={{
-            marginTop: "15px",
-            color: "#F2D675",
-            fontFamily: "Arial, sans-serif",
-            fontSize:
-              size === "small" ? "12px" : size === "medium" ? "14px" : "16px",
-            fontWeight: 500,
-          }}
-        >
-          {text}
-        </div>
-      )}
-
+      <div
+        style={{
+          marginTop: "15px",
+          color: "#F2D675",
+          fontFamily: "Arial, sans-serif",
+          fontSize:
+            size === "small" ? "12px" : size === "medium" ? "14px" : "16px",
+          fontWeight: 500,
+        }}
+      >
+        {i18n("loading")}
+      </div>
       <style jsx global>{`
         @keyframes spin {
           0% {

@@ -5,6 +5,7 @@ import { Tag, Loader } from "lucide-react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
+import { useTranslations } from "next-intl";
 
 // Categories for navigation
 const categories = [

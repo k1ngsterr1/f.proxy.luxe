@@ -1,5 +1,9 @@
 {
   "about": {
+    "pricing": "Pricing",
+    "security": "Security",
+    "quality": "Quality",
+    "suitability_title": "Suitability",
     "intro": "Our company has been selling anonymous proxy servers since 2016. Why you should buy proxies from us:",
     "advantages": {
       "quality": "High quality and speed - proxies are high-quality, fast and stable;",

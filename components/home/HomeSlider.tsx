@@ -58,26 +58,14 @@ export const HomeSlider: FC = () => {
             <p className="imain-text">{i18n("text")}</p>
             <h3 className="imain-subheader">{i18n("subheader")}</h3>
             <div className="imain-table">
-              <div>
-                <div>
-                  <p className="imain-count">329122</p>
-                  <p className="imain-hint">{i18n("stats.clients")}</p>
-                </div>
-                <div>
-                  <p className="imain-count">289596</p>
-                  <p className="imain-hint">{i18n("stats.activeProxies")}</p>
-                </div>
-              </div>
-              <div>
-                <div>
-                  <p className="imain-count">1158898</p>
-                  <p className="imain-hint">{i18n("stats.soldProxies")}</p>
-                </div>
-                <div>
-                  <p className="imain-count">3133702</p>
-                  <p className="imain-hint">{i18n("stats.ordersProcessed")}</p>
-                </div>
-              </div>
+              <p
+                className="imain-count"
+                style={{
+                  textDecoration: "upperCase",
+                }}
+              >
+                {i18n("main")}
+              </p>
             </div>
           </div>
           <div className="imain-slide">

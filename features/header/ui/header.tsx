@@ -1,23 +1,32 @@
 "use client";
-import { FC, useState } from "react";
+
+import { FC } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
 import Logo from "@/assets/images/logo.png";
 import RusFlag from "@/assets/images/rus-lang.png";
 import EngFlag from "@/assets/images/eng-lang.png";
 import Enter from "@/assets/images/enter.svg";
-import Link from "next/link";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
-import { useRouter } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { BurgerMenu } from "@/features/menu/ui/burger-menu";
-import { useTranslations } from "next-intl";
 
 export const Header: FC = () => {
   const i18n = useTranslations();
   const { token } = useAuthStore();
   const { openPopup } = usePopupStore();
-  const navigate = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+  const router = useRouter();
+
+  const getPathForLocale = (targetLocale: string) => {
+    const segments = pathname.split("/");
+    segments[1] = targetLocale;
+    return segments.join("/");
+  };
 
   return (
     <>
@@ -45,28 +54,26 @@ export const Header: FC = () => {
                   {i18n("header.faq")}
                 </Link>
               </nav>
+
               <div className="header-lang">
-                <Link href="/ru" className="lang-item active">
-                  <Image
-                    src={RusFlag}
-                    alt=""
-                    layout="response"
-                    width={40}
-                    height={26}
-                  />
+                <Link
+                  href={getPathForLocale("ru")}
+                  className={`lang-item ${locale === "ru" ? "active" : ""}`}
+                  locale="ru"
+                >
+                  <Image src={RusFlag} alt="Русский" width={40} height={26} />
                 </Link>
-                <Link href="/en" className="lang-item">
-                  <Image
-                    src={EngFlag}
-                    alt=""
-                    layout="response"
-                    width={40}
-                    height={26}
-                  />
+                <Link
+                  href={getPathForLocale("en")}
+                  className={`lang-item ${locale === "en" ? "active" : ""}`}
+                  locale="en"
+                >
+                  <Image src={EngFlag} alt="English" width={40} height={26} />
                 </Link>
               </div>
+
               {token ? (
-                <div onClick={() => navigate.push("/personal-account")}>
+                <div onClick={() => router.push("/personal-account")}>
                   <a className="another-btn">
                     <span>{i18n("header.account")}</span>
                   </a>
@@ -77,13 +84,7 @@ export const Header: FC = () => {
                     onClick={() => openPopup("auth-enter")}
                     className="btn-enter"
                   >
-                    <Image
-                      src={Enter}
-                      alt=""
-                      layout="response"
-                      width={27}
-                      height={27}
-                    />
+                    <Image src={Enter} alt="" width={27} height={27} />
                     <span>{i18n("header.login")}</span>
                   </a>
                   <a onClick={() => openPopup("auth-reg")} className="btn-reg">
@@ -92,12 +93,14 @@ export const Header: FC = () => {
                 </div>
               )}
             </div>
+
             <div className="header-burger">
               <BurgerMenu />
             </div>
           </div>
         </div>
       </header>
+
       <div
         style={{
           display: "flex",
