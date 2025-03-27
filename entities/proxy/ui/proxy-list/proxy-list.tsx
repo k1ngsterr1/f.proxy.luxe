@@ -1,8 +1,8 @@
 "use client";
 
 import type React from "react";
-import { useEffect } from "react";
-import { AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
 
 interface Proxy {
   id: string;
@@ -18,6 +18,8 @@ export interface Props {
 }
 
 const ProxyList: React.FC<Props> = ({ proxies }) => {
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+
   useEffect(() => {
     console.log("proxies", proxies);
   }, [proxies]);
@@ -88,6 +90,47 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     return countries[code] || "🌐";
   };
 
+  // Export functions
+  const exportToTxt = () => {
+    if (!proxies || proxies.length === 0) return;
+
+    let content = "# Proxy List Export\n";
+    content += "# Format: IP:HTTP_PORT:SOCKS_PORT:PROTOCOL:COUNTRY\n\n";
+
+    proxies.forEach((proxy) => {
+      content += `${proxy.ip}:${proxy.port_http || "-"}:${
+        proxy.port_socks || "-"
+      }:${proxy.protocol}:${proxy.country}\n`;
+    });
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `proxy-list-${new Date().toISOString().split("T")[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setExportMenuOpen(false);
+  };
+
+  const exportToJson = () => {
+    if (!proxies || proxies.length === 0) return;
+
+    const content = JSON.stringify(proxies, null, 2);
+    const blob = new Blob([content], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `proxy-list-${new Date().toISOString().split("T")[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setExportMenuOpen(false);
+  };
+
   // Styles - Black and Gold theme
   const cardStyle: React.CSSProperties = {
     backgroundColor: "#000000",
@@ -99,6 +142,9 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
   const cardHeaderStyle: React.CSSProperties = {
     padding: "16px 24px",
     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   };
 
   const cardTitleStyle: React.CSSProperties = {
@@ -185,6 +231,46 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     marginRight: "8px",
   };
 
+  // Export button styles
+  const exportButtonStyle: React.CSSProperties = {
+    backgroundColor: "rgba(243, 214, 117, 0.1)",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "4px",
+    color: "#f3d675",
+    padding: "8px 12px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    cursor: "pointer",
+    fontSize: "14px",
+    position: "relative",
+  };
+
+  const exportMenuStyle: React.CSSProperties = {
+    position: "absolute",
+    top: "100%",
+    right: 0,
+    marginTop: "4px",
+    backgroundColor: "#111111",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "4px",
+    padding: "8px 0",
+    zIndex: 20,
+    minWidth: "150px",
+    display: exportMenuOpen ? "block" : "none",
+  };
+
+  const exportMenuItemStyle: React.CSSProperties = {
+    padding: "8px 16px",
+    color: "#FFFFFF",
+    fontSize: "14px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    cursor: "pointer",
+    transition: "background-color 0.2s",
+  };
+
   // Loading skeleton styles
   const skeletonStyle: React.CSSProperties = {
     height: "16px",
@@ -264,10 +350,12 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       <div style={cardStyle}>
         <style>{scrollbarStyles}</style>
         <div style={cardHeaderStyle}>
-          <h3 style={cardTitleStyle}>Список прокси</h3>
-          <p style={cardDescriptionStyle}>
-            Загрузка доступных прокси-серверов...
-          </p>
+          <div>
+            <h3 style={cardTitleStyle}>Список прокси</h3>
+            <p style={cardDescriptionStyle}>
+              Загрузка доступных прокси-серверов...
+            </p>
+          </div>
         </div>
         <div style={cardContentStyle}>
           <div className="proxy-table-container" style={tableContainerStyle}>
@@ -316,8 +404,10 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     return (
       <div style={cardStyle}>
         <div style={cardHeaderStyle}>
-          <h3 style={cardTitleStyle}>Список прокси</h3>
-          <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+          <div>
+            <h3 style={cardTitleStyle}>Список прокси</h3>
+            <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+          </div>
         </div>
         <div style={emptyStateContainerStyle}>
           <AlertCircle style={emptyStateIconStyle} />
@@ -334,8 +424,49 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     <div style={cardStyle}>
       <style>{scrollbarStyles}</style>
       <div style={cardHeaderStyle}>
-        <h3 style={cardTitleStyle}>Список прокси</h3>
-        <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+        <div>
+          <h3 style={cardTitleStyle}>Список прокси</h3>
+          <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+        </div>
+        <div style={{ position: "relative" }}>
+          <button
+            style={exportButtonStyle}
+            onClick={() => setExportMenuOpen(!exportMenuOpen)}
+          >
+            <Download size={16} />
+            <span>Экспорт</span>
+          </button>
+          <div style={exportMenuStyle}>
+            <div
+              style={exportMenuItemStyle}
+              onClick={exportToTxt}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor =
+                  "rgba(243, 214, 117, 0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
+            >
+              <FileText size={16} />
+              <span>Сохранить как TXT</span>
+            </div>
+            <div
+              style={exportMenuItemStyle}
+              onClick={exportToJson}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor =
+                  "rgba(243, 214, 117, 0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
+            >
+              <FileJson size={16} />
+              <span>Сохранить как JSON</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div style={cardContentStyle}>
         <div className="proxy-table-container" style={tableContainerStyle}>

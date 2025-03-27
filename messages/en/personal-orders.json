@@ -1,0 +1,27 @@
+{
+  "personal-orders": {
+    "title": "ORDERS",
+    "verify-email": "You need to verify your email by clicking the link in the message.",
+    "orders-loading": "Loading orders...",
+    "orders-error": "Error loading orders",
+    "orders-unknown-error": "Unknown error",
+    "empty": "Nothing found...",
+    "days": "days",
+    "pay-button": "PAY",
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "expired": "Expired"
+    },
+    "table": {
+      "id": "ID",
+      "country": "Country",
+      "quantity": "Quantity",
+      "period": "Period",
+      "type": "Type",
+      "status": "Status",
+      "price": "Price",
+      "actions": "Actions"
+    }
+  }
+}

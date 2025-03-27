@@ -1,0 +1,27 @@
+{
+  "personal-orders": {
+    "title": "ЗАКАЗЫ",
+    "verify-email": "Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме.",
+    "orders-loading": "Загрузка заказов...",
+    "orders-error": "Ошибка при загрузке заказов",
+    "orders-unknown-error": "Неизвестная ошибка",
+    "empty": "Ничего не найдено...",
+    "days": "дней",
+    "pay-button": "ОПЛАТИТЬ",
+    "status": {
+      "active": "Активен",
+      "pending": "Обработка",
+      "expired": "Истек"
+    },
+    "table": {
+      "id": "ID",
+      "country": "Страна",
+      "quantity": "Количество",
+      "period": "Период",
+      "type": "Тип",
+      "status": "Статус",
+      "price": "Цена",
+      "actions": "Действия"
+    }
+  }
+}

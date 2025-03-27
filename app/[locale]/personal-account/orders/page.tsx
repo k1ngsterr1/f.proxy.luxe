@@ -7,10 +7,12 @@ import { useProxyOrders } from "@/entities/orders/hooks/queries/use-get-proxy-or
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { Button } from "@/shared/ui/button";
+import { useTranslations } from "next-intl";
 
 export default function OrdersPage() {
   const navigate = useRouter();
   const { data: user } = useGetUser();
+  const i18n = useTranslations();
   const { data: ordersData, isLoading, isError, error } = useProxyOrders();
 
   return (
@@ -27,7 +29,7 @@ export default function OrdersPage() {
         <AlertMessage
           type="warning"
           isEmail
-          message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+          message={i18n("personal-orders.verify-email")}
         />
       )}
       <div
@@ -44,7 +46,7 @@ export default function OrdersPage() {
             fontWeight: "bold",
           }}
         >
-          ЗАКАЗЫ
+          {i18n("personal-orders.title")}
         </h1>
       </div>
 
@@ -66,7 +68,7 @@ export default function OrdersPage() {
           }}
         >
           <Loader2 size={20} className="animate-spin" />
-          Загрузка заказов...
+          {i18n("personal-orders.orders-loading")}
         </div>
       )}
 
@@ -83,7 +85,8 @@ export default function OrdersPage() {
             border: "1px solid rgba(255, 82, 82, 0.2)",
           }}
         >
-          Ошибка при загрузке заказов: {error?.message || "Неизвестная ошибка"}
+          {i18n("personal-orders.orders-error")}:{" "}
+          {error?.message || "Неизвестная ошибка"}
         </div>
       )}
 
@@ -115,14 +118,30 @@ export default function OrdersPage() {
                   textAlign: "left",
                 }}
               >
-                <th style={{ padding: "12px 16px" }}>ID</th>
-                <th style={{ padding: "12px 16px" }}>Страна</th>
-                <th style={{ padding: "12px 16px" }}>Количество</th>
-                <th style={{ padding: "12px 16px" }}>Период</th>
-                <th style={{ padding: "12px 16px" }}>Тип</th>
-                <th style={{ padding: "12px 16px" }}>Статус</th>
-                <th style={{ padding: "12px 16px" }}>Цена</th>
-                <th style={{ padding: "12px 16px" }}>Действия</th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.id")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.country")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.quantity")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.period")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.type")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.status")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.price")}
+                </th>
+                <th style={{ padding: "12px 16px" }}>
+                  {i18n("personal-orders.table.actions")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -138,7 +157,7 @@ export default function OrdersPage() {
                   <td style={{ padding: "12px 16px" }}>{order.country}</td>
                   <td style={{ padding: "12px 16px" }}>{order.quantity}</td>
                   <td style={{ padding: "12px 16px" }}>
-                    {order.periodDays} дней
+                    {order.periodDays} {i18n("personal-orders.table.days")}
                   </td>
                   <td style={{ padding: "12px 16px" }}>{order.proxyType}</td>
                   <td style={{ padding: "12px 16px" }}>
@@ -164,10 +183,10 @@ export default function OrdersPage() {
                       }}
                     >
                       {order.status === "ACTIVE"
-                        ? "Активен"
+                        ? `${i18n("personal-orders.status.active")}`
                         : order.status === "PENDING"
-                        ? "Обработка"
-                        : "Истек"}
+                        ? `${i18n("personal-orders.status.pending")}`
+                        : `${i18n("personal-orders.status.expired")}`}
                     </span>
                   </td>
                   <td style={{ padding: "12px 16px", marginRight: "16px" }}>
@@ -176,7 +195,7 @@ export default function OrdersPage() {
                   {order.status === "PENDING" && (
                     <Button
                       variant="small"
-                      name="ОПЛАТИТЬ"
+                      name={`${i18n("personal-orders.pay-button")}`}
                       onClick={() =>
                         navigate.push(`/personal-account/orders/${order.id}`)
                       }
@@ -201,7 +220,7 @@ export default function OrdersPage() {
               border: "1px solid rgba(243, 214, 117, 0.2)",
             }}
           >
-            Ничего не найдено...
+            {i18n(`personal-orders.empty`)}
           </div>
         )
       )}

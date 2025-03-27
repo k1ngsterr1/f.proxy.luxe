@@ -13,6 +13,8 @@
       "buy": "Buy"
     },
     "residential": {
+      "month": "month",
+      "loading": "Loading...",
       "title": "RESIDENTIAL IPv4 PROXY DYNAMIC",
       "description": "Suitable for all sites. Except payment systems. Issued to one user",
       "issued": "Issued to one user",
