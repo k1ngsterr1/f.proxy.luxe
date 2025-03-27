@@ -67,19 +67,19 @@
         "3days": "3.6 rub.",
         "1week": "6.72 rub.",
         "2weeks": "12.6 rub.",
-        "1month": "25.2 rub."
+        "1month": "$0.08"
       },
       "ipv4": {
         "3days": "3.6 rub.",
         "1week": "6.72 rub.",
         "2weeks": "12.6 rub.",
-        "1month": "25.2 rub."
+        "1month": "$2.40"
       },
       "ipv4shared": {
         "3days": "3.6 rub.",
         "1week": "6.72 rub.",
         "2weeks": "12.6 rub.",
-        "1month": "25.2 rub."
+        "1month": "$2.40"
       }
     }
   }
