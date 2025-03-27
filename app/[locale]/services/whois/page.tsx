@@ -79,9 +79,7 @@ export default function Whois() {
           <h1 className="section-header">
             <span>{t("title")}</span>
           </h1>
-          <p className="blist-text">
-            {t("description")}
-          </p>
+          <p className="blist-text">{t("description")}</p>
 
           <form action="#" className="blist-form" onSubmit={handleSubmit}>
             <p className="blist-hint">{t("form.hint")}</p>
@@ -443,8 +441,12 @@ export default function Whois() {
                           fontWeight: "500",
                         }}
                       >
-                        <div>{t("fields.route")}: {data.route.route}</div>
-                        <div>{t("fields.origin")}: {data.route.origin}</div>
+                        <div>
+                          {t("fields.route")}: {data.route.route}
+                        </div>
+                        <div>
+                          {t("fields.origin")}: {data.route.origin}
+                        </div>
                       </div>
                     </div>
                     <div
@@ -593,10 +595,18 @@ export default function Whois() {
                           fontWeight: "500",
                         }}
                       >
-                        <div>{t("fields.name")}: {data.person.name}</div>
-                        <div>{t("fields.address")}: {data.person.address}</div>
-                        <div>{t("fields.phone")}: {data.person.phone}</div>
-                        <div>{t("fields.nic")}: {data.person.nicHdl}</div>
+                        <div>
+                          {t("fields.name")}: {data.person.name}
+                        </div>
+                        <div>
+                          {t("fields.address")}: {data.person.address}
+                        </div>
+                        <div>
+                          {t("fields.phone")}: {data.person.phone}
+                        </div>
+                        <div>
+                          {t("fields.nic")}: {data.person.nicHdl}
+                        </div>
                       </div>
                     </div>
                     <div

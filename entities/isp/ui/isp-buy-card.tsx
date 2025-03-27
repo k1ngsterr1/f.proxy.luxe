@@ -55,13 +55,9 @@ export const ISPBuyCard = () => {
   return (
     <div className="buy-col">
       <div className="buy-item" style={{ height: 850, minHeight: 800 }}>
-        <h3 className="buy-item__header">
-          {i18n("title")}
-        </h3>
+        <h3 className="buy-item__header">{i18n("title")}</h3>
         <div className="separator"></div>
-        <p className="buy-item__about">
-          {i18n("description")}
-        </p>
+        <p className="buy-item__about">{i18n("description")}</p>
         <a href="#" className="buy-item__btn">
           {i18n("issued")}
         </a>
@@ -113,7 +109,7 @@ export const ISPBuyCard = () => {
         />
 
         <div className="buy-item__price">
-          {i18n("price")} <span>2.4$ / IP</span>
+          {i18n("price")} <span>$2.4 / IP</span>
         </div>
         <Button
           className="btn"

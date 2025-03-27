@@ -26,7 +26,7 @@ export default function BuyProxy() {
               </div>
               <div className="ibuy-text">
                 {i18n("buy-proxy.iBuyTest")}{" "}
-                <a href="amilto:admin@proxy.luxe ">admin@proxy.luxe </a>
+                <a href="mailto:admin@proxy.luxe ">admin@proxy.luxe</a>
               </div>
             </div>
           </div>

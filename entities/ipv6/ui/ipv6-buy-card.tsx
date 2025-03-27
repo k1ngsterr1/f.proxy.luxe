@@ -62,9 +62,7 @@ export const IPV6BuyCard = () => {
       <div className="buy-item" style={{ minHeight: 800, height: 850 }}>
         <h3 className="buy-item__header">{i18n("title")}</h3>
         <div className="separator"></div>
-        <p className="buy-item__about">
-          {i18n("description")}
-        </p>
+        <p className="buy-item__about">{i18n("description")}</p>
         <a className="buy-item__btn">{i18n("issued")}</a>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("country")}
@@ -148,7 +146,7 @@ export const IPV6BuyCard = () => {
           }}
         />
         <div className="buy-item__price">
-          {i18n("price")}: <span>0.08$ / IP</span>
+          {i18n("price")}: <span>$0.08 / IP</span>
         </div>
         <Button
           onClick={handleBuyClick}

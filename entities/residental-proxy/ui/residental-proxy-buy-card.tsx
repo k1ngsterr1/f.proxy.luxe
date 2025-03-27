@@ -19,9 +19,7 @@ export const ResidentalProxyBuyCard = () => {
           {i18n("title")}
         </h3>
         <div className="separator"></div>
-        <p className="buy-item__about">
-          {i18n("description")}
-        </p>
+        <p className="buy-item__about">{i18n("description")}</p>
         <a className="buy-item__btn">{i18n("issued")}</a>
         <h4 className="buy-item__subheader">{i18n("country")}</h4>
         <select
@@ -133,7 +131,7 @@ export const ResidentalProxyBuyCard = () => {
         />
         <div className="buy-item__price">
           {i18n("price")}
-          <span>2.4$ / IP</span>
+          <span>$2.4 / IP</span>
         </div>
         <Button className="btn" variant="big" name={i18n("buy")} />
       </div>
