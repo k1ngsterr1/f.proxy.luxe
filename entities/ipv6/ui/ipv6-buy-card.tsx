@@ -19,33 +19,33 @@ export const IPV6BuyCard = () => {
   const [quantity, setQuantity] = useState<string>("10");
   const [goal, setGoal] = useState<string>("");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
+  const [period, setPeriod] = useState<string>("");
 
   useEffect(() => {
-    if (!countryId && preferences?.ipv6?.country.length) {
+    if (preferences?.ipv6?.country.length && !countryId) {
       setCountryId(preferences.ipv6.country[0].id);
+    }
+
+    if (preferences?.ipv6?.period.length && !period) {
+      setPeriod(preferences.ipv6.period[0].id);
     }
   }, [preferences]);
 
-  // ✅ Handle Country Change
-  const handleChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCountryId(e.target.value);
-  };
-
-  // ✅ Ensure order sends properly
   const handleBuyClick = () => {
-    const selectedCountry = preferences?.ipv6.country.find((c) => {
-      return c.id == countryId;
-    });
+    const selectedCountry = preferences?.ipv6.country.find(
+      (c) => c.id == countryId
+    );
+    const selectedPeriod = preferences?.ipv6.period.find((p) => p.id == period);
 
-    if (!selectedCountry) return null;
+    if (!selectedCountry || !selectedPeriod) return null;
 
     const orderData = {
       country: selectedCountry.name,
       quantity: Number(quantity),
-      goal: goal,
+      goal,
       usage,
-      period: "1m",
-      periodDays: "1m",
+      period: selectedPeriod.name,
+      periodDays: selectedPeriod.id,
       totalPrice: 0.08 * Number(quantity),
       proxyType: usage.includes("SOCKS5") ? "SOCKS5" : "HTTPS",
       type: "ipv6",
@@ -64,23 +64,15 @@ export const IPV6BuyCard = () => {
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
         <a className="buy-item__btn">{i18n("issued")}</a>
+
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("country")}
         </h4>
         <select
           value={countryId}
-          onChange={handleChangeCountry}
+          onChange={(e) => setCountryId(e.target.value)}
           disabled={isLoadingPreferences}
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            appearance: "none",
-            cursor: isLoadingPreferences ? "not-allowed" : "pointer",
-          }}
+          style={selectStyle}
         >
           {preferences?.ipv6?.country.map((c) => (
             <option key={c.id} value={c.id}>
@@ -89,7 +81,6 @@ export const IPV6BuyCard = () => {
           ))}
         </select>
 
-        {/* ✅ Quantity Input */}
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("quantity")}
         </h4>
@@ -98,53 +89,35 @@ export const IPV6BuyCard = () => {
           value={quantity}
           min={10}
           onChange={(e) => setQuantity(e.target.value)}
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            appearance: "none",
-            cursor: "pointer",
-          }}
+          style={inputStyle}
         />
+
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("period")}
         </h4>
-
-        <div
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            textAlign: "center",
-          }}
+        <select
+          value={period}
+          onChange={(e) => setPeriod(e.target.value)}
+          disabled={isLoadingPreferences}
+          style={selectStyle}
         >
-          {i18n("month")}
-        </div>
+          {preferences?.ipv6?.period.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("usage")}
         </h4>
         <input
           type="text"
           value={goal}
-          min={10}
           onChange={(e) => setGoal(e.target.value)}
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            appearance: "none",
-            cursor: "pointer",
-          }}
+          style={inputStyle}
         />
+
         <div className="buy-item__price">
           {i18n("price")}: <span>$0.08 / IP</span>
         </div>
@@ -158,4 +131,19 @@ export const IPV6BuyCard = () => {
       </div>
     </div>
   );
+};
+
+const selectStyle = {
+  backgroundColor: "#1E1E1E",
+  color: "#fff",
+  border: "1px solid #3E3E3E",
+  padding: "10px",
+  width: "100%",
+  borderRadius: "5px",
+  appearance: "none" as const,
+  cursor: "pointer",
+};
+
+const inputStyle = {
+  ...selectStyle,
 };

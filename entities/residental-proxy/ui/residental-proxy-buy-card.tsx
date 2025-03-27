@@ -11,12 +11,12 @@ import { Loader2 } from "lucide-react";
 
 // Define the pricing structure based on the provided plans
 const TARIFF_PRICES = {
-  "1 GB": 2.4,
-  "3 GB": 7,
-  "10 GB": 21,
-  "25 GB": 50,
-  "50 GB": 90,
-  "100 GB": 170,
+  "1 Gb": 2.4,
+  "3 Gb": 7,
+  "10 Gb": 21,
+  "25 Gb": 50,
+  "50 Gb": 90,
+  "100 Gb": 170,
 };
 
 export const ResidentalProxyBuyCard = () => {
@@ -59,6 +59,7 @@ export const ResidentalProxyBuyCard = () => {
     if (!selectedTariff) return;
 
     const price = getTariffPrice(selectedTariff.name);
+    console.log(selectedTariff);
 
     const orderData = {
       tariff: selectedTariff.name,
@@ -135,7 +136,7 @@ export const ResidentalProxyBuyCard = () => {
             }}
           >
             <Loader2 size={16} className="animate-spin" />
-            <span>З{i18n("loading")}</span>
+            <span>{i18n("loading")}</span>
           </div>
         ) : (
           <select

@@ -23,6 +23,9 @@ export const ISPBuyCard = () => {
     if (!countryId && preferences?.isp?.country.length) {
       setCountryId(preferences.isp.country[0].id);
     }
+    if (!period && preferences?.isp?.period.length) {
+      setPeriod(preferences.isp.period[0].id);
+    }
   }, [preferences]);
 
   // 👉 Пример обработчика для кнопки "Купить"
@@ -97,7 +100,11 @@ export const ISPBuyCard = () => {
           onChange={(e) => setPeriod(e.target.value)}
           style={selectStyle}
         >
-          <option value="1m">{i18n("month")}</option>
+          {preferences?.isp?.period.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
