@@ -108,25 +108,25 @@ export const Header: FC = () => {
       >
         <nav className="submenu">
           <Link href="/services/my-ip" className="submenu-item">
-            Мой IP
+            {i18n("nav-bar.my-ip")}
           </Link>
           <Link href="/services/proxy-checker" className="submenu-item">
-            Прокси чекер
+            {i18n("nav-bar.proxy-checker")}
           </Link>
           <Link href="/services/anonymity-checker" className="submenu-item">
-            Моя анонимность
+            {i18n("nav-bar.anonimity-checker")}
           </Link>
           <Link href="/services/port-checker" className="submenu-item">
-            Проверка портов
+            {i18n("nav-bar.port-checker")}
           </Link>
           <Link href="/services/whois" className="submenu-item">
-            Whois
+            {i18n("nav-bar.whois")}
           </Link>
           <Link href="/services/black-lists" className="submenu-item">
-            Блэк листы
+            {i18n("nav-bar.black-lists")}
           </Link>
           <Link href="/services/ipv6-checker" className="submenu-item">
-            Поддержка IPv6
+            {i18n("nav-bar.ipv6-checker")}
           </Link>
         </nav>
       </div>

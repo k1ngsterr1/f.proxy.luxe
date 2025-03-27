@@ -1,0 +1,11 @@
+{
+  "nav-bar": {
+    "my-ip": "My IP",
+    "proxy-checker": "Proxy Checker",
+    "anonymity-checker": "My Anonymity",
+    "port-checker": "Port Checker",
+    "whois": "Whois",
+    "black-lists": "Blacklists",
+    "ipv6-checker": "IPv6 Support"
+  }
+}
