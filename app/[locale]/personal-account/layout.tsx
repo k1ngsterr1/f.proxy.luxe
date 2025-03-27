@@ -1,16 +1,25 @@
+// app/layouts/root-layout.tsx
 "use client";
+
 import { PropsWithChildren } from "react";
 import "@/assets/styles/normalize.css";
 import "@/assets/styles/lk.css";
 import "@/assets/styles/style.css";
-import { QueryClientProvider, useIsFetching } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import reactQueryClient from "@/shared/config/query-client";
 import { Sidebar } from "@/features/sidebar/sidebar";
-import { Loader } from "@/shared/ui/loader";
+import ClientLayout from "../client-layout";
 
-type RootLayoutProps = PropsWithChildren;
+interface RootLayoutProps extends PropsWithChildren {
+  messages: Record<string, any>;
+  locale: "ru" | "en";
+}
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+  messages,
+  locale,
+}: RootLayoutProps) {
   return (
     <>
       <div className="header_offset"></div>
@@ -18,14 +27,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <div className="mw">
           <div
             className="cont"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-            }}
+            style={{ display: "flex", flexDirection: "row" }}
           >
             <QueryClientProvider client={reactQueryClient}>
-              <Sidebar />
-              {children}
+              <ClientLayout messages={messages} locale={locale}>
+                <Sidebar />
+                {children}
+              </ClientLayout>
             </QueryClientProvider>
           </div>
         </div>
