@@ -5,6 +5,37 @@
       "line1": "Free tool that allows you to check if your or any other IP address is in anti-spam databases.",
       "line2": "Will your email messages or forum chats be blocked? The check is performed against more than 50 databases that track blacklists of IP addresses."
     },
+    "premiumSolutions": "Our Premium Proxy Solutions",
+    "cards": {
+      "perIp": "/ IP",
+      "ipv6": {
+        "title": "IPv6 Proxies",
+        "price": "$0.08",
+        "features": {
+          "anonymity": "High anonymity",
+          "bandwidth": "Unlimited bandwidth",
+          "uptime": "99.9% uptime"
+        }
+      },
+      "ipv4": {
+        "title": "ISP IPv4 Static",
+        "price": "$2.40",
+        "features": {
+          "static": "Static IP addresses",
+          "speed": "High-speed connection",
+          "support": "24/7 technical support"
+        }
+      },
+      "ipv4shared": {
+        "title": "Residential IPv4 Dynamic",
+        "price": "$2.40",
+        "features": {
+          "rotation": "Dynamic IP rotation",
+          "residential": "Residential IP addresses",
+          "geo": "Geo-targeting available"
+        }
+      }
+    },
     "ipv6": {
       "headerPrefix": "IPv6",
       "header": "PROXY"

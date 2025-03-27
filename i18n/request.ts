@@ -46,6 +46,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ...(await import(`../messages/${locale}/whois.json`)),
       ...(await import(`../messages/${locale}/blacklist.json`)),
       ...(await import(`../messages/${locale}/ipv6.json`)),
+      ...(await import(`../messages/${locale}/payments-block.json`)),
     },
   };
 });

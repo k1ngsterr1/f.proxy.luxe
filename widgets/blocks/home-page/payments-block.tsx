@@ -3,37 +3,39 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CreditCard, Bitcoin, Wallet, Shield, CheckCircle } from "lucide-react";
-
-// Import payment method logos
-// Note: In a real implementation, you would need to have these images in your project
-const paymentMethods = [
-  {
-    id: "visa-mastercard",
-    name: "Visa/MasterCard",
-    icon: "/images/payment/visa-mastercard.png",
-    description: "Credit or debit card payment",
-  },
-  {
-    id: "payeer",
-    name: "PAYEER",
-    icon: "/images/payment/payeer.png",
-    description: "Electronic payment system",
-  },
-  {
-    id: "bitcoin",
-    name: "Bitcoin",
-    icon: "/images/payment/bitcoin.png",
-    description: "Cryptocurrency payment",
-  },
-  {
-    id: "webmoney",
-    name: "WebMoney",
-    icon: "/images/payment/webmoney.png",
-    description: "Global payment system",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export const PaymentMethodsBlock = () => {
+  const t = useTranslations("paymentsBlock");
+  
+  // Define payment methods with translations
+  const paymentMethods = [
+    {
+      id: "visa-mastercard",
+      name: t("methods.visa-mastercard.name"),
+      icon: "/images/payment/visa-mastercard.png",
+      description: t("methods.visa-mastercard.description"),
+    },
+    {
+      id: "payeer",
+      name: t("methods.payeer.name"),
+      icon: "/images/payment/payeer.png",
+      description: t("methods.payeer.description"),
+    },
+    {
+      id: "bitcoin",
+      name: t("methods.bitcoin.name"),
+      icon: "/images/payment/bitcoin.png",
+      description: t("methods.bitcoin.description"),
+    },
+    {
+      id: "webmoney",
+      name: t("methods.webmoney.name"),
+      icon: "/images/payment/webmoney.png",
+      description: t("methods.webmoney.description"),
+    },
+  ];
+
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -89,7 +91,7 @@ export const PaymentMethodsBlock = () => {
               marginBottom: "16px",
             }}
           >
-            SECURE <span style={{ color: "#f3d675" }}>PAYMENT METHODS</span>
+            {t("title.first")} <span style={{ color: "#f3d675" }}>{t("title.second")}</span>
           </motion.h2>
 
           <motion.p
@@ -104,8 +106,7 @@ export const PaymentMethodsBlock = () => {
               margin: "0 auto 40px",
             }}
           >
-            Choose your preferred payment method. All transactions are secure
-            and encrypted.
+            {t("description")}
           </motion.p>
 
           {/* Payment methods grid */}
@@ -165,7 +166,7 @@ export const PaymentMethodsBlock = () => {
                       textTransform: "uppercase",
                     }}
                   >
-                    Popular
+                    {t("popular")}
                   </div>
                 )}
 
@@ -242,7 +243,7 @@ export const PaymentMethodsBlock = () => {
                     }}
                   >
                     <CheckCircle size={16} style={{ marginRight: "6px" }} />
-                    Selected
+                    {t("selected")}
                   </div>
                 )}
               </motion.div>
@@ -271,19 +272,19 @@ export const PaymentMethodsBlock = () => {
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Shield size={20} color="#f3d675" />
               <span style={{ color: "#CCCCCC", fontSize: "14px" }}>
-                Secure Payments
+                {t("security.secure")}
               </span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Shield size={20} color="#f3d675" />
               <span style={{ color: "#CCCCCC", fontSize: "14px" }}>
-                Encrypted Transactions
+                {t("security.encrypted")}
               </span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Shield size={20} color="#f3d675" />
               <span style={{ color: "#CCCCCC", fontSize: "14px" }}>
-                24/7 Support
+                {t("security.support")}
               </span>
             </div>
           </motion.div>

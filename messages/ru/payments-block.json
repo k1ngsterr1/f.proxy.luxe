@@ -1,0 +1,34 @@
+{
+  "paymentsBlock": {
+    "title": {
+      "first": "БЕЗОПАСНЫЕ",
+      "second": "СПОСОБЫ ОПЛАТЫ"
+    },
+    "description": "Выберите предпочтительный способ оплаты. Все транзакции безопасны и зашифрованы.",
+    "methods": {
+      "visa-mastercard": {
+        "name": "Visa/MasterCard",
+        "description": "Оплата кредитной или дебетовой картой"
+      },
+      "payeer": {
+        "name": "PAYEER",
+        "description": "Электронная платежная система"
+      },
+      "bitcoin": {
+        "name": "Bitcoin",
+        "description": "Оплата криптовалютой"
+      },
+      "webmoney": {
+        "name": "WebMoney",
+        "description": "Глобальная платежная система"
+      }
+    },
+    "popular": "Популярный",
+    "selected": "Выбрано",
+    "security": {
+      "secure": "Безопасные платежи",
+      "encrypted": "Зашифрованные транзакции",
+      "support": "Поддержка 24/7"
+    }
+  }
+}
