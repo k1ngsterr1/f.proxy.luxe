@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Logo from "@/assets/images/logo.png";
 import TelegramIcon from "@/assets/images/telegram.png";
 import VkIcon from "@/assets/images/vk-icon.png";
@@ -8,7 +8,7 @@ import Link from "next/link";
 import { FC } from "react";
 
 export const Footer: FC = () => {
-  const i18n = useTranslations()
+  const i18n = useTranslations();
   return (
     <>
       <footer className="footer">
@@ -18,9 +18,7 @@ export const Footer: FC = () => {
               <Link href="/" className="header-logo">
                 <Image src={Logo} alt="Proxy Luxe" />
               </Link>
-              <p className="footer-logo__text">
-              {i18n("footer.paragraph")}
-              </p>
+              <p className="footer-logo__text">{i18n("footer.paragraph")}</p>
               <p className="footer-logo__text">
                 © 2021 – {new Date().getFullYear()} «Proxy.Luxe»
               </p>
@@ -32,20 +30,26 @@ export const Footer: FC = () => {
                 <Link href="/faq">{i18n("footer.faq")}</Link>
                 <Link href="/articles">{i18n("footer.articles")}</Link>
                 <Link href="/services/my-ip">{i18n("footer.myIp")}</Link>
-                <Link href="/services/proxy-checker">{i18n("footer.proxyChecker")}</Link>
+                <Link href="/services/proxy-checker">
+                  {i18n("footer.proxyChecker")}
+                </Link>
                 {/* <Link href="/conditions">Условия использования</Link> */}
                 {/* <Link href="#">Реквизиты</Link> */}
               </nav>
               <div className="footer-menu__info">
-                <Link href="/privacy-policy">{i18n("footer.privacyPolicy")}</Link>
+                <Link href="/privacy-policy">
+                  {i18n("footer.privacyPolicy")}
+                </Link>
                 <div className="separator"></div>
                 <Link href="/responsibility-principle">
-                {i18n("footer.noticeOfResponsibility")}
+                  {i18n("footer.noticeOfResponsibility")}
                 </Link>
               </div>
             </div>
             <div className="footer-soc">
-              <p className="footer-soc__hint">{i18n("footer.technicalSupport")}</p>
+              <p className="footer-soc__hint">
+                {i18n("footer.technicalSupport")}
+              </p>
               <a href="mailto:admin@proxy.luxe" className="footer-soc__link">
                 admin@proxy.luxe
               </a>
