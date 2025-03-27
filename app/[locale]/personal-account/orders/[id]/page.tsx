@@ -9,6 +9,7 @@ import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-orde
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { Button } from "@/shared/ui/button";
+import { useDeleteOrder } from "@/entities/orders/hooks/mutation/use-delete-order.mutation";
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -24,6 +25,16 @@ export default function OrderDetailPage() {
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
   const navigate = useRouter();
+
+  const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
+
+  const handleDelete = () => {
+    if (confirm("Вы уверены, что хотите удалить этот заказ?")) {
+      deleteOrder(orderId as string, {
+        onSuccess: () => navigate.push("/personal-account/orders"),
+      });
+    }
+  };
 
   const handleApplyCoupon = () => {
     if (!couponCode) return;
@@ -385,11 +396,17 @@ export default function OrderDetailPage() {
               borderTop: "1px solid rgba(243, 214, 117, 0.2)",
               display: "flex",
               justifyContent: "flex-start",
+              gap: "12px",
             }}
           >
             <Button
               onClick={handleContinue}
               name={isFinishing ? "Загрузка..." : "Оплатить"}
+              variant="medium"
+            />
+            <Button
+              onClick={handleDelete}
+              name={isDeleting ? "Удаление..." : "Удалить"}
               variant="medium"
             />
           </div>
