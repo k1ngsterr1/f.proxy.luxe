@@ -111,7 +111,7 @@ export const ISPBuyCard = () => {
         />
 
         <div className="buy-item__price">
-          {i18n("price")} <span>2.4$ / IP</span>
+          {i18n("price")} <span>$2.4 / IP</span>
         </div>
         <Button
           className="btn"

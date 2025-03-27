@@ -128,7 +128,7 @@ export const ResidentalProxyBuyCard = () => {
         />
         <div className="buy-item__price">
           {i18n("price")}
-          <span>2.4$ / IP</span>
+          <span>$2.4 / IP</span>
         </div>
         <Button
           className="btn"

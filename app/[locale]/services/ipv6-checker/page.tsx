@@ -4,20 +4,23 @@ import { checkIpv6 } from "@/entities/ipv6/api/post/ipv6-check.api";
 import { useEffect, useState } from "react";
 import { AlertCircle, CheckCircle, Loader } from "lucide-react";
 import { useTranslations } from "next-intl";
-
-interface IPv6CheckResponse {
-  domain: string;
-  hasIPv6: boolean;
-  ipv6Addresses: string[];
-  timestamp: string;
-}
+import { useCheckIpv6 } from "@/entities/ipv6/hooks/mutate/use-ipv6-check.mutate";
 
 export default function Page() {
   const t = useTranslations("ipv6");
   const [domain, setDomain] = useState<string>("");
-  const [result, setResult] = useState<IPv6CheckResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    mutateAsync: checkIpv6Mutate,
+    data: result,
+    isPending: isLoading,
+  } = useCheckIpv6();
+
+  useEffect(() => {
+    if (result) {
+      setError(null);
+    }
+  }, [result]);
 
   const handleCheck = async () => {
     if (!domain) {
@@ -26,22 +29,16 @@ export default function Page() {
     }
 
     const cleanDomain = domain.replace(/^https?:\/\//, "");
-
-    setIsLoading(true);
     setError(null);
-    setResult(null);
 
     try {
-      const data: any = await checkIpv6(cleanDomain);
-      setResult(data);
+      await checkIpv6Mutate(cleanDomain); // теперь используется мутация
     } catch (err) {
       let errorMessage = t("errors.request");
       if (err instanceof Error) {
         errorMessage = err.message;
       }
       setError(errorMessage);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -148,16 +145,16 @@ export default function Page() {
                     borderRadius: "4px",
                     fontSize: "12px",
                     fontWeight: "500",
-                    backgroundColor: result.hasIPv6
+                    backgroundColor: result.hasIpv6
                       ? "rgba(76, 175, 80, 0.1)"
                       : "rgba(255, 82, 82, 0.1)",
-                    color: result.hasIPv6 ? "#4CAF50" : "#FF5252",
-                    border: result.hasIPv6
+                    color: result.hasIpv6 ? "#4CAF50" : "#FF5252",
+                    border: result.hasIpv6
                       ? "1px solid rgba(76, 175, 80, 0.3)"
                       : "1px solid rgba(255, 82, 82, 0.3)",
                   }}
                 >
-                  {result.hasIPv6
+                  {result.hasIpv6
                     ? t("result.status.supported")
                     : t("result.status.notSupported")}
                 </span>
@@ -173,7 +170,7 @@ export default function Page() {
                     marginBottom: "16px",
                   }}
                 >
-                  {result.hasIPv6 ? (
+                  {result.hasIpv6 ? (
                     <CheckCircle size={24} color="#4CAF50" />
                   ) : (
                     <AlertCircle size={24} color="#FF5252" />
@@ -181,11 +178,11 @@ export default function Page() {
                   <span
                     style={{
                       fontSize: "16px",
-                      color: result.hasIPv6 ? "#4CAF50" : "#FF5252",
+                      color: result.hasIpv6 ? "#4CAF50" : "#FF5252",
                       fontWeight: "500",
                     }}
                   >
-                    {result.hasIPv6
+                    {result.hasIpv6
                       ? t("result.summary.supported", { domain: result.domain })
                       : t("result.summary.notSupported", {
                           domain: result.domain,
@@ -212,19 +209,21 @@ export default function Page() {
                       {t("result.addresses")}
                     </div>
                     <ul style={{ margin: 0, padding: "0 0 0 20px" }}>
-                      {result.ipv6Addresses.map((address, index) => (
-                        <li
-                          key={index}
-                          style={{
-                            color: "#FFFFFF",
-                            fontSize: "14px",
-                            fontFamily: "monospace",
-                            marginBottom: "4px",
-                          }}
-                        >
-                          {address}
-                        </li>
-                      ))}
+                      {result.ipv6Addresses.map(
+                        (address: any, index: number) => (
+                          <li
+                            key={index}
+                            style={{
+                              color: "#FFFFFF",
+                              fontSize: "14px",
+                              fontFamily: "monospace",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            {address}
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
                 )}

@@ -1,8 +1,9 @@
 import axios from "axios";
 import { IpData } from "@/app/[locale]/services/my-ip/page";
 import { apiClient } from "@/shared/config/apiClient";
+import { IPV6 } from "@/shared/types/preferences.types";
 
-export const checkIpv6 = async (domain: any): Promise<IpData | null> => {
+export const checkIpv6 = async (domain: any): Promise<any> => {
   try {
     const response = await apiClient.post("/api/v1/services/ipv6/check", {
       domain: domain,

@@ -75,10 +75,6 @@ export const AdvantagesBlock = () => {
             <AdvantageCard key={index} {...adv} />
           ))}
         </div>
-        <div className="advantages-hint">
-          {i18n("hint.part1")} <span>{i18n("hint.highlight")}</span>{" "}
-          {i18n("hint.part2")}
-        </div>
       </div>
     </section>
   );

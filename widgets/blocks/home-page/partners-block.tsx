@@ -44,9 +44,7 @@ export const PartnersBlock = () => {
             </div>
           </div>
         </div>
-        <h2 className="section-header partners-subheader">
-          {i18n("earnings.line1")} <span>{i18n("earnings.amount")}</span>
-        </h2>
+
         <p className="partners-hint">
           {i18n("payout.line1")} <br />
           {i18n("payout.line2")}
