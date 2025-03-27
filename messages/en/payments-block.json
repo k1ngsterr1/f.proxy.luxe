@@ -1,0 +1,34 @@
+{
+  "paymentsBlock": {
+    "title": {
+      "first": "SECURE",
+      "second": "PAYMENT METHODS"
+    },
+    "description": "Choose your preferred payment method. All transactions are secure and encrypted.",
+    "methods": {
+      "visa-mastercard": {
+        "name": "Visa/MasterCard",
+        "description": "Credit or debit card payment"
+      },
+      "payeer": {
+        "name": "PAYEER",
+        "description": "Electronic payment system"
+      },
+      "bitcoin": {
+        "name": "Bitcoin",
+        "description": "Cryptocurrency payment"
+      },
+      "webmoney": {
+        "name": "WebMoney",
+        "description": "Global payment system"
+      }
+    },
+    "popular": "Popular",
+    "selected": "Selected",
+    "security": {
+      "secure": "Secure Payments",
+      "encrypted": "Encrypted Transactions",
+      "support": "24/7 Support"
+    }
+  }
+}

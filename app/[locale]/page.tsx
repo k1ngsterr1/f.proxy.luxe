@@ -9,8 +9,7 @@ import { BuyPromoBlock } from "@/widgets/blocks/home-page/buy-promo-block";
 import { PartnersBlock } from "@/widgets/blocks/home-page/partners-block";
 import { FaqBlock } from "@/widgets/blocks/home-page/faq-block";
 import { AboutBlock } from "@/widgets/blocks/home-page/about-block";
-import payments from "@/assets/images/payments.png";
-import Image from "next/image";
+import { PaymentMethodsBlock } from "@/widgets/blocks/home-page/payments-block";
 
 export default function Home() {
   return (
@@ -22,14 +21,7 @@ export default function Home() {
         <AdvantagesBlock />
         <PartnersBlock />
         <FaqBlock />
-        <Image
-          src={payments}
-          style={{
-            height: 100,
-            filter: "grayscale(100%)",
-          }}
-          alt="Payments"
-        />
+        <PaymentMethodsBlock />
         <AboutBlock />
       </QueryClientProvider>
     </>

@@ -1,5 +1,10 @@
 {
   "faq": {
+    "categories": {
+      "general": "General",
+      "technical": "Technical"
+    },
+    "search": "Search your question",
     "faqtext1": "General Questions",
     "faqtext2": "Why are proxies needed?",
     "faqtext3": "How long does it take to issue a proxy after payment?",
