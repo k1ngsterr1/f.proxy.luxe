@@ -1,15 +1,72 @@
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, KeyRound, ArrowRight } from "lucide-react";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 export default function ProfilePage() {
   const { data } = useGetUser();
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [emailCode, setEmailCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showEmailCode, setShowEmailCode] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const isMobile = useIsMobile();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    // Validate passwords match if both are provided
+    if (newPassword || confirmPassword) {
+      if (newPassword !== confirmPassword) {
+        setError("Пароли не совпадают");
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        setError("Пароль должен содержать не менее 8 символов");
+        return;
+      }
+    }
+
+    // Validate email code if changing email or password
+    if ((newPassword || confirmPassword) && !emailCode) {
+      setError("Для изменения пароля необходимо ввести код из письма");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Success message
+      setSuccess("Профиль успешно обновлен");
+
+      // Reset form fields
+      if (newPassword) {
+        setNewPassword("");
+        setConfirmPassword("");
+        setEmailCode("");
+      }
+    } catch (err) {
+      setError("Произошла ошибка при обновлении профиля");
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -28,10 +85,15 @@ export default function ProfilePage() {
           message="Вам необходимо подтвердить свой email введя код, указанной в письме."
         />
       )}
+
+      {error && <AlertMessage type="error" message={error} />}
+
+      {success && <AlertMessage type="success" message={success} />}
+
       <div style={{ marginBottom: "32px" }}>
         <h1
           style={{
-            fontSize: "32px",
+            fontSize: isMobile ? "24px" : "32px",
             margin: 0,
             color: "#FFFFFF",
             fontWeight: "bold",
@@ -42,7 +104,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Form */}
-      <form>
+      <form onSubmit={handleSubmit}>
         {/* Email Field */}
         <div style={{ marginBottom: "24px" }}>
           <label
@@ -74,6 +136,7 @@ export default function ProfilePage() {
             <input
               type="email"
               value={data?.email}
+              readOnly
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
@@ -86,54 +149,11 @@ export default function ProfilePage() {
             />
           </div>
           <div style={{ color: "#f3d675", fontSize: "12px" }}>
-            Для изменения e-mail укажите "Текущий пароль"
+            Для изменения e-mail укажите код из письма
           </div>
         </div>
 
-        {/* Notification Preferences */}
-        <div style={{ marginBottom: "24px" }}>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "12px",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              defaultChecked
-              style={{
-                marginRight: "8px",
-                accentColor: "#f3d675",
-              }}
-            />
-            <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-              Получать письма о необходимости продления прокси.
-            </span>
-          </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              defaultChecked
-              style={{
-                marginRight: "8px",
-                accentColor: "#f3d675",
-              }}
-            />
-            <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-              Получать письма (рассылку) о новостях сервиса, купоны, акции.
-            </span>
-          </label>
-        </div>
-
-        {/* Current Password */}
+        {/* Email Code Field */}
         <div style={{ marginBottom: "24px" }}>
           <label
             style={{
@@ -143,10 +163,10 @@ export default function ProfilePage() {
               fontSize: "14px",
             }}
           >
-            Текущий пароль:
+            Код из почты:
           </label>
           <div style={{ position: "relative" }}>
-            <Lock
+            <KeyRound
               size={16}
               style={{
                 position: "absolute",
@@ -157,7 +177,10 @@ export default function ProfilePage() {
               }}
             />
             <input
-              type={showCurrentPassword ? "text" : "password"}
+              type={showEmailCode ? "text" : "password"}
+              value={emailCode}
+              onChange={(e) => setEmailCode(e.target.value)}
+              placeholder="Введите код из письма"
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
@@ -170,7 +193,7 @@ export default function ProfilePage() {
             />
             <button
               type="button"
-              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              onClick={() => setShowEmailCode(!showEmailCode)}
               style={{
                 position: "absolute",
                 right: "12px",
@@ -183,8 +206,11 @@ export default function ProfilePage() {
                 color: "#f3d675",
               }}
             >
-              {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              {showEmailCode ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
+          </div>
+          <div style={{ color: "#999999", fontSize: "12px", marginTop: "4px" }}>
+            Код подтверждения был отправлен на ваш email
           </div>
         </div>
 
@@ -203,7 +229,7 @@ export default function ProfilePage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
               gap: "16px",
             }}
           >
@@ -221,6 +247,8 @@ export default function ProfilePage() {
               />
               <input
                 type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Новый пароль"
                 style={{
                   width: "100%",
@@ -265,6 +293,8 @@ export default function ProfilePage() {
               />
               <input
                 type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Повторите новый пароль"
                 style={{
                   width: "100%",
@@ -295,55 +325,63 @@ export default function ProfilePage() {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Security Section */}
-        <div style={{ marginBottom: "24px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              color: "#FFFFFF",
-              fontSize: "14px",
-            }}
-          >
-            Безопасность:
-          </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              style={{
-                marginRight: "8px",
-                accentColor: "#f3d675",
-              }}
-            />
-            <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-              Включить двухфакторную идентификацию через E-mail
-            </span>
-          </label>
+          <div style={{ color: "#999999", fontSize: "12px", marginTop: "8px" }}>
+            Минимум 8 символов, включая буквы и цифры
+          </div>
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
+          disabled={isSubmitting}
           style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             padding: "10px 24px",
-            backgroundColor: "#f3d675",
+            backgroundColor: isSubmitting
+              ? "rgba(243, 214, 117, 0.5)"
+              : "#f3d675",
             border: "none",
             borderRadius: "4px",
             color: "#000000",
             fontSize: "14px",
-            cursor: "pointer",
+            cursor: isSubmitting ? "not-allowed" : "pointer",
             fontWeight: "500",
+            gap: "8px",
           }}
         >
-          Сохранить
+          {isSubmitting ? (
+            <>
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-black"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                style={{ width: "16px", height: "16px" }}
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Сохранение...
+            </>
+          ) : (
+            <>
+              Сохранить
+              <ArrowRight size={16} />
+            </>
+          )}
         </button>
       </form>
     </div>
