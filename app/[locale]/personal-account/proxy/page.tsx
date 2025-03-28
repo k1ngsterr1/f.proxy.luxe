@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
+import ProxyList, { Props as ProxyListProps } from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies.queries";
+import { Proxy as ApiProxy } from "@/entities/proxy/api/get/get-all-proxies.api";
 import { AlertMessage } from "@/shared/ui/alert";
 import Link from "next/link";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
@@ -151,7 +152,11 @@ export default function ProxyPage() {
       proxies?.data?.items &&
       Array.isArray(proxies.data.items) &&
       proxies.data.items.length > 0 ? (
-        <ProxyList proxies={proxies.data.items} />
+        <ProxyList proxies={proxies.data.items.map((proxy: ApiProxy) => ({
+          ...proxy,
+          login: "", // Default empty login since API Proxy doesn't have login
+          password: "" // Default empty password since API Proxy doesn't have password
+        }))}/>
       ) : (
         !isLoading &&
         !isError && (

@@ -1,5 +1,3 @@
-// app/layouts/root-layout.tsx
-import { PropsWithChildren } from "react";
 import "@/assets/styles/normalize.css";
 import "@/assets/styles/lk.css";
 import "@/assets/styles/style.css";
@@ -9,14 +7,20 @@ import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
+interface LayoutProps {
   children: React.ReactNode;
-  params: { locale: "en" | "ru" };
-}) {
-  const locale = params.locale;
+  params: Promise<{ locale: string }>;
+}
+
+export default async function Layout({ children, params }: LayoutProps) {
+  const locale = (await params).locale;
+
+  // Validate locale
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
+  // Get messages for the current locale
   const messages = await getMessages();
 
   return (

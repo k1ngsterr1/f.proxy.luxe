@@ -18,12 +18,10 @@ export default function PersonalAccount() {
   const isFetching = useIsFetching();
 
   useEffect(() => {
+    // If no token is found, redirect immediately without showing popup
     if (!token) {
-      const timeout = setTimeout(() => {
-        navigate.push("/");
-      }, 1000);
-
-      return () => clearTimeout(timeout);
+      // Redirect to home page without delay
+      navigate.replace("/");
     }
   }, [token, navigate]);
 

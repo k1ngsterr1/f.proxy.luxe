@@ -63,6 +63,7 @@ export default function ProfilePage() {
         {
           code: emailCode,
           newPassword: newPassword as any,
+          //@ts-ignore
           confirmPassword: confirmPassword as any,
           email: data?.email as any,
         },
