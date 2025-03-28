@@ -2,12 +2,9 @@ import { apiClient } from "@/shared/config/apiClient";
 import axios from "axios";
 import { EmailDTO } from "@/shared/interfaces/email.interface";
 
-export const sendEmailCode = async (data: EmailDTO) => {
+export const sendEmailCode = async () => {
   try {
-    const response = await apiClient.post(
-      "/api/v1/user/send-verification",
-      data
-    );
+    const response = await apiClient.post("/api/v1/user/send-verification");
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

@@ -61,13 +61,9 @@ export const AlertMessage: React.FC<AlertMessageProps> = ({
   };
 
   const handleResend = async () => {
-    if (!email) return;
-
-    const payload: EmailDTO = { email };
-
     try {
       setResendStatus("loading");
-      await sendEmailCode(payload);
+      await sendEmailCode();
       setResendStatus("success");
       navigate.push("/verification-code");
     } catch (err) {

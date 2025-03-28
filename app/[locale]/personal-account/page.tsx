@@ -7,6 +7,7 @@ import { Loader } from "@/shared/ui/loader";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { PayForm } from "@/widgets/forms/pay-form";
 import { useIsFetching } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -24,6 +25,7 @@ export default function PersonalAccount() {
       navigate.replace("/");
     }
   }, [token, navigate]);
+  const i18n = useTranslations("personal-account");
 
   return (
     <>
@@ -53,8 +55,8 @@ export default function PersonalAccount() {
               {data?.isVerified === false && (
                 <AlertMessage
                   type="warning"
-                  isEmail
-                  message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+                  isEmail={true}
+                  message={i18n("verify-alert")}
                 />
               )}
             </div>
