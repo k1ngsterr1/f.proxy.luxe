@@ -16,6 +16,7 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
+import { usePayeerPayment } from "@/entities/payments/hooks/general/use-payeer-payment";
 
 // const PayFormValidation = () => {
 //   const i18n = useTranslations("forms.payment.errors");
@@ -36,6 +37,7 @@ import { useTranslations } from "next-intl";
 export const PayForm = () => {
   const isMobile = useIsMobile();
   const { processWebMoneyPayment } = useWebMoneyPayment();
+  const { processPayeerPayment } = usePayeerPayment();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const i18n = useTranslations("forms.payment");
   const errorI18n = useTranslations("forms.payment.errors");
@@ -56,6 +58,8 @@ export const PayForm = () => {
 
         if (values.paymentMethod === "webmoney") {
           await processWebMoneyPayment(values.paymentAmount);
+        } else if (values.paymentMethod === "payeer") {
+          await processPayeerPayment(values.paymentAmount);
         } else {
           // Handle other payment methods
           console.log("Processing payment:", values);
