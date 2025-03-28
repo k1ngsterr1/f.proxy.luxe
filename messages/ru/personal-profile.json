@@ -1,0 +1,28 @@
+{
+  "personal-profile": {
+    "title": "ПРОФИЛЬ",
+    "email": "E-mail:",
+    "email-required": "*",
+    "email-change-hint": "Для изменения e-mail укажите код из письма",
+    "button-request-code": "ЗАПРОСИТЬ КОД",
+    "code": "Код из письма:",
+    "code-required": "*",
+    "code-placeholder": "Введите код из письма",
+    "new-password": "Новый пароль:",
+    "new-password-placeholder": "Введите новый пароль",
+    "confirm-password": "Подтвердите пароль:",
+    "confirm-password-placeholder": "Подтвердите новый пароль",
+    "submit-button": "СОХРАНИТЬ ИЗМЕНЕНИЯ",
+    "errors": {
+      "passwords-not-match": "Пароли не совпадают",
+      "password-length": "Пароль должен содержать не менее 8 символов",
+      "code-required": "Для изменения пароля необходимо ввести код из письма",
+      "generic-error": "Произошла ошибка при обновлении профиля"
+    },
+    "success": {
+      "password-changed": "Пароль успешно изменен",
+      "reset-code-sent": "Код для сброса пароля отправлен на вашу почту"
+    },
+    "verification-warning": "Вам необходимо подтвердить свой email введя код, указанной в письме."
+  }
+}

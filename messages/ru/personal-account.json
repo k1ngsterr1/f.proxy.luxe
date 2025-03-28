@@ -1,0 +1,27 @@
+{
+  "personal-account": {
+    "title": "ЛИЧНЫЙ КАБИНЕТ",
+    "welcome": "Добро пожаловать в личный кабинет",
+    "sidebar": {
+      "balance": "Баланс",
+      "navigation": "Навигация"
+    },
+    "overview": {
+      "active-orders": "Активные заказы",
+      "active-proxies": "Активные прокси",
+      "total-spent": "Всего потрачено",
+      "account-created": "Аккаунт создан"
+    },
+    "actions": {
+      "add-funds": "ПОПОЛНИТЬ",
+      "buy-proxy": "КУПИТЬ ПРОКСИ",
+      "view-all": "СМОТРЕТЬ ВСЕ"
+    },
+    "verification": {
+      "email-verification": "Подтверждение email",
+      "verified": "Подтвержден",
+      "not-verified": "Не подтвержден",
+      "verify-now": "Подтвердить сейчас"
+    }
+  }
+}

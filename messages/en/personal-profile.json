@@ -1,0 +1,28 @@
+{
+  "personal-profile": {
+    "title": "PROFILE",
+    "email": "E-mail:",
+    "email-required": "*",
+    "email-change-hint": "To change your e-mail, enter the code from the email",
+    "button-request-code": "REQUEST CODE",
+    "code": "Code from email:",
+    "code-required": "*",
+    "code-placeholder": "Enter code from email",
+    "new-password": "New password:",
+    "new-password-placeholder": "Enter new password",
+    "confirm-password": "Confirm password:",
+    "confirm-password-placeholder": "Confirm new password",
+    "submit-button": "SAVE CHANGES",
+    "errors": {
+      "passwords-not-match": "Passwords do not match",
+      "password-length": "Password must be at least 8 characters long",
+      "code-required": "Enter the code from the email to change password",
+      "generic-error": "An error occurred when updating profile"
+    },
+    "success": {
+      "password-changed": "Password successfully changed",
+      "reset-code-sent": "Password reset code sent to your email"
+    },
+    "verification-warning": "You need to verify your email by entering the code specified in the email."
+  }
+}

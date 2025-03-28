@@ -1,0 +1,17 @@
+{
+  "personal-announcements": {
+    "title": "ANNOUNCEMENTS",
+    "no-announcements": "No announcements at the moment",
+    "read-more": "Read More",
+    "mark-read": "Mark as Read",
+    "all-read": "All announcements marked as read",
+    "new": "NEW",
+    "date-format": "MM/DD/YYYY",
+    "categories": {
+      "maintenance": "Maintenance",
+      "updates": "Updates",
+      "promotions": "Promotions",
+      "news": "News"
+    }
+  }
+}

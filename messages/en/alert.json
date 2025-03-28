@@ -1,0 +1,10 @@
+{
+  "alert": {
+    "resend": {
+      "sending": "Sending...",
+      "sent": "Sent ✅",
+      "error": "Error 🔁",
+      "resend": "Resend"
+    }
+  }
+}

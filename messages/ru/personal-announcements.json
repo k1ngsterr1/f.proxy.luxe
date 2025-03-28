@@ -1,0 +1,17 @@
+{
+  "personal-announcements": {
+    "title": "ОБЪЯВЛЕНИЯ",
+    "no-announcements": "Нет объявлений на данный момент",
+    "read-more": "Читать далее",
+    "mark-read": "Отметить как прочитанное",
+    "all-read": "Все объявления отмечены как прочитанные",
+    "new": "НОВОЕ",
+    "date-format": "DD.MM.YYYY",
+    "categories": {
+      "maintenance": "Технические работы",
+      "updates": "Обновления",
+      "promotions": "Акции",
+      "news": "Новости"
+    }
+  }
+}

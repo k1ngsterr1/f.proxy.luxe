@@ -9,6 +9,7 @@ import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useSendResetEmail } from "@/entities/auth/hooks/mutations/use-reset-email.mutations";
 import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-password.mutation";
+import { useTranslations } from "next-intl";
 
 export default function ProfilePage() {
   const { data } = useGetUser();
@@ -21,6 +22,7 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const t = useTranslations("personal-profile");
 
   const {
     mutate: sendResetEmail,
@@ -40,19 +42,19 @@ export default function ProfilePage() {
     // Validate passwords match if both are provided
     if (newPassword || confirmPassword) {
       if (newPassword !== confirmPassword) {
-        setError("Пароли не совпадают");
+        setError(t("errors.passwords-not-match"));
         return;
       }
 
       if (newPassword.length < 8) {
-        setError("Пароль должен содержать не менее 8 символов");
+        setError(t("errors.password-length"));
         return;
       }
     }
 
     // Validate email code if changing email or password
     if ((newPassword || confirmPassword) && !emailCode) {
-      setError("Для изменения пароля необходимо ввести код из письма");
+      setError(t("errors.code-required"));
       return;
     }
 
@@ -67,7 +69,7 @@ export default function ProfilePage() {
         {
           onSuccess: () => {
             // Success message
-            setSuccess("Пароль успешно изменен");
+            setSuccess(t("success.password-changed"));
 
             // Reset form fields
             setNewPassword("");
@@ -93,11 +95,11 @@ export default function ProfilePage() {
                 }
               } else {
                 setError(
-                  err.message || "Произошла ошибка при обновлении профиля"
+                  err.message || t("errors.generic-error")
                 );
               }
             } else {
-              setError("Произошла ошибка при обновлении профиля");
+              setError(t("errors.generic-error"));
             }
             console.error(err);
           },
@@ -120,7 +122,7 @@ export default function ProfilePage() {
         <AlertMessage
           type="warning"
           isEmail
-          message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+          message={t("verification-warning")}
         />
       )}
       {error && <AlertMessage type="error" message={error} />}
@@ -128,7 +130,7 @@ export default function ProfilePage() {
       {sendResetEmailMutationIsSuccess && (
         <AlertMessage
           type="success"
-          message="Код для сброса пароля отправлен на вашу почту"
+          message={t("success.reset-code-sent")}
         />
       )}
       {sendResetEmailMutationIsError && (
@@ -137,7 +139,7 @@ export default function ProfilePage() {
           message={
             sendResetEmailMutationError instanceof Error
               ? sendResetEmailMutationError.message
-              : "Ошибка при отправке кода сброса пароля"
+              : t("errors.generic-error")
           }
         />
       )}
@@ -150,7 +152,7 @@ export default function ProfilePage() {
             fontWeight: "bold",
           }}
         >
-          ПРОФИЛЬ
+          {t("title")}
         </h1>
       </div>
       <form onSubmit={handleSubmit}>
@@ -164,7 +166,7 @@ export default function ProfilePage() {
               fontSize: "14px",
             }}
           >
-            E-mail: <span style={{ color: "#f3d675" }}>*</span>
+            {t("email")} <span style={{ color: "#f3d675" }}>{t("email-required")}</span>
           </label>
           <div
             style={{
@@ -198,7 +200,7 @@ export default function ProfilePage() {
             />
           </div>
           <div style={{ color: "#f3d675", fontSize: "12px" }}>
-            Для изменения e-mail укажите код из письма
+            {t("email-change-hint")}
           </div>
           <div style={{ marginTop: "8px" }}>
             <button
@@ -257,7 +259,7 @@ export default function ProfilePage() {
                   Отправка...
                 </>
               ) : (
-                "Отправить код на почту"
+                t("button-request-code")
               )}
             </button>
           </div>
@@ -273,7 +275,7 @@ export default function ProfilePage() {
               fontSize: "14px",
             }}
           >
-            Код из почты:
+            {t("code")}{t("code-required")}
           </label>
           <div style={{ position: "relative" }}>
             <KeyRound
@@ -290,7 +292,7 @@ export default function ProfilePage() {
               type={showEmailCode ? "text" : "password"}
               value={emailCode}
               onChange={(e) => setEmailCode(e.target.value)}
-              placeholder="Введите код из письма"
+              placeholder={t("code-placeholder")}
               style={{
                 width: "100%",
                 padding: "10px 12px 10px 36px",
@@ -320,7 +322,7 @@ export default function ProfilePage() {
             </button>
           </div>
           <div style={{ color: "#999999", fontSize: "12px", marginTop: "4px" }}>
-            Код подтверждения был отправлен на ваш email
+            {t("success.reset-code-sent")}
           </div>
         </div>
 
@@ -334,7 +336,7 @@ export default function ProfilePage() {
               fontSize: "14px",
             }}
           >
-            Изменить пароль:
+            {t("new-password")}
           </label>
           <div
             style={{
@@ -359,7 +361,7 @@ export default function ProfilePage() {
                 type={showNewPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Новый пароль"
+                placeholder={t("new-password-placeholder")}
                 style={{
                   width: "100%",
                   padding: "10px 12px 10px 36px",
@@ -405,7 +407,7 @@ export default function ProfilePage() {
                 type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Повторите новый пароль"
+                placeholder={t("confirm-password-placeholder")}
                 style={{
                   width: "100%",
                   padding: "10px 12px 10px 36px",
@@ -436,7 +438,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <div style={{ color: "#999999", fontSize: "12px", marginTop: "8px" }}>
-            Минимум 8 символов, включая буквы и цифры
+            {t("errors.password-length")}
           </div>
         </div>
         <button
@@ -482,11 +484,11 @@ export default function ProfilePage() {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Сохранение...
+              {t("submit-button")}...
             </>
           ) : (
             <>
-              Сохранить
+              {t("submit-button")}
               <ArrowRight size={16} />
             </>
           )}

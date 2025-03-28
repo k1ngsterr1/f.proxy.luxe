@@ -1,0 +1,33 @@
+{
+  "personal-proxy": {
+    "title": "МОИ ПРОКСИ",
+    "verify-email": "Вам необходимо подтвердить свой email, нажав на ссылку в сообщении.",
+    "proxies-loading": "Загрузка прокси...",
+    "proxies-error": "Ошибка при загрузке прокси",
+    "proxies-unknown-error": "Неизвестная ошибка",
+    "empty": "Прокси не найдены...",
+    "days-left": "дней осталось",
+    "expires": "Истекает",
+    "copy-button": "КОПИРОВАТЬ",
+    "refresh-button": "ОБНОВИТЬ",
+    "copied": "Скопировано!",
+    "add-funds": "Пополнить баланс",
+    "status": {
+      "active": "Активен",
+      "expired": "Истек"
+    },
+    "tabs": {
+      "all": "Все",
+      "active": "Активные",
+      "expired": "Истекшие"
+    },
+    "proxy-details": {
+      "ip": "IP",
+      "port": "Порт",
+      "user": "Имя пользователя",
+      "password": "Пароль",
+      "country": "Страна",
+      "type": "Тип"
+    }
+  }
+}

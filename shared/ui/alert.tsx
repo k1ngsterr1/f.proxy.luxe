@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { EmailDTO } from "@/shared/interfaces/email.interface";
 import { sendEmailCode } from "@/entities/auth/api/post/send-email-code.api";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 type AlertType = "success" | "error" | "warning" | "info";
 
@@ -25,6 +26,7 @@ export const AlertMessage: React.FC<AlertMessageProps> = ({
   const [resendStatus, setResendStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
+  const t = useTranslations("alert.resend");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -102,12 +104,12 @@ export const AlertMessage: React.FC<AlertMessageProps> = ({
           }}
         >
           {resendStatus === "loading"
-            ? "Отправка..."
+            ? t("sending")
             : resendStatus === "success"
-            ? "Отправлено ✅"
+            ? t("sent")
             : resendStatus === "error"
-            ? "Ошибка 🔁"
-            : "Отправить снова"}
+            ? t("error")
+            : t("resend")}
         </button>
       )}
     </div>

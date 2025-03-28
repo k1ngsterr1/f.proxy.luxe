@@ -4,6 +4,7 @@ import { useGetPaymentHistory } from "@/entities/payments/hooks/queries/use-get-
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Loader,
   CheckCircle,
@@ -35,6 +36,8 @@ export default function PaymentsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false);
+
+  const t = useTranslations("personal-payments");
 
   useEffect(() => {
     console.log("data:", paymentsData, isUserLoading, isPaymentsLoading);
@@ -69,7 +72,7 @@ export default function PaymentsPage() {
           border: "rgba(76, 175, 80, 0.3)",
           color: "#4CAF50",
           icon: <CheckCircle size={14} />,
-          text: "Успешно",
+          text: t("status.success"),
         };
       case "pending":
       case "processing":
@@ -78,7 +81,7 @@ export default function PaymentsPage() {
           border: "rgba(255, 193, 7, 0.3)",
           color: "#FFC107",
           icon: <Clock size={14} />,
-          text: "В обработке",
+          text: t("status.pending"),
         };
       case "failed":
       case "error":
@@ -87,7 +90,7 @@ export default function PaymentsPage() {
           border: "rgba(255, 82, 82, 0.3)",
           color: "#FF5252",
           icon: <XCircle size={14} />,
-          text: "Ошибка",
+          text: t("status.failed"),
         };
       default:
         return {
@@ -132,7 +135,7 @@ export default function PaymentsPage() {
         <AlertMessage
           type="warning"
           isEmail
-          message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+          message={t("verify-email")}
         />
       )}
 
@@ -152,7 +155,7 @@ export default function PaymentsPage() {
             fontWeight: "bold",
           }}
         >
-          ПЛАТЕЖИ
+          {t("title")}
         </h1>
 
         <button
@@ -171,7 +174,7 @@ export default function PaymentsPage() {
             gap: "8px",
           }}
         >
-          Пополнить баланс
+          {t("add-funds")}
         </button>
       </div>
 
@@ -204,7 +207,7 @@ export default function PaymentsPage() {
           />
           <input
             type="text"
-            placeholder="Поиск платежей..."
+            placeholder={t("search-placeholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -238,7 +241,7 @@ export default function PaymentsPage() {
           }}
         >
           <Loader size={20} className="animate-spin" />
-          <span>Загрузка платежей...</span>
+          <span>{t("loading")}</span>
         </div>
       )}
 
@@ -255,16 +258,15 @@ export default function PaymentsPage() {
             border: "1px solid rgba(255, 82, 82, 0.2)",
           }}
         >
-          Ошибка при загрузке платежей:{" "}
-          {paymentsError.message || "Неизвестная ошибка"}
+          {t("error")} {paymentsError.message || t("unknown-error")}
         </div>
       )}
 
       {/* Payments Table */}
       {!isPaymentsLoading &&
-      !paymentsError &&
-      paymentsData &&
-      paymentsData.length > 0 ? (
+        !paymentsError &&
+        paymentsData &&
+        paymentsData.length > 0 ? (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -289,10 +291,10 @@ export default function PaymentsPage() {
                     textAlign: "left",
                   }}
                 >
-                  <th style={{ padding: "12px 16px" }}>ID</th>
-                  <th style={{ padding: "12px 16px" }}>Дата</th>
-                  <th style={{ padding: "12px 16px" }}>Сумма</th>
-                  <th style={{ padding: "12px 16px" }}>Статус</th>
+                  <th style={{ padding: "12px 16px" }}>{t("table.id")}</th>
+                  <th style={{ padding: "12px 16px" }}>{t("table.date")}</th>
+                  <th style={{ padding: "12px 16px" }}>{t("table.amount")}</th>
+                  <th style={{ padding: "12px 16px" }}>{t("table.status")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -364,8 +366,8 @@ export default function PaymentsPage() {
             }}
           >
             <div>
-              Показано {filteredPayments?.length} из {paymentsData?.length}{" "}
-              платежей
+              {t("showing")} {filteredPayments?.length} {t("of")} {paymentsData?.length}{" "}
+              {t("payments")}
             </div>
             {paymentsData?.total > paymentsData?.length && (
               <button
@@ -378,7 +380,7 @@ export default function PaymentsPage() {
                   textDecoration: "underline",
                 }}
               >
-                Загрузить еще
+                {t("load-more")}
               </button>
             )}
           </div>
@@ -397,7 +399,7 @@ export default function PaymentsPage() {
               border: "1px solid rgba(243, 214, 117, 0.2)",
             }}
           >
-            Ничего не найдено...
+            {t("empty")}
           </div>
         )
       )}

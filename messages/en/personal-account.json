@@ -1,0 +1,27 @@
+{
+  "personal-account": {
+    "title": "PERSONAL ACCOUNT",
+    "welcome": "Welcome to your personal account",
+    "sidebar": {
+      "balance": "Balance",
+      "navigation": "Navigation"
+    },
+    "overview": {
+      "active-orders": "Active Orders",
+      "active-proxies": "Active Proxies",
+      "total-spent": "Total Spent",
+      "account-created": "Account Created"
+    },
+    "actions": {
+      "add-funds": "ADD FUNDS",
+      "buy-proxy": "BUY PROXY",
+      "view-all": "VIEW ALL"
+    },
+    "verification": {
+      "email-verification": "Email Verification",
+      "verified": "Verified",
+      "not-verified": "Not Verified",
+      "verify-now": "Verify Now"
+    }
+  }
+}

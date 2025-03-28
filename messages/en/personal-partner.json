@@ -1,0 +1,59 @@
+{
+  "personal-partner": {
+    "title": "PARTNER PROGRAM",
+    "stats": {
+      "title": "Your Statistics",
+      "referrals": "Total Referrals",
+      "earnings": "Total Earnings",
+      "pending": "Pending Payouts",
+      "available": "Available for Withdrawal"
+    },
+    "referral": {
+      "title": "Your Referral Link",
+      "description": "Share this link with others to earn commission from their purchases",
+      "copy-button": "COPY LINK",
+      "copied": "Copied!"
+    },
+    "withdrawal": {
+      "title": "Request Withdrawal",
+      "amount": "Amount",
+      "amount-placeholder": "Enter amount",
+      "method": "Payment Method",
+      "address": "Payment Address",
+      "address-placeholder": "Enter payment address",
+      "submit-button": "REQUEST WITHDRAWAL",
+      "minimum-amount": "Minimum withdrawal amount is",
+      "success": "Withdrawal request submitted successfully",
+      "error": "Error submitting withdrawal request"
+    },
+    "history": {
+      "title": "Withdrawal History",
+      "table": {
+        "id": "ID",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "payment-method": "Payment Method"
+      },
+      "status": {
+        "pending": "Pending",
+        "completed": "Completed",
+        "rejected": "Rejected"
+      },
+      "empty": "No withdrawal history found...",
+      "loading": "Loading withdrawal history..."
+    },
+    "referrals": {
+      "title": "Your Referrals",
+      "table": {
+        "id": "ID",
+        "date": "Registration Date",
+        "user": "User",
+        "purchases": "Total Purchases",
+        "commission": "Your Commission"
+      },
+      "empty": "No referrals found...",
+      "loading": "Loading referrals..."
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "personal-payments": {
+    "title": "ПЛАТЕЖИ",
+    "balance": "Баланс",
+    "add-funds": "ПОПОЛНИТЬ",
+    "payment-history": "История платежей",
+    "verify-email": "Вам необходимо подтвердить свой email, нажав на ссылку в сообщении.",
+    "table": {
+      "id": "ID",
+      "date": "Дата",
+      "amount": "Сумма",
+      "status": "Статус",
+      "description": "Описание"
+    },
+    "status": {
+      "success": "Успешно",
+      "pending": "В обработке",
+      "failed": "Ошибка"
+    },
+    "loading": "Загрузка платежей...",
+    "error": "Ошибка загрузки платежей:",
+    "unknown-error": "Неизвестная ошибка",
+    "empty": "Ничего не найдено...",
+    "search-placeholder": "Поиск платежей...",
+    "showing": "Показано",
+    "of": "из",
+    "payments": "платежей",
+    "load-more": "Загрузить еще"
+  }
+}

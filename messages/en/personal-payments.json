@@ -1,0 +1,30 @@
+{
+  "personal-payments": {
+    "title": "PAYMENTS",
+    "balance": "Balance",
+    "add-funds": "ADD FUNDS",
+    "payment-history": "Payment History",
+    "verify-email": "You need to verify your email by clicking the link in the message.",
+    "table": {
+      "id": "ID",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "description": "Description"
+    },
+    "status": {
+      "success": "Success",
+      "pending": "Processing",
+      "failed": "Error"
+    },
+    "loading": "Loading payments...",
+    "error": "Error loading payments:",
+    "unknown-error": "Unknown error",
+    "empty": "Nothing found...",
+    "search-placeholder": "Search payments...",
+    "showing": "Showing",
+    "of": "of",
+    "payments": "payments",
+    "load-more": "Load more"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "personal-proxy": {
+    "title": "MY PROXIES",
+    "verify-email": "You need to verify your email by clicking the link in the message.",
+    "proxies-loading": "Loading proxies...",
+    "proxies-error": "Error loading proxies",
+    "proxies-unknown-error": "Unknown error",
+    "empty": "No proxies found...",
+    "days-left": "days left",
+    "expires": "Expires",
+    "copy-button": "COPY",
+    "refresh-button": "REFRESH",
+    "copied": "Copied!",
+    "add-funds": "Add funds",
+    "status": {
+      "active": "Active",
+      "expired": "Expired"
+    },
+    "tabs": {
+      "all": "All",
+      "active": "Active",
+      "expired": "Expired"
+    },
+    "proxy-details": {
+      "ip": "IP",
+      "port": "Port",
+      "user": "Username",
+      "password": "Password",
+      "country": "Country",
+      "type": "Type"
+    }
+  }
+}

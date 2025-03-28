@@ -8,8 +8,10 @@ import { AlertMessage } from "@/shared/ui/alert";
 import Link from "next/link";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useTranslations } from "next-intl";
 
 export default function ProxyPage() {
+  const t = useTranslations("personal-proxy");
   const [proxy, setProxy] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function ProxyPage() {
         <AlertMessage
           type="warning"
           isEmail
-          message="Вам необходимо подтвердить свой email введя код, указанной в письме."
+          message={t("verify-email")}
         />
       )}
       <div
@@ -61,7 +63,7 @@ export default function ProxyPage() {
             fontWeight: "bold",
           }}
         >
-          ПРОКСИ
+          {t("title")}
         </h1>
         <Link
           href="/personal-account"
@@ -74,7 +76,7 @@ export default function ProxyPage() {
             textDecoration: "none",
           }}
         >
-          Пополнение баланса
+          {t("add-funds")}
         </Link>
       </div>
       <div
@@ -123,7 +125,7 @@ export default function ProxyPage() {
           }}
         >
           <Loader2 size={20} className="animate-spin" />
-          Загрузка прокси...
+          {t("proxies-loading")}
         </div>
       )}
 
@@ -140,8 +142,8 @@ export default function ProxyPage() {
             border: "1px solid rgba(255, 82, 82, 0.2)",
           }}
         >
-          Ошибка при загрузке списка прокси:{" "}
-          {error?.message || "Неизвестная ошибка"}
+          {t("proxies-error")}:{" "}
+          {error?.message || t("proxies-unknown-error")}
         </div>
       )}
       {!isLoading &&
@@ -164,7 +166,7 @@ export default function ProxyPage() {
               border: "1px solid rgba(243, 214, 117, 0.2)",
             }}
           >
-            Ничего не найдено...
+            {t("empty")}
           </div>
         )
       )}
