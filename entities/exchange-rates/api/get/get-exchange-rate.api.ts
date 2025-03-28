@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "d03c0baa50128a51bb904a7b";
+const API_KEY = "889cd0978fbd160830386605";
 const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/USD`;
 
 export const getExchangeRate = async (): Promise<number | null> => {
