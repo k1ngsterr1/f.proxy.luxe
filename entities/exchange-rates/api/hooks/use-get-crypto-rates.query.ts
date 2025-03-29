@@ -21,7 +21,6 @@ export const useExchangeRates = () => {
         LTC: cryptoRates?.litecoin ? cryptoRates.litecoin.usd.toFixed(2) : "0",
       };
     },
-    staleTime: 60 * 1000, // Cache for 1 minute
-    refetchInterval: 30 * 1000, // Auto-refresh every 30 sec
+    staleTime: 6000 * 1000, // Cache for 1 minute
   });
 };

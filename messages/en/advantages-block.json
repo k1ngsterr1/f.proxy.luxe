@@ -28,8 +28,8 @@
         "altText": "Protocol switching"
       },
       "flexiblePurchases": {
-        "title": "PURCHASE FROM 1 IP",
-        "description": "You can buy even one proxy - quantity doesn't matter.",
+        "title": "PURCHASE FROM ISP 1 IP",
+        "description": "You can buy even one ISP proxy - quantity doesn't matter.",
         "altText": "Flexible purchases"
       },
       "periods": {

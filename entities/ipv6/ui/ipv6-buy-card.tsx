@@ -101,11 +101,7 @@ export const IPV6BuyCard = () => {
           disabled={isLoadingPreferences}
           style={selectStyle}
         >
-          {preferences?.ipv6?.period.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
+          <option> {i18n("month")}</option>
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>

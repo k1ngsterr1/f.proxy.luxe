@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { EmailDTO } from "@/shared/interfaces/email.interface";
 import { sendEmailCode } from "@/entities/auth/api/post/send-email-code.api";

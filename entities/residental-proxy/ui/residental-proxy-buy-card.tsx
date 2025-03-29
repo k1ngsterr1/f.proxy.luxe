@@ -100,6 +100,29 @@ export const ResidentalProxyBuyCard = () => {
             marginTop: 16,
           }}
         >
+          {i18n("country")}
+        </h4>
+        <select
+          className="buy-item__select"
+          style={{
+            backgroundColor: "#1E1E1E",
+            color: "#fff",
+            border: "1px solid #3E3E3E",
+            padding: "10px",
+            width: "100%",
+            borderRadius: "5px",
+            appearance: "none",
+            cursor: "pointer",
+          }}
+        >
+          <option value="1">{i18n("option")}</option>
+        </select>
+        <h4
+          className="buy-item__subheader"
+          style={{
+            marginTop: 16,
+          }}
+        >
           {i18n("quantity")}
         </h4>
         <select
