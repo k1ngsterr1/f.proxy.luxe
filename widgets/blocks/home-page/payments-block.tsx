@@ -91,7 +91,8 @@ export const PaymentMethodsBlock = () => {
               marginBottom: "16px",
             }}
           >
-            {t("title.first")} <span style={{ color: "#f3d675" }}>{t("title.second")}</span>
+            {t("title.first")}{" "}
+            <span style={{ color: "#f3d675" }}>{t("title.second")}</span>
           </motion.h2>
 
           <motion.p
@@ -108,8 +109,6 @@ export const PaymentMethodsBlock = () => {
           >
             {t("description")}
           </motion.p>
-
-          {/* Payment methods grid */}
           <div
             style={{
               display: "grid",
@@ -131,10 +130,11 @@ export const PaymentMethodsBlock = () => {
                       ? "rgba(243, 214, 117, 0.15)"
                       : "rgba(243, 214, 117, 0.05)",
                   borderRadius: "8px",
-                  border: `1px solid ${selectedMethod === method.id
-                    ? "rgba(243, 214, 117, 0.5)"
-                    : "rgba(243, 214, 117, 0.1)"
-                    }`,
+                  border: `1px solid ${
+                    selectedMethod === method.id
+                      ? "rgba(243, 214, 117, 0.5)"
+                      : "rgba(243, 214, 117, 0.1)"
+                  }`,
                   padding: "20px",
                   cursor: "pointer",
                   transition: "all 0.3s ease",
@@ -149,7 +149,6 @@ export const PaymentMethodsBlock = () => {
                     "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 10px 0 rgba(243, 214, 117, 0.1)",
                 }}
               >
-                {/* @ts-ignore */}
                 {method.popular && (
                   <div
                     style={{

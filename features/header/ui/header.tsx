@@ -24,8 +24,17 @@ export const Header: FC = () => {
 
   const getPathForLocale = (targetLocale: string) => {
     const segments = pathname.split("/");
-    segments[1] = targetLocale;
-    return segments.join("/");
+
+    // Если текущий путь начинается с /en или /ru — заменяем
+    const supportedLocales = ["en", "ru"];
+    if (supportedLocales.includes(segments[1])) {
+      segments[1] = targetLocale;
+    } else {
+      // если нет локали — добавляем её в начало
+      segments.unshift(targetLocale);
+    }
+
+    return segments.join("/") || "/";
   };
 
   return (
