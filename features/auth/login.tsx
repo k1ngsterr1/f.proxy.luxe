@@ -64,7 +64,7 @@ export const LoginAuthForm = () => {
             type="email"
             name="email"
             className="auth-inp auth-mail"
-            placeholder="E-mail"
+            placeholder={i18n("auth.email.placeholder")}
             style={errors.email ? { border: "2px solid red" } : {}}
           />
           <div
@@ -90,7 +90,7 @@ export const LoginAuthForm = () => {
             type="password"
             name="password"
             className="auth-inp auth-pass"
-            placeholder="Password"
+            placeholder={i18n("auth.password.placeholder")}
             style={errors.password ? { border: "2px solid red" } : {}}
           />
           <ErrorMessage name="password">

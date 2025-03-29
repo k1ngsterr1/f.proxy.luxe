@@ -5,7 +5,7 @@ import type React from "react";
 
 export interface Article {
   id: string | number;
-  imageUrl: string;
+  images: string[];
   imageAlt?: string;
   title: string;
   date: string;
@@ -37,8 +37,8 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({
       {articles.map((article) => (
         <ArticleCard
           key={article.id}
-          imageUrl={article.imageUrl}
-          imageAlt={article.imageAlt}
+          imageUrl={(article?.images && article.images.length > 0) ? article.images[0] : "/placeholder.svg"}
+          imageAlt={article?.imageAlt}
           title={article.title}
           date={article.date}
           summary={article.summary}

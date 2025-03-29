@@ -59,7 +59,7 @@ export const HomeSlider: FC = () => {
             <h3 className="imain-subheader">{i18n("subheader")}</h3>
             <div className="imain-table">
               <p
-                className="imain-count"
+                className="imain-count text-2xl"
                 style={{
                   width: "60%",
                   textAlign: "left",
@@ -69,12 +69,22 @@ export const HomeSlider: FC = () => {
                 {i18n("main")}
               </p>
             </div>
+            <p
+              className="imain-count"
+              style={{
+                width: "60%",
+                textAlign: "left",
+                textDecoration: "upperCase",
+              }}
+            >
+              {i18n("main2")}
+            </p>
           </div>
           <div className="imain-slide">
             <h2 className="imain-header">{i18n("header")}</h2>
             <p className="imain-text">{i18n("text")}</p>
             <h3 className="imain-subheader">{i18n("subheader")}</h3>
-            <div className="imain-table">
+            <div className="imain-table flex flex-col">
               <p
                 className="imain-count"
                 style={{
@@ -86,6 +96,16 @@ export const HomeSlider: FC = () => {
                 {i18n("main")}
               </p>
             </div>
+            <p
+              className="imain-count"
+              style={{
+                width: "60%",
+                textAlign: "left",
+                textDecoration: "upperCase",
+              }}
+            >
+              {i18n("main2")}
+            </p>
           </div>
         </Slider>
         <div className="imain-status">
