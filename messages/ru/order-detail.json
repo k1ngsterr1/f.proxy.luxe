@@ -1,0 +1,34 @@
+{
+  "order-detail": {
+    "title": "ЗАКАЗЫ",
+    "loading": "Загрузка информации о заказе...",
+    "error": "Ошибка при загрузке заказа: ",
+    "unknown-error": "Неизвестная ошибка",
+    "table": {
+      "order-number": "Номер заказа:",
+      "order-date": "Дата заказа:",
+      "order-type": "Тип заказа:",
+      "ip-quantity": "Кол-во IP:",
+      "days-quantity": "Кол-во дней:",
+      "order-amount": "Сумма заказа:",
+      "discount-coupon": "Купон на скидку:",
+      "purchase": "Покупка"
+    },
+    "coupon": {
+      "placeholder": "Купон на скидку",
+      "apply": "Применить"
+    },
+    "proxy-type": {
+      "label": "Тип прокси можно будет изменить в личном кабинете после покупки.",
+      "http": "HTTP(s)",
+      "socks5": "SOCKS5"
+    },
+    "buttons": {
+      "pay": "Оплатить",
+      "delete": "Удалить",
+      "loading": "Загрузка...",
+      "deleting": "Удаление..."
+    },
+    "confirm-delete": "Вы уверены, что хотите удалить этот заказ?"
+  }
+}
