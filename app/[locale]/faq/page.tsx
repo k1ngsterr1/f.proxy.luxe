@@ -425,7 +425,6 @@ export default function Faq() {
                   </li>
                 ))}
             </ul>
-
             <ul
               style={{
                 listStyle: "none",
@@ -481,8 +480,6 @@ export default function Faq() {
                 ))}
             </ul>
           </div>
-
-          {/* FAQ Content */}
           <div
             id="faq-content"
             ref={faqContentRef}
@@ -565,8 +562,6 @@ export default function Faq() {
               </div>
             ))}
           </div>
-
-          {/* Contact Support */}
           <div
             style={{
               marginTop: "40px",

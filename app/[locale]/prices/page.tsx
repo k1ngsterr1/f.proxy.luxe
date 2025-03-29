@@ -29,56 +29,6 @@ export default function Prices() {
           padding: "0 1.5rem",
         }}
       >
-        {/* Header with gold accent */}
-        <h1
-          style={{
-            fontSize: "2.5rem",
-            fontWeight: "700",
-            textAlign: "center",
-            margin: "2rem 0 3rem",
-            position: "relative",
-            color: "#ffffff",
-          }}
-        >
-          <span
-            style={{
-              position: "relative",
-              display: "inline-block",
-              zIndex: "1",
-            }}
-          >
-            {i18n("header")}
-            <span
-              style={{
-                position: "absolute",
-                height: "12px",
-                background:
-                  "linear-gradient(90deg, rgba(212,175,55,0.7) 0%, rgba(212,175,55,0.9) 50%, rgba(212,175,55,0.7) 100%)",
-                width: "100%",
-                bottom: "-4px",
-                left: "0",
-                zIndex: "-1",
-                borderRadius: "6px",
-              }}
-            ></span>
-          </span>
-        </h1>
-
-        {/* Description with improved typography */}
-        <p
-          style={{
-            fontSize: "1.1rem",
-            lineHeight: "1.6",
-            textAlign: "center",
-            maxWidth: "800px",
-            margin: "0 auto 3rem",
-            color: "#d0d0d0",
-          }}
-        >
-          {i18n("description.line1")} <br />
-          {i18n("description.line2")}
-        </p>
-
         {/* Animated banner */}
         <div
           style={{
@@ -637,7 +587,7 @@ export default function Prices() {
                   color: "#d0d0d0",
                 }}
               >
-                {i18n("ipRange.1-9")}
+                ∞
               </div>
               <div
                 style={{
@@ -774,7 +724,7 @@ export default function Prices() {
                   color: "#d0d0d0",
                 }}
               >
-                {i18n("ipRange.1-9")}
+                ∞
               </div>
               <div
                 style={{
@@ -793,143 +743,143 @@ export default function Prices() {
                     transition: "all 0.3s ease",
                   }}
                 >
-                  {i18n("priceValues.ipv4shared.1month")}    </div>
+                  {i18n("priceValues.ipv4shared.1month")}{" "}
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2
+            style={{
+              fontSize: "1.8rem",
+              fontWeight: "600",
+              textAlign: "center",
+              marginBottom: "2rem",
+              position: "relative",
+              display: "inline-block",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <span
+              style={{
+                color: "#d4af37",
+                fontWeight: "300",
+                marginRight: "0.5rem",
+              }}
+            >
+              {i18n("ipv4shared.headerPrefix")}
+            </span>
+            {i18n("ipv4shared.header")}
+            <span
+              style={{
+                position: "absolute",
+                height: "2px",
+                background:
+                  "linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,1) 50%, rgba(212,175,55,0) 100%)",
+                width: "120%",
+                bottom: "-10px",
+                left: "-10%",
+              }}
+            ></span>
+          </h2>
+
+          <div
+            style={{
+              backgroundColor: "rgba(20, 20, 20, 0.8)",
+              borderRadius: "10px",
+              overflow: "hidden",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+              border: "1px solid rgba(212,175,55,0.2)",
+              marginBottom: "3rem",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 2fr",
+                backgroundColor: "#1a1a1a",
+                borderBottom: "1px solid rgba(212,175,55,0.2)",
+                padding: "1rem 0",
+              }}
+            >
+              <div
+                style={{
+                  padding: "0.8rem 1.5rem",
+                  fontWeight: "600",
+                  color: "#d4af37",
+                }}
+              >
+                {i18n("tableHeaders.country")}
+              </div>
+              <div
+                style={{
+                  padding: "0.8rem 1.5rem",
+                  fontWeight: "600",
+                  color: "#d4af37",
+                }}
+              >
+                {i18n("tableHeaders.ipCount")}
+              </div>
+              <div
+                style={{
+                  padding: "0.8rem 1.5rem",
+                  fontWeight: "600",
+                  color: "#d4af37",
+                }}
+              >
+                {i18n("tableHeaders.singleIpCost")}
               </div>
             </div>
 
-            <h2
-              style={{
-                fontSize: "1.8rem",
-                fontWeight: "600",
-                textAlign: "center",
-                marginBottom: "2rem",
-                position: "relative",
-                display: "inline-block",
-                left: "50%",
-                transform: "translateX(-50%)",
-              }}
-            >
-              <span
-                style={{
-                  color: "#d4af37",
-                  fontWeight: "300",
-                  marginRight: "0.5rem",
-                }}
-              >
-                {i18n("ipv4shared.headerPrefix")}
-              </span>
-              {i18n("ipv4shared.header")}
-              <span
-                style={{
-                  position: "absolute",
-                  height: "2px",
-                  background:
-                    "linear-gradient(90deg, rgba(212,175,55,0) 0%, rgba(212,175,55,1) 50%, rgba(212,175,55,0) 100%)",
-                  width: "120%",
-                  bottom: "-10px",
-                  left: "-10%",
-                }}
-              ></span>
-            </h2>
-
             <div
               style={{
-                backgroundColor: "rgba(20, 20, 20, 0.8)",
-                borderRadius: "10px",
-                overflow: "hidden",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-                border: "1px solid rgba(212,175,55,0.2)",
-                marginBottom: "3rem",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 2fr",
+                backgroundColor: "transparent",
+                borderBottom: "1px solid rgba(255,255,255,0.05)",
               }}
             >
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 2fr",
-                  backgroundColor: "#1a1a1a",
-                  borderBottom: "1px solid rgba(212,175,55,0.2)",
-                  padding: "1rem 0",
+                  padding: "0.8rem 1.5rem",
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                <div
-                  style={{
-                    padding: "0.8rem 1.5rem",
-                    fontWeight: "600",
-                    color: "#d4af37",
-                  }}
-                >
-                  {i18n("tableHeaders.country")}
-                </div>
-                <div
-                  style={{
-                    padding: "0.8rem 1.5rem",
-                    fontWeight: "600",
-                    color: "#d4af37",
-                  }}
-                >
-                  {i18n("tableHeaders.ipCount")}
-                </div>
-                <div
-                  style={{
-                    padding: "0.8rem 1.5rem",
-                    fontWeight: "600",
-                    color: "#d4af37",
-                  }}
-                >
-                  {i18n("tableHeaders.singleIpCost")}
-                </div>
+                <Image
+                  src={Flags || "/placeholder.svg"}
+                  alt="Country flags"
+                  width={400}
+                  height={20}
+                  style={{ marginRight: "0.5rem", borderRadius: "3px" }}
+                />
               </div>
-
               <div
                 style={{
+                  padding: "0.8rem 1.5rem",
+                  color: "#d0d0d0",
+                }}
+              >
+                ∞
+              </div>
+              <div
+                style={{
+                  padding: "0.8rem 1.5rem",
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr 2fr",
-                  backgroundColor: "transparent",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gap: "0.5rem",
                 }}
               >
                 <div
                   style={{
-                    padding: "0.8rem 1.5rem",
-                    display: "flex",
-                    alignItems: "center",
+                    padding: "0.5rem",
+                    backgroundColor: "rgba(212,175,55,0.1)",
+                    borderRadius: "5px",
+                    textAlign: "center",
+                    transition: "all 0.3s ease",
                   }}
                 >
-                  <Image
-                    src={Flags || "/placeholder.svg"}
-                    alt="Country flags"
-                    width={400}
-                    height={20}
-                    style={{ marginRight: "0.5rem", borderRadius: "3px" }}
-                  />
-                </div>
-                <div
-                  style={{
-                    padding: "0.8rem 1.5rem",
-                    color: "#d0d0d0",
-                  }}
-                >
-                  {i18n("ipRange.1-9")}
-                </div>
-                <div
-                  style={{
-                    padding: "0.8rem 1.5rem",
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "0.5rem",
-                      backgroundColor: "rgba(212,175,55,0.1)",
-                      borderRadius: "5px",
-                      textAlign: "center",
-                      transition: "all 0.3s ease",
-                    }}
-                  >
-                    {i18n("priceValues.ipv4shared.1month")}
-                  </div>
+                  {i18n("priceValues.ipv4shared.1month")}
                 </div>
               </div>
             </div>

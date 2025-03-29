@@ -41,11 +41,11 @@
       "header": "PROXY"
     },
     "ipv4": {
-      "headerPrefix": "IPv4",
+      "headerPrefix": "ISP IPv4",
       "header": "PROXY"
     },
     "ipv4shared": {
-      "headerPrefix": "IPv4 SHARED",
+      "headerPrefix": "RESIDENTAL",
       "header": "PROXY"
     },
     "tableHeaders": {

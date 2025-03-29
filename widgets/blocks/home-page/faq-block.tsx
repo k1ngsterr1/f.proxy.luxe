@@ -62,7 +62,7 @@ export const FaqBlock = () => {
               <span>{i18n("chat.label")}</span>
             </button>
             <a
-              href={`mailto:${i18n("email.address")}`}
+              href={`mailto:admin@proxy.luxe`}
               className="question-mail question-link"
             >
               <span className="img-wrap">

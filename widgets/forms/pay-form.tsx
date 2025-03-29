@@ -147,7 +147,7 @@ export const PayForm = () => {
             { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
             { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
             { id: "dogecoin", img: DogeCoin, text: "DOGECOIN (DOGE)" },
-            { id: "payeer", img: Payer, text: "PAYER" },
+            { id: "payeer", img: Payer, text: "PAYEER" },
             { id: "enot", img: Enot, text: "ENOT.IO" },
           ].map((method) => (
             <label key={method.id} className="method">

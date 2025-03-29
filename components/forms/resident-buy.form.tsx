@@ -58,6 +58,13 @@ export const ResidentBuyForm: FC<ResidentBuyFormProps> = ({
         onChange={countryAmountHandler}
         placeholder="Укажите колличество"
       />
+      <h4 className="buy-item__subheader">Кол-во</h4>
+      <Select
+        options={amounts}
+        value={amount}
+        onChange={countryAmountHandler}
+        placeholder="Укажите колличество"
+      />
       <h4 className="buy-item__subheader">Тарифный план(Gb)</h4>
       <Select
         options={tariffs}
