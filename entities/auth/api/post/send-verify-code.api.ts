@@ -4,6 +4,7 @@ import { SendVerifyCodeDTO } from "@/shared/interfaces/email.interface";
 
 export const sendVerifyCode = async (data: SendVerifyCodeDTO) => {
   try {
+    console.log(data);
     const response = await apiClient.post("/api/v1/user/verify", data);
     return response.data;
   } catch (error) {

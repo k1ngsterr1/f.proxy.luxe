@@ -166,7 +166,8 @@ export const VerificationForm = () => {
             </>
           ) : (
             <>
-              {i18n("confirmButton")} <ArrowRight size={16} style={{ marginLeft: "8px" }} />
+              {i18n("confirmButton")}{" "}
+              <ArrowRight size={16} style={{ marginLeft: "8px" }} />
             </>
           )}
         </button>

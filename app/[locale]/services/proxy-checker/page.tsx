@@ -16,8 +16,8 @@ import { useTranslations } from "next-intl";
 interface ProxyResult {
   ip: string;
   port: number;
-  isActive: boolean;
-  protocol: string;
+  status: string;
+  type: string;
   country?: string;
   anonymityLevel?: string;
   supportsIPv6?: boolean;
@@ -71,7 +71,7 @@ export default function ProxyCheckerPage() {
   };
 
   // Calculate stats
-  const activeProxies = results.filter((r) => r.isActive).length;
+  const activeProxies = results.filter((r) => r.status === "valid").length;
   const totalProxies = results.length;
   const successRate =
     totalProxies > 0 ? Math.round((activeProxies / totalProxies) * 100) : 0;
@@ -106,8 +106,7 @@ export default function ProxyCheckerPage() {
               color: "#CCCCCC",
             }}
           >
-            {i18n("description.line1")}{" "}
-            {!isMobile && <br />}
+            {i18n("description.line1")} {!isMobile && <br />}
             {i18n("description.line2")}
           </p>
 
@@ -368,7 +367,8 @@ export default function ProxyCheckerPage() {
                   >
                     <XCircle size={16} color="#FF5252" />
                     <span style={{ color: "#FFFFFF", fontSize: "14px" }}>
-                      {totalProxies - activeProxies} {i18n("results.inactiveCount")}
+                      {totalProxies - activeProxies}{" "}
+                      {i18n("results.inactiveCount")}
                     </span>
                   </div>
                   <div
@@ -414,18 +414,26 @@ export default function ProxyCheckerPage() {
                         {i18n("results.status")}
                       </th>
                       {!isMobile && (
-                        <th style={{ padding: "12px 16px" }}>{i18n("results.protocol")}</th>
+                        <th style={{ padding: "12px 16px" }}>
+                          {i18n("results.protocol")}
+                        </th>
                       )}
                       {checkLocation && !isMobile && (
-                        <th style={{ padding: "12px 16px" }}>{i18n("results.country")}</th>
+                        <th style={{ padding: "12px 16px" }}>
+                          {i18n("results.country")}
+                        </th>
                       )}
                       {!isMobile && (
-                        <th style={{ padding: "12px 16px" }}>{i18n("results.responseTime")}</th>
+                        <th style={{ padding: "12px 16px" }}>
+                          {i18n("results.responseTime")}
+                        </th>
                       )}
                       <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
-                        {isMobile ? i18n("results.details") : i18n("results.additional")}
+                        {isMobile
+                          ? i18n("results.details")
+                          : i18n("results.additional")}
                       </th>
                     </tr>
                   </thead>
@@ -450,7 +458,9 @@ export default function ProxyCheckerPage() {
                             fontSize: isMobile ? "11px" : "14px",
                           }}
                         >
-                          {result.ip}:{result.port}
+                          {result.status === "valid"
+                            ? `${result.ip}:${result.port}`
+                            : "-"}
                         </td>
                         <td
                           style={{
@@ -466,28 +476,35 @@ export default function ProxyCheckerPage() {
                               borderRadius: "4px",
                               fontSize: isMobile ? "10px" : "12px",
                               fontWeight: "500",
-                              backgroundColor: result.isActive
-                                ? "rgba(76, 175, 80, 0.1)"
-                                : "rgba(255, 82, 82, 0.1)",
-                              color: result.isActive ? "#4CAF50" : "#FF5252",
-                              border: result.isActive
-                                ? "1px solid rgba(76, 175, 80, 0.3)"
-                                : "1px solid rgba(255, 82, 82, 0.3)",
+                              backgroundColor:
+                                result.status === "valid"
+                                  ? "rgba(76, 175, 80, 0.1)"
+                                  : "rgba(255, 82, 82, 0.1)",
+                              color:
+                                result.status === "valid"
+                                  ? "#4CAF50"
+                                  : "#FF5252",
+                              border:
+                                result.status === "valid"
+                                  ? "1px solid rgba(76, 175, 80, 0.3)"
+                                  : "1px solid rgba(255, 82, 82, 0.3)",
                             }}
                           >
-                            {result.isActive ? (
+                            {result.status === "valid" ? (
                               <CheckCircle size={isMobile ? 10 : 12} />
                             ) : (
                               <XCircle size={isMobile ? 10 : 12} />
                             )}
-                            {result.isActive ? i18n("results.active") : i18n("results.inactive")}
+                            {result.status === "valid"
+                              ? i18n("results.active")
+                              : i18n("results.inactive")}
                           </div>
                         </td>
                         {!isMobile && (
                           <td
                             style={{ padding: "12px 16px", color: "#FFFFFF" }}
                           >
-                            {result.protocol || "—"}
+                            {result.type || "—"}
                           </td>
                         )}
                         {checkLocation && !isMobile && (
@@ -528,7 +545,7 @@ export default function ProxyCheckerPage() {
                         >
                           {isMobile ? (
                             <div style={{ fontSize: "11px", color: "#CCCCCC" }}>
-                              {result.protocol && <div>{result.protocol}</div>}
+                              {result.type && <div>{result.type}</div>}
                               {result.country && checkLocation && (
                                 <div
                                   style={{
@@ -542,7 +559,9 @@ export default function ProxyCheckerPage() {
                                 </div>
                               )}
                               {result.responseTime && (
-                                <div>{result.responseTime} {i18n("results.ms")}</div>
+                                <div>
+                                  {result.responseTime} {i18n("results.ms")}
+                                </div>
                               )}
                             </div>
                           ) : result.error ? (

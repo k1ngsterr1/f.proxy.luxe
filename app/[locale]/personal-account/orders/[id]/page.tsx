@@ -42,12 +42,15 @@ export default function OrderDetailPage() {
   };
 
   const handleContinue = () => {
-    finishOrder(orderId, {
-      onSuccess: (order: any) => {
-        localStorage.setItem("proxyType", order.type);
-        navigate.push(`/personal-account/proxy`);
-      },
-    });
+    finishOrder(
+      { orderId: orderId, promocode: couponCode },
+      {
+        onSuccess: (order: any) => {
+          localStorage.setItem("proxyType", order.type);
+          navigate.push(`/personal-account/proxy`);
+        },
+      }
+    );
   };
 
   const formatDate = (dateString: string) => {

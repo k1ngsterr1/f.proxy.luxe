@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import ProxyList, { Props as ProxyListProps } from "@/entities/proxy/ui/proxy-list/proxy-list";
+import ProxyList, {
+  Props as ProxyListProps,
+} from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies.queries";
 import { Proxy as ApiProxy } from "@/entities/proxy/api/get/get-all-proxies.api";
 import { AlertMessage } from "@/shared/ui/alert";
@@ -42,11 +44,7 @@ export default function ProxyPage() {
       }}
     >
       {data?.isVerified === false && (
-        <AlertMessage
-          type="warning"
-          isEmail
-          message={t("verify-email")}
-        />
+        <AlertMessage type="warning" isEmail message={t("verify-email")} />
       )}
       <div
         style={{
@@ -143,8 +141,7 @@ export default function ProxyPage() {
             border: "1px solid rgba(255, 82, 82, 0.2)",
           }}
         >
-          {t("proxies-error")}:{" "}
-          {error?.message || t("proxies-unknown-error")}
+          {t("proxies-error")}: {error?.message || t("proxies-unknown-error")}
         </div>
       )}
       {!isLoading &&
@@ -152,11 +149,14 @@ export default function ProxyPage() {
       proxies?.data?.items &&
       Array.isArray(proxies.data.items) &&
       proxies.data.items.length > 0 ? (
-        <ProxyList proxies={proxies.data.items.map((proxy: ApiProxy) => ({
-          ...proxy,
-          login: "", // Default empty login since API Proxy doesn't have login
-          password: "" // Default empty password since API Proxy doesn't have password
-        }))}/>
+        <ProxyList
+          proxies={proxies.data.items.map((proxy: ApiProxy) => ({
+            ...proxy,
+            type: proxyType,
+            login: proxy.login ? proxy.login : "", // Default empty login since API Proxy doesn't have login
+            password: proxy.password ? proxy.password : "", // Default empty password since API Proxy doesn't have password
+          }))}
+        />
       ) : (
         !isLoading &&
         !isError && (

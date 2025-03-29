@@ -7,6 +7,8 @@ import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
 interface Proxy {
   id: string;
   ip: string;
+  type: string;
+  ports: number[];
   protocol: string;
   port_http: number | string;
   port_socks: number | string;
@@ -38,7 +40,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       border: "1px solid",
     };
 
-    switch (protocol.toLowerCase()) {
+    switch (protocol?.toLowerCase()) {
       case "http":
         return {
           ...baseStyle,
@@ -88,7 +90,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       in: "🇮🇳",
     };
 
-    const code = countryCode.toLowerCase();
+    const code = countryCode?.toLowerCase();
     return countries[code] || "🌐";
   };
 
@@ -99,18 +101,29 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     let content = "#Proxy\n";
 
     proxies.forEach((proxy) => {
-      const ip = proxy.ip;
-      const port = proxy.port_http || proxy.port_socks || "-";
       const login = proxy.login || "user";
       const password = proxy.password || "pass";
 
-      // Format 1
-      content += "#1: IP:PORT:LOGIN:PASSWORD\n";
-      content += `${ip}:${port}:${login}:${password}\n\n`;
+      if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
+        proxy.ports.forEach((port: number | string) => {
+          const ip = "res.proxy-seller.com";
 
-      // Format 2
-      content += "#2: LOGIN:PASSWORD@IP:PORT\n";
-      content += `${login}:${password}@${ip}:${port}\n`;
+          content += "#1: IP:PORT:LOGIN:PASSWORD\n";
+          content += `@${ip}:${port}:${login}:${password}\n\n`;
+
+          content += "#2: LOGIN:PASSWORD@IP:PORT\n";
+          content += `${login}:${password}@${ip}:${port}\n\n`;
+        });
+      } else {
+        const ip = proxy.ip;
+        const port = proxy.port_http || proxy.port_socks || "-";
+
+        content += "#1: IP:PORT:LOGIN:PASSWORD\n";
+        content += `${ip}:${port}:${login}:${password}\n\n`;
+
+        content += "#2: LOGIN:PASSWORD@IP:PORT\n";
+        content += `${login}:${password}@${ip}:${port}\n\n`;
+      }
 
       content += "\n";
     });
@@ -130,21 +143,39 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
   const exportToJson = () => {
     if (!proxies || proxies.length === 0) return;
 
-    const enhancedProxies = proxies.map((proxy) => {
-      const ip = proxy.ip;
-      const port = proxy.port_http || proxy.port_socks || "-";
+    const enhancedProxies = proxies.flatMap((proxy) => {
       const login = proxy.login || "user";
       const password = proxy.password || "pass";
 
-      return {
-        ...proxy,
-        format1: `${ip}:${port}:${login}:${password}`,
-        format2: `${login}:${password}@${ip}:${port}`,
-      };
+      if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
+        return proxy.ports.map((port: number | string) => {
+          const ip = "res.proxy-seller.com";
+          return {
+            ...proxy,
+            ip,
+            port,
+            format1: `@${ip}:${port}:${login}:${password}`,
+            format2: `${login}:${password}@${ip}:${port}`,
+          };
+        });
+      } else {
+        const ip = proxy.ip;
+        const port = proxy.port_http || proxy.port_socks || "-";
+        return [
+          {
+            ...proxy,
+            ip,
+            port,
+            format1: `${ip}:${port}:${login}:${password}`,
+            format2: `${login}:${password}@${ip}:${port}`,
+          },
+        ];
+      }
     });
 
-    const content = JSON.stringify(enhancedProxies, null, 2);
-    const blob = new Blob([content], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(enhancedProxies, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -531,7 +562,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                   <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
                   <td style={tableCellStyle}>
                     <span style={getProtocolStyles(proxy.protocol)}>
-                      {proxy.protocol.toUpperCase()}
+                      {proxy.protocol?.toUpperCase()}
                     </span>
                   </td>
                   <td style={tableCellMonoStyle}>{proxy.port_http || "—"}</td>

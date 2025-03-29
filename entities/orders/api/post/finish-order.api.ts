@@ -5,7 +5,8 @@ import { FinishOrderDTO } from "@/shared/interfaces/order.interface";
 export const finishOrder = async (data: FinishOrderDTO): Promise<any> => {
   try {
     const response = await apiClient.post("/api/v1/orders/finish", {
-      orderId: data,
+      orderId: data.orderId,
+      promocode: data.promocode,
     });
 
     return response.data;

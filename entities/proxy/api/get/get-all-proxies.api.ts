@@ -4,10 +4,14 @@ import axios from "axios";
 export interface Proxy {
   id: string;
   ip: string;
+  type: string;
+  ports: number[];
   protocol: string;
   port_socks: number;
   port_http: number;
   country: string;
+  login: string;
+  password: string;
 }
 
 export interface ProxyListResponse {
