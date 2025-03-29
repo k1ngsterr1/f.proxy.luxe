@@ -60,6 +60,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ...(await import(`../messages/${locale}/personal-account.json`)),
       ...(await import(`../messages/${locale}/personal-announcements.json`)),
       ...(await import(`../messages/${locale}/alert.json`)),
+      ...(await import(`../messages/${locale}/order-detail.json`)),
     },
   };
 });

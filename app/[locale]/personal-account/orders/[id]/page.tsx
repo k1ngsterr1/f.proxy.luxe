@@ -10,8 +10,11 @@ import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { Button } from "@/shared/ui/button";
 import { useDeleteOrder } from "@/entities/orders/hooks/mutation/use-delete-order.mutation";
+import { useTranslations } from "next-intl";
 
 export default function OrderDetailPage() {
+  const t = useTranslations("order-detail");
+  const alertT = useTranslations("alert");
   const { id } = useParams();
   const orderId = Array.isArray(id) ? id[0] : id;
   const {
@@ -29,7 +32,7 @@ export default function OrderDetailPage() {
   const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
 
   const handleDelete = () => {
-    if (confirm("Вы уверены, что хотите удалить этот заказ?")) {
+    if (confirm(t("confirm-delete"))) {
       deleteOrder(orderId as string, {
         onSuccess: () => navigate.push("/personal-account/orders"),
       });
@@ -71,7 +74,7 @@ export default function OrderDetailPage() {
         <AlertMessage
           type="warning"
           isEmail
-          message="Вам необходимо подтвердить свой email перейдя по ссылке, указанной в письме."
+          message={alertT("verify-email")}
         />
       )}
       <div
@@ -90,7 +93,7 @@ export default function OrderDetailPage() {
             textDecoration: "none",
           }}
         >
-          ЗАКАЗЫ
+          {t("title")}
         </Link>
         <ChevronRight
           size={24}
@@ -123,7 +126,7 @@ export default function OrderDetailPage() {
           }}
         >
           <Loader2 size={20} className="animate-spin" />
-          Загрузка информации о заказе...
+          {t("loading")}
         </div>
       )}
       {isError && (
@@ -138,7 +141,7 @@ export default function OrderDetailPage() {
             border: "1px solid rgba(255, 82, 82, 0.2)",
           }}
         >
-          Ошибка при загрузке заказа: {error?.message || "Неизвестная ошибка"}
+          {t("error")} {error?.message || t("unknown-error")}
         </div>
       )}
       {!isLoading && !isError && order && (
@@ -168,7 +171,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Номер заказа:
+                  {t("table.order-number")}
                 </td>
                 <td
                   style={{
@@ -189,7 +192,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Дата заказа:
+                  {t("table.order-date")}
                 </td>
                 <td
                   style={{
@@ -210,7 +213,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Тип заказа:
+                  {t("table.order-type")}
                 </td>
                 <td
                   style={{
@@ -219,7 +222,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Покупка
+                  {t("table.purchase")}
                 </td>
               </tr>
               <tr>
@@ -231,7 +234,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Кол-во IP:
+                  {t("table.ip-quantity")}
                 </td>
                 <td
                   style={{
@@ -252,7 +255,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Кол-во дней:
+                  {t("table.days-quantity")}
                 </td>
                 <td
                   style={{
@@ -273,7 +276,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Сумма заказа:
+                  {t("table.order-amount")}
                 </td>
                 <td
                   style={{
@@ -295,7 +298,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  Купон на скидку:
+                  {t("table.discount-coupon")}
                 </td>
                 <td
                   style={{
@@ -309,7 +312,7 @@ export default function OrderDetailPage() {
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="Купон на скидку"
+                      placeholder={t("coupon.placeholder")}
                       style={{
                         padding: "8px 12px",
                         backgroundColor: "rgba(243, 214, 117, 0.1)",
@@ -320,7 +323,7 @@ export default function OrderDetailPage() {
                       }}
                     />
                     <Button
-                      name="Применить"
+                      name={t("coupon.apply")}
                       onClick={handleApplyCoupon}
                       variant="default"
                     />
@@ -361,7 +364,7 @@ export default function OrderDetailPage() {
                     accentColor: "#f3d675",
                   }}
                 />
-                <span style={{ color: "#FFFFFF" }}>HTTP(s)</span>
+                <span style={{ color: "#FFFFFF" }}>{t("proxy-type.http")}</span>
               </label>
               <label
                 style={{
@@ -380,7 +383,7 @@ export default function OrderDetailPage() {
                     accentColor: "#f3d675",
                   }}
                 />
-                <span style={{ color: "#FFFFFF" }}>SOCKS5</span>
+                <span style={{ color: "#FFFFFF" }}>{t("proxy-type.socks5")}</span>
               </label>
             </div>
             <p
@@ -390,7 +393,7 @@ export default function OrderDetailPage() {
                 margin: "0",
               }}
             >
-              Тип прокси можно будет изменить в личном кабинете после покупки.
+              {t("proxy-type.label")}
             </p>
           </div>
           <div
@@ -404,12 +407,12 @@ export default function OrderDetailPage() {
           >
             <Button
               onClick={handleContinue}
-              name={isFinishing ? "Загрузка..." : "Оплатить"}
+              name={isFinishing ? t("buttons.loading") : t("buttons.pay")}
               variant="medium"
             />
             <Button
               onClick={handleDelete}
-              name={isDeleting ? "Удаление..." : "Удалить"}
+              name={isDeleting ? t("buttons.deleting") : t("buttons.delete")}
               variant="medium"
             />
           </div>
