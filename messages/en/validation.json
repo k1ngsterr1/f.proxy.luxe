@@ -6,7 +6,8 @@
     },
     "password": {
       "minLength": "Password must be at least 8 characters",
-      "required": "Password field is required"
+      "required": "Password field is required",
+      "letterRequired": "Password must contain at least one letter"
     },
     "confirmPassword": {
       "match": "Passwords must match",

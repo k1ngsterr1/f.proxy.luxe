@@ -7,6 +7,16 @@ const baseConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['api.proxy.luxe'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.proxy.luxe',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 // 👇 Apply next-intl plugin

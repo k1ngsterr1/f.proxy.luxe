@@ -49,6 +49,12 @@ export const PaymentMethodsBlock = () => {
   const handleMethodSelect = (methodId: string) => {
     setSelectedMethod(methodId);
   };
+  
+  // Handle WebMoney icon click to redirect to passport URL
+  const handleWebMoneyIconClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the parent div's onClick
+    window.open('https://passport.webmoney.ru/asp/certview.asp?wmid=550228486872', '_blank');
+  };
 
   return (
     <section className="payment-methods-section">
@@ -130,11 +136,10 @@ export const PaymentMethodsBlock = () => {
                       ? "rgba(243, 214, 117, 0.15)"
                       : "rgba(243, 214, 117, 0.05)",
                   borderRadius: "8px",
-                  border: `1px solid ${
-                    selectedMethod === method.id
-                      ? "rgba(243, 214, 117, 0.5)"
-                      : "rgba(243, 214, 117, 0.1)"
-                  }`,
+                  border: `1px solid ${selectedMethod === method.id
+                    ? "rgba(243, 214, 117, 0.5)"
+                    : "rgba(243, 214, 117, 0.1)"
+                    }`,
                   padding: "20px",
                   cursor: "pointer",
                   transition: "all 0.3s ease",
@@ -149,26 +154,29 @@ export const PaymentMethodsBlock = () => {
                     "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 10px 0 rgba(243, 214, 117, 0.1)",
                 }}
               >
-                {method.popular && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      backgroundColor: "#f3d675",
-                      color: "#000000",
-                      fontSize: "10px",
-                      fontWeight: "bold",
-                      padding: "4px 8px",
-                      borderRadius: "20px",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {t("popular")}
-                  </div>
-                )}
+                {
+                  // @ts-ignore
+                  method.popular && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        backgroundColor: "#f3d675",
+                        color: "#000000",
+                        fontSize: "10px",
+                        fontWeight: "bold",
+                        padding: "4px 8px",
+                        borderRadius: "20px",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {t("popular")}
+                    </div>
+                  )
+                }
 
-                <div
+                < div
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -199,7 +207,9 @@ export const PaymentMethodsBlock = () => {
                       <Wallet size={24} color="#f3d675" />
                     )}
                     {method.id === "webmoney" && (
-                      <Wallet size={24} color="#f3d675" />
+                      <div onClick={handleWebMoneyIconClick} style={{ cursor: 'pointer' }}>
+                        <Wallet size={24} color="#f3d675" />
+                      </div>
                     )}
 
                     {/* Uncomment this when you have actual images */}
@@ -301,6 +311,6 @@ export const PaymentMethodsBlock = () => {
           }}
         />
       </div>
-    </section>
+    </section >
   );
 };

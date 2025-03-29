@@ -33,7 +33,7 @@ export default function Articles() {
   const formattedArticles =
     articles?.map((article: any) => ({
       id: article.id,
-      imageUrl: article.image || "/placeholder.svg?height=400&width=600",
+      images: article.images || [],
       title: article.title,
       // Extract date from content or use a placeholder
       date: extractDateFromContent(article.content) || "01.01.2023",
@@ -51,8 +51,8 @@ export default function Articles() {
   // Filter articles by category if one is selected
   const filteredArticles = activeCategory
     ? formattedArticles.filter((article: any) =>
-        article.tags.some((tag: any) => tag.slug === activeCategory)
-      )
+      article.tags.some((tag: any) => tag.slug === activeCategory)
+    )
     : formattedArticles;
 
   // Helper function to extract date from content (simplified example)
@@ -123,83 +123,6 @@ export default function Articles() {
               статьи
             </span>
           </h1>
-
-          {/* Categories Navigation */}
-          <div
-            style={{
-              overflowX: "auto",
-              marginBottom: "32px",
-              WebkitOverflowScrolling: "touch",
-              msOverflowStyle: "none",
-              scrollbarWidth: "none",
-            }}
-          >
-            <ul
-              className="nav-list"
-              style={{
-                display: "flex",
-                flexWrap: "nowrap",
-                gap: "12px",
-                padding: "0",
-                margin: "0",
-                listStyle: "none",
-                paddingBottom: "8px", // Space for scrollbar
-              }}
-            >
-              <li>
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor:
-                      activeCategory === null
-                        ? "#f3d675"
-                        : "rgba(243, 214, 117, 0.1)",
-                    color: activeCategory === null ? "#000000" : "#f3d675",
-                    border: "1px solid rgba(243, 214, 117, 0.3)",
-                    borderRadius: "20px",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: activeCategory === null ? "600" : "400",
-                    whiteSpace: "nowrap",
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  Все статьи
-                </button>
-              </li>
-              {categories.map((category) => (
-                <li key={category.id}>
-                  <button
-                    onClick={() => setActiveCategory(category.slug)}
-                    style={{
-                      padding: "8px 16px",
-                      backgroundColor:
-                        activeCategory === category.slug
-                          ? "#f3d675"
-                          : "rgba(243, 214, 117, 0.1)",
-                      color:
-                        activeCategory === category.slug
-                          ? "#000000"
-                          : "#f3d675",
-                      border: "1px solid rgba(243, 214, 117, 0.3)",
-                      borderRadius: "20px",
-                      cursor: "pointer",
-                      fontSize: "14px",
-                      fontWeight:
-                        activeCategory === category.slug ? "600" : "400",
-                      whiteSpace: "nowrap",
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    {category.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Loading State */}
           {isLoading && (
             <div
               style={{
@@ -220,8 +143,6 @@ export default function Articles() {
               </h3>
             </div>
           )}
-
-          {/* Error State */}
           {isError && (
             <div
               style={{
@@ -245,8 +166,6 @@ export default function Articles() {
               </p>
             </div>
           )}
-
-          {/* Articles Grid */}
           {!isLoading && !isError && (
             <div className="articles-inner">
               {filteredArticles.length > 0 ? (

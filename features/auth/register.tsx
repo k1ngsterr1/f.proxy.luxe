@@ -35,7 +35,7 @@ export const RegisterAuthForm = () => {
       .required(validationI18n("email.required")),
     password: Yup.string()
       .min(8, validationI18n("password.minLength"))
-      .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+      .matches(/[a-zA-Z]/, validationI18n("password.letterRequired"))
       .required(validationI18n("password.required")),
     repeatPassword: Yup.string()
       .oneOf([Yup.ref("password")], validationI18n("confirmPassword.match"))
@@ -63,15 +63,15 @@ export const RegisterAuthForm = () => {
 
         if (statusCode === 400) {
           if (message.includes("User with this email already exists")) {
-            setErrors({ email: "User with this email already exists" });
+            setErrors({ email: i18n("auth.errors.emailExists") });
           } else {
-            setErrors({ general: message || "Registration error" });
+            setErrors({ general: message || i18n("auth.errors.registrationError") });
           }
         } else {
-          setErrors({ general: "Unknown error. Please try again." });
+          setErrors({ general: i18n("auth.errors.unknownError") });
         }
       } else {
-        setErrors({ general: "Network or server error. Please try later." });
+        setErrors({ general: i18n("auth.errors.networkError") });
       }
     } finally {
       setSubmitting(false);
@@ -98,7 +98,7 @@ export const RegisterAuthForm = () => {
               type="email"
               name="email"
               className="auth-inp auth-mail"
-              placeholder="E-mail"
+              placeholder={i18n("auth.email.placeholder")}
               style={errors.email ? { border: "2px solid red" } : {}}
             />
             <ErrorMessage name="email">
@@ -119,7 +119,7 @@ export const RegisterAuthForm = () => {
               type="password"
               name="password"
               className="auth-inp auth-pass"
-              placeholder="Password"
+              placeholder={i18n("auth.password.placeholder")}
               style={errors.password ? { border: "2px solid red" } : {}}
             />
             <ErrorMessage name="password">
@@ -140,7 +140,7 @@ export const RegisterAuthForm = () => {
               type="password"
               name="repeatPassword"
               className="auth-inp auth-pass"
-              placeholder="Confirm password"
+              placeholder={i18n("auth.confirmPassword.placeholder")}
               style={errors.repeatPassword ? { border: "2px solid red" } : {}}
             />
             <ErrorMessage name="repeatPassword">
