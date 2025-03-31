@@ -16,7 +16,7 @@ export const useDigisellerPayment = () => {
           id_d: "5084120",
           typecurr: "USD",
           lang: lang,
-          unit_cnt: String(amount),
+          unit_cnt: amount,
         };
 
         submitDigisellerForm(fields);

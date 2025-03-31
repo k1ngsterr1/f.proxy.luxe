@@ -1,6 +1,6 @@
 const DIGISELLER_URL = "https://oplata.info/asp2/pay.asp";
 
-export const submitDigisellerForm = (fields: Record<string, string>) => {
+export const submitDigisellerForm = (fields: Record<string, any>) => {
   const form = document.createElement("form");
   form.method = "POST";
   form.action = DIGISELLER_URL;
