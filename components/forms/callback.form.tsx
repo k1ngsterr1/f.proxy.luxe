@@ -4,6 +4,7 @@ import { FC, FormEventHandler, useState, useRef, useEffect } from "react";
 import { Option } from "@/shared/interfaces/option.interface";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
+import { apiClient } from "@/shared/config/apiClient";
 
 const getOptions = (i18n: any) => [
   { id: "1", text: i18n("support.option1") },
@@ -26,7 +27,6 @@ export const CallbackForm: FC = () => {
     setIsOpen(false);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -43,8 +43,46 @@ export const CallbackForm: FC = () => {
     };
   }, []);
 
-  const onSubmitHandler: FormEventHandler<HTMLFormElement> = (event) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const onSubmitHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const supportData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      support: selectedOption?.text || 'General Support',
+      message: formData.get('message')
+    };
+
+    try {
+      const response = await apiClient.post('/api/v1/user/send-support', supportData);
+
+      if (response.status !== 200 && response.status !== 201) {
+        throw new Error('Failed to send support request');
+      }
+
+      // Clear the form
+      form.reset();
+      setSelectedOption(null);
+      setTechnicalSupport(undefined);
+
+      // Show success message
+      setSubmitSuccess(true);
+      setTimeout(() => setSubmitSuccess(false), 5000); // Hide success message after 5 seconds
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setSubmitError(error instanceof Error ? error.message : 'Failed to send message');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,7 +102,6 @@ export const CallbackForm: FC = () => {
         required
       />
 
-      {/* Custom Select Dropdown */}
       <div
         ref={dropdownRef}
         style={{
@@ -82,9 +119,8 @@ export const CallbackForm: FC = () => {
             width: "100%",
             padding: "0.75rem 1rem",
             backgroundColor: "rgba(0, 0, 0, 0.7)",
-            border: `1px solid ${
-              isOpen ? "rgba(212, 175, 55, 0.8)" : "rgba(212, 175, 55, 0.5)"
-            }`,
+            border: `1px solid ${isOpen ? "rgba(212, 175, 55, 0.8)" : "rgba(212, 175, 55, 0.5)"
+              }`,
             borderRadius: "6px",
             color: selectedOption ? "white" : "rgba(255, 255, 255, 0.6)",
             fontSize: "1rem",
@@ -197,9 +233,47 @@ export const CallbackForm: FC = () => {
         placeholder={i18n("message.placeholder")}
         required
       ></textarea>
-      <button type="submit" className="question-btn btn-hover">
-        {i18n("submit")}
+      <button
+        type="submit"
+        className="question-btn btn-hover"
+        disabled={isSubmitting}
+        style={{
+          opacity: isSubmitting ? 0.7 : 1,
+          cursor: isSubmitting ? 'not-allowed' : 'pointer'
+        }}
+      >
+        {isSubmitting ? 'Sending...' : i18n("submit")}
       </button>
+
+      {/* Success message */}
+      {submitSuccess && (
+        <div style={{
+          marginTop: '1rem',
+          padding: '0.75rem',
+          backgroundColor: 'rgba(39, 174, 96, 0.1)',
+          border: '1px solid rgba(39, 174, 96, 0.5)',
+          borderRadius: '6px',
+          color: '#2ecc71',
+          textAlign: 'center'
+        }}>
+          Your message has been sent successfully!
+        </div>
+      )}
+
+      {/* Error message */}
+      {submitError && (
+        <div style={{
+          marginTop: '1rem',
+          padding: '0.75rem',
+          backgroundColor: 'rgba(231, 76, 60, 0.1)',
+          border: '1px solid rgba(231, 76, 60, 0.5)',
+          borderRadius: '6px',
+          color: '#e74c3c',
+          textAlign: 'center'
+        }}>
+          Failed to send message. Please try again.
+        </div>
+      )}
     </form>
   );
 };
