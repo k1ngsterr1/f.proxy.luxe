@@ -148,7 +148,7 @@ export const PayForm = () => {
             { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
             { id: "dogecoin", img: DogeCoin, text: "DOGECOIN (DOGE)" },
             { id: "payeer", img: Payer, text: "PAYEER" },
-            { id: "enot", img: Enot, text: "ENOT.IO" },
+            { id: "digiseller", img: Enot, text: "DIGISELLER" },
           ].map((method) => (
             <label key={method.id} className="method">
               <input
