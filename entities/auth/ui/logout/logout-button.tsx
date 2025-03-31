@@ -14,22 +14,18 @@ export const LogoutButton: FC = () => {
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    
+
     // Close any open popups first
     closePopup("non-auth");
-    
+
     // Clear auth tokens
     removeAccessToken();
     removeRefreshToken();
-    
+
     // Use window.location for a full page refresh instead of client-side navigation
     // This ensures the app state is completely reset
     window.location.href = "/";
   };
 
-  return (
-    <Link href="#" onClick={handleLogout}>
-      {i18n("button")}
-    </Link>
-  );
+  return <span onClick={handleLogout}>{i18n("button")}</span>;
 };

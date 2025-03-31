@@ -56,17 +56,20 @@ export const CallbackForm: FC = () => {
     const formData = new FormData(form);
 
     const supportData = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      support: selectedOption?.text || 'General Support',
-      message: formData.get('message')
+      name: formData.get("name"),
+      email: formData.get("email"),
+      support: selectedOption?.text || "General Support",
+      message: formData.get("message"),
     };
 
     try {
-      const response = await apiClient.post('/api/v1/user/send-support', supportData);
+      const response = await apiClient.post(
+        "/api/v1/user/send-support",
+        supportData
+      );
 
       if (response.status !== 200 && response.status !== 201) {
-        throw new Error('Failed to send support request');
+        throw new Error("Failed to send support request");
       }
 
       // Clear the form
@@ -78,8 +81,10 @@ export const CallbackForm: FC = () => {
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 5000); // Hide success message after 5 seconds
     } catch (error) {
-      console.error('Error sending email:', error);
-      setSubmitError(error instanceof Error ? error.message : 'Failed to send message');
+      console.error("Error sending email:", error);
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to send message"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -123,8 +128,9 @@ export const CallbackForm: FC = () => {
             width: "100%",
             padding: "0.75rem 1rem",
             backgroundColor: "rgba(0, 0, 0, 0.7)",
-            border: `1px solid ${isOpen ? "rgba(212, 175, 55, 0.8)" : "rgba(212, 175, 55, 0.5)"
-              }`,
+            border: `1px solid ${
+              isOpen ? "rgba(212, 175, 55, 0.8)" : "rgba(212, 175, 55, 0.5)"
+            }`,
             borderRadius: "6px",
             color: selectedOption ? "white" : "rgba(255, 255, 255, 0.6)",
             fontSize: "1rem",
@@ -237,44 +243,57 @@ export const CallbackForm: FC = () => {
         placeholder={i18n("message.placeholder")}
         required
       ></textarea>
-      <button
-        type="submit"
-        className="question-btn btn-hover"
-        disabled={isSubmitting}
+      <div
         style={{
-          opacity: isSubmitting ? 0.7 : 1,
-          cursor: isSubmitting ? 'not-allowed' : 'pointer'
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {isSubmitting ? 'Sending...' : i18n("submit")}
-      </button>
+        <button
+          type="submit"
+          className="btn btn-hover"
+          disabled={isSubmitting}
+          style={{
+            marginTop: 16,
+            opacity: isSubmitting ? 0.7 : 1,
+            cursor: isSubmitting ? "not-allowed" : "pointer",
+          }}
+        >
+          {isSubmitting ? "Sending..." : i18n("submit")}
+        </button>
+      </div>
 
       {/* Success message */}
       {submitSuccess && (
-        <div style={{
-          marginTop: '1rem',
-          padding: '0.75rem',
-          backgroundColor: 'rgba(39, 174, 96, 0.1)',
-          border: '1px solid rgba(39, 174, 96, 0.5)',
-          borderRadius: '6px',
-          color: '#2ecc71',
-          textAlign: 'center'
-        }}>
+        <div
+          style={{
+            marginTop: "1rem",
+            padding: "0.75rem",
+            backgroundColor: "rgba(39, 174, 96, 0.1)",
+            border: "1px solid rgba(39, 174, 96, 0.5)",
+            borderRadius: "6px",
+            color: "#2ecc71",
+            textAlign: "center",
+          }}
+        >
           Your message has been sent successfully!
         </div>
       )}
 
       {/* Error message */}
       {submitError && (
-        <div style={{
-          marginTop: '1rem',
-          padding: '0.75rem',
-          backgroundColor: 'rgba(231, 76, 60, 0.1)',
-          border: '1px solid rgba(231, 76, 60, 0.5)',
-          borderRadius: '6px',
-          color: '#e74c3c',
-          textAlign: 'center'
-        }}>
+        <div
+          style={{
+            marginTop: "1rem",
+            padding: "0.75rem",
+            backgroundColor: "rgba(231, 76, 60, 0.1)",
+            border: "1px solid rgba(231, 76, 60, 0.5)",
+            borderRadius: "6px",
+            color: "#e74c3c",
+            textAlign: "center",
+          }}
+        >
           Failed to send message. Please try again.
         </div>
       )}

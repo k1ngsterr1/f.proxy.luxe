@@ -9,7 +9,7 @@ interface ExchangeRates {
 }
 
 export const useExchangeRates = () => {
-  return useQuery<ExchangeRates>({
+  return useQuery<any>({
     queryKey: ["exchangeRates"],
     queryFn: async () => {
       const usdRate = await getExchangeRate(); // ✅ USD → RUB (unchanged)

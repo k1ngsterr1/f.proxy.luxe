@@ -4,8 +4,10 @@ import { useRouter } from "next/navigation";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { Button } from "@/shared/ui/button";
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { ChevronDown } from "lucide-react";
 
 export const ISPBuyCard = () => {
   const router = useRouter();
@@ -13,7 +15,8 @@ export const ISPBuyCard = () => {
   const [countryId, setCountryId] = useState<string>("1");
   const [quantity, setQuantity] = useState<string>("1");
   const [period, setPeriod] = useState<string>("1m");
-  const [goal, setGoal] = useState<string>("");
+  const [goal, setGoal] = useState<string>("surfing");
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const { data: preferences, isLoading: isLoadingPreferences } =
     useGetPreferences();
@@ -30,6 +33,12 @@ export const ISPBuyCard = () => {
 
   // 👉 Пример обработчика для кнопки "Купить"
   const handleBuyClick = () => {
+    // Validate goal is selected
+    if (!goal) {
+      setValidationError(i18n("errors.goalRequired"));
+      return;
+    }
+
     const selectedCountry = preferences?.isp.country.find((c) => {
       return c.id == countryId;
     });
@@ -90,6 +99,13 @@ export const ISPBuyCard = () => {
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
@@ -100,24 +116,66 @@ export const ISPBuyCard = () => {
           onChange={(e) => setPeriod(e.target.value)}
           style={selectStyle}
         >
-          {preferences?.isp?.period.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
+          <option>{i18n("month")}</option>
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          {i18n("usage")}
+          {i18n("usage")} <span style={{ color: "#f3d675" }}>*</span>
         </h4>
-        <input
-          type="text"
-          required
-          placeholder={i18n("usage")}
-          value={goal}
-          onChange={(e) => setGoal(e.target.value)}
-          style={inputStyle}
-        />
+        <div style={{ position: "relative" }}>
+          <select
+            value={goal}
+            onChange={(e) => {
+              setGoal(e.target.value);
+              setValidationError(null);
+            }}
+            style={{
+              ...selectStyle,
+              borderColor: validationError ? "#ff4d4f" : "#3E3E3E",
+            }}
+            required
+          >
+            <option value="surfing">
+              {i18n("goals.surfing") || "Surfing"}
+            </option>
+            <option value="social_media">
+              {i18n("goals.socialMedia") || "Social Media"}
+            </option>
+            <option value="seo">
+              {i18n("goals.seo") || "SEO & Marketing"}
+            </option>
+            <option value="data_collection">
+              {i18n("goals.dataCollection") || "Data Collection"}
+            </option>
+            <option value="ecommerce">
+              {i18n("goals.ecommerce") || "E-commerce"}
+            </option>
+            <option value="gaming">{i18n("goals.gaming") || "Gaming"}</option>
+            <option value="streaming">
+              {i18n("goals.streaming") || "Streaming"}
+            </option>
+            <option value="research">
+              {i18n("goals.research") || "Research"}
+            </option>
+            <option value="other">{i18n("goals.other") || "Other"}</option>
+          </select>
+          <ChevronDown
+            size={16}
+            style={{
+              position: "absolute",
+              right: "12px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "#f3d675",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+        {validationError && (
+          <div style={{ color: "#ff4d4f", fontSize: "12px", marginTop: "4px" }}>
+            {validationError}
+          </div>
+        )}
 
         <div className="buy-item__price">
           {i18n("price")} <span>$2.4 / IP</span>
@@ -125,7 +183,7 @@ export const ISPBuyCard = () => {
         <Button
           className="btn"
           variant="big"
-          name={i18n("buy")}
+          name={isLoadingOrder ? i18n("loading") : i18n("buy")}
           onClick={handleBuyClick}
         />
       </div>
@@ -142,6 +200,7 @@ const selectStyle = {
   borderRadius: "5px",
   appearance: "none" as const,
   cursor: "pointer",
+  paddingRight: "30px", // Space for the chevron
 };
 
 const inputStyle = {

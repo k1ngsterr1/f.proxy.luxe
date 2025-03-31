@@ -10,7 +10,22 @@
       "month": "1 month",
       "usage": "USAGE PURPOSE",
       "price": "PRICE",
-      "buy": "Buy"
+      "buy": "Buy",
+      "loading": "Loading...",
+      "goals": {
+        "surfing": "Web Surfing",
+        "socialMedia": "Social Media",
+        "seo": "SEO & Marketing",
+        "dataCollection": "Data Collection",
+        "ecommerce": "E-commerce",
+        "gaming": "Gaming",
+        "streaming": "Streaming",
+        "research": "Research",
+        "other": "Other"
+      },
+      "errors": {
+        "goalRequired": "Please select a usage goal"
+      }
     },
     "residential": {
       "month": "month",
@@ -23,6 +38,17 @@
       "quantity": "QUANTITY (NO LIMIT)",
       "plan": "TARIFF PLAN (GB)",
       "usage": "USAGE PURPOSE",
+      "goals": {
+        "surfing": "Web Surfing",
+        "socialMedia": "Social Media",
+        "seo": "SEO & Marketing",
+        "dataCollection": "Data Collection",
+        "ecommerce": "E-commerce",
+        "gaming": "Gaming",
+        "streaming": "Streaming",
+        "research": "Research",
+        "other": "Other"
+      },
       "price": "PRICE",
       "buy": "Buy"
     },
@@ -35,6 +61,17 @@
       "period": "PERIOD",
       "month": "1 month",
       "usage": "USAGE PURPOSE",
+      "goals": {
+        "surfing": "Web Surfing",
+        "socialMedia": "Social Media",
+        "seo": "SEO & Marketing",
+        "dataCollection": "Data Collection",
+        "ecommerce": "E-commerce",
+        "gaming": "Gaming",
+        "streaming": "Streaming",
+        "research": "Research",
+        "other": "Other"
+      },
       "price": "PRICE",
       "processing": "Processing...",
       "buy": "Buy"
