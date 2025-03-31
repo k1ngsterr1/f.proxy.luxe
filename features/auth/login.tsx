@@ -55,6 +55,7 @@ export const LoginAuthForm = () => {
       {({ isSubmitting, errors }: any) => (
         <Form
           className="auth-form"
+          autoComplete="off"
           style={{
             maxWidth: 920,
             margin: "auto",
@@ -131,7 +132,11 @@ export const LoginAuthForm = () => {
                 marginTop: 16,
               }}
               disabled={isSubmitting}
-              name={isSubmitting ? i18n("auth.login.processing") : i18n("auth.login.button")}
+              name={
+                isSubmitting
+                  ? i18n("auth.login.processing")
+                  : i18n("auth.login.button")
+              }
             />
           </div>
         </Form>

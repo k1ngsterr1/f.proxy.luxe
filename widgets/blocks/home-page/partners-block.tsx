@@ -8,7 +8,12 @@ export const PartnersBlock = () => {
   const navigate = useRouter();
 
   return (
-    <section className="partners section">
+    <section
+      className="partners section"
+      style={{
+        overflowX: "hidden",
+      }}
+    >
       <div className="scontainer">
         <h2 className="section-header">{i18n("header")}</h2>
         <div className="partners-inner">
@@ -44,7 +49,6 @@ export const PartnersBlock = () => {
             </div>
           </div>
         </div>
-
         <p className="partners-hint">
           {i18n("payout.line1")} <br />
           {i18n("payout.line2")}

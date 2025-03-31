@@ -22,6 +22,7 @@ export default function Partners() {
   return (
     <main
       style={{
+        overflowX: "hidden",
         backgroundColor: "#000000",
         color: "#FFFFFF",
         marginTop: 256,

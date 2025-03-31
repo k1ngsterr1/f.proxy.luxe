@@ -129,6 +129,7 @@ export const PayForm = () => {
 
   return (
     <form
+      autoComplete="off"
       onSubmit={handleSubmit}
       style={{
         marginLeft: isMobile ? 0 : 64,

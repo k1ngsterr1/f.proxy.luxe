@@ -112,6 +112,8 @@ export const ISPBuyCard = () => {
         </h4>
         <input
           type="text"
+          required
+          placeholder={i18n("usage")}
           value={goal}
           onChange={(e) => setGoal(e.target.value)}
           style={inputStyle}

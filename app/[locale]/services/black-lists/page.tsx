@@ -78,11 +78,9 @@ export default function BlackListPage() {
             <span>{t("title")}</span>
           </h1>
 
-          <p className="blist-text">
-            {t("description")}
-          </p>
+          <p className="blist-text">{t("description")}</p>
 
-          <form onSubmit={handleSubmit} className="blist">
+          <form onSubmit={handleSubmit} className="blist" autoComplete="off">
             <p className="blist-hint">{t("form.ipAddress")}</p>
             <div className="btn-wrap">
               <input
@@ -230,7 +228,9 @@ export default function BlackListPage() {
                       : "1px solid rgba(76, 175, 80, 0.3)",
                   }}
                 >
-                  {result.isListed ? t("result.status.listed") : t("result.status.notListed")}
+                  {result.isListed
+                    ? t("result.status.listed")
+                    : t("result.status.notListed")}
                 </span>
               </div>
 
@@ -257,7 +257,10 @@ export default function BlackListPage() {
                     }}
                   >
                     {result.isListed
-                      ? t("result.summary.listed", { ip: result.ip, count: result.blacklistCount })
+                      ? t("result.summary.listed", {
+                          ip: result.ip,
+                          count: result.blacklistCount,
+                        })
                       : t("result.summary.notListed", { ip: result.ip })}
                   </span>
                 </div>

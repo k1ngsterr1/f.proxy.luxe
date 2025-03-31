@@ -86,7 +86,11 @@ export const CallbackForm: FC = () => {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} className="question-form">
+    <form
+      onSubmit={onSubmitHandler}
+      className="question-form"
+      autoComplete="off"
+    >
       <input
         name="name"
         type="text"

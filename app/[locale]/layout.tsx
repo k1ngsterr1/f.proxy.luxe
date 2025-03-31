@@ -35,8 +35,8 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
         <title>Proxy Luxe</title>
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
         <Script id="chatra" strategy="afterInteractive">

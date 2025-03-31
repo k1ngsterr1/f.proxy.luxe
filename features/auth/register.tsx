@@ -65,7 +65,9 @@ export const RegisterAuthForm = () => {
           if (message.includes("User with this email already exists")) {
             setErrors({ email: i18n("auth.errors.emailExists") });
           } else {
-            setErrors({ general: message || i18n("auth.errors.registrationError") });
+            setErrors({
+              general: message || i18n("auth.errors.registrationError"),
+            });
           }
         } else {
           setErrors({ general: i18n("auth.errors.unknownError") });
@@ -93,7 +95,7 @@ export const RegisterAuthForm = () => {
         const { isSubmitting, errors } = formikProps;
 
         return (
-          <Form className="auth-form">
+          <Form className="auth-form" autoComplete="off">
             <Field
               type="email"
               name="email"
@@ -171,7 +173,11 @@ export const RegisterAuthForm = () => {
                 type="submit"
                 variant="big"
                 disabled={isSubmitting}
-                name={isSubmitting ? i18n("auth.register.processing") : i18n("auth.register.button")}
+                name={
+                  isSubmitting
+                    ? i18n("auth.register.processing")
+                    : i18n("auth.register.button")
+                }
               />
             </div>
           </Form>

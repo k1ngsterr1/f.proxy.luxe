@@ -103,17 +103,17 @@ export const IPV6BuyCard = () => {
         >
           <option> {i18n("month")}</option>
         </select>
-
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("usage")}
         </h4>
         <input
           type="text"
           value={goal}
+          required
+          placeholder={i18n("usage")}
           onChange={(e) => setGoal(e.target.value)}
           style={inputStyle}
         />
-
         <div className="buy-item__price">
           {i18n("price")}: <span>$0.08 / IP</span>
         </div>

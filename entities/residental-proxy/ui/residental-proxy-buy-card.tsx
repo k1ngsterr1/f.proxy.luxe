@@ -115,7 +115,7 @@ export const ResidentalProxyBuyCard = () => {
             cursor: "pointer",
           }}
         >
-          <option value="1">{i18n("option")}</option>
+          <option value="∞">{i18n("option")}</option>
         </select>
         <h4
           className="buy-item__subheader"
@@ -197,6 +197,7 @@ export const ResidentalProxyBuyCard = () => {
         <input
           type="text"
           value={goal}
+          required
           onChange={(e) => setGoal(e.target.value)}
           placeholder={i18n("usage")}
           style={{
