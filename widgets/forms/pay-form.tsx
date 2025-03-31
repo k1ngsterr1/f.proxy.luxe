@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
 import { usePayeerPayment } from "@/entities/payments/hooks/general/use-payeer-payment";
+import { useDigisellerPayment } from "@/entities/payments/hooks/general/use-digiseller-payment";
 
 // const PayFormValidation = () => {
 //   const i18n = useTranslations("forms.payment.errors");
@@ -38,6 +39,7 @@ export const PayForm = () => {
   const isMobile = useIsMobile();
   const { processWebMoneyPayment } = useWebMoneyPayment();
   const { processPayeerPayment } = usePayeerPayment();
+  const { processDigisellerPayment } = useDigisellerPayment();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const i18n = useTranslations("forms.payment");
   const errorI18n = useTranslations("forms.payment.errors");
@@ -60,6 +62,11 @@ export const PayForm = () => {
           await processWebMoneyPayment(values.paymentAmount);
         } else if (values.paymentMethod === "payeer") {
           await processPayeerPayment(values.paymentAmount);
+        } else if (values.paymentMethod === "digiseller") {
+          await processDigisellerPayment(
+            Math.floor(parseFloat(values.paymentAmount)),
+            "ru"
+          );
         } else {
           // Handle other payment methods
           console.log("Processing payment:", values);
