@@ -23,18 +23,26 @@ export const Header: FC = () => {
   const router = useRouter();
 
   const getPathForLocale = (targetLocale: string) => {
-    const segments = pathname.split("/");
-
-    // Если текущий путь начинается с /en или /ru — заменяем
+    const segments = pathname.split("/").filter(Boolean);
     const supportedLocales = ["en", "ru"];
-    if (supportedLocales.includes(segments[1])) {
-      segments[1] = targetLocale;
+
+    // Заменяем текущую локаль или добавляем, если её нет
+    if (supportedLocales.includes(segments[0])) {
+      segments[0] = targetLocale;
     } else {
-      // если нет локали — добавляем её в начало
       segments.unshift(targetLocale);
     }
 
-    return segments.join("/") || "/";
+    return "/" + segments.join("/");
+  };
+
+  const changeLanguage = (lang: string) => {
+    const newPath = getPathForLocale(lang);
+    router.push(newPath);
+    // Небольшая задержка, чтобы push сработал, затем перезагрузка
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   return (
@@ -63,26 +71,28 @@ export const Header: FC = () => {
                   {i18n("header.faq")}
                 </Link>
               </nav>
-
               <div className="header-lang">
-                <Link
-                  href={getPathForLocale("ru")}
+                <span
+                  onClick={() => changeLanguage("ru")}
                   className={`lang-item ${locale === "ru" ? "active" : ""}`}
-                  locale="ru"
                 >
                   <Image src={RusFlag} alt="Русский" width={40} height={26} />
-                </Link>
-                <Link
-                  href={getPathForLocale("en")}
+                </span>
+                <span
+                  onClick={() => changeLanguage("en")}
                   className={`lang-item ${locale === "en" ? "active" : ""}`}
-                  locale="en"
                 >
                   <Image src={EngFlag} alt="English" width={40} height={26} />
-                </Link>
+                </span>
               </div>
 
               {token ? (
-                <div onClick={() => router.push("/personal-account")}>
+                <div
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => router.push("/personal-account")}
+                >
                   <a className="another-btn">
                     <span>{i18n("header.account")}</span>
                   </a>

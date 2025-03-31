@@ -22,6 +22,29 @@ export default function Prices() {
         padding: "2rem 0 4rem",
       }}
     >
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "Center",
+          marginBottom: 32,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "36px",
+            fontWeight: "bold",
+            color: "#FFFFFF",
+            marginBottom: "16px",
+            position: "relative",
+            display: "inline-block",
+            padding: "0 20px",
+          }}
+        >
+          {i18n("header")}
+        </h1>
+      </div>
       <section
         style={{
           maxWidth: "1200px",
@@ -29,7 +52,6 @@ export default function Prices() {
           padding: "0 1.5rem",
         }}
       >
-        {/* Animated banner */}
         <div
           style={{
             background:

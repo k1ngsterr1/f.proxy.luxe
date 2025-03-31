@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
-import { Loader2 } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 
 // Define the pricing structure based on the provided plans
 const TARIFF_PRICES = {
@@ -21,9 +21,10 @@ const TARIFF_PRICES = {
 
 export const ResidentalProxyBuyCard = () => {
   const i18n = useTranslations("proxy-cards.residential");
-  const [goal, setGoal] = useState<string>("");
+  const [goal, setGoal] = useState<string>("surfing"); // Default to "surfing"
   const [tariffId, setTariffId] = useState<number>(0);
   const [selectedTariff, setSelectedTariff] = useState<any>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const router = useRouter();
   const { data: preferences, isLoading: isLoadingPreferences } =
@@ -56,6 +57,15 @@ export const ResidentalProxyBuyCard = () => {
   };
 
   const handleBuyClick = () => {
+    // Clear previous validation errors
+    setValidationError(null);
+
+    // Validate that a goal is selected
+    if (!goal) {
+      setValidationError(i18n("errors.goalRequired"));
+      return;
+    }
+
     if (!selectedTariff) return;
 
     const price = getTariffPrice(selectedTariff.name);
@@ -78,6 +88,42 @@ export const ResidentalProxyBuyCard = () => {
     });
   };
 
+  // Common style for select elements
+  const selectStyle = {
+    backgroundColor: "#1E1E1E",
+    color: "#fff",
+    border: "1px solid #3E3E3E",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "5px",
+    appearance: "none" as const,
+    cursor: "pointer",
+    paddingRight: "30px", // Space for the chevron icon
+  };
+
+  // Style for the select wrapper (to position the chevron icon)
+  const selectWrapperStyle = {
+    position: "relative" as const,
+    width: "100%",
+  };
+
+  // Style for the chevron icon
+  const chevronStyle = {
+    position: "absolute" as const,
+    right: "10px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    pointerEvents: "none" as const,
+    color: "#f3d675",
+  };
+
+  // Style for validation error message
+  const errorStyle = {
+    color: "#ff4d4f",
+    fontSize: "12px",
+    marginTop: "4px",
+  };
+
   return (
     <div className="buy-col">
       <div
@@ -93,7 +139,6 @@ export const ResidentalProxyBuyCard = () => {
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
         <a className="buy-item__btn">{i18n("issued")}</a>
-
         <h4
           className="buy-item__subheader"
           style={{
@@ -102,21 +147,12 @@ export const ResidentalProxyBuyCard = () => {
         >
           {i18n("country")}
         </h4>
-        <select
-          className="buy-item__select"
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            appearance: "none",
-            cursor: "pointer",
-          }}
-        >
-          <option value="∞">{i18n("option")}</option>
-        </select>
+        <div style={selectWrapperStyle}>
+          <select className="buy-item__select" style={selectStyle}>
+            <option value="∞">{i18n("option")}</option>
+          </select>
+          <ChevronDown style={chevronStyle} size={16} />
+        </div>
         <h4
           className="buy-item__subheader"
           style={{
@@ -125,22 +161,12 @@ export const ResidentalProxyBuyCard = () => {
         >
           {i18n("quantity")}
         </h4>
-        <select
-          className="buy-item__select"
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            appearance: "none",
-            cursor: "pointer",
-          }}
-        >
-          <option value="1">1</option>
-        </select>
-
+        <div style={selectWrapperStyle}>
+          <select className="buy-item__select" style={selectStyle}>
+            <option value="∞">∞</option>
+          </select>
+          <ChevronDown style={chevronStyle} size={16} />
+        </div>
         <h4
           className="buy-item__subheader"
           style={{
@@ -162,55 +188,58 @@ export const ResidentalProxyBuyCard = () => {
             <span>{i18n("loading")}</span>
           </div>
         ) : (
-          <select
-            className="buy-item__select"
-            value={tariffId}
-            onChange={(e) => {
-              const id = Number(e.target.value);
-              setTariffId(id);
-              // Create a synthetic tariff object based on the selected option
-              const tariffName = Object.keys(TARIFF_PRICES)[id];
-              setSelectedTariff({ id, name: tariffName });
-            }}
-            style={{
-              backgroundColor: "#1E1E1E",
-              color: "#fff",
-              border: "1px solid #3E3E3E",
-              padding: "10px",
-              width: "100%",
-              borderRadius: "5px",
-              appearance: "none",
-              cursor: "pointer",
-            }}
-          >
-            {Object.entries(TARIFF_PRICES).map(([tariffName, price], index) => (
-              <option key={index} value={index}>
-                {tariffName} - ${price}/{i18n("month")}
-              </option>
-            ))}
-          </select>
+          <div style={selectWrapperStyle}>
+            <select
+              className="buy-item__select"
+              value={tariffId}
+              onChange={handleTariffChange}
+              style={selectStyle}
+            >
+              {Object.entries(TARIFF_PRICES).map(
+                ([tariffName, price], index) => (
+                  <option key={index} value={index}>
+                    {tariffName} - ${price}/{i18n("month")}
+                  </option>
+                )
+              )}
+            </select>
+            <ChevronDown style={chevronStyle} size={16} />
+          </div>
         )}
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          {i18n("usage")}
+          {i18n("usage")} <span style={{ color: "#f3d675" }}>*</span>
         </h4>
-        <input
-          type="text"
-          value={goal}
-          required
-          onChange={(e) => setGoal(e.target.value)}
-          placeholder={i18n("usage")}
-          style={{
-            backgroundColor: "#1E1E1E",
-            color: "#fff",
-            border: "1px solid #3E3E3E",
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            appearance: "none",
-          }}
-        />
-
+        <div style={selectWrapperStyle}>
+          <select
+            value={goal}
+            onChange={(e) => {
+              setGoal(e.target.value);
+              setValidationError(null); // Clear validation error when user selects an option
+            }}
+            style={{
+              ...selectStyle,
+              border: validationError
+                ? "1px solid #ff4d4f"
+                : "1px solid #3E3E3E",
+            }}
+            required
+          >
+            <option value="surfing">{i18n("goals.surfing")}</option>
+            <option value="socialMedia">{i18n("goals.socialMedia")}</option>
+            <option value="seo">{i18n("goals.seo")}</option>
+            <option value="dataCollection">
+              {i18n("goals.dataCollection")}
+            </option>
+            <option value="ecommerce">{i18n("goals.ecommerce")}</option>
+            <option value="gaming">{i18n("goals.gaming")}</option>
+            <option value="streaming">{i18n("goals.streaming")}</option>
+            <option value="research">{i18n("goals.research")}</option>
+            <option value="other">{i18n("goals.other")}</option>
+          </select>
+          <ChevronDown style={chevronStyle} size={16} />
+        </div>
+        {validationError && <div style={errorStyle}>{validationError}</div>}
         <div className="buy-item__price">
           {i18n("price")}
           <span>

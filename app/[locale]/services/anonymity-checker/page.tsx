@@ -267,7 +267,9 @@ export default function AnonymityChecker() {
           }}
         >
           <AlertCircle size={24} />
-          <span>{t("errors.errorPrefix")}: {error}</span>
+          <span>
+            {t("errors.errorPrefix")}: {error}
+          </span>
         </div>
       </div>
     );
@@ -311,10 +313,14 @@ export default function AnonymityChecker() {
 
   // Get anonymity level text and color
   const getAnonymityLevel = () => {
-    if (anonymityScore >= 90) return { text: t("anonymityLevels.excellent"), color: "#4CAF50" };
-    if (anonymityScore >= 70) return { text: t("anonymityLevels.good"), color: "#8BC34A" };
-    if (anonymityScore >= 50) return { text: t("anonymityLevels.medium"), color: "#FFC107" };
-    if (anonymityScore >= 30) return { text: t("anonymityLevels.low"), color: "#FF9800" };
+    if (anonymityScore >= 90)
+      return { text: t("anonymityLevels.excellent"), color: "#4CAF50" };
+    if (anonymityScore >= 70)
+      return { text: t("anonymityLevels.good"), color: "#8BC34A" };
+    if (anonymityScore >= 50)
+      return { text: t("anonymityLevels.medium"), color: "#FFC107" };
+    if (anonymityScore >= 30)
+      return { text: t("anonymityLevels.low"), color: "#FF9800" };
     return { text: t("anonymityLevels.critical"), color: "#FF5252" };
   };
 
@@ -667,7 +673,9 @@ export default function AnonymityChecker() {
                       borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
                     }}
                   >
-                    <div style={{ color: "#999999", fontSize: "14px" }}>{t("systemInfo.os")}</div>
+                    <div style={{ color: "#999999", fontSize: "14px" }}>
+                      {t("systemInfo.os")}
+                    </div>
                     <div style={{ color: "#FFFFFF", fontSize: "14px" }}>
                       {userData.os.name} {userData.os.version}
                     </div>
@@ -912,7 +920,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {proxyData.isProxy ? t("anonymityStatus.detected") : t("anonymityStatus.notDetected")}
+                      {proxyData.isProxy
+                        ? t("anonymityStatus.detected")
+                        : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -952,7 +962,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {proxyData.isVPN ? t("anonymityStatus.detected") : t("anonymityStatus.notDetected")}
+                      {proxyData.isVPN
+                        ? t("anonymityStatus.detected")
+                        : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -992,7 +1004,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {proxyData.isTor ? t("anonymityStatus.detected") : t("anonymityStatus.notDetected")}
+                      {proxyData.isTor
+                        ? t("anonymityStatus.detected")
+                        : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
 
@@ -1035,7 +1049,9 @@ export default function AnonymityChecker() {
                         <CheckCircle size={12} />
                       )}
                       {blacklistData.isBlacklisted
-                        ? `${t("anonymityStatus.detected")} (${blacklistData.reports} ${t("anonymityStatus.blacklistReports")})`
+                        ? `${t("anonymityStatus.detected")} (${
+                            blacklistData.reports
+                          } ${t("anonymityStatus.blacklistReports")})`
                         : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
@@ -1076,7 +1092,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {webRTC ? t("anonymityStatus.leaking") : t("anonymityStatus.protected")}
+                      {webRTC
+                        ? t("anonymityStatus.leaking")
+                        : t("anonymityStatus.protected")}
                     </div>
                   </div>
 
@@ -1116,7 +1134,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {flash ? t("anonymityStatus.enabled") : t("anonymityStatus.disabled")}
+                      {flash
+                        ? t("anonymityStatus.enabled")
+                        : t("anonymityStatus.disabled")}
                     </div>
                   </div>
 
@@ -1156,7 +1176,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {java ? t("anonymityStatus.enabled") : t("anonymityStatus.disabled")}
+                      {java
+                        ? t("anonymityStatus.enabled")
+                        : t("anonymityStatus.disabled")}
                     </div>
                   </div>
 
@@ -1195,7 +1217,9 @@ export default function AnonymityChecker() {
                       ) : (
                         <CheckCircle size={12} />
                       )}
-                      {activeX ? t("anonymityStatus.enabled") : t("anonymityStatus.disabled")}
+                      {activeX
+                        ? t("anonymityStatus.enabled")
+                        : t("anonymityStatus.disabled")}
                     </div>
                   </div>
                 </div>
@@ -1312,23 +1336,6 @@ export default function AnonymityChecker() {
                     {t("additionalProtection.description")}
                   </div>
                 </div>
-                <button
-                  style={{
-                    marginLeft: isMobile ? "0" : "auto",
-                    backgroundColor: "#f3d675",
-                    color: "#000000",
-                    border: "none",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    width: isMobile ? "100%" : "auto",
-                    marginTop: isMobile ? "12px" : "0",
-                  }}
-                >
-                  {t("additionalProtection.buyProxy")}
-                </button>
               </div>
             </div>
           </div>
