@@ -15,7 +15,7 @@ export const useDigisellerPayment = () => {
         const fields = {
           id_d: "5084120",
           typecurr: "USD",
-          lang: lang,
+          lang: `${lang}-${lang.toUpperCase()}`,
           unit_cnt: amount,
         };
 

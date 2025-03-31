@@ -15,7 +15,7 @@ import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmon
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useState } from "react";
 import { Button } from "@/shared/ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePayeerPayment } from "@/entities/payments/hooks/general/use-payeer-payment";
 import { useDigisellerPayment } from "@/entities/payments/hooks/general/use-digiseller-payment";
 
@@ -43,6 +43,7 @@ export const PayForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const i18n = useTranslations("forms.payment");
   const errorI18n = useTranslations("forms.payment.errors");
+  const locale = useLocale();
 
   const formik = useFormik({
     initialValues: {
@@ -63,9 +64,10 @@ export const PayForm = () => {
         } else if (values.paymentMethod === "payeer") {
           await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "digiseller") {
+          console.log(locale);
           await processDigisellerPayment(
             Math.floor(parseFloat(values.paymentAmount)),
-            "ru"
+            locale
           );
         } else {
           // Handle other payment methods
