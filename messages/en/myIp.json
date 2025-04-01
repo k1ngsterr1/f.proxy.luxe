@@ -1,6 +1,7 @@
 {
   "myIp": {
     "header": "YOUR IP ADDRESS",
+    "refresh": "Refresh",
     "description": {
       "line1": "With this service you can find out your IP address and get detailed information about it.",
       "line2": "In addition to IP information, the data that your browser sends to the server is displayed here."

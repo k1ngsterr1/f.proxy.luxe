@@ -29,10 +29,7 @@ export const Footer: FC = () => {
                 <Link href="/prices">{i18n("footer.prices")}</Link>
                 <Link href="/faq">{i18n("footer.faq")}</Link>
                 <Link href="/articles">{i18n("footer.articles")}</Link>
-                <Link href="/services/my-ip">{i18n("footer.myIp")}</Link>
-                <Link href="/services/proxy-checker">
-                  {i18n("footer.proxyChecker")}
-                </Link>
+
                 {/* <Link href="/conditions">Условия использования</Link> */}
                 {/* <Link href="#">Реквизиты</Link> */}
               </nav>
