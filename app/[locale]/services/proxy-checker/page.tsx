@@ -1,12 +1,11 @@
 "use client";
 
 import { proxyChecker } from "@/entities/proxy/api/post/proxy-checker.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Loader,
   CheckCircle,
   XCircle,
-  Globe,
   Info,
   AlertTriangle,
 } from "lucide-react";
@@ -15,6 +14,7 @@ import { useTranslations } from "next-intl";
 
 interface ProxyResult {
   ip: string;
+  raw: string;
   port: number;
   status: string;
   type: string;
@@ -69,6 +69,10 @@ export default function ProxyCheckerPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("results:", results);
+  }, [results]);
 
   // Calculate stats
   const activeProxies = results.filter((r) => r.status === "valid").length;
@@ -334,6 +338,7 @@ export default function ProxyCheckerPage() {
                     fontSize: "18px",
                     fontWeight: "600",
                     color: "#f3d675",
+                    textTransform: "uppercase",
                   }}
                 >
                   {i18n("results.title")}
@@ -386,6 +391,88 @@ export default function ProxyCheckerPage() {
                 </div>
               </div>
 
+              {/* Valid/Invalid Sections */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                  gap: "20px",
+                  padding: "20px",
+                }}
+              >
+                {/* Valid Proxies */}
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <CheckCircle size={18} color="#4CAF50" />
+                    <span style={{ color: "#4CAF50", fontWeight: "500" }}>
+                      {i18n("results.valid")}
+                    </span>
+                  </div>
+                  <textarea
+                    readOnly
+                    value={results
+                      .filter((r) => r.status === "valid")
+                      .map((r) => `${r.ip}:${r.port}`)
+                      .join("\n")}
+                    style={{
+                      width: "100%",
+                      height: "120px",
+                      padding: "12px",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      border: "1px solid rgba(76, 175, 80, 0.3)",
+                      borderRadius: "4px",
+                      color: "#FFFFFF",
+                      fontSize: "14px",
+                      resize: "none",
+                      fontFamily: "monospace",
+                    }}
+                  />
+                </div>
+
+                {/* Invalid Proxies */}
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <XCircle size={18} color="#FF5252" />
+                    <span style={{ color: "#FF5252", fontWeight: "500" }}>
+                      {i18n("results.invalid")}
+                    </span>
+                  </div>
+                  <textarea
+                    readOnly
+                    value={results
+                      .filter((r: any) => r.status != "valid")
+                      .map((r) => `${r.raw}`)
+                      .join("\n")}
+                    style={{
+                      width: "100%",
+                      height: "120px",
+                      padding: "12px",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      border: "1px solid rgba(255, 82, 82, 0.3)",
+                      borderRadius: "4px",
+                      color: "#FFFFFF",
+                      fontSize: "14px",
+                      resize: "none",
+                      fontFamily: "monospace",
+                    }}
+                  />
+                </div>
+              </div>
+
               {/* Results Table */}
               <div style={{ overflowX: "auto" }}>
                 <table
@@ -404,6 +491,24 @@ export default function ProxyCheckerPage() {
                       }}
                     >
                       <th
+                        style={{
+                          padding: isMobile ? "10px 8px" : "12px 16px",
+                          width: "40px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {i18n("results.status")}
+                      </th>
+                      <th
+                        style={{
+                          padding: isMobile ? "10px 8px" : "12px 16px",
+                          width: "40px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {/* Country Flag Column */}
+                      </th>
+                      <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
                         {i18n("results.ipPort")}
@@ -411,29 +516,22 @@ export default function ProxyCheckerPage() {
                       <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
-                        {i18n("results.status")}
+                        {i18n("results.login")}
                       </th>
-                      {!isMobile && (
-                        <th style={{ padding: "12px 16px" }}>
-                          {i18n("results.protocol")}
-                        </th>
-                      )}
-                      {checkLocation && !isMobile && (
-                        <th style={{ padding: "12px 16px" }}>
-                          {i18n("results.country")}
-                        </th>
-                      )}
-                      {!isMobile && (
-                        <th style={{ padding: "12px 16px" }}>
-                          {i18n("results.responseTime")}
-                        </th>
-                      )}
                       <th
                         style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
                       >
-                        {isMobile
-                          ? i18n("results.details")
-                          : i18n("results.additional")}
+                        {i18n("results.password")}
+                      </th>
+                      <th
+                        style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
+                      >
+                        {i18n("results.type")}
+                      </th>
+                      <th
+                        style={{ padding: isMobile ? "10px 8px" : "12px 16px" }}
+                      >
+                        {i18n("results.responseTime")}
                       </th>
                     </tr>
                   </thead>
@@ -444,7 +542,9 @@ export default function ProxyCheckerPage() {
                         style={{
                           borderTop: "1px solid rgba(243, 214, 117, 0.1)",
                           backgroundColor:
-                            index % 2 === 0
+                            result.status !== "valid"
+                              ? "rgba(255, 82, 82, 0.05)"
+                              : index % 2 === 0
                               ? "transparent"
                               : "rgba(243, 214, 117, 0.03)",
                         }}
@@ -452,139 +552,100 @@ export default function ProxyCheckerPage() {
                         <td
                           style={{
                             padding: isMobile ? "10px 8px" : "12px 16px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {result.status === "valid" ? (
+                            <CheckCircle
+                              size={isMobile ? 16 : 18}
+                              color="#4CAF50"
+                            />
+                          ) : (
+                            <XCircle
+                              size={isMobile ? 16 : 18}
+                              color="#FF5252"
+                            />
+                          )}
+                        </td>
+                        <td
+                          style={{
+                            padding: isMobile ? "10px 8px" : "12px 16px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {result.country && (
+                            <div
+                              style={{
+                                display: "inline-block",
+                                width: "24px",
+                                height: "16px",
+                                backgroundColor: "#333",
+                                borderRadius: "2px",
+                                overflow: "hidden",
+                                fontSize: "12px",
+                                textAlign: "center",
+                                color: "#fff",
+                              }}
+                            >
+                              {/* Display first two letters of country code or a flag emoji */}
+                              {result.country.substring(0, 2)}
+                            </div>
+                          )}
+                        </td>
+                        <td
+                          style={{
+                            padding: isMobile ? "10px 8px" : "12px 16px",
                             fontFamily: "monospace",
-                            color: "#f3d675",
+                            color:
+                              result.status === "valid" ? "#f3d675" : "#999",
                             fontWeight: "500",
                             fontSize: isMobile ? "11px" : "14px",
                           }}
                         >
-                          {result.status === "valid"
-                            ? `${result.ip}:${result.port}`
-                            : "-"}
+                          {`${
+                            result.status !== "valid"
+                              ? result.raw
+                              : `${result.ip}:${result.port}`
+                          }`}
                         </td>
                         <td
                           style={{
                             padding: isMobile ? "10px 8px" : "12px 16px",
+                            color: "#CCCCCC",
                           }}
                         >
-                          <div
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: "6px",
-                              padding: isMobile ? "3px 6px" : "4px 8px",
-                              borderRadius: "4px",
-                              fontSize: isMobile ? "10px" : "12px",
-                              fontWeight: "500",
-                              backgroundColor:
-                                result.status === "valid"
-                                  ? "rgba(76, 175, 80, 0.1)"
-                                  : "rgba(255, 82, 82, 0.1)",
-                              color:
-                                result.status === "valid"
-                                  ? "#4CAF50"
-                                  : "#FF5252",
-                              border:
-                                result.status === "valid"
-                                  ? "1px solid rgba(76, 175, 80, 0.3)"
-                                  : "1px solid rgba(255, 82, 82, 0.3)",
-                            }}
-                          >
-                            {result.status === "valid" ? (
-                              <CheckCircle size={isMobile ? 10 : 12} />
-                            ) : (
-                              <XCircle size={isMobile ? 10 : 12} />
-                            )}
-                            {result.status === "valid"
-                              ? i18n("results.active")
-                              : i18n("results.inactive")}
-                          </div>
+                          {result.authRequired ? "—" : "—"}
                         </td>
-                        {!isMobile && (
-                          <td
-                            style={{ padding: "12px 16px", color: "#FFFFFF" }}
-                          >
-                            {result.type || "—"}
-                          </td>
-                        )}
-                        {checkLocation && !isMobile && (
-                          <td style={{ padding: "12px 16px" }}>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "6px",
-                              }}
-                            >
-                              {result.country ? (
-                                <>
-                                  <Globe size={14} color="#f3d675" />
-                                  <span style={{ color: "#FFFFFF" }}>
-                                    {result.country}
-                                  </span>
-                                </>
-                              ) : (
-                                <span style={{ color: "#999999" }}>—</span>
-                              )}
-                            </div>
-                          </td>
-                        )}
-                        {!isMobile && (
-                          <td
-                            style={{ padding: "12px 16px", color: "#FFFFFF" }}
-                          >
-                            {result.responseTime
-                              ? `${result.responseTime} ${i18n("results.ms")}`
-                              : "—"}
-                          </td>
-                        )}
                         <td
                           style={{
                             padding: isMobile ? "10px 8px" : "12px 16px",
+                            color: "#CCCCCC",
                           }}
                         >
-                          {isMobile ? (
-                            <div style={{ fontSize: "11px", color: "#CCCCCC" }}>
-                              {result.type && <div>{result.type}</div>}
-                              {result.country && checkLocation && (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "4px",
-                                  }}
-                                >
-                                  <Globe size={10} color="#f3d675" />
-                                  {result.country}
-                                </div>
-                              )}
-                              {result.responseTime && (
-                                <div>
-                                  {result.responseTime} {i18n("results.ms")}
-                                </div>
-                              )}
-                            </div>
-                          ) : result.error ? (
-                            <div
-                              style={{
-                                color: "#FF5252",
-                                fontSize: "12px",
-                                maxWidth: "200px",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                              }}
-                              title={result.error}
-                            >
-                              {result.error}
-                            </div>
-                          ) : result.anonymityLevel ? (
-                            <div style={{ color: "#4CAF50", fontSize: "12px" }}>
-                              {result.anonymityLevel}
-                            </div>
-                          ) : (
-                            <span style={{ color: "#999999" }}>—</span>
-                          )}
+                          {result.authRequired ? "—" : "—"}
+                        </td>
+                        <td
+                          style={{
+                            padding: isMobile ? "10px 8px" : "12px 16px",
+                            color: "#FFFFFF",
+                          }}
+                        >
+                          {result.supportsIPv6
+                            ? `${result.type || "HTTP(s)"} + IPv6`
+                            : result.type ||
+                              (result.status === "valid" ? "HTTP(s)" : "Error")}
+                        </td>
+                        <td
+                          style={{
+                            padding: isMobile ? "10px 8px" : "12px 16px",
+                            color: "#FFFFFF",
+                          }}
+                        >
+                          {result.responseTime
+                            ? `${result.responseTime}${i18n("results.ms")}`
+                            : result.status === "valid"
+                            ? "—"
+                            : "—"}
                         </td>
                       </tr>
                     ))}
@@ -593,7 +654,6 @@ export default function ProxyCheckerPage() {
               </div>
             </div>
           )}
-
           {/* Features Section */}
           <div style={{ marginTop: "32px" }}>
             <h3

@@ -1,5 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import React from "react";
+import { useIsMobile } from "../utils/use-is-mobile";
 
 interface AdvantageCardProps {
   image: StaticImageData | string;
@@ -14,14 +15,20 @@ export const AdvantageCard: React.FC<AdvantageCardProps> = ({
   description,
   altText = "",
 }) => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="adv-item">
-      <div className="adv-item__img">
+      <div>
         <Image
           src={image}
           layout="responsive"
-          width={300} // Default width
-          height={200} // Default height
+          style={{
+            width: isMobile ? 64 : 250,
+            height: isMobile ? 64 : 150,
+          }}
+          width={isMobile ? 150 : 300} // Default width
+          height={isMobile ? 100 : 200} // Default height
           alt={altText || title} // Fallback to title for better accessibility
         />
       </div>

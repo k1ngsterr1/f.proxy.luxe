@@ -1,14 +1,15 @@
 {
-    "footer": {
-      "paragraph": "Индивидуальные резидентные прокси",
-      "buyProxy": "Купить прокси",
-      "prices": "Цены",
-      "articles": "Блог",
-      "faq": "FAQ",
-      "myIp": "Мой IP",
-      "proxyChecker": "Прокси чекер",
-      "technicalSupport": "Техническая поддержка",
-      "privacyPolicy": "Политика конфиденциальности",
-      "noticeOfResponsibility":"Уведомление об ответственности"
-    }
+  "footer": {
+    "paragraph": "Индивидуальные резидентные прокси",
+    "buyProxy": "Купить прокси",
+    "prices": "Цены",
+    "articles": "Блог",
+    "faq": "FAQ",
+    "myIp": "Мой IP",
+    "proxyChecker": "Прокси чекер",
+    "publicOffer": "Публичная оферта",
+    "technicalSupport": "Техническая поддержка",
+    "privacyPolicy": "Политика конфиденциальности",
+    "noticeOfResponsibility": "Уведомление об ответственности"
   }
+}

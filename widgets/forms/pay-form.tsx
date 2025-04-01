@@ -7,7 +7,7 @@ import Visa from "@/assets/images/visa.png";
 import WebMoney from "@/assets/images/webmoney.png";
 import BitCoin from "@/assets/images/bitcoin.png";
 import LitCoin from "@/assets/images/litecoin.png";
-import DogeCoin from "@/assets/images/dogetoin.png";
+import Digiseller from "@/assets/images/digiseller.png";
 import Payer from "@/assets/images/payeer.png";
 import Enot from "@/assets/images/enot.png";
 import Image from "next/image";
@@ -156,9 +156,8 @@ export const PayForm = () => {
             { id: "webmoney", img: WebMoney, text: "WEBMONEY (WMT)" },
             { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
             { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
-            { id: "dogecoin", img: DogeCoin, text: "DOGECOIN (DOGE)" },
+            { id: "digiseller", img: Digiseller, text: "DIGISELLER" },
             { id: "payeer", img: Payer, text: "PAYEER" },
-            { id: "digiseller", img: Enot, text: "DIGISELLER" },
           ].map((method) => (
             <label key={method.id} className="method">
               <input

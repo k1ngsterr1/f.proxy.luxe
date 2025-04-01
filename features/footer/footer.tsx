@@ -44,6 +44,8 @@ export const Footer: FC = () => {
                 <Link href="/responsibility-principle">
                   {i18n("footer.noticeOfResponsibility")}
                 </Link>
+                <div className="separator"></div>
+                <Link href="/public-offer">{i18n("footer.publicOffer")}</Link>
               </div>
             </div>
             <div className="footer-soc">

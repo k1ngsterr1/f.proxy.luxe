@@ -27,7 +27,7 @@ export const Sidebar = () => {
     backgroundColor: "#0A0A0A",
     color: "#ffffff",
     width: "280px",
-    minHeight: "100vh",
+    minHeight: "80vh",
     display: "flex",
     flexDirection: "column" as const,
     position: "relative" as const,

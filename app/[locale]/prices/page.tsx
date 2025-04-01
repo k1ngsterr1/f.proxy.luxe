@@ -592,16 +592,13 @@ export default function Prices() {
                 style={{
                   padding: "0.8rem 1.5rem",
                   display: "flex",
+                  fontSize: "14px",
                   alignItems: "center",
                 }}
               >
-                <Image
-                  src={Flags || "/placeholder.svg"}
-                  alt="Country flags"
-                  width={400}
-                  height={20}
-                  style={{ marginRight: "0.5rem", borderRadius: "3px" }}
-                />
+                🇷🇺 🇵🇭 🇺🇸 🇺🇦 🇰🇿 🇮🇹 🇨🇦 🇩🇰 🇷🇴 🇧🇪 🇬🇧 🇨🇭 🇧🇷 🇸🇨 🇧🇾 🇭🇺 🇬🇷 🇪🇬 🇧🇬 🇲🇦 🇸🇪
+                🇱🇹 🇩🇪 🇨🇿 🇮🇱 🇿🇦 🇬🇪 🇰🇬 🇳🇬 🇸🇦 🇩🇰 🇦🇲 🇪🇸 🇲🇩 🇻🇳 🇫🇮 🇨🇳 🇰🇷 🇯🇵 🇹🇷 🇸🇬 🇭🇰
+                🇸🇦 🇹🇼 🇨🇾
               </div>
               <div
                 style={{
@@ -624,6 +621,9 @@ export default function Prices() {
                     padding: "0.5rem",
                     backgroundColor: "rgba(212,175,55,0.1)",
                     borderRadius: "5px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     textAlign: "center",
                     transition: "all 0.3s ease",
                   }}
@@ -729,16 +729,13 @@ export default function Prices() {
                 style={{
                   padding: "0.8rem 1.5rem",
                   display: "flex",
+                  fontSize: "14px",
                   alignItems: "center",
                 }}
               >
-                <Image
-                  src={Flags || "/placeholder.svg"}
-                  alt="Country flags"
-                  width={400}
-                  height={20}
-                  style={{ marginRight: "0.5rem", borderRadius: "3px" }}
-                />
+                🇷🇺 🇵🇭 🇺🇸 🇺🇦 🇰🇿 🇮🇹 🇨🇦 🇩🇰 🇷🇴 🇧🇪 🇬🇧 🇨🇭 🇧🇷 🇸🇨 🇧🇾 🇭🇺 🇬🇷 🇪🇬 🇧🇬 🇲🇦 🇸🇪
+                🇱🇹 🇩🇪 🇨🇿 🇮🇱 🇿🇦 🇬🇪 🇰🇬 🇳🇬 🇸🇦 🇩🇰 🇦🇲 🇪🇸 🇲🇩 🇻🇳 🇫🇮 🇨🇳 🇰🇷 🇯🇵 🇹🇷 🇸🇬 🇭🇰
+                🇸🇦 🇹🇼 🇨🇾
               </div>
               <div
                 style={{
@@ -762,6 +759,9 @@ export default function Prices() {
                     backgroundColor: "rgba(212,175,55,0.1)",
                     borderRadius: "5px",
                     textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     transition: "all 0.3s ease",
                   }}
                 >
@@ -865,16 +865,13 @@ export default function Prices() {
                 style={{
                   padding: "0.8rem 1.5rem",
                   display: "flex",
+                  fontSize: "14px",
                   alignItems: "center",
                 }}
               >
-                <Image
-                  src={Flags || "/placeholder.svg"}
-                  alt="Country flags"
-                  width={400}
-                  height={20}
-                  style={{ marginRight: "0.5rem", borderRadius: "3px" }}
-                />
+                🇷🇺 🇵🇭 🇺🇸 🇺🇦 🇰🇿 🇮🇹 🇨🇦 🇩🇰 🇷🇴 🇧🇪 🇬🇧 🇨🇭 🇧🇷 🇸🇨 🇧🇾 🇭🇺 🇬🇷 🇪🇬 🇧🇬 🇲🇦 🇸🇪
+                🇱🇹 🇩🇪 🇨🇿 🇮🇱 🇿🇦 🇬🇪 🇰🇬 🇳🇬 🇸🇦 🇩🇰 🇦🇲 🇪🇸 🇲🇩 🇻🇳 🇫🇮 🇨🇳 🇰🇷 🇯🇵 🇹🇷 🇸🇬 🇭🇰
+                🇸🇦 🇹🇼 🇨🇾
               </div>
               <div
                 style={{
@@ -897,6 +894,9 @@ export default function Prices() {
                     padding: "0.5rem",
                     backgroundColor: "rgba(212,175,55,0.1)",
                     borderRadius: "5px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     textAlign: "center",
                     transition: "all 0.3s ease",
                   }}

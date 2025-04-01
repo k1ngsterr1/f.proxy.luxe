@@ -12,7 +12,7 @@ import { ChevronDown } from "lucide-react";
 export const ISPBuyCard = () => {
   const router = useRouter();
   const i18n = useTranslations("proxy-cards.isp");
-  const [countryId, setCountryId] = useState<string>("1");
+  const [countryId, setCountryId] = useState<string>("3758");
   const [quantity, setQuantity] = useState<string>("1");
   const [period, setPeriod] = useState<string>("1m");
   const [goal, setGoal] = useState<string>("surfing");
@@ -34,19 +34,14 @@ export const ISPBuyCard = () => {
   // 👉 Пример обработчика для кнопки "Купить"
   const handleBuyClick = () => {
     // Validate goal is selected
-    if (!goal) {
-      setValidationError(i18n("errors.goalRequired"));
-      return;
-    }
 
     const selectedCountry = preferences?.isp.country.find((c) => {
+      console.log(c);
       return c.id == countryId;
     });
 
-    if (!selectedCountry) return null;
-
     const orderData = {
-      country: selectedCountry.name,
+      country: selectedCountry?.name,
       quantity: Number(quantity),
       periodDays: period,
       goal,
@@ -118,7 +113,6 @@ export const ISPBuyCard = () => {
         >
           <option>{i18n("month")}</option>
         </select>
-
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("usage")} <span style={{ color: "#f3d675" }}>*</span>
         </h4>
