@@ -60,7 +60,10 @@ export const PayForm = () => {
         setIsSubmitting(true);
 
         if (values.paymentMethod === "webmoney") {
-          await processWebMoneyPayment(values.paymentAmount);
+          await processWebMoneyPayment(
+            values.paymentAmount,
+            values.paymentMethod
+          );
         } else if (values.paymentMethod === "payeer") {
           await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "digiseller") {
@@ -69,11 +72,21 @@ export const PayForm = () => {
             Math.floor(parseFloat(values.paymentAmount)),
             locale
           );
+        } else if (values.paymentMethod === "litecoin") {
+          await processWebMoneyPayment(
+            values.paymentAmount,
+            values.paymentMethod
+          );
+        } else if (values.paymentMethod === "bitcoin") {
+          await processWebMoneyPayment(
+            values.paymentAmount,
+            values.paymentMethod
+          );
         } else {
-          // Handle other payment methods
-          console.log("Processing payment:", values);
-          // Simulate API call
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await processDigisellerPayment(
+            Math.floor(parseFloat(values.paymentAmount)),
+            locale
+          );
         }
       } catch (error) {
         console.error("Payment processing error:", error);

@@ -7,13 +7,25 @@ import { submitWebMoneyForm } from "../../helper/submit-webmoney.helper";
 
 // ✅ Constants
 const MERCHANT_WALLET = "T830321222093";
+const MERCHANT_WALLET_LTC = "L886522288283";
+const MERCHANT_WALLET_BTC = "X974038425634";
 const RESULT_URL = "https://api.proxy.luxe/api/v1/payment/success";
 
 // ✅ Hook: WebMoney Payment Processing
 export const useWebMoneyPayment = () => {
   const processWebMoneyPayment = useCallback(
-    async (amount: string | number) => {
+    async (
+      amount: string | number,
+      type: "webmoney" | "bitcoin" | "litecoin"
+    ) => {
       try {
+        let purse = MERCHANT_WALLET;
+        if (type === "bitcoin") {
+          purse = MERCHANT_WALLET_BTC;
+        }
+        if (type === "litecoin") {
+          purse = MERCHANT_WALLET_LTC;
+        }
         const userId = getUserIdFromToken();
         if (!userId) return;
 
@@ -21,7 +33,7 @@ export const useWebMoneyPayment = () => {
         const description = `Пополнение баланса на ${amount}`;
 
         const fields = {
-          LMI_PAYEE_PURSE: MERCHANT_WALLET,
+          LMI_PAYEE_PURSE: purse,
           LMI_PAYMENT_AMOUNT: String(amount),
           LMI_PAYMENT_NO: orderId.toString(),
           LMI_PAYMENT_DESC: description,

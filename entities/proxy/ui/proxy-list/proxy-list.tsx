@@ -107,22 +107,30 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
         proxy.ports.forEach((port: number | string) => {
           const ip = "res.proxy-seller.com";
-
-          content += "#1: IP:PORT:LOGIN:PASSWORD\n";
-          content += `@${ip}:${port}:${login}:${password}\n\n`;
-
-          content += "#2: LOGIN:PASSWORD@IP:PORT\n";
+          content += `@${ip}:${port}:${login}:${password}\n`;
+        });
+        content += "\n";
+        proxy.ports.forEach((port: number | string) => {
+          const ip = "res.proxy-seller.com";
           content += `${login}:${password}@${ip}:${port}\n\n`;
         });
       } else {
         const ip = proxy.ip;
         const port = proxy.port_http || proxy.port_socks || "-";
+        content += `${ip}:${port}:${login}:${password}\n`;
+      }
 
-        content += "#1: IP:PORT:LOGIN:PASSWORD\n";
-        content += `${ip}:${port}:${login}:${password}\n\n`;
+      content += "\n";
+    });
 
-        content += "#2: LOGIN:PASSWORD@IP:PORT\n";
-        content += `${login}:${password}@${ip}:${port}\n\n`;
+    proxies.forEach((proxy) => {
+      const login = proxy.login || "user";
+      const password = proxy.password || "pass";
+
+      if (proxy.type !== "resident") {
+        const ip = proxy.ip;
+        const port = proxy.port_http || proxy.port_socks || "-";
+        content += `${login}:${password}@${ip}:${port}\n`;
       }
 
       content += "\n";
