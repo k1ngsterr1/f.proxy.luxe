@@ -1,192 +1,1426 @@
-import React from "react";
-import { useTranslations } from "next-intl";
+"use client";
 
-export const PublicOfferBlock = () => {
-  const i18n = useTranslations("privacyPolicy");
+import { useState, useRef, useEffect } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import { ChevronUp, Copy, Check, Calendar, FileText } from "lucide-react";
+import Link from "next/link";
+
+export default function PublicOfferPage() {
+  const locale = useLocale();
+  const i18n = useTranslations("publicOffer");
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  // Toggle section visibility
+  const toggleSection = (section: string) => {
+    setActiveSection(activeSection === section ? null : section);
+  };
+
+  // Copy text to clipboard
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  // Scroll to section
+  const scrollToSection = (sectionId: string) => {
+    const section = sectionRefs.current[sectionId];
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+      setActiveSection(sectionId);
+    }
+  };
+
+  // Scroll to top
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Handle scroll for back to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div
+    <main
       style={{
-        padding: "20px",
-        maxWidth: "1200px",
-        margin: "0 auto",
         backgroundColor: "#000000",
         color: "#FFFFFF",
+        minHeight: "100vh",
+        paddingTop: "250px",
+        paddingBottom: "50px",
       }}
     >
-      <div style={{ marginBottom: "32px" }}>
-        <h1
-          style={{
-            fontSize: "32px",
-            margin: 0,
-            marginTop: 32,
-            textAlign: "center",
-            color: "#FFFFFF",
-            fontWeight: "bold",
-          }}
-        >
-          {i18n("header")}
-        </h1>
-      </div>
       <div
         style={{
-          backgroundColor: "rgba(243, 214, 117, 0.05)",
-          borderRadius: "8px",
-          border: "1px solid rgba(243, 214, 117, 0.2)",
-          padding: "24px",
-          fontSize: "14px",
-          lineHeight: "1.6",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "0 20px",
         }}
       >
-        {/* Section 1 */}
-        <section style={{ marginBottom: "24px" }}>
-          <h2
+        {/* Header */}
+        <div
+          style={{
+            marginBottom: "40px",
+            position: "relative",
+          }}
+        >
+          <h1
             style={{
+              fontSize: "32px",
+              fontWeight: "bold",
               color: "#f3d675",
-              fontSize: "18px",
               marginBottom: "16px",
-              fontWeight: "600",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
             }}
           >
-            {i18n("section1.title")}
-          </h2>
-          {[1, 2, 3, 4, 5].map((item) => (
-            <p key={item} style={{ marginBottom: "12px" }}>
-              {i18n(`section1.point${item}`)}
-            </p>
-          ))}
-        </section>
+            <FileText size={28} />
+            {i18n("header")}
+          </h1>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              color: "#999999",
+              fontSize: "14px",
+              marginBottom: "24px",
+            }}
+          >
+            <Calendar size={16} />
+            {i18n("publishedDate")}
+          </div>
+          <p
+            style={{
+              fontSize: "16px",
+              lineHeight: "1.6",
+              color: "#CCCCCC",
+              marginBottom: "32px",
+              maxWidth: "800px",
+            }}
+          >
+            {i18n("introduction")}
+          </p>
+        </div>
 
-        {/* Section 2 */}
-        <section style={{ marginBottom: "24px" }}>
-          <h2
+        {/* Content layout with sidebar */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "280px 1fr",
+            gap: "40px",
+          }}
+        >
+          {/* Table of Contents Sidebar */}
+          <aside
             style={{
-              color: "#f3d675",
-              fontSize: "18px",
-              marginBottom: "16px",
-              fontWeight: "600",
+              position: "sticky",
+              top: "100px",
+              height: "fit-content",
+              backgroundColor: "rgba(243, 214, 117, 0.05)",
+              borderRadius: "8px",
+              padding: "24px",
+              border: "1px solid rgba(243, 214, 117, 0.2)",
             }}
           >
-            {i18n("section2.title")}
-          </h2>
-          <p style={{ marginBottom: "12px" }}>{i18n("section2.point1")}</p>
-          <p style={{ marginBottom: "12px" }}>{i18n("section2.point2")}</p>
-          <ul
-            style={{
-              marginLeft: "20px",
-              marginBottom: "12px",
-              listStyleType: "disc",
-            }}
-          >
-            {[1, 2, 3, 4, 5].map((item) => (
-              <li key={item} style={{ marginBottom: "8px" }}>
-                {i18n(`section2.list.item${item}`)}
-              </li>
-            ))}
-          </ul>
-        </section>
+            <h2
+              style={{
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "#f3d675",
+                marginBottom: "16px",
+              }}
+            >
+              {i18n("tableOfContents")}
+            </h2>
+            <nav>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {[...Array(11)].map((_, index) => (
+                  <li
+                    key={`section${index + 1}`}
+                    style={{
+                      marginBottom: "12px",
+                      borderBottom:
+                        index < 10
+                          ? "1px solid rgba(243, 214, 117, 0.1)"
+                          : "none",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    <button
+                      onClick={() => scrollToSection(`section${index + 1}`)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color:
+                          activeSection === `section${index + 1}`
+                            ? "#f3d675"
+                            : "#FFFFFF",
+                        fontSize: "14px",
+                        textAlign: "left",
+                        cursor: "pointer",
+                        padding: "0",
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        transition: "color 0.2s",
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "50%",
+                          backgroundColor:
+                            activeSection === `section${index + 1}`
+                              ? "rgba(243, 214, 117, 0.2)"
+                              : "rgba(255, 255, 255, 0.1)",
+                          color:
+                            activeSection === `section${index + 1}`
+                              ? "#f3d675"
+                              : "#FFFFFF",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {index + 1}
+                      </span>
+                      {i18n(`section${index + 1}.title`)}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-        {/* Section 3 */}
-        <section style={{ marginBottom: "24px" }}>
-          <h2
-            style={{
-              color: "#f3d675",
-              fontSize: "18px",
-              marginBottom: "16px",
-              fontWeight: "600",
-            }}
-          >
-            {i18n("section3.title")}
-          </h2>
-          {[1, 2, 3].map((item) => (
-            <p key={item} style={{ marginBottom: "12px" }}>
-              {i18n(`section3.point${item}`)}
-            </p>
-          ))}
-        </section>
+            <div
+              style={{
+                marginTop: "24px",
+                padding: "16px",
+                backgroundColor: "rgba(243, 214, 117, 0.1)",
+                borderRadius: "8px",
+                fontSize: "14px",
+                color: "#CCCCCC",
+              }}
+            >
+              <p style={{ marginBottom: "12px" }}>
+                {i18n("needHelp.question")}
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
+                <Link
+                  href="/contacts"
+                  style={{
+                    color: "#f3d675",
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  {i18n("needHelp.contactUs")}
+                </Link>
+                <Link
+                  href="/faq"
+                  style={{
+                    color: "#f3d675",
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  {i18n("needHelp.faq")}
+                </Link>
+              </div>
+            </div>
+          </aside>
 
-        {/* Section 4 */}
-        <section style={{ marginBottom: "24px" }}>
-          <h2
-            style={{
-              color: "#f3d675",
-              fontSize: "18px",
-              marginBottom: "16px",
-              fontWeight: "600",
-            }}
-          >
-            {i18n("section4.title")}
-          </h2>
-          <p style={{ marginBottom: "12px" }}>{i18n("section4.point1")}</p>
-          <ul
-            style={{
-              marginLeft: "20px",
-              marginBottom: "12px",
-              listStyleType: "disc",
-            }}
-          >
-            {[1, 2, 3, 4].map((item) => (
-              <li key={item} style={{ marginBottom: "8px" }}>
-                {i18n(`section4.list.item${item}`)}
-              </li>
-            ))}
-          </ul>
-          <p style={{ marginBottom: "12px" }}>{i18n("section4.point2")}</p>
-        </section>
+          {/* Main Content */}
+          <div>
+            {/* Section 1 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section1 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  I
+                </span>
+                {i18n("section1.title")}
+              </h2>
 
-        {/* Section 5 */}
-        <section style={{ marginBottom: "24px" }}>
-          <h2
-            style={{
-              color: "#f3d675",
-              fontSize: "18px",
-              marginBottom: "16px",
-              fontWeight: "600",
-            }}
-          >
-            {i18n("section5.title")}
-          </h2>
-          {[1, 2, 3].map((item) => (
-            <p key={item} style={{ marginBottom: "12px" }}>
-              {i18n(`section5.point${item}`)}
-            </p>
-          ))}
-        </section>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "16px",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "16px",
+                    lineHeight: "1.6",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  {i18n("section1.point1")}
+                </p>
+                <button
+                  onClick={() => copyToClipboard(i18n("section1.point1"))}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: copied ? "#4CAF50" : "#f3d675",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    fontSize: "12px",
+                  }}
+                  title={i18n("copyText")}
+                >
+                  {copied ? <Check size={16} /> : <Copy size={16} />}
+                </button>
+              </div>
 
-        {/* Section 6 */}
-        <section style={{ marginBottom: "24px" }}>
-          <h2
-            style={{
-              color: "#f3d675",
-              fontSize: "18px",
-              marginBottom: "16px",
-              fontWeight: "600",
-            }}
-          >
-            {i18n("section6.title")}
-          </h2>
-          {[1, 2].map((item) => (
-            <p key={item} style={{ marginBottom: "12px" }}>
-              {i18n(`section6.point${item}`)}
-            </p>
-          ))}
-        </section>
+              <div
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  marginBottom: "16px",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: "14px",
+                    lineHeight: "1.6",
+                    color: "#CCCCCC",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {i18n("section1.point2")}
+                </p>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    lineHeight: "1.6",
+                    color: "#CCCCCC",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {i18n("section1.point3")}
+                </p>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    lineHeight: "1.6",
+                    color: "#CCCCCC",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {i18n("section1.point4")}
+                </p>
+                <p
+                  style={{
+                    fontSize: "14px",
+                    lineHeight: "1.6",
+                    color: "#CCCCCC",
+                  }}
+                >
+                  {i18n("section1.point5")}
+                </p>
+              </div>
+            </section>
 
-        {/* Section 7 */}
-        <section>
-          <h2
-            style={{
-              color: "#f3d675",
-              fontSize: "18px",
-              marginBottom: "16px",
-              fontWeight: "600",
-            }}
-          >
-            {i18n("section7.title")}
-          </h2>
-          <p style={{ marginBottom: "12px" }}>{i18n("section7.point1")}</p>
-        </section>
+            {/* Section 2 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section2 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  II
+                </span>
+                {i18n("section2.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section2.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section2.point2")}
+              </p>
+
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  marginBottom: "16px",
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#f3d675",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {i18n("section2.listTitle")}
+                </h3>
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                  }}
+                >
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section2.list.item1")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section2.list.item2")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section2.list.item3")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section2.list.item4")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section2.list.item5")}
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            {/* Section 3 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section3 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  III
+                </span>
+                {i18n("section3.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section3.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section3.point2")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section3.point3")}
+              </p>
+            </section>
+
+            {/* Section 4 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section4 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  IV
+                </span>
+                {i18n("section4.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section4.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section4.point2")}
+              </p>
+
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  padding: "16px",
+                }}
+              >
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                  }}
+                >
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section4.list.item1")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section4.list.item2")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      marginBottom: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section4.list.item3")}
+                  </li>
+                  <li
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#FFFFFF",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: "6px",
+                        height: "6px",
+                        borderRadius: "50%",
+                        backgroundColor: "#f3d675",
+                        display: "inline-block",
+                      }}
+                    ></span>
+                    {i18n("section4.list.item4")}
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            {/* Section 5 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section5 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  V
+                </span>
+                {i18n("section5.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section5.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section5.point2")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                }}
+              >
+                {i18n("section5.point3")}
+              </p>
+            </section>
+
+            {/* Section 6 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section6 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  VI
+                </span>
+                {i18n("section6.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section6.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                }}
+              >
+                {i18n("section6.point2")}
+              </p>
+            </section>
+
+            {/* Section 7 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section7 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  VII
+                </span>
+                {i18n("section7.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                }}
+              >
+                {i18n("section7.point1")}
+              </p>
+            </section>
+
+            {/* Section 8 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section8 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  VIII
+                </span>
+                {i18n("section8.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section8.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section8.point2")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                }}
+              >
+                {i18n("section8.point3")}
+              </p>
+            </section>
+
+            {/* Section 9 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section9 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  IX
+                </span>
+                {i18n("section9.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section9.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section9.point2")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                }}
+              >
+                {i18n("section9.point3")}
+              </p>
+            </section>
+
+            {/* Section 10 */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section10 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.03)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.1)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  X
+                </span>
+                {i18n("section10.title")}
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section10.point1")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("section10.point2")}
+              </p>
+
+              <p
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.6",
+                  color: "#FFFFFF",
+                }}
+              >
+                {i18n("section10.point3")}
+              </p>
+            </section>
+
+            {/* Section 11 - Company Details */}
+            <section
+              ref={(el: any) => (sectionRefs.current.section11 = el)}
+              style={{
+                marginBottom: "40px",
+                backgroundColor: "rgba(243, 214, 117, 0.05)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.2)",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(243, 214, 117, 0.2)",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  XI
+                </span>
+                {i18n("section11.title")}
+              </h2>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    borderRadius: "8px",
+                    padding: "16px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#CCCCCC",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <strong style={{ color: "#f3d675" }}>
+                      {i18n("section11.website")}:
+                    </strong>{" "}
+                    proxy.luxe
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#CCCCCC",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <strong style={{ color: "#f3d675" }}>
+                      {i18n("section11.name")}:
+                    </strong>{" "}
+                    {i18n("section11.fullName")}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#CCCCCC",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <strong style={{ color: "#f3d675" }}>
+                      {i18n("section11.inn")}:
+                    </strong>{" "}
+                    590621469075
+                  </p>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    borderRadius: "8px",
+                    padding: "16px",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#CCCCCC",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <strong style={{ color: "#f3d675" }}>
+                      {i18n("section11.phone")}:
+                    </strong>{" "}
+                    +79304140003
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#CCCCCC",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <strong style={{ color: "#f3d675" }}>
+                      {i18n("section11.email")}:
+                    </strong>{" "}
+                    admin@proxy.luxe
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      lineHeight: "1.6",
+                      color: "#CCCCCC",
+                    }}
+                  >
+                    <strong style={{ color: "#f3d675" }}>
+                      {i18n("section11.telegram")}:
+                    </strong>{" "}
+                    <a
+                      href="https://t.me/andreyproxy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#f3d675",
+                        textDecoration: "none",
+                      }}
+                    >
+                      @andreyproxy
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Back to top button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          style={{
+            position: "fixed",
+            bottom: "30px",
+            right: "30px",
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            backgroundColor: "rgba(243, 214, 117, 0.2)",
+            border: "1px solid rgba(243, 214, 117, 0.5)",
+            color: "#f3d675",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            zIndex: 100,
+            transition: "all 0.3s ease",
+          }}
+        >
+          <ChevronUp size={24} />
+        </button>
+      )}
+    </main>
   );
-};
+}

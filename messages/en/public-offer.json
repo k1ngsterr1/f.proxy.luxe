@@ -1,9 +1,18 @@
 {
-  "privacyPolicy": {
-    "header": "Terms of Use and Public Offer Agreement of proxy.luxe",
+  "publicOffer": {
+    "header": "Terms of Use and Public Offer Agreement",
     "publishedDate": "Published on March 31, 2025",
+    "introduction": "This document is a public offer agreement and contains all essential conditions for granting a License to use proxy.luxe services. By accepting this offer, you agree to all terms and conditions outlined below.",
+    "tableOfContents": "Table of Contents",
+    "copyText": "Copy text",
+    "backToTop": "Back to top",
+    "needHelp": {
+      "question": "Need help understanding this agreement?",
+      "contactUs": "Contact our support team",
+      "faq": "Visit our FAQ page"
+    },
     "section1": {
-      "title": "I. GENERAL PROVISIONS",
+      "title": "GENERAL PROVISIONS",
       "point1": "For the purposes of this Agreement, the Parties have defined the meaning of the following terms used in the text of the Agreement and appendices to this Agreement:",
       "point2": "1.1. Offer – this document is a public offer agreement and contains all essential conditions for granting a License, which is posted on the Internet at https://proxy.luxe/ (hereinafter referred to as the website)",
       "point3": "1.2. Acceptance of the offer – full and unconditional acceptance of the offer.",
@@ -11,48 +20,77 @@
       "point5": "1.4. License – the right to use the website within the period provided by the Licensor."
     },
     "section2": {
-      "title": "II. SUBJECT OF THE AGREEMENT",
+      "title": "SUBJECT OF THE AGREEMENT",
       "point1": "2.1. The Licensor grants the Licensee the right to use the website at https://proxy.luxe/ (non-exclusive license) within the limits established by this Agreement, and the Licensee undertakes to pay the Licensor the remuneration stipulated by this Agreement.",
       "point2": "2.2. The territory in which the Licensee is permitted to use the License is the whole world.",
+      "listTitle": "2.3. Under this Agreement, the license for the right to use the website includes:",
       "list": {
-        "item1": "- use of the website functionality",
-        "item2": "- access to the use of IP addresses through proxy on the website",
-        "item3": "- technical support for the duration of the license",
-        "item4": "- access to personal account features",
-        "item5": "- ability to purchase additional services"
+        "item1": "Use of the website functionality",
+        "item2": "Access to the use of IP addresses through proxy on the website",
+        "item3": "Technical support for the duration of the license",
+        "item4": "Access to personal account features",
+        "item5": "Ability to purchase additional services"
       }
     },
     "section3": {
-      "title": "III. COST OF LICENSE",
+      "title": "COST OF LICENSE",
       "point1": "3.1. The cost of the License is specified in the price list.",
       "point2": "3.2. When concluding the agreement, the specific List and cost of the License under this Agreement is indicated in the invoice provided on the website. All calculations under the Agreement are carried out in Russian rubles, or in electronic means of payment at the rate of 1 to 1 Russian ruble.",
       "point3": "3.3. Payment for the License is made by the Licensee by making a 100% prepayment at once by paying in the ways specified in clause 3.5. of the Agreement. The date of payment and confirmation of payment is considered to be the date of receipt of funds to the Licensor's settlement account, or to an electronic wallet."
     },
     "section4": {
-      "title": "IV. TERMS AND PROCEDURE FOR REFUND",
+      "title": "TERMS AND PROCEDURE FOR REFUND",
       "point1": "4.1. Payment for the license is non-refundable.",
       "point2": "4.2. A refund can only be made by decision of the Licensor.",
       "list": {
-        "item1": "- in case of technical issues preventing the use of the service",
-        "item2": "- if the service was not provided as described",
-        "item3": "- in other exceptional circumstances at the Licensor's discretion",
-        "item4": "- within the timeframe specified by applicable law"
+        "item1": "In case of technical issues preventing the use of the service",
+        "item2": "If the service was not provided as described",
+        "item3": "In other exceptional circumstances at the Licensor's discretion",
+        "item4": "Within the timeframe specified by applicable law"
       }
     },
     "section5": {
-      "title": "V. PERSONAL DATA PROCESSING",
+      "title": "PERSONAL DATA PROCESSING",
       "point1": "5.1. By accepting the terms of the Offer, the Licensee gives consent in accordance with current legislation for the processing of their information and (or) personal data by the Licensor, as well as by the Licensor in relations with third parties.",
       "point2": "5.2. The Licensor undertakes to take all necessary legal, organizational and technical measures in accordance with Federal Law No. 152-FZ dated July 27, 2006 \"On Personal Data\" to protect personal data from unauthorized, unauthorized or accidental access to them, destruction, modification, blocking, copying, provision, distribution of personal data, as well as from other illegal actions in relation to personal data.",
       "point3": "5.3. The Licensee has the right to withdraw consent for data processing by notifying the Licensor in writing."
     },
     "section6": {
-      "title": "VI. RIGHTS AND OBLIGATIONS OF THE PARTIES",
+      "title": "RIGHTS AND OBLIGATIONS OF THE PARTIES",
       "point1": "6.1. The Licensor and Licensee agree to fulfill all obligations under this Agreement in good faith and in accordance with the terms specified herein.",
       "point2": "6.2. The Licensee agrees not to use the service for any illegal activities and to comply with all applicable laws and regulations when using the proxy services."
     },
     "section7": {
-      "title": "VII. LIABILITY",
+      "title": "LIABILITY",
       "point1": "7.1. In cases of non-fulfillment or improper fulfillment of their obligations under the Agreement, the Parties shall be liable in accordance with the legislation of the Russian Federation, taking into account the terms of this Agreement."
+    },
+    "section8": {
+      "title": "DISPUTE RESOLUTION",
+      "point1": "8.1. All disputes and disagreements arising in connection with the execution of this Agreement shall be resolved by the Parties through negotiations.",
+      "point2": "8.2. The Parties undertake to monitor the receipt of legally significant messages by e-mail on a daily basis. An electronic message is considered delivered even in cases where it has been sent to the person to whom it is addressed (the addressee), but for circumstances depending on him, it has not been delivered to him or the addressee has not read it.",
+      "point3": "8.3. The pre-trial dispute resolution procedure is mandatory, with a review period of 10 days from the date of receipt by the parties."
+    },
+    "section9": {
+      "title": "CONFIDENTIALITY AND INFORMATION PROTECTION",
+      "point1": "9.1. This section is regulated by the following regulatory legal acts: Federal Law of the Russian Federation dated July 27, 2006 No. 152-FZ \"On Personal Data\", Federal Law of the Russian Federation dated July 27, 2006 No. 149-FZ \"On Information, Information Technologies and Information Protection\".",
+      "point2": "9.2. By entering into this Agreement, the Licensee consents to the use of information about himself (personal data), his relationship with the Licensor, his personal data, data about his business and income, transferred to the Licensor as part of the execution of this Agreement.",
+      "point3": "9.3. The Licensee has the right to withdraw consent for the processing of personal data by revoking acceptance of this Offer Agreement."
+    },
+    "section10": {
+      "title": "OTHER CONDITIONS",
+      "point1": "10.1. According to Part 2 of Art. 434 of the Civil Code of the Russian Federation, the parties recognize that when concluding the Agreement, they act in good faith, provide each other with reliable data, and recognize the proper conclusion of this offer in electronic form by paying for a license or sending acceptance by drawing up an application.",
+      "point2": "10.2. This Agreement is valid from the moment the Licensee sends acceptance until the moment the Parties fulfill all obligations.",
+      "point3": "10.3. The Licensee confirms that all the terms of this Agreement are clear to him, and he accepts them unconditionally and in full."
+    },
+    "section11": {
+      "title": "LICENSOR",
+      "website": "Website",
+      "name": "Name",
+      "fullName": "Self-employed Kolos Vladlena Olegovna",
+      "inn": "INN (Tax ID)",
+      "phone": "Phone",
+      "email": "E-mail",
+      "telegram": "Telegram"
     }
   }
 }
