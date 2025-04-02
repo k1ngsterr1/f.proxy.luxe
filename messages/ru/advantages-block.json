@@ -24,7 +24,7 @@
       },
       "protocols": {
         "title": "HTTPS / SOCKS5",
-        "description": "Прокси переключаются с HTTPS на SOCKS5 и обратно в личном кабинете.",
+        "description": "Прокси поддерживают два протокола, порт HTTPS и SOCKS5.",
         "altText": "Переключение прокси"
       },
       "flexiblePurchases": {

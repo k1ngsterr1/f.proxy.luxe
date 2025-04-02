@@ -7,7 +7,7 @@
     "description": "Choose your preferred payment method. All transactions are secure and encrypted.",
     "methods": {
       "visa-mastercard": {
-        "name": "Visa/MasterCard",
+        "name": "Visa/MasterCard/MIR",
         "description": "Credit or debit card payment"
       },
       "payeer": {

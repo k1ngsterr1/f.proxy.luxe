@@ -7,7 +7,7 @@
     "description": "Выберите предпочтительный способ оплаты. Все транзакции безопасны и зашифрованы.",
     "methods": {
       "visa-mastercard": {
-        "name": "Visa/MasterCard",
+        "name": "Visa/MasterCard/MIR",
         "description": "Оплата кредитной или дебетовой картой"
       },
       "payeer": {

@@ -39,10 +39,6 @@ export const Header: FC = () => {
   const changeLanguage = (lang: string) => {
     const newPath = getPathForLocale(lang);
     router.push(newPath);
-    // Небольшая задержка, чтобы push сработал, затем перезагрузка
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
   };
 
   return (

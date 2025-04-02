@@ -14,7 +14,7 @@
       },
       "automation": {
         "title": "FULLY AUTOMATED",
-        "description": "Proxies are activated immediately after payment.",
+        "description": "Proxies supports 2 protocols, port HTTPS and SOCKS5.",
         "altText": "Automatic activation"
       },
       "exclusive": {

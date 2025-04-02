@@ -19,15 +19,20 @@ export const AdvantageCard: React.FC<AdvantageCardProps> = ({
 
   return (
     <div className="adv-item">
-      <div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Image
           src={image}
-          layout="responsive"
           style={{
-            width: isMobile ? 64 : 250,
-            height: isMobile ? 64 : 150,
+            width: isMobile ? 64 : 150,
+            height: isMobile ? 64 : 160,
           }}
-          width={isMobile ? 150 : 300} // Default width
+          width={isMobile ? 150 : 200} // Default width
           height={isMobile ? 100 : 200} // Default height
           alt={altText || title} // Fallback to title for better accessibility
         />
