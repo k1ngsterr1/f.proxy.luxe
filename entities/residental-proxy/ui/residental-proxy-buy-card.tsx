@@ -9,7 +9,6 @@ import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-orde
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { ChevronDown, Loader2 } from "lucide-react";
 
-// Define the pricing structure based on the provided plans
 const TARIFF_PRICES = {
   "1 Gb": 2.4,
   "3 Gb": 7,
@@ -215,7 +214,7 @@ export const ResidentalProxyBuyCard = () => {
             value={goal}
             onChange={(e) => {
               setGoal(e.target.value);
-              setValidationError(null); // Clear validation error when user selects an option
+              setValidationError(null);
             }}
             style={{
               ...selectStyle,

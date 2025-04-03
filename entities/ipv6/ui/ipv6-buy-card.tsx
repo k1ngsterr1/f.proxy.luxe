@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
-import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/shared/ui/button";
+
+
 
 export const IPV6BuyCard = () => {
   const router = useRouter();
@@ -15,8 +18,9 @@ export const IPV6BuyCard = () => {
     useGetPreferences();
   const { mutate: createOrder, isPending: isLoadingOrder } = useCreateOrder();
 
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [countryId, setCountryId] = useState<string>("");
-  const [quantity, setQuantity] = useState<string>("10");
+  const [quantity, setQuantity] = useState<number>(10);
   const [goal, setGoal] = useState<string>("");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("");
@@ -57,6 +61,44 @@ export const IPV6BuyCard = () => {
     });
   };
 
+
+  // Common style for select elements
+  const selectStyle = {
+    backgroundColor: "#1E1E1E",
+    color: "#fff",
+    border: "1px solid #3E3E3E",
+    padding: "10px",
+    width: "100%",
+    borderRadius: "5px",
+    appearance: "none" as const,
+    cursor: "pointer",
+    paddingRight: "30px", // Space for the chevron icon
+  };
+
+  // Style for the select wrapper (to position the chevron icon)
+  const selectWrapperStyle = {
+    position: "relative" as const,
+    width: "100%",
+  };
+
+  // Style for the chevron icon
+  const chevronStyle = {
+    position: "absolute" as const,
+    right: "10px",
+    top: "50%",
+    transform: "translateY(-50%)",
+    pointerEvents: "none" as const,
+    color: "#f3d675",
+  };
+
+  // Style for validation error message
+  const errorStyle = {
+    color: "#ff4d4f",
+    fontSize: "12px",
+    marginTop: "4px",
+  };
+
+
   return (
     <div className="buy-col">
       <div className="buy-item" style={{ minHeight: 800, height: 850 }}>
@@ -87,8 +129,14 @@ export const IPV6BuyCard = () => {
         <input
           type="number"
           value={quantity}
-          min={10}
-          onChange={(e) => setQuantity(e.target.value)}
+          max={10}
+          min={0}
+          onChange={(e) => {
+            const newValue = Number(e.target.value);
+            if (newValue >= 0 && newValue <= 10) {
+              setQuantity(newValue);
+            }
+          }}
           style={inputStyle}
         />
 
@@ -106,16 +154,37 @@ export const IPV6BuyCard = () => {
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("usage")}
         </h4>
-        <input
-          type="text"
-          value={goal}
-          required
-          placeholder={i18n("usage")}
-          onChange={(e) => setGoal(e.target.value)}
-          style={inputStyle}
-        />
+        <div style={selectWrapperStyle}>
+          <select
+            value={goal}
+            onChange={(e) => {
+              setGoal(e.target.value);
+              setValidationError(null);
+            }}
+            style={{
+              ...selectStyle,
+              border: validationError
+                ? "1px solid #ff4d4f"
+                : "1px solid #3E3E3E",
+            }}
+            required
+          >
+            <option value="surfing">{i18n("goals.surfing")}</option>
+            <option value="socialMedia">{i18n("goals.socialMedia")}</option>
+            <option value="seo">{i18n("goals.seo")}</option>
+            <option value="dataCollection">
+              {i18n("goals.dataCollection")}
+            </option>
+            <option value="ecommerce">{i18n("goals.ecommerce")}</option>
+            <option value="gaming">{i18n("goals.gaming")}</option>
+            <option value="streaming">{i18n("goals.streaming")}</option>
+            <option value="research">{i18n("goals.research")}</option>
+            <option value="other">{i18n("goals.other")}</option>
+          </select>
+          <ChevronDown style={chevronStyle} size={16} />
+        </div>
         <div className="buy-item__price">
-          {i18n("price")}: <span>$0.08 / IP</span>
+          {i18n("price")}: <span>{`$ ${0.08 * quantity} / IP`}</span>
         </div>
         <Button
           onClick={handleBuyClick}
