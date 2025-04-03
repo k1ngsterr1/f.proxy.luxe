@@ -98,7 +98,7 @@ export const ISPBuyCard = () => {
           ))}
         </select>
 
-        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+        <h4 className="buy-item__subheader" style={{ marginTop: 16, marginBottom: 20 }}>
           {i18n("quantity")}:    <span
             style={{ left: `calc(${fillPercentage}% + 10px)` }}
           >
@@ -116,7 +116,7 @@ export const ISPBuyCard = () => {
         >
           <option>{i18n("month")}</option>
         </select>
-        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+        <h4 className="buy-item__subheader" style={{ marginTop: 32 }}>
           {i18n("usage")} <span style={{ color: "#f3d675" }}>*</span>
         </h4>
         <div style={{ position: "relative" }}>
@@ -177,6 +177,7 @@ export const ISPBuyCard = () => {
         <div className="buy-item__price">
           {i18n("price")} <span>{`$ ${(2.4 * value).toFixed(1)} / IP`}</span>
         </div>
+        <div className="mt-8" />
         <Button
           className="btn"
           variant="big"
