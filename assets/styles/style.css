@@ -1,42 +1,54 @@
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Thin.ttf");
-  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"), url("fonts/CeraPro-Thin.woff") format("woff"), url("fonts/CeraPro-Thin.eot") format("eot");
+  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"),
+    url("fonts/CeraPro-Thin.woff") format("woff"),
+    url("fonts/CeraPro-Thin.eot") format("eot");
   font-weight: 100;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Light.ttf");
-  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"), url("fonts/CeraPro-Light.woff") format("woff"), url("fonts/CeraPro-Light.eot") format("eot");
+  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"),
+    url("fonts/CeraPro-Light.woff") format("woff"),
+    url("fonts/CeraPro-Light.eot") format("eot");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Regular.ttf");
-  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"), url("fonts/CeraPro-Regular.woff") format("woff"), url("fonts/CeraPro-Regular.eot") format("eot");
+  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"),
+    url("fonts/CeraPro-Regular.woff") format("woff"),
+    url("fonts/CeraPro-Regular.eot") format("eot");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Medium.ttf");
-  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"), url("fonts/CeraPro-Medium.woff") format("woff"), url("fonts/CeraPro-Medium.eot") format("eot");
+  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"),
+    url("fonts/CeraPro-Medium.woff") format("woff"),
+    url("fonts/CeraPro-Medium.eot") format("eot");
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraProBold";
   src: url("fonts/CeraPro-Bold.ttf");
-  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"), url("fonts/CeraPro-Bold.woff") format("woff"), url("fonts/CeraPro-Bold.eot") format("eot");
+  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"),
+    url("fonts/CeraPro-Bold.woff") format("woff"),
+    url("fonts/CeraPro-Bold.eot") format("eot");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Black.ttf");
-  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"), url("fonts/CeraPro-Black.woff") format("woff"), url("fonts/CeraPro-Black.eot") format("eot");
+  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"),
+    url("fonts/CeraPro-Black.woff") format("woff"),
+    url("fonts/CeraPro-Black.eot") format("eot");
   font-weight: 900;
   font-style: normal;
 }
@@ -53,7 +65,15 @@
   font-feature-settings: "pnum" on, "lnum" on;
 }
 
-h1, h2, h3, h4, h5, h6, p, ul, hr {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+hr {
   margin: 0;
   padding: 0;
 }
@@ -62,22 +82,27 @@ h1, h2, h3, h4, h5, h6, p, ul, hr {
   border: none;
 }
 
-a, input, button {
+a,
+input,
+button {
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
 }
-a:hover, input:hover, button:hover {
+a:hover,
+input:hover,
+button:hover {
   outline: none;
   text-decoration: none;
 }
 
-input[type=submit], button {
+input[type="submit"],
+button {
   border: none;
   cursor: pointer;
 }
 
-input:not([type=checkbox]):not([type=radio]),
+input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
   -webkit-appearance: none;
@@ -200,7 +225,9 @@ select {
   margin-bottom: 10px;
   display: block;
 }
-.modal .m-content .c form input, .modal .m-content .c form select, .modal .m-content .c form textarea {
+.modal .m-content .c form input,
+.modal .m-content .c form select,
+.modal .m-content .c form textarea {
   width: 100%;
   border: 1px solid #e6e6e6;
   border-radius: 5px;
@@ -234,7 +261,8 @@ select {
 .modal .m-content .c form .inp_line .inp_address {
   width: 50%;
 }
-.modal .m-content .c form .inp_line .inp_home, .modal .m-content .c form .inp_line .inp_home_num {
+.modal .m-content .c form .inp_line .inp_home,
+.modal .m-content .c form .inp_line .inp_home_num {
   width: 20%;
 }
 .modal .m-content .c form .policy {
@@ -462,16 +490,37 @@ select {
   font-family: "CeraPro";
   color: rgb(255, 255, 255);
 }
-.paymant_section .mw .cont .main_cont .info_cont ul li input::-webkit-input-placeholder {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  ul
+  li
+  input::-webkit-input-placeholder {
   color: rgb(255, 255, 255);
 }
 .paymant_section .mw .cont .main_cont .info_cont ul li input::-moz-placeholder {
   color: rgb(255, 255, 255);
 }
-.paymant_section .mw .cont .main_cont .info_cont ul li input:-ms-input-placeholder {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  ul
+  li
+  input:-ms-input-placeholder {
   color: rgb(255, 255, 255);
 }
-.paymant_section .mw .cont .main_cont .info_cont ul li input::-ms-input-placeholder {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  ul
+  li
+  input::-ms-input-placeholder {
   color: rgb(255, 255, 255);
 }
 .paymant_section .mw .cont .main_cont .info_cont ul li input::placeholder {
@@ -575,7 +624,14 @@ select {
   transition: all 0.3s ease;
   position: relative;
 }
-.paymant_section .mw .cont .main_cont .info_cont .coupon .form .btn_apply:hover {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  .coupon
+  .form
+  .btn_apply:hover {
   color: #000 !important;
   background: #f9d933;
   -webkit-box-shadow: 0px 0px 15px 5px rgba(250, 222, 76, 0.45);
@@ -622,17 +678,39 @@ select {
   cursor: pointer;
   margin-right: 26px;
 }
-.paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox input {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  .type_proxy
+  .inp_checkbox
+  input {
   position: absolute;
   width: 0;
   height: 0;
   visibility: hidden;
   opacity: 0;
 }
-.paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox input:checked ~ .inp::before {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  .type_proxy
+  .inp_checkbox
+  input:checked
+  ~ .inp::before {
   opacity: 1;
 }
-.paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .inp {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  .type_proxy
+  .inp_checkbox
+  .inp {
   border-radius: 5px;
   background-color: rgb(250, 222, 76);
   width: 21px;
@@ -658,7 +736,14 @@ select {
   position: relative;
   margin-right: 10px;
 }
-.paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .inp::before {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  .type_proxy
+  .inp_checkbox
+  .inp::before {
   content: "";
   width: 11px;
   height: 8px;
@@ -669,7 +754,14 @@ select {
   transition: 0.5s;
   opacity: 0;
 }
-.paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .txt {
+.paymant_section
+  .mw
+  .cont
+  .main_cont
+  .info_cont
+  .type_proxy
+  .inp_checkbox
+  .txt {
   font-size: 16px;
   font-family: "CeraPro";
   color: rgb(255, 255, 255);
@@ -783,7 +875,8 @@ select {
 .personal_account .mw {
   padding-bottom: 100px;
 }
-.personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+.personal_account .mw .cont .sidebar .balance,
+.personal_account .mw .cont .sidebar .exchange_rates {
   font-size: 16px;
   font-family: "CeraProBold";
   color: rgb(255, 255, 255);
@@ -814,10 +907,12 @@ select {
   align-items: center;
   margin-bottom: 5px;
 }
-.personal_account .mw .cont .sidebar .balance span, .personal_account .mw .cont .sidebar .exchange_rates span {
+.personal_account .mw .cont .sidebar .balance span,
+.personal_account .mw .cont .sidebar .exchange_rates span {
   margin-left: 5px;
 }
-.personal_account .mw .cont .sidebar .balance span, .personal_account .mw .cont .sidebar .exchange_rates span {
+.personal_account .mw .cont .sidebar .balance span,
+.personal_account .mw .cont .sidebar .exchange_rates span {
   font-weight: normal;
   color: #fade4c;
 }
@@ -887,7 +982,13 @@ select {
   margin: 0 auto;
   background: transparent;
 }
-.personal_account .mw .cont .main_cont .top_desc .send_again_c .send_again:hover {
+.personal_account
+  .mw
+  .cont
+  .main_cont
+  .top_desc
+  .send_again_c
+  .send_again:hover {
   color: #f9d933;
 }
 .personal_account .mw .cont .main_cont .agree_faq {
@@ -940,10 +1041,25 @@ select {
   opacity: 0;
   visibility: hidden;
 }
-.personal_account .mw .cont .main_cont .payment_method .methods .method input:checked ~ .method_cont {
+.personal_account
+  .mw
+  .cont
+  .main_cont
+  .payment_method
+  .methods
+  .method
+  input:checked
+  ~ .method_cont {
   border-color: #fade4c;
 }
-.personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont {
+.personal_account
+  .mw
+  .cont
+  .main_cont
+  .payment_method
+  .methods
+  .method
+  .method_cont {
   border: 1px solid rgba(75, 75, 75, 0.639);
   border-radius: 20px;
   padding: 26px;
@@ -968,7 +1084,14 @@ select {
   -o-transition: 0.5s;
   transition: 0.5s;
 }
-.personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont:hover {
+.personal_account
+  .mw
+  .cont
+  .main_cont
+  .payment_method
+  .methods
+  .method
+  .method_cont:hover {
   border-color: #fade4c;
 }
 .personal_account .mw .cont .main_cont .payment_method .methods .method .img {
@@ -992,7 +1115,15 @@ select {
   align-items: center;
   margin-bottom: 15px;
 }
-.personal_account .mw .cont .main_cont .payment_method .methods .method .img img {
+.personal_account
+  .mw
+  .cont
+  .main_cont
+  .payment_method
+  .methods
+  .method
+  .img
+  img {
   height: 100%;
   width: auto;
 }
@@ -1204,12 +1335,26 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox {
     margin-right: 16px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .inp {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .inp {
     width: 20px;
     height: 20px;
     min-width: 20px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .txt {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .txt {
     font-size: 14px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .info_txt {
@@ -1237,7 +1382,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1278,7 +1424,14 @@ select {
     width: 100%;
     margin-bottom: 15px;
   }
-  .personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont {
+  .personal_account
+    .mw
+    .cont
+    .main_cont
+    .payment_method
+    .methods
+    .method
+    .method_cont {
     padding: 16px;
   }
   .personal_account .mw .cont .main_cont .payment_method .methods .method .img {
@@ -1415,12 +1568,26 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox {
     margin-right: 16px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .inp {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .inp {
     width: 20px;
     height: 20px;
     min-width: 20px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .txt {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .txt {
     font-size: 14px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .info_txt {
@@ -1448,7 +1615,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1489,7 +1657,14 @@ select {
     width: 48%;
     margin-bottom: 15px;
   }
-  .personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont {
+  .personal_account
+    .mw
+    .cont
+    .main_cont
+    .payment_method
+    .methods
+    .method
+    .method_cont {
     padding: 16px;
   }
   .personal_account .mw .cont .main_cont .payment_method .methods .method .img {
@@ -1614,12 +1789,26 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox {
     margin-right: 16px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .inp {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .inp {
     width: 20px;
     height: 20px;
     min-width: 20px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .txt {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .txt {
     font-size: 14px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .info_txt {
@@ -1647,7 +1836,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1688,7 +1878,14 @@ select {
     width: 48%;
     margin-bottom: 15px;
   }
-  .personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont {
+  .personal_account
+    .mw
+    .cont
+    .main_cont
+    .payment_method
+    .methods
+    .method
+    .method_cont {
     padding: 16px;
   }
   .personal_account .mw .cont .main_cont .payment_method .methods .method .img {
@@ -1810,12 +2007,26 @@ select {
   .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox {
     margin-right: 16px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .inp {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .inp {
     width: 20px;
     height: 20px;
     min-width: 20px;
   }
-  .paymant_section .mw .cont .main_cont .info_cont .type_proxy .inp_checkbox .txt {
+  .paymant_section
+    .mw
+    .cont
+    .main_cont
+    .info_cont
+    .type_proxy
+    .inp_checkbox
+    .txt {
     font-size: 14px;
   }
   .paymant_section .mw .cont .main_cont .info_cont .info_txt {
@@ -1843,7 +2054,8 @@ select {
   .personal_account .mw {
     padding-bottom: 80px;
   }
-  .personal_account .mw .cont .sidebar .balance, .personal_account .mw .cont .sidebar .exchange_rates {
+  .personal_account .mw .cont .sidebar .balance,
+  .personal_account .mw .cont .sidebar .exchange_rates {
     font-size: 14px;
     padding-bottom: 24px;
     padding: 10px 16px;
@@ -1884,7 +2096,14 @@ select {
     width: 31%;
     margin-bottom: 15px;
   }
-  .personal_account .mw .cont .main_cont .payment_method .methods .method .method_cont {
+  .personal_account
+    .mw
+    .cont
+    .main_cont
+    .payment_method
+    .methods
+    .method
+    .method_cont {
     padding: 16px;
   }
   .personal_account .mw .cont .main_cont .payment_method .methods .method .img {

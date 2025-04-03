@@ -63,11 +63,6 @@ body.fixed {
   overflow-y: hidden;
 }
 
-a:hover {
-  text-decoration: underline;
-  /* color: rgb(217.9130434783, 183.8260869565, 6.0869565217) !important; */
-}
-
 img {
   max-width: 100%;
 }

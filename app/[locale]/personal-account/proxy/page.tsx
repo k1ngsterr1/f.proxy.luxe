@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import ProxyList, {
-  Props as ProxyListProps,
-} from "@/entities/proxy/ui/proxy-list/proxy-list";
+import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies.queries";
-import { Proxy as ApiProxy } from "@/entities/proxy/api/get/get-all-proxies.api";
+import type { Proxy as ApiProxy } from "@/entities/proxy/api/get/get-all-proxies.api";
 import { AlertMessage } from "@/shared/ui/alert";
 import Link from "next/link";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useTranslations } from "next-intl";
+import { TrafficBar } from "@/features/traffic-bar/traffic-bar";
+import { ResidentProxyConstructor } from "@/features/residental-proxy-constructor/residental-proxy-constructor";
 
 export default function ProxyPage() {
   const t = useTranslations("personal-proxy");
@@ -31,6 +31,22 @@ export default function ProxyPage() {
   const { data } = useGetUser();
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
   const isMobile = useIsMobile();
+
+  const trafficData =
+    proxies?.data?.items && proxies.data.items.length > 0
+      ? {
+          totalBandwidthGB:
+            Number(proxies.data.items[0].package_info?.traffic_limit) /
+            1073741824, // Convert bytes to GB
+          usedBandwidthMB:
+            Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
+          reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
+          reserveUsedMB: 0, // Assuming a fixed value for reserve used
+          rotationType: "rotating" as const,
+          rotationInterval: 60,
+          autoRenewal: true,
+        }
+      : null;
 
   return (
     <div
@@ -107,6 +123,17 @@ export default function ProxyPage() {
           </button>
         ))}
       </div>
+      {proxyType === "resident" && trafficData && (
+        <TrafficBar
+          totalBandwidthGB={trafficData.totalBandwidthGB}
+          usedBandwidthMB={trafficData.usedBandwidthMB}
+          reserveBandwidthGB={trafficData.reserveBandwidthGB}
+          reserveUsedMB={trafficData.reserveUsedMB}
+          rotationType={trafficData.rotationType}
+          rotationInterval={trafficData.rotationInterval}
+          autoRenewal={trafficData.autoRenewal}
+        />
+      )}
       {isLoading && (
         <div
           style={{
@@ -127,8 +154,6 @@ export default function ProxyPage() {
           {t("proxies-loading")}
         </div>
       )}
-
-      {/* ✅ Error State */}
       {isError && (
         <div
           style={{
@@ -175,6 +200,7 @@ export default function ProxyPage() {
           </div>
         )
       )}
+      {proxyType === "resident" && <ResidentProxyConstructor />}
     </div>
   );
 }

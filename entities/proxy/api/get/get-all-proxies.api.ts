@@ -12,12 +12,13 @@ export interface Proxy {
   country: string;
   login: string;
   password: string;
+  package_items: any;
 }
 
 export interface ProxyListResponse {
-  status: string; // ✅ Enforcing "success" or "error"
+  status: string;
   data: {
-    items: Proxy[]; // ✅ Matches RDO structure
+    items: Proxy[];
   };
 }
 

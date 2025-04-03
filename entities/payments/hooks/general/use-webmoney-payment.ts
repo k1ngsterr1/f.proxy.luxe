@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
-import { getExchangeRate } from "@/entities/exchange-rates/api/get/get-exchange-rate.api";
+import { getExchangeRate } from "@/entities/exchange-rates/api/get/get-exchange-rate.api"; // USD -> RUB
+import { getCryptoRates } from "@/entities/exchange-rates/api/get/get-crypto-rates.api"; // BTC/LTC -> USD
 import { getUserIdFromToken } from "@/shared/utils/get-user-id";
 import { submitWebMoneyForm } from "../../helper/submit-webmoney.helper";
 
@@ -20,21 +21,41 @@ export const useWebMoneyPayment = () => {
     ) => {
       try {
         let purse = MERCHANT_WALLET;
-        if (type === "bitcoin") {
-          purse = MERCHANT_WALLET_BTC;
+        let convertedAmount = Number(amount);
+
+        // 💰 Convert RUB -> USD -> BTC/LTC if needed
+        if (type === "bitcoin" || type === "litecoin") {
+          const [rubRate, cryptoRates] = await Promise.all([
+            getExchangeRate(), // USD → RUB
+            getCryptoRates(), // BTC/LTC → USD
+          ]);
+
+          if (!rubRate || !cryptoRates) {
+            console.error("❌ Failed to fetch exchange rates");
+            return;
+          }
+
+          const cryptoPriceUSD =
+            type === "bitcoin"
+              ? cryptoRates.bitcoin.usd
+              : cryptoRates.litecoin.usd;
+
+          const usdAmount = Number(amount) / rubRate; // RUB → USD
+          convertedAmount = Number((usdAmount / cryptoPriceUSD).toFixed(8)); // USD → crypto
+
+          purse =
+            type === "bitcoin" ? MERCHANT_WALLET_BTC : MERCHANT_WALLET_LTC;
         }
-        if (type === "litecoin") {
-          purse = MERCHANT_WALLET_LTC;
-        }
+
         const userId = getUserIdFromToken();
         if (!userId) return;
 
         const orderId = Math.floor(Math.random() * 1_000_000_000);
-        const description = `Пополнение баланса на ${amount}`;
+        const description = `Пополнение баланса на ${amount} ${type}`;
 
         const fields = {
           LMI_PAYEE_PURSE: purse,
-          LMI_PAYMENT_AMOUNT: String(amount),
+          LMI_PAYMENT_AMOUNT: String(convertedAmount),
           LMI_PAYMENT_NO: orderId.toString(),
           LMI_PAYMENT_DESC: description,
           LMI_SIM_MODE: "0",

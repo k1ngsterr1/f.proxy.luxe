@@ -10,10 +10,12 @@ import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-pa
 import { AlertMessage } from "@/shared/ui/alert";
 import { ChangePasswordForm } from "@/features/auth/change-password";
 import { Mail, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ChangePasswordPage() {
   const isMobile = useIsMobile();
   const t = useTranslations("forgot-password-page");
+  const navigate = useRouter();
 
   const [email, setEmail] = useState("");
   const [emailCode, setEmailCode] = useState("");
@@ -96,6 +98,7 @@ export default function ChangePasswordPage() {
           setEmailCode("");
           setNewPassword("");
           setConfirmPassword("");
+          navigate.push("/");
         },
         onError: (err) => {
           if (err instanceof Error) {
@@ -111,7 +114,8 @@ export default function ChangePasswordPage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "70vh",
+        marginTop: 256,
         backgroundColor: "#000000",
         color: "#FFFFFF",
         display: "flex",
