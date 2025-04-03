@@ -40,8 +40,9 @@ export const useWebMoneyPayment = () => {
               ? cryptoRates.bitcoin.usd
               : cryptoRates.litecoin.usd;
 
-          const usdAmount = Number(amount) / rubRate; // RUB → USD
-          convertedAmount = Number((usdAmount / cryptoPriceUSD).toFixed(8)); // USD → crypto
+          convertedAmount = Number(
+            (Number(amount) / (cryptoPriceUSD / 1000)).toFixed(8)
+          ); // USD → crypto
 
           purse =
             type === "bitcoin" ? MERCHANT_WALLET_BTC : MERCHANT_WALLET_LTC;
@@ -51,11 +52,11 @@ export const useWebMoneyPayment = () => {
         if (!userId) return;
 
         const orderId = Math.floor(Math.random() * 1_000_000_000);
-        const description = `Пополнение баланса на ${amount} ${type}`;
+        const description = `Пополнение баланса на ${amount} USD`;
 
         const fields = {
           LMI_PAYEE_PURSE: purse,
-          LMI_PAYMENT_AMOUNT: String(convertedAmount),
+          LMI_PAYMENT_AMOUNT: String(convertedAmount.toFixed(2)),
           LMI_PAYMENT_NO: orderId.toString(),
           LMI_PAYMENT_DESC: description,
           LMI_SIM_MODE: "0",
