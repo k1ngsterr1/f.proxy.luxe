@@ -75,7 +75,12 @@ export default function ArticlePage() {
   const params = useParams();
   const articleId = params.slug as string;
 
-  const { data: article, isLoading, isError, error } = useGetArticleById(articleId);
+  const {
+    data: article,
+    isLoading,
+    isError,
+    error,
+  } = useGetArticleById(articleId);
 
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -239,7 +244,9 @@ export default function ArticlePage() {
                   }}
                 >
                   <Calendar size={16} style={{ color: "#f3d675" }} />
-                  <span style={{ fontSize: "14px" }}>{extractDateFromContent(article?.content) || "01.01.2023"}</span>
+                  <span style={{ fontSize: "14px" }}>
+                    {extractDateFromContent(article?.content) || "01.01.2023"}
+                  </span>
                 </div>
                 <div
                   style={{
@@ -280,7 +287,11 @@ export default function ArticlePage() {
                 }}
               >
                 <Image
-                  src={(article?.images && article.images.length > 0) ? article.images[0] : "/placeholder.svg?height=800&width=1200"}
+                  src={
+                    article?.images && article.images.length > 0
+                      ? article.images[0]
+                      : "/placeholder.svg?height=800&width=1200"
+                  }
                   alt={article?.title || "Article Image"}
                   fill
                   style={{ objectFit: "cover" }}
@@ -301,7 +312,11 @@ export default function ArticlePage() {
                   color: "#E0E0E0",
                 }}
               >
-                <div dangerouslySetInnerHTML={{ __html: article?.content || "Содержимое статьи не найдено" }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: article?.content || "Содержимое статьи не найдено",
+                  }}
+                />
 
                 {/* Article Footer */}
                 <div
@@ -327,35 +342,41 @@ export default function ArticlePage() {
                     }}
                   >
                     <Tag size={18} style={{ color: "#f3d675" }} />
-                    {extractTagsFromContent(article?.content).map((tag, index) => (
-                      <Link
-                        key={index}
-                        href={`/tags/${tag.slug}`}
-                        className="article-tags__link"
-                        style={{
-                          color: "#f3d675",
-                          textDecoration: "none",
-                          fontSize: "14px",
-                          padding: "4px 12px",
-                          backgroundColor: "rgba(243, 214, 117, 0.1)",
-                          borderRadius: "20px",
-                          transition: "all 0.2s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor =
-                            "rgba(243, 214, 117, 0.2)";
-                          e.currentTarget.style.transform = "translateY(-2px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor =
-                            "rgba(243, 214, 117, 0.1)";
-                          e.currentTarget.style.transform = "translateY(0)";
-                        }}
-                      >
-                        {tag.name}
-                        {index < extractTagsFromContent(article?.content).length - 1 ? "," : ""}
-                      </Link>
-                    ))}
+                    {extractTagsFromContent(article?.content).map(
+                      (tag, index) => (
+                        <Link
+                          key={index}
+                          href={`/tags/${tag.slug}`}
+                          className="article-tags__link"
+                          style={{
+                            color: "#f3d675",
+                            textDecoration: "none",
+                            fontSize: "14px",
+                            padding: "4px 12px",
+                            backgroundColor: "rgba(243, 214, 117, 0.1)",
+                            borderRadius: "20px",
+                            transition: "all 0.2s ease",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "rgba(243, 214, 117, 0.2)";
+                            e.currentTarget.style.transform =
+                              "translateY(-2px)";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "rgba(243, 214, 117, 0.1)";
+                            e.currentTarget.style.transform = "translateY(0)";
+                          }}
+                        >
+                          {tag.name}
+                          {index <
+                          extractTagsFromContent(article?.content).length - 1
+                            ? ","
+                            : ""}
+                        </Link>
+                      )
+                    )}
                   </div>
 
                   <Link
@@ -518,7 +539,7 @@ export default function ArticlePage() {
                   </button>
                 </div>
               </div>
-            </>  
+            </>
           )}
         </div>
       </section>
