@@ -98,7 +98,11 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
   const exportToTxt = () => {
     if (!proxies || proxies.length === 0) return;
 
-    let content = "#Proxy\n";
+    let contentHttpFirstFormat = "";
+    let contentHttpSecondFormat = "";
+
+    let contentSocksFirstFormat = "";
+    let contentSocksSecondFormat = "";
 
     proxies.forEach((proxy) => {
       const login = proxy.login || "user";
@@ -106,45 +110,53 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
 
       if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
         proxy.ports.forEach((port: number | string) => {
-          const ip = "res.proxy-seller.com";
-          content += `@${ip}:${port}:${login}:${password}\n`;
-        });
-        content += "\n";
-        proxy.ports.forEach((port: number | string) => {
-          const ip = "res.proxy-seller.com";
-          content += `${login}:${password}@${ip}:${port}\n\n`;
+          const ip = "104.22.51.115";
+
+          // HTTP
+          contentHttpFirstFormat += `${ip}:${port}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${ip}:${port}\n`;
+
+          // SOCKS5
+          contentSocksFirstFormat += `${ip}:${port}:${login}:${password}\n`;
+          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
         });
       } else {
         const ip = proxy.ip;
-        const port = proxy.port_http || proxy.port_socks || "-";
-        content += `${ip}:${port}:${login}:${password}\n`;
-      }
+        const portHttp = proxy.port_http;
+        const portSocks = proxy.port_socks;
 
-      content += "\n";
+        if (portHttp) {
+          contentHttpFirstFormat += `${ip}:${portHttp}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${ip}:${portHttp}\n`;
+        }
+
+        if (portSocks) {
+          contentSocksFirstFormat += `${ip}:${portSocks}:${login}:${password}\n`;
+          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${portSocks}\n`;
+        }
+      }
     });
 
-    proxies.forEach((proxy) => {
-      const login = proxy.login || "user";
-      const password = proxy.password || "pass";
+    const contentHttp = `${contentHttpFirstFormat}\n${contentHttpSecondFormat}`;
+    const contentSocks = `${contentSocksFirstFormat}\n${contentSocksSecondFormat}`;
 
-      if (proxy.type !== "resident") {
-        const ip = proxy.ip;
-        const port = proxy.port_http || proxy.port_socks || "-";
-        content += `${login}:${password}@${ip}:${port}\n`;
-      }
+    const createAndDownloadFile = (content: string, type: string) => {
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `proxy-${type}-${
+        new Date().toISOString().split("T")[0]
+      }.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
 
-      content += "\n";
-    });
+    if (contentHttp.trim()) createAndDownloadFile(contentHttp, "http");
+    if (contentSocks.trim()) createAndDownloadFile(contentSocks, "socks");
 
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `proxy-list-${new Date().toISOString().split("T")[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
     setExportMenuOpen(false);
   };
 
