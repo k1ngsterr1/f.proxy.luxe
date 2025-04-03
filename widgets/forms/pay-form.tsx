@@ -66,8 +66,7 @@ export const PayForm = () => {
           );
         } else if (values.paymentMethod === "payeer") {
           await processPayeerPayment(values.paymentAmount);
-        } else if (values.paymentMethod === "digiseller") {
-          console.log(locale);
+        } else if (values.paymentMethod === "digiseller" || "visa") {
           await processDigisellerPayment(
             Math.floor(parseFloat(values.paymentAmount)),
             locale

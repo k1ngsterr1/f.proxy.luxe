@@ -2,42 +2,54 @@
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Thin.ttf");
-  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"), url("fonts/CeraPro-Thin.woff") format("woff"), url("fonts/CeraPro-Thin.eot") format("eot");
+  src: local("fonts/CeraPro-Thin"), local("fonts/CeraPro-Thin"),
+    url("fonts/CeraPro-Thin.woff") format("woff"),
+    url("fonts/CeraPro-Thin.eot") format("eot");
   font-weight: 100;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Light.ttf");
-  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"), url("fonts/CeraPro-Light.woff") format("woff"), url("fonts/CeraPro-Light.eot") format("eot");
+  src: local("fonts/CeraPro-Light"), local("fonts/CeraPro-Light"),
+    url("fonts/CeraPro-Light.woff") format("woff"),
+    url("fonts/CeraPro-Light.eot") format("eot");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Regular.ttf");
-  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"), url("fonts/CeraPro-Regular.woff") format("woff"), url("fonts/CeraPro-Regular.eot") format("eot");
+  src: local("fonts/CeraPro-Regular"), local("fonts/CeraPro-Regular"),
+    url("fonts/CeraPro-Regular.woff") format("woff"),
+    url("fonts/CeraPro-Regular.eot") format("eot");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Medium.ttf");
-  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"), url("fonts/CeraPro-Medium.woff") format("woff"), url("fonts/CeraPro-Medium.eot") format("eot");
+  src: local("fonts/CeraPro-Medium"), local("fonts/CeraPro-Medium"),
+    url("fonts/CeraPro-Medium.woff") format("woff"),
+    url("fonts/CeraPro-Medium.eot") format("eot");
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Bold.ttf");
-  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"), url("fonts/CeraPro-Bold.woff") format("woff"), url("fonts/CeraPro-Bold.eot") format("eot");
+  src: local("fonts/CeraPro-Bold"), local("fonts/CeraPro-Bold"),
+    url("fonts/CeraPro-Bold.woff") format("woff"),
+    url("fonts/CeraPro-Bold.eot") format("eot");
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: "CeraPro";
   src: url("fonts/CeraPro-Black.ttf");
-  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"), url("fonts/CeraPro-Black.woff") format("woff"), url("fonts/CeraPro-Black.eot") format("eot");
+  src: local("fonts/CeraPro-Black"), local("fonts/CeraPro-Black"),
+    url("fonts/CeraPro-Black.woff") format("woff"),
+    url("fonts/CeraPro-Black.eot") format("eot");
   font-weight: 900;
   font-style: normal;
 }
@@ -1075,7 +1087,8 @@ img {
   padding-left: 20px;
 }
 
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+.select2-container--default
+  .select2-results__option--highlighted.select2-results__option--selectable {
   background: #c1a305;
   color: #fff;
 }
@@ -1576,7 +1589,7 @@ img {
 .prcheck .anon-item .astatus {
   display: inline-flex;
   padding: 6px 20px;
-  border-radius: 4PX;
+  border-radius: 4px;
   font-size: 15px;
   color: #fff;
   font-weight: 500;
@@ -2624,4 +2637,4 @@ img {
   .footer-logo__text {
     padding-left: 0;
   }
-}/*# sourceMappingURL=site.css.map */
+} /*# sourceMappingURL=site.css.map */
