@@ -12,6 +12,29 @@ interface TrafficBarProps {
   autoRenewal: boolean;
 }
 
+const buttonBase: React.CSSProperties = {
+  borderRadius: "4px",
+  padding: "8px 16px",
+  fontSize: "14px",
+  fontWeight: 600,
+  cursor: "pointer",
+  transition: "background-color 0.2s, color 0.2s",
+};
+
+const primaryButton: React.CSSProperties = {
+  ...buttonBase,
+  backgroundColor: "#f3d675",
+  color: "#000000",
+  border: "none",
+};
+
+const ghostButton: React.CSSProperties = {
+  ...buttonBase,
+  backgroundColor: "transparent",
+  color: "#4CAF50",
+  border: "1px solid #4CAF50",
+};
+
 export const TrafficBar: React.FC<TrafficBarProps> = ({
   totalBandwidthGB,
   usedBandwidthMB,
@@ -51,33 +74,33 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <button
             style={{
-              borderRadius: "50%",
+              ...buttonBase,
               width: "16px",
               height: "16px",
-              borderWidth: "2px",
-              borderStyle: "solid",
-              borderColor: rotationType === "sticky" ? "#4CAF50" : "#999999",
-              backgroundColor:
-                rotationType === "sticky" ? "#4CAF50" : "transparent",
-              cursor: "pointer",
+              borderRadius: "50%",
+              border: "2px solid",
+              borderColor: isRotating ? "#999999" : "#4CAF50",
+              backgroundColor: isRotating ? "#4CAF50" : "transparent",
+              padding: 0,
             }}
             onClick={() => setIsRotating(false)}
           />
+
           <span style={{ fontSize: "14px", color: "#f3d675" }}>Sticky</span>
           <button
             style={{
-              borderRadius: "50%",
+              ...buttonBase,
               width: "16px",
               height: "16px",
-              borderWidth: "2px",
-              borderStyle: "solid",
-              borderColor: rotationType === "rotating" ? "#4CAF50" : "#999999",
-              backgroundColor:
-                rotationType === "rotating" ? "#4CAF50" : "transparent",
-              cursor: "pointer",
+              borderRadius: "50%",
+              border: "2px solid",
+              borderColor: isRotating ? "#4CAF50" : "#999999",
+              backgroundColor: isRotating ? "#4CAF50" : "transparent",
+              padding: 0,
             }}
             onClick={() => setIsRotating(true)}
           />
+
           <span style={{ fontSize: "14px", color: "#f3d675" }}>Rotating</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -93,49 +116,35 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
           >
             <option>60 minutes</option>
           </select>
-          <button
-            style={{
-              backgroundColor: "#f3d675",
-              color: "#000000",
-              borderRadius: "4px",
-              padding: "8px 16px",
-              fontSize: "14px",
-              fontWeight: "600",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Change
-          </button>
+          <button style={primaryButton}>Change</button>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ fontSize: "14px", color: "#f3d675" }}>
             Auto-renewal
           </span>
           <button
+            onClick={() => setIsAutoRenewal(!isAutoRenewal)}
             style={{
-              borderRadius: "50%",
-              width: "24px",
-              height: "16px",
+              width: "40px",
+              height: "20px",
               backgroundColor: isAutoRenewal ? "#4CAF50" : "#999999",
-              transition: "background-color 0.2s",
-              position: "relative",
+              borderRadius: "20px",
               border: "none",
               cursor: "pointer",
+              position: "relative",
+              padding: 0,
             }}
-            onClick={() => setIsAutoRenewal(!isAutoRenewal)}
           >
             <div
               style={{
-                width: "12px",
-                height: "12px",
-                backgroundColor: "#FFFFFF",
+                width: "16px",
+                height: "16px",
                 borderRadius: "50%",
+                backgroundColor: "#fff",
                 position: "absolute",
                 top: "2px",
-                left: isAutoRenewal ? "auto" : "2px",
-                right: isAutoRenewal ? "2px" : "auto",
-                transition: "transform 0.2s",
+                left: isAutoRenewal ? "20px" : "2px",
+                transition: "left 0.2s",
               }}
             />
           </button>
@@ -241,43 +250,10 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
           alignItems: "center",
         }}
       >
-        <button
-          style={{
-            backgroundColor: "#f3d675",
-            color: "#000000",
-            borderRadius: "4px",
-            padding: "8px 16px",
-            fontSize: "14px",
-            fontWeight: "600",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          + Add GB
-        </button>
+        <button style={primaryButton}>+ Add GB</button>
+
         <div style={{ display: "flex", gap: "16px" }}>
-          <button
-            style={{
-              color: "#4CAF50",
-              fontSize: "14px",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Tariff history
-          </button>
-          <button
-            style={{
-              color: "#4CAF50",
-              fontSize: "14px",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Consumption history
-          </button>
+          <button style={ghostButton}>Tariff history</button>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "14px", color: "#CCCCCC" }}>

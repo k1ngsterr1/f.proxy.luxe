@@ -163,7 +163,6 @@ export default function ChangePasswordPage() {
 
         {error && <AlertMessage type="error" message={error} />}
         {success && <AlertMessage type="success" message={success} />}
-
         <div
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.3)",
