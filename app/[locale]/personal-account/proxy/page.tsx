@@ -35,17 +35,19 @@ export default function ProxyPage() {
   const trafficData =
     proxies?.data?.items && proxies.data.items.length > 0
       ? {
-          totalBandwidthGB:
-            Number(proxies.data.items[0].package_info?.traffic_limit) /
-            1073741824, // Convert bytes to GB
-          usedBandwidthMB:
-            Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
-          reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
-          reserveUsedMB: 0, // Assuming a fixed value for reserve used
-          rotationType: "rotating" as const,
-          rotationInterval: 60,
-          autoRenewal: true,
-        }
+        totalBandwidthGB:
+          //@ts-ignore
+          Number(proxies.data.items[0].package_info?.traffic_limit) /
+          1073741824, // Convert bytes to GB
+        usedBandwidthMB:
+          //@ts-ignore
+          Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
+        reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
+        reserveUsedMB: 0, // Assuming a fixed value for reserve used
+        rotationType: "rotating" as const,
+        rotationInterval: 60,
+        autoRenewal: true,
+      }
       : null;
 
   return (
@@ -170,10 +172,10 @@ export default function ProxyPage() {
         </div>
       )}
       {!isLoading &&
-      !isError &&
-      proxies?.data?.items &&
-      Array.isArray(proxies.data.items) &&
-      proxies.data.items.length > 0 ? (
+        !isError &&
+        proxies?.data?.items &&
+        Array.isArray(proxies.data.items) &&
+        proxies.data.items.length > 0 ? (
         <ProxyList
           proxies={proxies.data.items.map((proxy: ApiProxy) => ({
             ...proxy,

@@ -2,7 +2,8 @@
 
 import { FC } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -26,7 +27,6 @@ export const Header: FC = () => {
     const segments = pathname.split("/").filter(Boolean);
     const supportedLocales = ["en", "ru"];
 
-    // Заменяем текущую локаль или добавляем, если её нет
     if (supportedLocales.includes(segments[0])) {
       segments[0] = targetLocale;
     } else {
@@ -37,6 +37,7 @@ export const Header: FC = () => {
   };
 
   const changeLanguage = (lang: string) => {
+    document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax; Secure`;
     const newPath = getPathForLocale(lang);
     router.push(newPath);
   };
