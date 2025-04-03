@@ -5,9 +5,10 @@ import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-orde
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { Button } from "@/shared/ui/button";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
+import { PureRangeSlider } from "@/shared/ui/range-slider";
 
 export const ISPBuyCard = () => {
   const router = useRouter();
@@ -59,6 +60,20 @@ export const ISPBuyCard = () => {
     setCountryId(e.target.value);
   };
 
+  const [value, setValue] = useState(5000)
+  const rangeRef = useRef<HTMLInputElement>(null)
+
+  const min = 0
+  const max = 10000
+
+  const fillPercentage = ((value - min) / (max - min)) * 100
+
+  useEffect(() => {
+    if (rangeRef.current) {
+      rangeRef.current.style.setProperty("--fill-percentage", `${fillPercentage}%`)
+    }
+  }, [fillPercentage])
+
   return (
     <div className="buy-col">
       <div className="buy-item" style={{ height: 850, minHeight: 800 }}>
@@ -84,25 +99,13 @@ export const ISPBuyCard = () => {
         </select>
 
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          {i18n("quantity")}
+          {i18n("quantity")}:    <span
+            style={{ left: `calc(${fillPercentage}% + 10px)` }}
+          >
+            {value}
+          </span>
         </h4>
-        <select
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          style={selectStyle}
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-        </select>
-
+        <PureRangeSlider value={value} setValue={setValue} ref={rangeRef} />
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("period")}
         </h4>
@@ -172,7 +175,7 @@ export const ISPBuyCard = () => {
         )}
 
         <div className="buy-item__price">
-          {i18n("price")} <span>$2.4 / IP</span>
+          {i18n("price")} <span>{`$ ${(2.4 * value).toFixed(1)} / IP`}</span>
         </div>
         <Button
           className="btn"

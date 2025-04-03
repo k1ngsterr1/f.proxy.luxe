@@ -11,10 +11,12 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { useExchangeRates } from "@/entities/exchange-rates/api/hooks/use-get-crypto-rates.query";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 export const Sidebar = () => {
   const i18n = useTranslations("sidebar");
   const pathname = usePathname();
+  const { data: userData } = useGetUser();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const {
     data: ratesData,
@@ -561,7 +563,7 @@ export const Sidebar = () => {
         <UserIcon />
         {i18n("title")}
       </div>
-
+      <div style={sidebarHeaderStyle}>ID: {userData?.id}</div>
       <div style={balanceWrapperStyle}>
         <ActiveLink href="/personal-account" activeClassName="active">
           <div style={balanceLinkStyle}>
