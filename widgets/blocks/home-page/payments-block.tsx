@@ -49,11 +49,14 @@ export const PaymentMethodsBlock = () => {
   const handleMethodSelect = (methodId: string) => {
     setSelectedMethod(methodId);
   };
-  
+
   // Handle WebMoney icon click to redirect to passport URL
   const handleWebMoneyIconClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering the parent div's onClick
-    window.open('https://passport.webmoney.ru/asp/certview.asp?wmid=550228486872', '_blank');
+    window.open(
+      "https://passport.webmoney.ru/asp/certview.asp?wmid=550228486872",
+      "_blank"
+    );
   };
 
   return (
@@ -134,10 +137,11 @@ export const PaymentMethodsBlock = () => {
                       ? "rgba(243, 214, 117, 0.15)"
                       : "rgba(243, 214, 117, 0.05)",
                   borderRadius: "8px",
-                  border: `1px solid ${selectedMethod === method.id
-                    ? "rgba(243, 214, 117, 0.5)"
-                    : "rgba(243, 214, 117, 0.1)"
-                    }`,
+                  border: `1px solid ${
+                    selectedMethod === method.id
+                      ? "rgba(243, 214, 117, 0.5)"
+                      : "rgba(243, 214, 117, 0.1)"
+                  }`,
                   padding: "20px",
                   cursor: "pointer",
                   transition: "all 0.3s ease",
@@ -174,7 +178,7 @@ export const PaymentMethodsBlock = () => {
                   )
                 }
 
-                < div
+                <div
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -205,7 +209,10 @@ export const PaymentMethodsBlock = () => {
                       <Wallet size={24} color="#f3d675" />
                     )}
                     {method.id === "webmoney" && (
-                      <div onClick={handleWebMoneyIconClick} style={{ cursor: 'pointer' }}>
+                      <div
+                        onClick={handleWebMoneyIconClick}
+                        style={{ cursor: "pointer" }}
+                      >
                         <Wallet size={24} color="#f3d675" />
                       </div>
                     )}
@@ -222,7 +229,7 @@ export const PaymentMethodsBlock = () => {
                     <h3
                       style={{
                         color: "#FFFFFF",
-                        fontSize: "18px",
+                        fontSize: "15px",
                         fontWeight: "600",
                         marginBottom: "4px",
                       }}
@@ -309,6 +316,6 @@ export const PaymentMethodsBlock = () => {
           }}
         />
       </div>
-    </section >
+    </section>
   );
 };

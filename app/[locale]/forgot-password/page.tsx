@@ -11,6 +11,7 @@ import { AlertMessage } from "@/shared/ui/alert";
 import { ChangePasswordForm } from "@/features/auth/change-password";
 import { Mail, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { usePopupStore } from "@/shared/store/use-popup.store";
 
 export default function ChangePasswordPage() {
   const isMobile = useIsMobile();
@@ -26,6 +27,7 @@ export default function ChangePasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const { closePopup } = usePopupStore();
 
   const { mutate: changePassword, isPending: isChangingPassword } =
     useChangePassword();
@@ -34,8 +36,7 @@ export default function ChangePasswordPage() {
     useSendResetEmail();
 
   useEffect(() => {
-    // This will be replaced with actual implementation
-    // sendResetEmail()
+    closePopup("auth-enter");
   }, []);
 
   const handleSendEmail = () => {
@@ -100,9 +101,14 @@ export default function ChangePasswordPage() {
           setConfirmPassword("");
           navigate.push("/");
         },
-        onError: (err) => {
-          if (err instanceof Error) {
-            setError(err.message);
+        onError: (err: any) => {
+          if (err as any) {
+            const message =
+              err?.response?.data?.message ||
+              err?.message ||
+              t("errors.generic-error");
+
+            setError(message);
           } else {
             setError(t("errors.generic-error"));
           }

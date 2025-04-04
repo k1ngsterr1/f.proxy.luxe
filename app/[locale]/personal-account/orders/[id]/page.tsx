@@ -52,6 +52,20 @@ export default function OrderDetailPage() {
           localStorage.setItem("proxyType", order.type);
           navigate.push(`/personal-account/proxy`);
         },
+        onError: (error: any) => {
+          const errorMessage =
+            error?.response?.data?.message ||
+            error?.message ||
+            alertT("generic");
+          if (
+            errorMessage.toLowerCase().includes("insufficient funds") ||
+            errorMessage.toLowerCase().includes("недостаточно средств")
+          ) {
+            alert(alertT("insufficient-funds"));
+          } else {
+            alert(errorMessage);
+          }
+        },
       }
     );
   };
@@ -71,11 +85,7 @@ export default function OrderDetailPage() {
       }}
     >
       {user?.isVerified === false && (
-        <AlertMessage
-          type="warning"
-          isEmail
-          message={alertT("verify-email")}
-        />
+        <AlertMessage type="warning" isEmail message={alertT("verify-email")} />
       )}
       <div
         style={{
@@ -383,7 +393,9 @@ export default function OrderDetailPage() {
                     accentColor: "#f3d675",
                   }}
                 />
-                <span style={{ color: "#FFFFFF" }}>{t("proxy-type.socks5")}</span>
+                <span style={{ color: "#FFFFFF" }}>
+                  {t("proxy-type.socks5")}
+                </span>
               </label>
             </div>
             <p
