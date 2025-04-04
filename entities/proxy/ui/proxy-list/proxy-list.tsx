@@ -551,7 +551,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
             <tbody style={tableBodyStyle}>
               {proxies.map((proxy, index) => (
                 <tr
-                  key={proxy.id}
+                  key={index}
                   style={
                     index % 2 === 0
                       ? tableRowStyle

@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import type React from "react";
+
+import { useState, useEffect } from "react";
 import { Plus, X, Edit, Trash2 } from "lucide-react";
+import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
 import { apiClient } from "@/shared/config/apiClient";
 
 const rotationOptions = [
@@ -47,6 +50,33 @@ export const ResidentProxyConstructor = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Get geo references data
+  const {
+    data: geoReferences,
+    isLoading: isLoadingGeo,
+    isError: isErrorGeo,
+    error: errorGeo,
+  } = useGetGeoReferences();
+
+  // Reset dependent fields when parent field changes
+  useEffect(() => {
+    setRegion("");
+    setCity("");
+  }, [country]);
+
+  useEffect(() => {
+    setCity("");
+  }, [region]);
+
+  // Get available countries, regions, and cities based on selections
+  const countries = geoReferences || [];
+
+  const selectedCountry = countries.find((c: any) => c.code === country);
+  const regions = selectedCountry?.regions || [];
+
+  const selectedRegion = regions.find((r: any) => r.code.toString() === region);
+  const cities = selectedRegion?.cities || [];
+
   const handleAddIp = () => {
     if (newIp.trim() !== "") {
       setWhitelist([...whitelist, newIp.trim()]);
@@ -86,11 +116,15 @@ export const ResidentProxyConstructor = () => {
 
     try {
       const payload = {
-        package_key: "5d6e4e4ed8e2048633b0",
+        package_key: "5d6e4e4ed8e2048633b0", // Hardcoded package key
         ports: Number(ports),
         whitelist: whitelist.join(";"),
         title: listName,
-        rotation: rotation === "general" ? 0 : rotation === "sticky" ? 1 : 2,
+        rotation: rotation === "general" ? 0 : rotation === "sticky" ? 1 : 2, // Convert rotation to numerical value
+        country: country,
+        region: region,
+        city: city,
+        isp: isp,
       };
 
       const response = await apiClient.post(
@@ -125,6 +159,7 @@ export const ResidentProxyConstructor = () => {
         border: "1px solid rgba(243, 214, 117, 0.2)",
       }}
     >
+      {/* IP Whitelist Section */}
       <div
         style={{
           backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -269,8 +304,11 @@ export const ResidentProxyConstructor = () => {
           <Plus size={16} style={{ marginRight: "8px" }} />
           Add
         </button>
+
+        {/* Add IP Popup */}
         {showAddIpPopup && (
           <>
+            {/* Backdrop */}
             <div
               onClick={handleCancelAddIp}
               style={{
@@ -280,6 +318,8 @@ export const ResidentProxyConstructor = () => {
                 zIndex: 999,
               }}
             />
+
+            {/* Popup Card */}
             <div
               style={{
                 position: "fixed",
@@ -297,6 +337,7 @@ export const ResidentProxyConstructor = () => {
                 animation: "fadeIn 0.25s ease-out",
               }}
             >
+              {/* Close button */}
               <button
                 onClick={handleCancelAddIp}
                 style={{
@@ -313,6 +354,7 @@ export const ResidentProxyConstructor = () => {
               >
                 <X size={18} />
               </button>
+
               <h4
                 style={{
                   fontSize: "18px",
@@ -323,6 +365,7 @@ export const ResidentProxyConstructor = () => {
               >
                 Add Whitelisted IP
               </h4>
+
               <input
                 type="text"
                 value={newIp}
@@ -339,6 +382,7 @@ export const ResidentProxyConstructor = () => {
                   marginBottom: "20px",
                 }}
               />
+
               <div
                 style={{
                   display: "flex",
@@ -381,6 +425,8 @@ export const ResidentProxyConstructor = () => {
           </>
         )}
       </div>
+
+      {/* Export Section */}
       <div
         style={{
           backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -399,6 +445,7 @@ export const ResidentProxyConstructor = () => {
         >
           Export
         </h3>
+
         {successMessage && (
           <div style={{ color: "green", marginBottom: "10px" }}>
             {successMessage}
@@ -409,6 +456,8 @@ export const ResidentProxyConstructor = () => {
             {errorMessage}
           </div>
         )}
+
+        {/* Name of the list */}
         <div style={{ marginBottom: "16px" }}>
           <label
             htmlFor="listName"
@@ -469,6 +518,8 @@ export const ResidentProxyConstructor = () => {
             </label>
           ))}
         </div>
+
+        {/* Authorization method */}
         <div style={{ marginBottom: "16px" }}>
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
@@ -504,6 +555,8 @@ export const ResidentProxyConstructor = () => {
             </label>
           ))}
         </div>
+
+        {/* Export format */}
         <div style={{ marginBottom: "16px" }}>
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
@@ -552,6 +605,7 @@ export const ResidentProxyConstructor = () => {
               gap: "10px",
             }}
           >
+            {/* Country dropdown with dynamic data */}
             <div>
               <label
                 htmlFor="country"
@@ -577,12 +631,34 @@ export const ResidentProxyConstructor = () => {
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
+                disabled={isLoadingGeo}
               >
                 <option value="">Select country</option>
-                <option value="us">United States</option>
-                <option value="ca">Canada</option>
+                {countries.map((countryItem: any) => (
+                  <option key={countryItem.code} value={countryItem.code}>
+                    {countryItem.name}
+                  </option>
+                ))}
               </select>
+              {isLoadingGeo && (
+                <p
+                  style={{
+                    fontSize: "10px",
+                    color: "#999999",
+                    marginTop: "4px",
+                  }}
+                >
+                  Loading countries...
+                </p>
+              )}
+              {isErrorGeo && (
+                <p style={{ fontSize: "10px", color: "red", marginTop: "4px" }}>
+                  Error loading geo data
+                </p>
+              )}
             </div>
+
+            {/* Region dropdown - dependent on country selection */}
             <div>
               <label
                 htmlFor="region"
@@ -608,12 +684,32 @@ export const ResidentProxyConstructor = () => {
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
+                disabled={!country || isLoadingGeo}
               >
                 <option value="">Select region</option>
-                <option value="ny">New York</option>
-                <option value="on">Ontario</option>
+                {regions.map((regionItem: any) => (
+                  <option
+                    key={regionItem.code}
+                    value={regionItem.code.toString()}
+                  >
+                    {regionItem.name}
+                  </option>
+                ))}
               </select>
+              {country && regions.length === 0 && !isLoadingGeo && (
+                <p
+                  style={{
+                    fontSize: "10px",
+                    color: "#999999",
+                    marginTop: "4px",
+                  }}
+                >
+                  No regions available
+                </p>
+              )}
             </div>
+
+            {/* City dropdown - dependent on region selection */}
             <div>
               <label
                 htmlFor="city"
@@ -639,12 +735,29 @@ export const ResidentProxyConstructor = () => {
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
+                disabled={!region || isLoadingGeo}
               >
                 <option value="">Select city</option>
-                <option value="ny">New York</option>
-                <option value="to">Toronto</option>
+                {cities.map((cityItem: any, index: number) => (
+                  <option key={index} value={cityItem.name}>
+                    {cityItem.name}
+                  </option>
+                ))}
               </select>
+              {region && cities.length === 0 && !isLoadingGeo && (
+                <p
+                  style={{
+                    fontSize: "10px",
+                    color: "#999999",
+                    marginTop: "4px",
+                  }}
+                >
+                  No cities available
+                </p>
+              )}
             </div>
+
+            {/* ISP dropdown */}
             <div>
               <label
                 htmlFor="isp"
@@ -674,11 +787,15 @@ export const ResidentProxyConstructor = () => {
                 <option value="">Select ISP</option>
                 <option value="verizon">Verizon</option>
                 <option value="rogers">Rogers</option>
-                {/* Add more options as needed */}
+                <option value="att">AT&T</option>
+                <option value="comcast">Comcast</option>
+                <option value="tmobile">T-Mobile</option>
               </select>
             </div>
           </div>
         </div>
+
+        {/* Ports */}
         <div>
           <label
             htmlFor="ports"
@@ -711,7 +828,24 @@ export const ResidentProxyConstructor = () => {
           </p>
         </div>
       </div>
+
+      {/* Output Section - Placeholder */}
       <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <button
+          style={{
+            backgroundColor: "#f3d675",
+            color: "#000000",
+            border: "none",
+            padding: "8px 16px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+            marginRight: "10px",
+          }}
+        >
+          Change plan
+        </button>
         <button
           style={{
             backgroundColor: "#f3d675",
@@ -728,6 +862,20 @@ export const ResidentProxyConstructor = () => {
           disabled={isLoading}
         >
           {isLoading ? "Creating..." : "Create"}
+        </button>
+        <button
+          style={{
+            backgroundColor: "#f3d675",
+            color: "#000000",
+            border: "none",
+            padding: "8px 16px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+          }}
+        >
+          Create api tools
         </button>
       </div>
     </div>
