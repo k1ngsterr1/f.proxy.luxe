@@ -68,7 +68,7 @@ export default function PersonalAccount() {
                 width: "100%",
               }}
             >
-              <PayForm />
+              <PayForm userId={data?.id as string} />
             </div>
           </div>
         </div>

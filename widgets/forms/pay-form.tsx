@@ -1,15 +1,11 @@
 "use client";
-
-import type React from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Visa from "@/assets/images/visa.png";
 import WebMoney from "@/assets/images/webmoney.png";
 import BitCoin from "@/assets/images/bitcoin.png";
 import LitCoin from "@/assets/images/litecoin.png";
 import Digiseller from "@/assets/images/digiseller.png";
 import Payer from "@/assets/images/payeer.png";
-import Enot from "@/assets/images/enot.png";
 import Image from "next/image";
 import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmoney-payment";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
@@ -35,12 +31,13 @@ import { useDigisellerPayment } from "@/entities/payments/hooks/general/use-digi
 
 // const validationSchema = PayFormValidation();
 
-export const PayForm = () => {
+export const PayForm = ({ userId }: { userId?: string }) => {
   const isMobile = useIsMobile();
   const { processWebMoneyPayment } = useWebMoneyPayment();
   const { processPayeerPayment } = usePayeerPayment();
   const { processDigisellerPayment } = useDigisellerPayment();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDigisellerPopup, setShowDigisellerPopup] = useState(false);
   const i18n = useTranslations("forms.payment");
   const errorI18n = useTranslations("forms.payment.errors");
   const locale = useLocale();
@@ -59,6 +56,11 @@ export const PayForm = () => {
       try {
         setIsSubmitting(true);
 
+        if (values.paymentMethod === "digiseller") {
+          setShowDigisellerPopup(true);
+          return; // Stop here and wait for popup interaction
+        }
+
         if (values.paymentMethod === "webmoney") {
           await processWebMoneyPayment(
             values.paymentAmount,
@@ -66,12 +68,9 @@ export const PayForm = () => {
           );
         } else if (values.paymentMethod === "payeer") {
           await processPayeerPayment(values.paymentAmount);
-        } else if (
-          values.paymentMethod === "digiseller" ||
-          values.paymentMethod === "visa"
-        ) {
+        } else if (values.paymentMethod === "visa") {
           await processDigisellerPayment(
-            Math.floor(parseFloat(values.paymentAmount)),
+            Math.floor(Number.parseFloat(values.paymentAmount)),
             locale
           );
         } else if (values.paymentMethod === "litecoin") {
@@ -86,7 +85,7 @@ export const PayForm = () => {
           );
         } else {
           await processDigisellerPayment(
-            Math.floor(parseFloat(values.paymentAmount)),
+            Math.floor(Number.parseFloat(values.paymentAmount)),
             locale
           );
         }
@@ -100,6 +99,26 @@ export const PayForm = () => {
       }
     },
   });
+
+  const handleDigisellerContinue = async () => {
+    setShowDigisellerPopup(false);
+    try {
+      await processDigisellerPayment(
+        Math.floor(Number.parseFloat(formik.values.paymentAmount)),
+        locale
+      );
+    } catch (error) {
+      console.error("Digiseller payment processing error:", error);
+      alert(error instanceof Error ? error.message : errorI18n("generalError"));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDigisellerCancel = () => {
+    setShowDigisellerPopup(false);
+    setIsSubmitting(false);
+  };
 
   // Handle form submission with native alert for validation errors
   const handleSubmit = (e: any) => {
@@ -145,109 +164,204 @@ export const PayForm = () => {
   };
 
   return (
-    <form
-      autoComplete="off"
-      onSubmit={handleSubmit}
-      style={{
-        marginLeft: isMobile ? 0 : 64,
-        marginTop: isMobile ? 32 : 0,
-      }}
-      noValidate // Add this to disable browser validation
-    >
-      <div className="m_title">
-        <h1 className="h1">
-          <span>{i18n("title")}</span>
-        </h1>
-      </div>
-
-      <div className="payment_method">
-        <div className="h5">
-          {i18n("paymentMethod")} <span style={{ color: "#f3d675" }}>*</span>
-        </div>
-
-        <div className="methods">
-          {[
-            { id: "visa", img: Visa, text: "VISA/MASTERCARD/MIR" },
-            { id: "webmoney", img: WebMoney, text: "WEBMONEY (WMT)" },
-            { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
-            { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
-            { id: "digiseller", img: Digiseller, text: "DIGISELLER" },
-            { id: "payeer", img: Payer, text: "PAYEER" },
-          ].map((method) => (
-            <label key={method.id} className="method">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value={method.id}
-                checked={formik.values.paymentMethod === method.id}
-                onChange={formik.handleChange}
-                // Remove required attribute
-              />
-              <span className="method_cont">
-                <span className="img">
-                  <Image
-                    src={method.img || "/placeholder.svg"}
-                    alt={method.text}
-                    width={80}
-                    height={80}
-                  />
-                </span>
-                <span className="txt">{method.text}</span>
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div className="sum_line">
-        <div className="h5">
-          {i18n("paymentAmount")} <span style={{ color: "#f3d675" }}>*</span>
-        </div>
-
-        <div className="form">
-          <input
-            name="paymentAmount"
-            type="number"
-            min={1}
-            max={1000}
-            placeholder="1000$"
-            value={formik.values.paymentAmount}
-            onChange={formik.handleChange}
-            // Keep required for this input as it's a standard input
-          />
-          <Button
-            type="submit"
-            className="btn_next"
-            style={{
-              opacity: isSubmitting ? 0.7 : 1,
-              cursor: isSubmitting ? "not-allowed" : "pointer",
-            }}
-            name={isSubmitting ? i18n("processing") : i18n("continue")}
-          />
-        </div>
-      </div>
-
-      {/* Checkbox for agreement - positioned at the bottom */}
-      <div
-        className="agree_faq"
+    <>
+      <form
+        autoComplete="off"
+        onSubmit={handleSubmit}
         style={{
-          marginLeft: 0,
-          marginTop: "16px",
+          marginLeft: isMobile ? 0 : 64,
+          marginTop: isMobile ? 32 : 0,
         }}
+        noValidate // Add this to disable browser validation
       >
-        <label className="checkbox">
-          <input
-            className="checkbox-inp"
-            name="agreed"
-            type="checkbox"
-            checked={formik.values.agreed}
-            onChange={formik.handleChange}
-            // Remove required attribute
-          />
-          <span className="checkbox-box"></span>
-          <span className="checkbox-text">{i18n("agreement")}</span>
-        </label>
-      </div>
-    </form>
+        <div className="m_title">
+          <h1 className="h1">
+            <span>{i18n("title")}</span>
+          </h1>
+        </div>
+
+        <div className="payment_method">
+          <div className="h5">
+            {i18n("paymentMethod")} <span style={{ color: "#f3d675" }}>*</span>
+          </div>
+
+          <div className="methods">
+            {[
+              { id: "visa", img: Visa, text: "VISA/MASTERCARD/MIR" },
+              { id: "webmoney", img: WebMoney, text: "WEBMONEY (WMT)" },
+              { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
+              { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
+              { id: "digiseller", img: Digiseller, text: "DIGISELLER" },
+              { id: "payeer", img: Payer, text: "PAYEER" },
+            ].map((method) => (
+              <label key={method.id} className="method">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value={method.id}
+                  checked={formik.values.paymentMethod === method.id}
+                  onChange={formik.handleChange}
+                  // Remove required attribute
+                />
+                <span className="method_cont">
+                  <span className="img">
+                    <Image
+                      src={method.img || "/placeholder.svg"}
+                      alt={method.text}
+                      width={80}
+                      height={80}
+                    />
+                  </span>
+                  <span className="txt">{method.text}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="sum_line">
+          <div className="h5">
+            {i18n("paymentAmount")} <span style={{ color: "#f3d675" }}>*</span>
+          </div>
+
+          <div className="form">
+            <input
+              name="paymentAmount"
+              type="number"
+              min={1}
+              max={1000}
+              placeholder="1000$"
+              value={formik.values.paymentAmount}
+              onChange={formik.handleChange}
+              // Keep required for this input as it's a standard input
+            />
+            <Button
+              type="submit"
+              className="btn_next"
+              style={{
+                opacity: isSubmitting ? 0.7 : 1,
+                cursor: isSubmitting ? "not-allowed" : "pointer",
+              }}
+              name={isSubmitting ? i18n("processing") : i18n("continue")}
+            />
+          </div>
+        </div>
+
+        {/* Checkbox for agreement - positioned at the bottom */}
+        <div
+          className="agree_faq"
+          style={{
+            marginLeft: 0,
+            marginTop: "16px",
+          }}
+        >
+          <label className="checkbox">
+            <input
+              className="checkbox-inp"
+              name="agreed"
+              type="checkbox"
+              checked={formik.values.agreed}
+              onChange={formik.handleChange}
+              // Remove required attribute
+            />
+            <span className="checkbox-box"></span>
+            <span className="checkbox-text">{i18n("agreement")}</span>
+          </label>
+        </div>
+      </form>
+
+      {/* Digiseller Popup */}
+      {showDigisellerPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              borderRadius: "8px",
+              padding: "24px",
+              maxWidth: "400px",
+              width: "90%",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+              border: "1px solid #f3d675",
+            }}
+          >
+            <h3
+              style={{
+                color: "#f3d675",
+                marginTop: 0,
+                marginBottom: "16px",
+                fontSize: "18px",
+              }}
+            >
+              Digiseller
+            </h3>
+            <p
+              style={{
+                color: "#ffffff",
+                marginBottom: "24px",
+                fontSize: "16px",
+                lineHeight: 1.5,
+              }}
+            >
+              Вам нужно скопировать этот код и вставить в поле "Номер
+              пользователя":
+              <br />{" "}
+              <strong style={{ color: "#f3d675" }}>
+                {userId || "Loading..."}
+              </strong>
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px",
+              }}
+            >
+              <button
+                onClick={handleDigisellerCancel}
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#f3d675",
+                  border: "1px solid #f3d675",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                }}
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleDigisellerContinue}
+                style={{
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
+              >
+                Далее
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
