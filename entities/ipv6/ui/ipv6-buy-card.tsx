@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/shared/ui/button";
+import { PureRangeSlider } from "@/shared/ui/range-slider";
 
 
 
@@ -20,10 +21,23 @@ export const IPV6BuyCard = () => {
 
   const [validationError, setValidationError] = useState<string | null>(null);
   const [countryId, setCountryId] = useState<string>("");
-  const [quantity, setQuantity] = useState<number>(10);
   const [goal, setGoal] = useState<string>("");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("");
+
+  const [value, setValue] = useState(5)
+  const rangeRef = useRef<HTMLInputElement>(null)
+
+  const min = 0
+  const max = 10
+
+  const fillPercentage = ((value - min) / (max - min)) * 100
+
+  useEffect(() => {
+    if (rangeRef.current) {
+      rangeRef.current.style.setProperty("--fill-percentage", `${fillPercentage}%`)
+    }
+  }, [fillPercentage])
 
   useEffect(() => {
     if (preferences?.ipv6?.country.length && !countryId) {
@@ -45,12 +59,12 @@ export const IPV6BuyCard = () => {
 
     const orderData = {
       country: selectedCountry.name,
-      quantity: Number(quantity),
+      quantity: Number(value),
       goal,
       usage,
       period: selectedPeriod.name,
       periodDays: selectedPeriod.id,
-      totalPrice: 0.08 * Number(quantity),
+      totalPrice: 0.08 * Number(value),
       proxyType: usage.includes("SOCKS5") ? "SOCKS5" : "HTTPS",
       type: "ipv6",
     };
@@ -123,24 +137,15 @@ export const IPV6BuyCard = () => {
           ))}
         </select>
 
-        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          {i18n("quantity")}
+        <h4 className="buy-item__subheader" style={{ marginTop: 20, marginBottom: 20 }}>
+          {i18n("quantity")}:    <span
+            style={{ left: `calc(${fillPercentage}% + 10px)` }}
+          >
+            {value}
+          </span>
         </h4>
-        <input
-          type="number"
-          value={quantity}
-          max={10}
-          min={0}
-          onChange={(e) => {
-            const newValue = Number(e.target.value);
-            if (newValue >= 0 && newValue <= 10) {
-              setQuantity(newValue);
-            }
-          }}
-          style={inputStyle}
-        />
-
-        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+        <PureRangeSlider value={value} setValue={setValue} ref={rangeRef} max={10} />
+        <h4 className="buy-item__subheader" style={{ marginTop: 20 }}>
           {i18n("period")}
         </h4>
         <select
@@ -151,8 +156,8 @@ export const IPV6BuyCard = () => {
         >
           <option> {i18n("month")}</option>
         </select>
-        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
-          {i18n("usage")}
+        <h4 className="buy-item__subheader" style={{ marginTop: 20 }}>
+          {i18n("usage")} <span style={{ color: "#f3d675" }}>*</span>
         </h4>
         <div style={selectWrapperStyle}>
           <select
@@ -184,7 +189,7 @@ export const IPV6BuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         <div className="buy-item__price">
-          {i18n("price")}: <span>{`$ ${0.08 * quantity} / IP`}</span>
+          {i18n("price")}: <span>{`$ ${0.8 * value} / IP`}</span>
         </div>
         <Button
           onClick={handleBuyClick}

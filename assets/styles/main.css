@@ -451,8 +451,8 @@ img {
   margin-bottom: 50px;
 }
 .imain-count {
-  font-size: 60px;
-  line-height: 68px;
+  font-size: 45px;
+  line-height: 70px;
   margin-bottom: 5px;
   color: #fade4c;
   font-weight: 900;
@@ -2656,6 +2656,10 @@ img {
   }
   .submenu {
     top: 100px;
+    margin-top: 40px;
+    max-width: 1300px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 @media screen and (max-width: 1100px) {

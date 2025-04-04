@@ -10,6 +10,14 @@ import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { PureRangeSlider } from "@/shared/ui/range-slider";
 
+/**
+ * ISPBuyCard component provides an interface for users to create ISP proxy orders.
+ * It allows selection of country, quantity, period, and usage goals. The component
+ * interacts with user preferences and order creation APIs, and provides feedback
+ * on order creation process. It includes form validation logic, particularly for
+ * required fields like goal. The component renders a UI for selecting options with
+ * a slider for quantity, and buttons for actions like buying.
+ */
 export const ISPBuyCard = () => {
   const router = useRouter();
   const i18n = useTranslations("proxy-cards.isp");
@@ -105,7 +113,7 @@ export const ISPBuyCard = () => {
             {value}
           </span>
         </h4>
-        <PureRangeSlider value={value} setValue={setValue} ref={rangeRef} />
+        <PureRangeSlider value={value} setValue={setValue} ref={rangeRef} max={10000} />
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("period")}
         </h4>

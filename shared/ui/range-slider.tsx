@@ -6,10 +6,11 @@ import "../styles/range-slider.css"
 interface IPureRangeSlider {
     value: number
     ref: any
+    max: number
     setValue: (value: number) => void
 }
 
-export function PureRangeSlider({ value, ref, setValue }: IPureRangeSlider) {
+export function PureRangeSlider({ value, ref, max, setValue }: IPureRangeSlider) {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = Number.parseFloat(e.target.value)
@@ -23,7 +24,7 @@ export function PureRangeSlider({ value, ref, setValue }: IPureRangeSlider) {
                     ref={ref}
                     type="range"
                     min={0}
-                    max={10000}
+                    max={max}
                     step={1}
                     value={value}
                     onChange={handleChange}
