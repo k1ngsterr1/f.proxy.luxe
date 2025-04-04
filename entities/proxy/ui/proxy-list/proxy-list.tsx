@@ -101,6 +101,54 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     let contentHttpFirstFormat = "";
     let contentHttpSecondFormat = "";
 
+    proxies.forEach((proxy) => {
+      const login = proxy.login || "user";
+      const password = proxy.password || "pass";
+
+      if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
+        proxy.ports.forEach((port: number | string) => {
+          const ip = "104.22.51.115";
+
+          contentHttpFirstFormat += `${ip}:${port}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${ip}:${port}\n`;
+        });
+      } else {
+        const ip = proxy.ip;
+        const portHttp = proxy.port_http;
+
+        if (portHttp) {
+          contentHttpFirstFormat += `${ip}:${portHttp}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${ip}:${portHttp}\n`;
+        }
+      }
+    });
+
+    const fullContent = `${contentHttpFirstFormat}\n${contentHttpSecondFormat}`;
+
+    const createAndDownloadFile = (content: string, fileName: string) => {
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
+
+    const dateStr = new Date().toISOString().split("T")[0];
+
+    if (fullContent.trim()) {
+      createAndDownloadFile(fullContent, `proxy-http-${dateStr}.txt`);
+    }
+
+    setExportMenuOpen(false);
+  };
+
+  const exportSocksToTxt = () => {
+    if (!proxies || proxies.length === 0) return;
+
     let contentSocksFirstFormat = "";
     let contentSocksSecondFormat = "";
 
@@ -112,23 +160,12 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
         proxy.ports.forEach((port: number | string) => {
           const ip = "104.22.51.115";
 
-          // HTTP
-          contentHttpFirstFormat += `${ip}:${port}:${login}:${password}\n`;
-          contentHttpSecondFormat += `${login}:${password}@${ip}:${port}\n`;
-
-          // SOCKS5
           contentSocksFirstFormat += `${ip}:${port}:${login}:${password}\n`;
           contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
         });
       } else {
         const ip = proxy.ip;
-        const portHttp = proxy.port_http;
         const portSocks = proxy.port_socks;
-
-        if (portHttp) {
-          contentHttpFirstFormat += `${ip}:${portHttp}:${login}:${password}\n`;
-          contentHttpSecondFormat += `${login}:${password}@${ip}:${portHttp}\n`;
-        }
 
         if (portSocks) {
           contentSocksFirstFormat += `${ip}:${portSocks}:${login}:${password}\n`;
@@ -137,73 +174,26 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       }
     });
 
-    const contentHttp = `${contentHttpFirstFormat}\n${contentHttpSecondFormat}`;
-    const contentSocks = `${contentSocksFirstFormat}\n${contentSocksSecondFormat}`;
+    const fullContent = `${contentSocksFirstFormat}\n${contentSocksSecondFormat}`;
 
-    const createAndDownloadFile = (content: string, type: string) => {
+    const createAndDownloadFile = (content: string, fileName: string) => {
       const blob = new Blob([content], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `proxy-${type}-${
-        new Date().toISOString().split("T")[0]
-      }.txt`;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     };
 
-    if (contentHttp.trim()) createAndDownloadFile(contentHttp, "http");
-    if (contentSocks.trim()) createAndDownloadFile(contentSocks, "socks");
+    const dateStr = new Date().toISOString().split("T")[0];
 
-    setExportMenuOpen(false);
-  };
+    if (fullContent.trim()) {
+      createAndDownloadFile(fullContent, `proxy-socks-${dateStr}.txt`);
+    }
 
-  const exportToJson = () => {
-    if (!proxies || proxies.length === 0) return;
-
-    const enhancedProxies = proxies.flatMap((proxy) => {
-      const login = proxy.login || "user";
-      const password = proxy.password || "pass";
-
-      if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
-        return proxy.ports.map((port: number | string) => {
-          const ip = "res.proxy-seller.com";
-          return {
-            ...proxy,
-            ip,
-            port,
-            format1: `@${ip}:${port}:${login}:${password}`,
-            format2: `${login}:${password}@${ip}:${port}`,
-          };
-        });
-      } else {
-        const ip = proxy.ip;
-        const port = proxy.port_http || proxy.port_socks || "-";
-        return [
-          {
-            ...proxy,
-            ip,
-            port,
-            format1: `${ip}:${port}:${login}:${password}`,
-            format2: `${login}:${password}@${ip}:${port}`,
-          },
-        ];
-      }
-    });
-
-    const blob = new Blob([JSON.stringify(enhancedProxies, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `proxy-list-${new Date().toISOString().split("T")[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
     setExportMenuOpen(false);
   };
 
@@ -525,11 +515,11 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
               }}
             >
               <FileText size={16} />
-              <span>Сохранить как TXT</span>
+              <span>Сохранить HTTP(s)</span>
             </div>
             <div
               style={exportMenuItemStyle}
-              onClick={exportToJson}
+              onClick={exportSocksToTxt}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor =
                   "rgba(243, 214, 117, 0.1)";
@@ -539,7 +529,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
               }}
             >
               <FileJson size={16} />
-              <span>Сохранить как JSON</span>
+              <span>Сохранить SOCKS</span>
             </div>
           </div>
         </div>
