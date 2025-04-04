@@ -97,7 +97,7 @@ export const ResidentProxyConstructor = ({
 
   useEffect(() => {
     if (regions) {
-      let cityList = [];
+      let cityList: any[] = [];
       regions.forEach((regionItem: any) => {
         cityList = [...cityList, ...regionItem.cities];
       });
