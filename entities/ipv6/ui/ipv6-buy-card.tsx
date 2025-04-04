@@ -9,8 +9,6 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { PureRangeSlider } from "@/shared/ui/range-slider";
 
-
-
 export const IPV6BuyCard = () => {
   const router = useRouter();
   const i18n = useTranslations("proxy-cards.ipv6");
@@ -25,19 +23,22 @@ export const IPV6BuyCard = () => {
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("");
 
-  const [value, setValue] = useState(5)
-  const rangeRef = useRef<HTMLInputElement>(null)
+  const [value, setValue] = useState(5);
+  const rangeRef = useRef<HTMLInputElement>(null);
 
-  const min = 0
-  const max = 10
+  const min = 0;
+  const max = 10;
 
-  const fillPercentage = ((value - min) / (max - min)) * 100
+  const fillPercentage = ((value - min) / (max - min)) * 100;
 
   useEffect(() => {
     if (rangeRef.current) {
-      rangeRef.current.style.setProperty("--fill-percentage", `${fillPercentage}%`)
+      rangeRef.current.style.setProperty(
+        "--fill-percentage",
+        `${fillPercentage}%`
+      );
     }
-  }, [fillPercentage])
+  }, [fillPercentage]);
 
   useEffect(() => {
     if (preferences?.ipv6?.country.length && !countryId) {
@@ -75,7 +76,6 @@ export const IPV6BuyCard = () => {
     });
   };
 
-
   // Common style for select elements
   const selectStyle = {
     backgroundColor: "#1E1E1E",
@@ -112,7 +112,6 @@ export const IPV6BuyCard = () => {
     marginTop: "4px",
   };
 
-
   return (
     <div className="buy-col">
       <div className="buy-item" style={{ minHeight: 800, height: 850 }}>
@@ -137,14 +136,21 @@ export const IPV6BuyCard = () => {
           ))}
         </select>
 
-        <h4 className="buy-item__subheader" style={{ marginTop: 20, marginBottom: 20 }}>
-          {i18n("quantity")}:    <span
-            style={{ left: `calc(${fillPercentage}% + 10px)` }}
-          >
+        <h4
+          className="buy-item__subheader"
+          style={{ marginTop: 20, marginBottom: 20 }}
+        >
+          {i18n("quantity")}:{" "}
+          <span style={{ left: `calc(${fillPercentage}% + 10px)` }}>
             {value}
           </span>
         </h4>
-        <PureRangeSlider value={value} setValue={setValue} ref={rangeRef} max={10} />
+        <PureRangeSlider
+          value={value}
+          setValue={setValue}
+          ref={rangeRef}
+          max={10}
+        />
         <h4 className="buy-item__subheader" style={{ marginTop: 20 }}>
           {i18n("period")}
         </h4>
@@ -189,7 +195,7 @@ export const IPV6BuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         <div className="buy-item__price">
-          {i18n("price")}: <span>{`$ ${0.8 * value} / IP`}</span>
+          {i18n("price")}: <span>{`$ ${(0.8 * value).toFixed(1)} / IP`}</span>
         </div>
         <Button
           onClick={handleBuyClick}
