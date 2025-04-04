@@ -19,6 +19,11 @@ export const routing = defineRouting({
     "/services/black-lists": "/services/black-lists",
     "/services/ipv6-checker": "/services/ipv6-checker",
     "/personal-account": "/personal-account",
+    "/personal-account/orders": "/personal-account/orders",
+    "/personal-account/partner": "/personal-account/partner",
+    "/personal-account/payments": "/personal-account/payments",
+    "/personal-account/profile": "/personal-account/profile",
+    "/personal-account/proxy": "/personal-account/proxy",
   },
 });
 

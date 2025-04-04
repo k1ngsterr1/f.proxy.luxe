@@ -41,8 +41,8 @@ export const useWebMoneyPayment = () => {
               : cryptoRates.litecoin.usd;
 
           convertedAmount = Number(
-            (Number(amount) / (cryptoPriceUSD / 1000)).toFixed(8)
-          ); // USD → crypto
+            (Number(amount) / (cryptoPriceUSD / 1000)).toFixed(2)
+          );
 
           purse =
             type === "bitcoin" ? MERCHANT_WALLET_BTC : MERCHANT_WALLET_LTC;
@@ -56,7 +56,7 @@ export const useWebMoneyPayment = () => {
 
         const fields = {
           LMI_PAYEE_PURSE: purse,
-          LMI_PAYMENT_AMOUNT: String(convertedAmount.toFixed(2)),
+          LMI_PAYMENT_AMOUNT: String(convertedAmount),
           LMI_PAYMENT_NO: orderId.toString(),
           LMI_PAYMENT_DESC: description,
           LMI_SIM_MODE: "0",
