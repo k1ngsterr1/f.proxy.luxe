@@ -19,10 +19,12 @@ export default function PersonalAccount() {
   const isFetching = useIsFetching();
 
   useEffect(() => {
-    // If no token is found, redirect immediately without showing popup
     if (!token) {
-      // Redirect to home page without delay
-      navigate.replace("/");
+      const timeout = setTimeout(() => {
+        navigate.replace("/");
+      }, 1000); // Задержка в миллисекундах (можно изменить)
+
+      return () => clearTimeout(timeout); // Очистка таймера при размонтировании/обновлении
     }
   }, [token, navigate]);
   const i18n = useTranslations("personal-account");

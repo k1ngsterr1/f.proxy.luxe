@@ -25,12 +25,9 @@ export const useWebMoneyPayment = () => {
 
         // 💰 Convert RUB -> USD -> BTC/LTC if needed
         if (type === "bitcoin" || type === "litecoin") {
-          const [rubRate, cryptoRates] = await Promise.all([
-            getExchangeRate(), // USD → RUB
-            getCryptoRates(), // BTC/LTC → USD
-          ]);
+          const cryptoRates = await getCryptoRates();
 
-          if (!rubRate || !cryptoRates) {
+          if (!cryptoRates) {
             console.error("❌ Failed to fetch exchange rates");
             return;
           }
@@ -47,12 +44,13 @@ export const useWebMoneyPayment = () => {
           purse =
             type === "bitcoin" ? MERCHANT_WALLET_BTC : MERCHANT_WALLET_LTC;
         }
-
         const userId = getUserIdFromToken();
+        console.log(userId);
         if (!userId) return;
 
         const orderId = Math.floor(Math.random() * 1_000_000_000);
         const description = `Пополнение баланса на ${amount} USD`;
+        console.log(orderId);
 
         const fields = {
           LMI_PAYEE_PURSE: purse,
