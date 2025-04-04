@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Plus, X, Edit, Trash2 } from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
 import { apiClient } from "@/shared/config/apiClient";
@@ -31,7 +31,11 @@ const radioCheckedStyle: React.CSSProperties = {
   boxShadow: "inset 0 0 0 3px #000000",
 };
 
-export const ResidentProxyConstructor = () => {
+export const ResidentProxyConstructor = ({
+  package_key,
+}: {
+  package_key: string;
+}) => {
   const [listName, setListName] = useState("");
   const [rotation, setRotation] = useState("general");
   const [authMethod, setAuthMethod] = useState("username");
@@ -49,6 +53,8 @@ export const ResidentProxyConstructor = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [availableIsps, setAvailableIsps] = useState<string[]>([]);
+  const [cities, setCities] = useState<any[]>([]);
 
   // Get geo references data
   const {
@@ -68,14 +74,36 @@ export const ResidentProxyConstructor = () => {
     setCity("");
   }, [region]);
 
+  const updateAvailableIsps = useCallback(() => {
+    if (city) {
+      const selectedCity = cities.find((c: any) => c.name === city);
+      setAvailableIsps(selectedCity?.isps || []);
+      setIsp(""); // Reset ISP when city changes
+    } else {
+      setAvailableIsps([]);
+      setIsp("");
+    }
+  }, [city, cities]);
+
+  useEffect(() => {
+    updateAvailableIsps();
+  }, [updateAvailableIsps]);
+
   // Get available countries, regions, and cities based on selections
   const countries = geoReferences || [];
 
   const selectedCountry = countries.find((c: any) => c.code === country);
   const regions = selectedCountry?.regions || [];
 
-  const selectedRegion = regions.find((r: any) => r.code.toString() === region);
-  const cities = selectedRegion?.cities || [];
+  useEffect(() => {
+    if (regions) {
+      let cityList = [];
+      regions.forEach((regionItem: any) => {
+        cityList = [...cityList, ...regionItem.cities];
+      });
+      setCities(cityList);
+    }
+  }, [regions]);
 
   const handleAddIp = () => {
     if (newIp.trim() !== "") {
@@ -116,15 +144,12 @@ export const ResidentProxyConstructor = () => {
 
     try {
       const payload = {
-        package_key: "5d6e4e4ed8e2048633b0", // Hardcoded package key
+        package_key, // Use the prop instead of hardcoded value
         ports: Number(ports),
         whitelist: whitelist.join(";"),
         title: listName,
-        rotation: rotation === "general" ? 0 : rotation === "sticky" ? 1 : 2, // Convert rotation to numerical value
-        country: country,
-        region: region,
-        city: city,
-        isp: isp,
+        rotation: rotation === "general" ? 0 : rotation === "sticky" ? -1 : 1, // Convert rotation to numerical value
+        geo: { country: country, region: region, city: city, isp: isp },
       };
 
       const response = await apiClient.post(
@@ -688,10 +713,7 @@ export const ResidentProxyConstructor = () => {
               >
                 <option value="">Select region</option>
                 {regions.map((regionItem: any) => (
-                  <option
-                    key={regionItem.code}
-                    value={regionItem.code.toString()}
-                  >
+                  <option key={regionItem.code} value={regionItem.name}>
                     {regionItem.name}
                   </option>
                 ))}
@@ -783,14 +805,26 @@ export const ResidentProxyConstructor = () => {
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
+                disabled={!city || availableIsps.length === 0}
               >
                 <option value="">Select ISP</option>
-                <option value="verizon">Verizon</option>
-                <option value="rogers">Rogers</option>
-                <option value="att">AT&T</option>
-                <option value="comcast">Comcast</option>
-                <option value="tmobile">T-Mobile</option>
+                {availableIsps.map((ispItem: string, index: number) => (
+                  <option key={index} value={ispItem}>
+                    {ispItem}
+                  </option>
+                ))}
               </select>
+              {city && availableIsps.length === 0 && !isLoadingGeo && (
+                <p
+                  style={{
+                    fontSize: "10px",
+                    color: "#999999",
+                    marginTop: "4px",
+                  }}
+                >
+                  No ISPs available
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -830,7 +864,7 @@ export const ResidentProxyConstructor = () => {
       </div>
 
       {/* Output Section - Placeholder */}
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <div style={{ textAlign: "left", marginTop: "20px" }}>
         <button
           style={{
             backgroundColor: "#f3d675",
@@ -841,41 +875,11 @@ export const ResidentProxyConstructor = () => {
             cursor: "pointer",
             fontSize: "14px",
             fontWeight: "500",
-            marginRight: "10px",
-          }}
-        >
-          Change plan
-        </button>
-        <button
-          style={{
-            backgroundColor: "#f3d675",
-            color: "#000000",
-            border: "none",
-            padding: "8px 16px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: "500",
-            marginRight: "10px",
           }}
           onClick={handleSubmit}
           disabled={isLoading}
         >
           {isLoading ? "Creating..." : "Create"}
-        </button>
-        <button
-          style={{
-            backgroundColor: "#f3d675",
-            color: "#000000",
-            border: "none",
-            padding: "8px 16px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: "500",
-          }}
-        >
-          Create api tools
         </button>
       </div>
     </div>
