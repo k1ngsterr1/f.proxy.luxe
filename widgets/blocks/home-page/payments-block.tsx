@@ -71,7 +71,6 @@ export const PaymentMethodsBlock = () => {
           position: "relative",
         }}
       >
-        {/* Gold accent line at top */}
         <div
           style={{
             position: "absolute",
@@ -100,7 +99,6 @@ export const PaymentMethodsBlock = () => {
             {t("title.first")}{" "}
             <span style={{ color: "#f3d675" }}>{t("title.second")}</span>
           </motion.h2>
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Edit, Trash2 } from "lucide-react";
+import { apiClient } from "@/shared/config/apiClient";
 
 const rotationOptions = [
   { label: "General", value: "general" },
@@ -36,10 +37,15 @@ export const ResidentProxyConstructor = () => {
   const [region, setRegion] = useState("");
   const [city, setCity] = useState("");
   const [isp, setIsp] = useState("");
-  const [ports, setPorts] = useState("1");
+  const [ports, setPorts] = useState("2");
   const [showAddIpPopup, setShowAddIpPopup] = useState(false);
   const [newIp, setNewIp] = useState("");
   const [whitelist, setWhitelist] = useState<string[]>([]);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editIp, setEditIp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleAddIp = () => {
     if (newIp.trim() !== "") {
@@ -52,6 +58,58 @@ export const ResidentProxyConstructor = () => {
   const handleCancelAddIp = () => {
     setNewIp("");
     setShowAddIpPopup(false);
+  };
+
+  const handleEditIp = (index: number) => {
+    setEditIndex(index);
+    setEditIp(whitelist[index]);
+  };
+
+  const handleUpdateIp = (index: number) => {
+    const updatedWhitelist = [...whitelist];
+    updatedWhitelist[index] = editIp;
+    setWhitelist(updatedWhitelist);
+    setEditIndex(null);
+    setEditIp("");
+  };
+
+  const handleDeleteIp = (index: number) => {
+    const updatedWhitelist = [...whitelist];
+    updatedWhitelist.splice(index, 1);
+    setWhitelist(updatedWhitelist);
+  };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    setSuccessMessage(null);
+    setErrorMessage(null);
+
+    try {
+      const payload = {
+        package_key: "5d6e4e4ed8e2048633b0",
+        ports: Number(ports),
+        whitelist: whitelist.join(";"),
+        title: listName,
+        rotation: rotation === "general" ? 0 : rotation === "sticky" ? 1 : 2,
+      };
+
+      const response = await apiClient.post(
+        "/api/v1/products/modify-proxy/resident",
+        payload
+      );
+
+      if (response.status === 200) {
+        setSuccessMessage("Proxy settings updated successfully!");
+      } else {
+        setErrorMessage(
+          `Failed to update proxy settings. Status: ${response.status}`
+        );
+      }
+    } catch (error: any) {
+      setErrorMessage(error.message || "An unexpected error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -67,7 +125,6 @@ export const ResidentProxyConstructor = () => {
         border: "1px solid rgba(243, 214, 117, 0.2)",
       }}
     >
-      {/* IP Whitelist Section */}
       <div
         style={{
           backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -94,10 +151,104 @@ export const ResidentProxyConstructor = () => {
             You have not added any IPs yet
           </p>
         ) : (
-          <ul>
+          <ul style={{ listStyle: "none", padding: 0 }}>
             {whitelist.map((ip, index) => (
-              <li key={index} style={{ color: "#f3d675" }}>
-                {ip}
+              <li
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "8px 12px",
+                  marginBottom: "8px",
+                  borderRadius: "4px",
+                  backgroundColor: "rgba(0, 0, 0, 0.2)",
+                  color: "#f3d675",
+                }}
+              >
+                {editIndex === index ? (
+                  <input
+                    type="text"
+                    value={editIp}
+                    onChange={(e) => setEditIp(e.target.value)}
+                    style={{
+                      width: "70%",
+                      padding: "6px 8px",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "4px",
+                      color: "#f3d675",
+                      fontSize: "14px",
+                    }}
+                  />
+                ) : (
+                  <span>{ip}</span>
+                )}
+                <div>
+                  {editIndex === index ? (
+                    <>
+                      <button
+                        onClick={() => handleUpdateIp(index)}
+                        style={{
+                          backgroundColor: "#f3d675",
+                          color: "#000000",
+                          border: "none",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          marginRight: "5px",
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditIndex(null)}
+                        style={{
+                          backgroundColor: "transparent",
+                          color: "#f3d675",
+                          border: "1px solid rgba(243, 214, 117, 0.2)",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => handleEditIp(index)}
+                        style={{
+                          backgroundColor: "transparent",
+                          color: "#f3d675",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                          marginRight: "5px",
+                        }}
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteIp(index)}
+                        style={{
+                          backgroundColor: "transparent",
+                          color: "#f3d675",
+                          border: "none",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                        }}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -118,12 +269,8 @@ export const ResidentProxyConstructor = () => {
           <Plus size={16} style={{ marginRight: "8px" }} />
           Add
         </button>
-
-        {/* Add IP Popup */}
-        {/* Add IP Popup */}
         {showAddIpPopup && (
           <>
-            {/* Backdrop */}
             <div
               onClick={handleCancelAddIp}
               style={{
@@ -133,8 +280,6 @@ export const ResidentProxyConstructor = () => {
                 zIndex: 999,
               }}
             />
-
-            {/* Popup Card */}
             <div
               style={{
                 position: "fixed",
@@ -152,7 +297,6 @@ export const ResidentProxyConstructor = () => {
                 animation: "fadeIn 0.25s ease-out",
               }}
             >
-              {/* Close button */}
               <button
                 onClick={handleCancelAddIp}
                 style={{
@@ -169,7 +313,6 @@ export const ResidentProxyConstructor = () => {
               >
                 <X size={18} />
               </button>
-
               <h4
                 style={{
                   fontSize: "18px",
@@ -180,7 +323,6 @@ export const ResidentProxyConstructor = () => {
               >
                 Add Whitelisted IP
               </h4>
-
               <input
                 type="text"
                 value={newIp}
@@ -197,7 +339,6 @@ export const ResidentProxyConstructor = () => {
                   marginBottom: "20px",
                 }}
               />
-
               <div
                 style={{
                   display: "flex",
@@ -240,8 +381,6 @@ export const ResidentProxyConstructor = () => {
           </>
         )}
       </div>
-
-      {/* Export Section */}
       <div
         style={{
           backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -260,7 +399,44 @@ export const ResidentProxyConstructor = () => {
         >
           Export
         </h3>
-
+        {successMessage && (
+          <div style={{ color: "green", marginBottom: "10px" }}>
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div style={{ color: "red", marginBottom: "10px" }}>
+            {errorMessage}
+          </div>
+        )}
+        <div style={{ marginBottom: "16px" }}>
+          <label
+            htmlFor="listName"
+            style={{
+              display: "block",
+              fontSize: "14px",
+              color: "#999999",
+              marginBottom: "6px",
+            }}
+          >
+            Name of the list
+          </label>
+          <input
+            type="text"
+            id="listName"
+            value={listName}
+            onChange={(e) => setListName(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "8px 12px",
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              border: "1px solid rgba(243, 214, 117, 0.2)",
+              borderRadius: "4px",
+              color: "#f3d675",
+              fontSize: "14px",
+            }}
+          />
+        </div>
         <div style={{ marginBottom: "16px" }}>
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
@@ -293,8 +469,6 @@ export const ResidentProxyConstructor = () => {
             </label>
           ))}
         </div>
-
-        {/* Authorization method */}
         <div style={{ marginBottom: "16px" }}>
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
@@ -330,8 +504,6 @@ export const ResidentProxyConstructor = () => {
             </label>
           ))}
         </div>
-
-        {/* Export format */}
         <div style={{ marginBottom: "16px" }}>
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
@@ -367,8 +539,6 @@ export const ResidentProxyConstructor = () => {
             </label>
           ))}
         </div>
-
-        {/* Filter */}
         <div style={{ marginBottom: "16px" }}>
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
@@ -411,7 +581,6 @@ export const ResidentProxyConstructor = () => {
                 <option value="">Select country</option>
                 <option value="us">United States</option>
                 <option value="ca">Canada</option>
-                {/* Add more options as needed */}
               </select>
             </div>
             <div>
@@ -443,7 +612,6 @@ export const ResidentProxyConstructor = () => {
                 <option value="">Select region</option>
                 <option value="ny">New York</option>
                 <option value="on">Ontario</option>
-                {/* Add more options as needed */}
               </select>
             </div>
             <div>
@@ -475,7 +643,6 @@ export const ResidentProxyConstructor = () => {
                 <option value="">Select city</option>
                 <option value="ny">New York</option>
                 <option value="to">Toronto</option>
-                {/* Add more options as needed */}
               </select>
             </div>
             <div>
@@ -512,8 +679,6 @@ export const ResidentProxyConstructor = () => {
             </div>
           </div>
         </div>
-
-        {/* Ports */}
         <div>
           <label
             htmlFor="ports"
@@ -546,14 +711,7 @@ export const ResidentProxyConstructor = () => {
           </p>
         </div>
       </div>
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "20px",
-          display: "flex",
-          justifyContent: "start",
-        }}
-      >
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
         <button
           style={{
             backgroundColor: "#f3d675",
@@ -566,8 +724,10 @@ export const ResidentProxyConstructor = () => {
             fontWeight: "500",
             marginRight: "10px",
           }}
+          onClick={handleSubmit}
+          disabled={isLoading}
         >
-          Create
+          {isLoading ? "Creating..." : "Create"}
         </button>
       </div>
     </div>
