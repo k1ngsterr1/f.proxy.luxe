@@ -14,10 +14,10 @@ interface Proxy {
   id: string;
   ip: string;
   type: string;
-  ports: number[];
+  ports?: number[] | string;
   protocol: string;
-  port_http: number | string;
-  port_socks: number | string;
+  port_http?: number | string;
+  port_socks?: number | string;
   country: string;
   login: string;
   password: string;

@@ -187,24 +187,27 @@ export default function ProxyPage() {
       Array.isArray(proxies.data.items) &&
       proxies.data.items.length > 0 ? (
         <ProxyList
-          proxies={proxies.data.items.flatMap((item: ApiProxy) => {
+          proxies={proxies.data.items.flatMap((item: ApiProxy): any => {
             if (proxyType === "resident" && item.package_list) {
-              return item.package_list.map((pkg) => ({
-                id: pkg.id.toString(),
-                ip: "104.22.51.115",
+              return item.package_list.map((pkg): any => ({
+                id: pkg.id.toString(), // ✅ Обязательное поле
+                ip: "104.22.51.115", // или pkg.ip если есть
                 type: proxyType,
                 ports:
                   pkg.export.ports >= 3
-                    ? `10000,...,${10000 + pkg.export.ports - 1}`
+                    ? `10000,...,${10000 + pkg.export.ports - 1}` // ✅ string
                     : Array.from(
                         { length: pkg.export.ports },
                         (_, i) => 10000 + i
-                      ).join(","),
+                      ).join(","), // ✅ тоже string
                 protocol: "SOCKS5/HTTP",
-                country: pkg.geo[0]?.country || "",
+                port_http: pkg.port_http ?? 0,
+                port_socks: pkg.port_socks ?? 0,
+                country: pkg.geo?.[0]?.country || "",
                 login: pkg.login,
                 password: pkg.password,
-                title: pkg.title.slice(0, 6).trim() + "...",
+                title: pkg.title?.slice(0, 6).trim() + "...",
+                package_list: item.package_list || [], // ✅ строго массив
               }));
             }
 
