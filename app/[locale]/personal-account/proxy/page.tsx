@@ -52,11 +52,11 @@ export default function ProxyPage() {
       : null;
 
   useEffect(() => {
-    if (proxies?.data?.items && proxies.data.items.length > 0) {
-      // Extract package_key from the first proxy item
-      //@ts-ignore
-      const key = proxies.data.items[0].package_info.package_key || null;
-      setPackage_key(key);
+    const packageInfo = proxies?.data?.items?.[0]?.package_info;
+    if (packageInfo?.package_key) {
+      setPackage_key(packageInfo.package_key);
+    } else {
+      setPackage_key(null);
     }
   }, [proxies]);
 
