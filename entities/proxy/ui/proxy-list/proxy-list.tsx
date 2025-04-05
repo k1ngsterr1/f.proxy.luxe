@@ -21,6 +21,7 @@ interface Proxy {
   country: string;
   login: string;
   password: string;
+  title?: string;
   package_list: ProxyListItem[];
 }
 
@@ -459,7 +460,9 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                   <th style={tableHeaderCellStyle}>IP-адрес</th>
                   <th style={tableHeaderCellStyle}>Протокол</th>
                   <th style={tableHeaderCellStyle}>Порт HTTP</th>
-                  <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                  <th style={tableHeaderCellStyle}>Название</th>
+                  <th style={tableHeaderCellStyle}>Логин</th>
+                  <th style={tableHeaderCellStyle}>Пароль</th>
                   <th style={tableHeaderCellStyle}>Страна</th>
                 </tr>
               </thead>
@@ -478,7 +481,13 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                         <div style={{ ...skeletonStyle, width: "60px" }}></div>
                       </td>
                       <td style={tableCellStyle}>
-                        <div style={{ ...skeletonStyle, width: "60px" }}></div>
+                        <div style={{ ...skeletonStyle, width: "100px" }}></div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "80px" }}></div>
+                      </td>
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "80px" }}></div>
                       </td>
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "100px" }}></div>
@@ -566,56 +575,64 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
           <table style={tableStyle}>
             <thead style={tableHeadStyle}>
               <tr>
+                <th style={tableHeaderCellStyle}>Название</th>
                 <th style={tableHeaderCellStyle}>IP-адрес</th>
                 <th style={tableHeaderCellStyle}>Протокол</th>
                 <th style={tableHeaderCellStyle}>Порт HTTP</th>
-                <th style={tableHeaderCellStyle}>Порт SOCKS</th>
                 <th style={tableHeaderCellStyle}>Логин</th>
                 <th style={tableHeaderCellStyle}>Пароль</th>
                 <th style={tableHeaderCellStyle}>Страна</th>
               </tr>
             </thead>
             <tbody style={tableBodyStyle}>
-              {proxies.map((proxy, index) => (
-                <tr
-                  key={index}
-                  style={
-                    index % 2 === 0
-                      ? tableRowStyle
-                      : {
-                          ...tableRowStyle,
-                          backgroundColor: "rgba(243, 214, 117, 0.03)",
-                        }
-                  }
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(243, 214, 117, 0.07)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      index % 2 === 0 ? "" : "rgba(243, 214, 117, 0.03)";
-                  }}
-                >
-                  <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
-                  <td style={tableCellStyle}>
-                    <span style={getProtocolStyles(proxy.protocol)}>
-                      {proxy.protocol?.toUpperCase()}
-                    </span>
-                  </td>
-                  <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
-                  <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
-                  <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
-                  <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
-                  <td style={tableCellStyle}>
-                    <div style={countryContainerStyle}>
-                      <span style={flagStyle}>
-                        {getCountryFlag(proxy.country)}
+              {proxies.map((proxy, index) => {
+                // Get title from package_list if available
+                const title =
+                  proxy.package_list && proxy.package_list[0]
+                    ? proxy.package_list[0].export.ext
+                    : "—";
+
+                return (
+                  <tr
+                    key={index}
+                    style={
+                      index % 2 === 0
+                        ? tableRowStyle
+                        : {
+                            ...tableRowStyle,
+                            backgroundColor: "rgba(243, 214, 117, 0.03)",
+                          }
+                    }
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(243, 214, 117, 0.07)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        index % 2 === 0 ? "" : "rgba(243, 214, 117, 0.03)";
+                    }}
+                  >
+                    <td style={tableCellEmphasisStyle}>{proxy.title}</td>
+                    <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
+                    <td style={tableCellStyle}>
+                      <span style={getProtocolStyles(proxy.protocol)}>
+                        {proxy.protocol?.toUpperCase()}
                       </span>
-                      {proxy.country}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
+                    <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
+                    <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
+                    <td style={tableCellStyle}>
+                      <div style={countryContainerStyle}>
+                        <span style={flagStyle}>
+                          {getCountryFlag(proxy.country)}
+                        </span>
+                        {proxy.country}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

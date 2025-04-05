@@ -193,14 +193,18 @@ export default function ProxyPage() {
                 id: pkg.id.toString(),
                 ip: "104.22.51.115",
                 type: proxyType,
-                ports: Array.from(
-                  { length: pkg.export.ports },
-                  (_, i) => 10000 + i
-                ).join(","),
+                ports:
+                  pkg.export.ports >= 3
+                    ? `10000,...,${10000 + pkg.export.ports - 1}`
+                    : Array.from(
+                        { length: pkg.export.ports },
+                        (_, i) => 10000 + i
+                      ).join(","),
                 protocol: "SOCKS5/HTTP",
                 country: pkg.geo[0]?.country || "",
                 login: pkg.login,
                 password: pkg.password,
+                title: pkg.title.slice(0, 6).trim() + "...",
               }));
             }
 
