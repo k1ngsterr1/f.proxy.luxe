@@ -395,6 +395,7 @@ export default function Prices() {
                     alignItems: "center",
                     justifyContent: "center",
                     marginRight: "1rem",
+                    flexShrink: 0,
                   }}
                 >
                   <LucideTag size={24} color="#d4af37" />

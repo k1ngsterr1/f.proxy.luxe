@@ -33,7 +33,12 @@
       "ms": "ms",
       "activeCount": "active",
       "inactiveCount": "inactive",
-      "successRate": "successful"
+      "successRate": "successful",
+      "login": "Login",
+      "password": "Password",
+      "type": "Type",
+      "valid": "Valid",
+      "invalid": "Invalid"
     },
     "features": {
       "title": "Proxy checker features:",

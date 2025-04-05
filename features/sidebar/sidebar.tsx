@@ -10,10 +10,14 @@ import { LogoutButton } from "@/entities/auth/ui/logout/logout-button";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { useExchangeRates } from "@/entities/exchange-rates/api/hooks/use-get-crypto-rates.query";
+
+import { useEffect } from "react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { useExchangeRates } from "@/entities/exchange-rates/api/hooks/use-get-crypto-rates.query";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Sidebar = () => {
+  const queryClient = useQueryClient();
   const i18n = useTranslations("sidebar");
   const pathname = usePathname();
   const { data: userData } = useGetUser();
@@ -24,7 +28,12 @@ export const Sidebar = () => {
     isError: ratesError,
   } = useExchangeRates();
 
-  // Base styles
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ["me"],
+    });
+  }, [userData]);
+
   const sidebarStyle = {
     backgroundColor: "#0A0A0A",
     color: "#ffffff",

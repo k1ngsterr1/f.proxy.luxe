@@ -27,6 +27,12 @@ export default function ChangePasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isEmailSent, setIsEmailSent] = useState(false);
+
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+
   const { closePopup } = usePopupStore();
 
   const { mutate: changePassword, isPending: isChangingPassword } =
@@ -40,8 +46,12 @@ export default function ChangePasswordPage() {
   }, []);
 
   const handleSendEmail = () => {
+    setEmailError(null);
+    setError(null);
+    setSuccess(null);
+
     if (!email) {
-      setError(t("errors.email-required"));
+      setEmailError(t("errors.email-required"));
       return;
     }
 
@@ -51,14 +61,9 @@ export default function ChangePasswordPage() {
         onSuccess: () => {
           setIsEmailSent(true);
           setSuccess(t("success.reset-code-sent"));
-          setError(null);
         },
         onError: (err) => {
-          if (err instanceof Error) {
-            setError(err.message);
-          } else {
-            setError(t("errors.generic-error"));
-          }
+          setEmailError(t("errors.generic-error"));
         },
       }
     );
@@ -68,21 +73,41 @@ export default function ChangePasswordPage() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setEmailError(null);
+    setCodeError(null);
+    setPasswordError(null);
+    setConfirmPasswordError(null);
 
-    if (!email || !emailCode || !newPassword || !confirmPassword) {
-      setError(t("errors.required-fields"));
-      return;
+    let hasError = false;
+
+    if (!email) {
+      setEmailError(t("errors.email-required"));
+      hasError = true;
+    }
+    if (!emailCode) {
+      setCodeError(t("errors.code-required"));
+      hasError = true;
+    }
+    if (!newPassword) {
+      setPasswordError(t("errors.password-required"));
+      hasError = true;
+    }
+    if (!confirmPassword) {
+      setConfirmPasswordError(t("errors.confirm-password-required"));
+      hasError = true;
     }
 
-    if (newPassword !== confirmPassword) {
-      setError(t("errors.passwords-not-match"));
-      return;
+    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
+      setConfirmPasswordError(t("errors.passwords-not-match"));
+      hasError = true;
     }
 
-    if (newPassword.length < 8) {
-      setError(t("errors.password-length"));
-      return;
+    if (newPassword && newPassword.length < 8) {
+      setPasswordError(t("errors.password-length"));
+      hasError = true;
     }
+
+    if (hasError) return;
 
     changePassword(
       {
@@ -102,20 +127,17 @@ export default function ChangePasswordPage() {
           navigate.push("/");
         },
         onError: (err: any) => {
-          if (err as any) {
-            const message =
-              err?.response?.data?.message ||
-              err?.message ||
-              t("errors.generic-error");
-
-            setError(message);
-          } else {
-            setError(t("errors.generic-error"));
-          }
+          const message =
+            err?.response?.data?.message ||
+            err?.message ||
+            t("errors.generic-error");
+          setError(message);
         },
       }
     );
   };
+
+
 
   return (
     <div
@@ -218,7 +240,10 @@ export default function ChangePasswordPage() {
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEmailError(null);
+                    }}
                     placeholder={t("emailPlaceholder") || "Enter your email"}
                     style={{
                       width: "100%",
@@ -227,7 +252,8 @@ export default function ChangePasswordPage() {
                       paddingTop: "10px",
                       paddingBottom: "10px",
                       backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      border: `1px solid ${emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
+                        }`,
                       borderRadius: "6px",
                       color: "#f3d675",
                       fontSize: "14px",
@@ -235,6 +261,11 @@ export default function ChangePasswordPage() {
                       outline: "none",
                     }}
                   />
+                  {emailError && (
+                    <div style={{ color: "#ff4d4f", fontSize: "12px", marginTop: "4px" }}>
+                      {emailError}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -314,6 +345,9 @@ export default function ChangePasswordPage() {
               error={error}
               success={success}
               i18n={t}
+              codeError={codeError}
+              passwordError={passwordError}
+              confirmPasswordError={confirmPasswordError}
             />
           )}
         </div>

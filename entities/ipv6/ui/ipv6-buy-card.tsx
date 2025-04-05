@@ -195,7 +195,7 @@ export const IPV6BuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         <div className="buy-item__price">
-          {i18n("price")}: <span>{`$ ${0.8 * value} / IP`}</span>
+          {i18n("price")}: <span>{`$${(0.8 * value).toFixed(2)} / ${value} IP`}</span>
         </div>
         <Button
           onClick={handleBuyClick}
