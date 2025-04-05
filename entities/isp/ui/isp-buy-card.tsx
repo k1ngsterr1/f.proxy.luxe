@@ -10,14 +10,6 @@ import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { PureRangeSlider } from "@/shared/ui/range-slider";
 
-/**
- * ISPBuyCard component provides an interface for users to create ISP proxy orders.
- * It allows selection of country, quantity, period, and usage goals. The component
- * interacts with user preferences and order creation APIs, and provides feedback
- * on order creation process. It includes form validation logic, particularly for
- * required fields like goal. The component renders a UI for selecting options with
- * a slider for quantity, and buttons for actions like buying.
- */
 export const ISPBuyCard = () => {
   const router = useRouter();
   const i18n = useTranslations("proxy-cards.isp");
@@ -51,7 +43,7 @@ export const ISPBuyCard = () => {
 
     const orderData = {
       country: selectedCountry?.name,
-      quantity: Number(quantity),
+      quantity: Number(value),
       periodDays: period,
       goal,
       type: "isp",
@@ -68,19 +60,22 @@ export const ISPBuyCard = () => {
     setCountryId(e.target.value);
   };
 
-  const [value, setValue] = useState(5000)
-  const rangeRef = useRef<HTMLInputElement>(null)
+  const [value, setValue] = useState(500);
+  const rangeRef = useRef<HTMLInputElement>(null);
 
-  const min = 0
-  const max = 10000
+  const min = 0;
+  const max = 500;
 
-  const fillPercentage = ((value - min) / (max - min)) * 100
+  const fillPercentage = ((value - min) / (max - min)) * 100;
 
   useEffect(() => {
     if (rangeRef.current) {
-      rangeRef.current.style.setProperty("--fill-percentage", `${fillPercentage}%`)
+      rangeRef.current.style.setProperty(
+        "--fill-percentage",
+        `${fillPercentage}%`
+      );
     }
-  }, [fillPercentage])
+  }, [fillPercentage]);
 
   return (
     <div className="buy-col">
@@ -105,15 +100,21 @@ export const ISPBuyCard = () => {
             </option>
           ))}
         </select>
-
-        <h4 className="buy-item__subheader" style={{ marginTop: 16, marginBottom: 20 }}>
-          {i18n("quantity")}:    <span
-            style={{ left: `calc(${fillPercentage}% + 10px)` }}
-          >
+        <h4
+          className="buy-item__subheader"
+          style={{ marginTop: 16, marginBottom: 20 }}
+        >
+          {i18n("quantity")}:
+          <span style={{ left: `calc(${fillPercentage}% + 10px)` }}>
             {value}
           </span>
         </h4>
-        <PureRangeSlider value={value} setValue={setValue} ref={rangeRef} max={10000} />
+        <PureRangeSlider
+          value={value}
+          setValue={setValue}
+          ref={rangeRef}
+          max={500}
+        />
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("period")}
         </h4>
@@ -183,7 +184,7 @@ export const ISPBuyCard = () => {
         )}
 
         <div className="buy-item__price">
-          {i18n("price")} <span>{`$ ${(2.4 * value).toFixed(1)} / IP`}</span>
+          {i18n("price")} <span>{`$${(2.4 * value).toFixed(1)} / IP`}</span>
         </div>
         <div className="mt-8" />
         <Button

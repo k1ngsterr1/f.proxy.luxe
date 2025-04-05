@@ -296,7 +296,7 @@ export default function OrderDetailPage() {
                     fontWeight: "bold",
                   }}
                 >
-                  {order.totalPrice} $
+                  ${order.totalPrice}
                 </td>
               </tr>
               <tr>
@@ -342,7 +342,6 @@ export default function OrderDetailPage() {
               </tr>
             </tbody>
           </table>
-
           <div
             style={{
               padding: "16px",
