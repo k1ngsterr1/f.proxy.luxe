@@ -24,10 +24,6 @@ export interface Props {
 const ProxyList: React.FC<Props> = ({ proxies }) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
-  useEffect(() => {
-    console.log("proxies", proxies);
-  }, [proxies]);
-
   // Function to get protocol badge styles
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
     const baseStyle: React.CSSProperties = {
