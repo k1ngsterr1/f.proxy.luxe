@@ -3,6 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
+import { countryFlags } from "../../content/flags";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -75,25 +76,41 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
   };
 
   // Get country flag emoji
-  const getCountryFlag = (countryCode: string) => {
-    // Simple implementation - in a real app you might want to use a library
-    // This converts country code to flag emoji for common countries
-    const countries: Record<string, string> = {
-      us: "🇺🇸",
-      uk: "🇬🇧",
-      ca: "🇨🇦",
-      au: "🇦🇺",
-      de: "🇩🇪",
-      fr: "🇫🇷",
-      jp: "🇯🇵",
-      cn: "🇨🇳",
-      ru: "🇷🇺",
-      br: "🇧🇷",
-      in: "🇮🇳",
+  const getCountryFlag = (countryCode: string): string => {
+    if (!countryCode || typeof countryCode !== "string") return "🌐";
+
+    const code = countryCode.toUpperCase().substring(0, 2);
+
+    const specialCases: Record<string, string> = {
+      UK: "GB",
+      AN: "NL",
+      SU: "RU",
     };
 
-    const code = countryCode?.toLowerCase();
-    return countries[code] || "🌐";
+    const normalizedCode = specialCases[code] || code;
+
+    if (countryFlags[normalizedCode]) {
+      return countryFlags[normalizedCode];
+    }
+
+    try {
+      const regionalIndicatorA = 0x1f1e6;
+      const asciiA = "A".charCodeAt(0);
+
+      // Проверяем что код состоит из 2 букв A-Z
+      if (normalizedCode.length === 2 && /^[A-Z]{2}$/.test(normalizedCode)) {
+        const firstChar =
+          normalizedCode.charCodeAt(0) - asciiA + regionalIndicatorA;
+        const secondChar =
+          normalizedCode.charCodeAt(1) - asciiA + regionalIndicatorA;
+
+        return String.fromCodePoint(firstChar, secondChar);
+      }
+    } catch (e) {
+      console.warn(`Couldn't generate flag for ${countryCode}:`, e);
+    }
+
+    return "🌐";
   };
 
   // Export functions
@@ -205,6 +222,8 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
 
     setExportMenuOpen(false);
   };
+
+  console.log(proxies);
 
   // Styles - Black and Gold theme
   const cardStyle: React.CSSProperties = {

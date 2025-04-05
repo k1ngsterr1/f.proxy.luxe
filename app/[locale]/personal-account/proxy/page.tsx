@@ -187,23 +187,30 @@ export default function ProxyPage() {
       Array.isArray(proxies.data.items) &&
       proxies.data.items.length > 0 ? (
         <ProxyList
-          proxies={proxies.data.items.map((proxy: ApiProxy) => {
-            const baseProxy = {
-              ...proxy,
-              type: proxyType,
-              login: proxy.login ? proxy.login : "",
-              password: proxy.password ? proxy.password : "",
-            };
-
-            if (proxyType === "resident") {
-              return {
-                ...baseProxy,
+          proxies={proxies.data.items.flatMap((item: ApiProxy) => {
+            if (proxyType === "resident" && item.package_list) {
+              return item.package_list.map((pkg) => ({
+                id: pkg.id.toString(),
                 ip: "104.22.51.115",
-                ports: proxy.ports || [],
+                type: proxyType,
+                ports: Array.from(
+                  { length: pkg.export.ports },
+                  (_, i) => 10000 + i
+                ).join(","),
                 protocol: "SOCKS5/HTTP",
-              };
+                country: pkg.geo[0]?.country || "",
+                login: pkg.login,
+                password: pkg.password,
+              }));
             }
-            return baseProxy;
+
+            // Для других типов прокси
+            return {
+              ...item,
+              type: proxyType,
+              login: item.login || "",
+              password: item.password || "",
+            };
           })}
         />
       ) : (

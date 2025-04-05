@@ -9,11 +9,17 @@ export interface Proxy {
   protocol: string;
   port_socks: number;
   port_http: number;
-  country: string;
+  geo: {
+    country: string;
+    region: string;
+    city: string;
+    isp: string;
+  }[];
   login: string;
   password: string;
   package_items: any;
   package_info?: any;
+  package_list?: any[];
 }
 
 export interface ProxyListResponse {
