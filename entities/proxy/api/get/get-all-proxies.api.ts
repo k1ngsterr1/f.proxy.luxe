@@ -13,6 +13,7 @@ export interface Proxy {
   login: string;
   password: string;
   package_items: any;
+  package_info?: any;
 }
 
 export interface ProxyListResponse {

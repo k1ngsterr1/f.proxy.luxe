@@ -96,16 +96,19 @@ export const Header: FC = () => {
                 </div>
               ) : (
                 <div className="header-btn">
-                  <a
+                  <span
                     onClick={() => openPopup("auth-enter")}
                     className="btn-enter"
                   >
                     <Image src={Enter} alt="" width={27} height={27} />
                     <span>{i18n("header.login")}</span>
-                  </a>
-                  <a onClick={() => openPopup("auth-reg")} className="btn-reg">
+                  </span>
+                  <span
+                    onClick={() => openPopup("auth-reg")}
+                    className="btn-reg"
+                  >
                     <span>{i18n("header.register")}</span>
-                  </a>
+                  </span>
                 </div>
               )}
             </div>

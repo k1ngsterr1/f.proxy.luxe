@@ -52,11 +52,11 @@ export default function ProxyPage() {
       : null;
 
   useEffect(() => {
-    if (proxies?.data?.items && proxies.data.items.length > 0) {
-      // Extract package_key from the first proxy item
-      //@ts-ignore
-      const key = proxies.data.items[0].package_info.package_key || null;
-      setPackage_key(key);
+    const packageInfo = proxies?.data?.items?.[0]?.package_info;
+    if (packageInfo?.package_key) {
+      setPackage_key(packageInfo.package_key);
+    } else {
+      setPackage_key(null);
     }
   }, [proxies]);
 
@@ -187,12 +187,24 @@ export default function ProxyPage() {
       Array.isArray(proxies.data.items) &&
       proxies.data.items.length > 0 ? (
         <ProxyList
-          proxies={proxies.data.items.map((proxy: ApiProxy) => ({
-            ...proxy,
-            type: proxyType,
-            login: proxy.login ? proxy.login : "", // Default empty login since API Proxy doesn't have login
-            password: proxy.password ? proxy.password : "", // Default empty password since API Proxy doesn't have password
-          }))}
+          proxies={proxies.data.items.map((proxy: ApiProxy) => {
+            const baseProxy = {
+              ...proxy,
+              type: proxyType,
+              login: proxy.login ? proxy.login : "",
+              password: proxy.password ? proxy.password : "",
+            };
+
+            if (proxyType === "resident") {
+              return {
+                ...baseProxy,
+                ip: "104.22.51.115",
+                ports: proxy.ports || [],
+                protocol: "SOCKS5/HTTP",
+              };
+            }
+            return baseProxy;
+          })}
         />
       ) : (
         !isLoading &&

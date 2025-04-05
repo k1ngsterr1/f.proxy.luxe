@@ -118,8 +118,7 @@ export const IPV6BuyCard = () => {
         <h3 className="buy-item__header">{i18n("title")}</h3>
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
-        <a className="buy-item__btn">{i18n("issued")}</a>
-
+        <span className="buy-item__btn">{i18n("issued")}</span>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("country")}
         </h4>

@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
 
 interface Proxy {
@@ -481,7 +481,6 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       </div>
     );
   }
-
   return (
     <div style={cardStyle}>
       <style>{scrollbarStyles}</style>
@@ -571,8 +570,8 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                       {proxy.protocol?.toUpperCase()}
                     </span>
                   </td>
-                  <td style={tableCellMonoStyle}>{proxy.port_http || "—"}</td>
-                  <td style={tableCellMonoStyle}>{proxy.port_socks || "—"}</td>
+                  <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
+                  <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
                   <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
                   <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
                   <td style={tableCellStyle}>
