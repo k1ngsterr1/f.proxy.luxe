@@ -65,14 +65,6 @@ export const ResidentProxyConstructor = ({
   } = useGetGeoReferences();
 
   // Reset dependent fields when parent field changes
-  useEffect(() => {
-    setRegion("");
-    setCity("");
-  }, [country]);
-
-  useEffect(() => {
-    setCity("");
-  }, [region]);
 
   const updateAvailableIsps = useCallback(() => {
     if (city) {
@@ -85,25 +77,11 @@ export const ResidentProxyConstructor = ({
     }
   }, [city, cities]);
 
-  useEffect(() => {
-    updateAvailableIsps();
-  }, [updateAvailableIsps]);
-
   // Get available countries, regions, and cities based on selections
   const countries = geoReferences || [];
 
   const selectedCountry = countries.find((c: any) => c.code === country);
   const regions = selectedCountry?.regions || [];
-
-  useEffect(() => {
-    if (regions) {
-      let cityList: any[] = [];
-      regions.forEach((regionItem: any) => {
-        cityList = [...cityList, ...regionItem.cities];
-      });
-      setCities(cityList);
-    }
-  }, [regions]);
 
   const handleAddIp = () => {
     if (newIp.trim() !== "") {

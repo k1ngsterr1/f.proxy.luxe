@@ -19,7 +19,7 @@ export const IPV6BuyCard = () => {
 
   const [validationError, setValidationError] = useState<string | null>(null);
   const [countryId, setCountryId] = useState<string>("");
-  const [goal, setGoal] = useState<string>("");
+  const [goal, setGoal] = useState<string>("Surfing");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("");
 
@@ -61,7 +61,7 @@ export const IPV6BuyCard = () => {
     const orderData = {
       country: selectedCountry.name,
       quantity: Number(value),
-      goal,
+      goal: goal,
       usage,
       period: selectedPeriod.name,
       periodDays: selectedPeriod.id,

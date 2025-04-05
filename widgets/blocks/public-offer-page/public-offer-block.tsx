@@ -13,7 +13,6 @@ export default function PublicOfferPage() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
-  // Toggle section visibility
   const toggleSection = (section: string) => {
     setActiveSection(activeSection === section ? null : section);
   };
