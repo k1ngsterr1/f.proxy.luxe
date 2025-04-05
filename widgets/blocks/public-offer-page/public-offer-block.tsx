@@ -55,7 +55,7 @@ export default function PublicOfferPage() {
         backgroundColor: "#000000",
         color: "#FFFFFF",
         minHeight: "100vh",
-        paddingTop: "250px",
+        paddingTop: "50px",
         paddingBottom: "50px",
       }}
     >

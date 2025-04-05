@@ -18,6 +18,9 @@ interface Props {
   error?: string | null;
   success?: string | null;
   i18n: ReturnType<typeof import("next-intl").useTranslations>;
+  codeError?: string | null;
+  passwordError?: string | null;
+  confirmPasswordError?: string | null;
 }
 
 export const ChangePasswordForm = ({
@@ -33,15 +36,21 @@ export const ChangePasswordForm = ({
   setShowConfirmPassword,
   isLoading,
   handleSubmit,
-  error,
-  success,
   i18n,
+  codeError,
+  passwordError,
+  confirmPasswordError,
 }: Props) => {
   const formStyle = {
     display: "flex",
     flexDirection: "column" as const,
     gap: "24px",
   };
+
+  const getInputStyle = (hasError: boolean) => ({
+    ...inputStyle,
+    border: hasError ? "1px solid #ff4d4f" : inputStyle.border,
+  });
 
   const fieldGroupStyle = {
     display: "flex",
@@ -122,11 +131,10 @@ export const ChangePasswordForm = ({
 
   return (
     <form onSubmit={handleSubmit} style={formStyle} autoComplete="off">
-      {/* Verification Code */}
+
       <div style={fieldGroupStyle}>
         <label style={labelStyle}>
-          {i18n("verificationCode") || "Verification Code"}{" "}
-          <span style={{ color: "#f3d675" }}>*</span>
+          {i18n("verificationCode")} <span style={{ color: "#f3d675" }}>*</span>
         </label>
         <div style={inputContainerStyle}>
           <KeyRound style={iconStyle} />
@@ -134,17 +142,18 @@ export const ChangePasswordForm = ({
             type="text"
             value={emailCode}
             onChange={(e) => setEmailCode(e.target.value)}
-            placeholder={i18n("codePlaceholder") || "Enter code from email"}
-            style={inputStyle}
+            placeholder={i18n("codePlaceholder")}
+            style={getInputStyle(!!codeError)}
           />
         </div>
+        {codeError && (
+          <p style={{ ...helperTextStyle, color: "#ff4d4f" }}>{codeError}</p>
+        )}
       </div>
 
-      {/* New Password */}
       <div style={fieldGroupStyle}>
         <label style={labelStyle}>
-          {i18n("newPassword") || "New Password"}{" "}
-          <span style={{ color: "#f3d675" }}>*</span>
+          {i18n("newPassword")} <span style={{ color: "#f3d675" }}>*</span>
         </label>
         <div style={inputContainerStyle}>
           <Lock style={iconStyle} />
@@ -152,8 +161,8 @@ export const ChangePasswordForm = ({
             type={showNewPassword ? "text" : "password"}
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            placeholder={i18n("newPasswordPlaceholder") || "Create a password"}
-            style={inputStyle}
+            placeholder={i18n("newPasswordPlaceholder")}
+            style={getInputStyle(!!passwordError)}
           />
           <button
             type="button"
@@ -167,13 +176,14 @@ export const ChangePasswordForm = ({
             )}
           </button>
         </div>
+        <p style={{ ...helperTextStyle, color: passwordError ? "#ff4d4f" : "#9CA3AF" }}>
+          {passwordError || i18n("errors.password-length")}
+        </p>
       </div>
 
-      {/* Confirm Password */}
       <div style={fieldGroupStyle}>
         <label style={labelStyle}>
-          {i18n("confirmPassword") || "Confirm Password"}{" "}
-          <span style={{ color: "#f3d675" }}>*</span>
+          {i18n("confirmPassword")} <span style={{ color: "#f3d675" }}>*</span>
         </label>
         <div style={inputContainerStyle}>
           <Lock style={iconStyle} />
@@ -181,10 +191,8 @@ export const ChangePasswordForm = ({
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder={
-              i18n("confirmPasswordPlaceholder") || "Repeat password"
-            }
-            style={inputStyle}
+            placeholder={i18n("confirmPasswordPlaceholder")}
+            style={getInputStyle(!!confirmPasswordError)}
           />
           <button
             type="button"
@@ -198,10 +206,9 @@ export const ChangePasswordForm = ({
             )}
           </button>
         </div>
-        <p style={helperTextStyle}>
-          {i18n("errors.password-length") ||
-            "Password must be at least 8 characters long"}
-        </p>
+        {confirmPasswordError && (
+          <p style={{ ...helperTextStyle, color: "#ff4d4f" }}>{confirmPasswordError}</p>
+        )}
       </div>
 
       <button type="submit" disabled={isLoading} style={buttonStyle}>

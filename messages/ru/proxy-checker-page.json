@@ -33,7 +33,12 @@
       "ms": "мс",
       "activeCount": "активных",
       "inactiveCount": "неактивных",
-      "successRate": "успешных"
+      "successRate": "успешных",
+      "login": "Логин",
+      "password": "Пароль",
+      "type": "Тип",
+      "valid": "Действительный",
+      "invalid": "Недействительный"
     },
     "features": {
       "title": "Возможности прокси чекера:",
