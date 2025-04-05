@@ -4,6 +4,11 @@ import type React from "react";
 import { useState } from "react";
 import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
 
+interface ProxyListItem {
+  export: { ports: number; ext: string };
+  login: string;
+  password: string;
+}
 interface Proxy {
   id: string;
   ip: string;
@@ -15,6 +20,7 @@ interface Proxy {
   country: string;
   login: string;
   password: string;
+  package_list: ProxyListItem[];
 }
 
 export interface Props {
@@ -96,19 +102,23 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
 
     let contentHttpFirstFormat = "";
     let contentHttpSecondFormat = "";
+    console.log(proxies);
 
-    proxies.forEach((proxy) => {
-      const login = proxy.login || "user";
-      const password = proxy.password || "pass";
-
-      if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
-        proxy.ports.forEach((port: number | string) => {
+    proxies.forEach((proxy, index) => {
+      if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
+        if (index > 0) return;
+        proxy.package_list.forEach((item) => {
           const ip = "104.22.51.115";
-
-          contentHttpFirstFormat += `${ip}:${port}:${login}:${password}\n`;
-          contentHttpSecondFormat += `${login}:${password}@${ip}:${port}\n`;
+          const login = item.login;
+          const password = item.password;
+          for (let port = 10000; port < 10000 + item.export.ports; port++) {
+            contentHttpFirstFormat += `${ip}:${port}:${login}:${password}\n`;
+            contentHttpSecondFormat += `${login}:${password}@${ip}:${port}\n`;
+          }
         });
       } else {
+        const login = proxy.login || "user";
+        const password = proxy.password || "pass";
         const ip = proxy.ip;
         const portHttp = proxy.port_http;
 
@@ -148,20 +158,23 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     let contentSocksFirstFormat = "";
     let contentSocksSecondFormat = "";
 
-    proxies.forEach((proxy) => {
-      const login = proxy.login || "user";
-      const password = proxy.password || "pass";
-
-      if (proxy.type === "resident" && Array.isArray(proxy.ports)) {
-        proxy.ports.forEach((port: number | string) => {
+    proxies.forEach((proxy, index) => {
+      if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
+        if (index > 0) return;
+        proxy.package_list.forEach((item) => {
           const ip = "104.22.51.115";
-
-          contentSocksFirstFormat += `${ip}:${port}:${login}:${password}\n`;
-          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
+          const login = item.login;
+          const password = item.password;
+          for (let port = 10000; port < 10000 + item.export.ports; port++) {
+            contentSocksFirstFormat += `${ip}:${port}:${login}:${password}\n`;
+            contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
+          }
         });
       } else {
         const ip = proxy.ip;
         const portSocks = proxy.port_socks;
+        const login = proxy.login || "user";
+        const password = proxy.password || "pass";
 
         if (portSocks) {
           contentSocksFirstFormat += `${ip}:${portSocks}:${login}:${password}\n`;
