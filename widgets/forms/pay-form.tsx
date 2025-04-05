@@ -38,6 +38,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
   const { processDigisellerPayment } = useDigisellerPayment();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDigisellerPopup, setShowDigisellerPopup] = useState(false);
+  const [showVisaPopup, setShowVisaPopup] = useState(false);
   const i18n = useTranslations("forms.payment");
   const errorI18n = useTranslations("forms.payment.errors");
   const locale = useLocale();
@@ -69,10 +70,8 @@ export const PayForm = ({ userId }: { userId?: string }) => {
         } else if (values.paymentMethod === "payeer") {
           await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "visa") {
-          await processDigisellerPayment(
-            Math.floor(Number.parseFloat(values.paymentAmount)),
-            locale
-          );
+          setShowVisaPopup(true);
+          return
         } else if (values.paymentMethod === "litecoin") {
           await processWebMoneyPayment(
             values.paymentAmount,
@@ -117,6 +116,11 @@ export const PayForm = ({ userId }: { userId?: string }) => {
 
   const handleDigisellerCancel = () => {
     setShowDigisellerPopup(false);
+    setIsSubmitting(false);
+  };
+
+  const handleVisaCancel = () => {
+    setShowVisaPopup(false);
     setIsSubmitting(false);
   };
 
@@ -201,7 +205,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                   value={method.id}
                   checked={formik.values.paymentMethod === method.id}
                   onChange={formik.handleChange}
-                  // Remove required attribute
+                // Remove required attribute
                 />
                 <span className="method_cont">
                   <span className="img">
@@ -233,7 +237,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               placeholder="1000$"
               value={formik.values.paymentAmount}
               onChange={formik.handleChange}
-              // Keep required for this input as it's a standard input
+            // Keep required for this input as it's a standard input
             />
             <Button
               type="submit"
@@ -262,7 +266,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               type="checkbox"
               checked={formik.values.agreed}
               onChange={formik.handleChange}
-              // Remove required attribute
+            // Remove required attribute
             />
             <span className="checkbox-box"></span>
             <span className="checkbox-text">{i18n("agreement")}</span>
@@ -270,7 +274,6 @@ export const PayForm = ({ userId }: { userId?: string }) => {
         </div>
       </form>
 
-      {/* Digiseller Popup */}
       {showDigisellerPopup && (
         <div
           style={{
@@ -345,6 +348,97 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               </button>
               <button
                 onClick={handleDigisellerContinue}
+                style={{
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
+              >
+                Далее
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showVisaPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              borderRadius: "8px",
+              padding: "24px",
+              maxWidth: "400px",
+              width: "90%",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+              border: "1px solid #f3d675",
+            }}
+          >
+            <h3
+              style={{
+                color: "#f3d675",
+                marginTop: 0,
+                marginBottom: "16px",
+                fontSize: "18px",
+              }}
+            >
+              VISA
+            </h3>
+            <p
+              style={{
+                color: "#ffffff",
+                marginBottom: "24px",
+                fontSize: "16px",
+                lineHeight: 1.5,
+              }}
+            >
+              Вам нужно скопировать этот код и вставить в поле "Номер
+              пользователя":
+              <br />{" "}
+              <strong style={{ color: "#f3d675" }}>
+                {userId || "Loading..."}
+              </strong>
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px",
+              }}
+            >
+              <button
+                onClick={handleVisaCancel}
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#f3d675",
+                  border: "1px solid #f3d675",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                }}
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handleVisaCancel}
                 style={{
                   backgroundColor: "#f3d675",
                   color: "#000000",

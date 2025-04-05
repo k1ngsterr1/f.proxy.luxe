@@ -7,6 +7,7 @@ interface IPureRangeSlider {
   value: number;
   ref: any;
   max: number;
+  min?: number;
   setValue: (value: number) => void;
 }
 
@@ -14,6 +15,7 @@ export function PureRangeSlider({
   value,
   ref,
   max,
+  min = 0,
   setValue,
 }: IPureRangeSlider) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +29,7 @@ export function PureRangeSlider({
         <input
           ref={ref}
           type="range"
-          min={0}
+          min={min}
           max={max}
           step={1}
           value={value}

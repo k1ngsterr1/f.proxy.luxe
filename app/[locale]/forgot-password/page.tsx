@@ -7,7 +7,6 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useTranslations } from "next-intl";
 import { useSendResetEmail } from "@/entities/auth/hooks/mutations/use-reset-email.mutations";
 import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-password.mutation";
-import { AlertMessage } from "@/shared/ui/alert";
 import { ChangePasswordForm } from "@/features/auth/change-password";
 import { Mail, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -188,9 +187,6 @@ export default function ChangePasswordPage() {
             }}
           ></div>
         </div>
-
-        {error && <AlertMessage type="error" message={error} />}
-        {success && <AlertMessage type="success" message={success} />}
         <div
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.3)",

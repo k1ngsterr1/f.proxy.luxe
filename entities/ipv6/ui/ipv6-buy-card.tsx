@@ -23,11 +23,11 @@ export const IPV6BuyCard = () => {
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("");
 
-  const [value, setValue] = useState(5);
+  const [value, setValue] = useState(50);
   const rangeRef = useRef<HTMLInputElement>(null);
 
-  const min = 0;
-  const max = 10;
+  const min = 10;
+  const max = 100;
 
   const fillPercentage = ((value - min) / (max - min)) * 100;
 
@@ -123,6 +123,7 @@ export const IPV6BuyCard = () => {
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("country")}
         </h4>
+
         <select
           value={countryId}
           onChange={(e) => setCountryId(e.target.value)}
@@ -149,7 +150,8 @@ export const IPV6BuyCard = () => {
           value={value}
           setValue={setValue}
           ref={rangeRef}
-          max={10}
+          min={10}
+          max={100}
         />
         <h4 className="buy-item__subheader" style={{ marginTop: 20 }}>
           {i18n("period")}
@@ -195,7 +197,7 @@ export const IPV6BuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         <div className="buy-item__price">
-          {i18n("price")}: <span>{`$${(0.8 * value).toFixed(2)} / ${value} IP`}</span>
+          {i18n("price")}: <span>{`$${(0.08 * value).toFixed(2)} / ${value} IP`}</span>
         </div>
         <Button
           onClick={handleBuyClick}

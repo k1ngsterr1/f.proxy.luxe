@@ -4,7 +4,9 @@
       "sending": "Sending...",
       "sent": "Sent ✅",
       "error": "Error 🔁",
-      "resend": "Resend"
+      "resend": "Resend",
+      "insufficient-funds": "Insufficient funds",
+      "verify-email": "Verify email"
     }
   }
 }

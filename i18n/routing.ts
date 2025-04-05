@@ -24,6 +24,8 @@ export const routing = defineRouting({
     "/personal-account/payments": "/personal-account/payments",
     "/personal-account/profile": "/personal-account/profile",
     "/personal-account/proxy": "/personal-account/proxy",
+    "/personal-account/proxy/[id]": "/personal-account/proxy/[id]",
+    "/personal-account/orders/[id]": "/personal-account/orders/[id]",
   },
 });
 

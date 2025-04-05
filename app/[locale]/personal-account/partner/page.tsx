@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Copy } from "lucide-react";
 import { AlertMessage } from "@/shared/ui/alert";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
