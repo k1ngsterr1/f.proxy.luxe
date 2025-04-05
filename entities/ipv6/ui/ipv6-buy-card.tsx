@@ -118,8 +118,7 @@ export const IPV6BuyCard = () => {
         <h3 className="buy-item__header">{i18n("title")}</h3>
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
-        <a className="buy-item__btn">{i18n("issued")}</a>
-
+        <span className="buy-item__btn">{i18n("issued")}</span>
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("country")}
         </h4>
@@ -195,7 +194,8 @@ export const IPV6BuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         <div className="buy-item__price">
-          {i18n("price")}: <span>{`$${(0.8 * value).toFixed(2)} / ${value} IP`}</span>
+          {i18n("price")}:{" "}
+          <span>{`$${(0.8 * value).toFixed(2)} / ${value} IP`}</span>
         </div>
         <Button
           onClick={handleBuyClick}

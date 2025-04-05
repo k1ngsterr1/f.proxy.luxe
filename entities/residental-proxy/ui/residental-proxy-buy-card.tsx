@@ -137,7 +137,7 @@ export const ResidentalProxyBuyCard = () => {
         </h3>
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
-        <a className="buy-item__btn">{i18n("issued")}</a>
+        <span className="buy-item__btn">{i18n("issued")}</span>
         <h4
           className="buy-item__subheader"
           style={{

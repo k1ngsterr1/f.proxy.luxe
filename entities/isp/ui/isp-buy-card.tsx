@@ -83,9 +83,7 @@ export const ISPBuyCard = () => {
         <h3 className="buy-item__header">{i18n("title")}</h3>
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
-        <a href="#" className="buy-item__btn">
-          {i18n("issued")}
-        </a>
+        <span className="buy-item__btn">{i18n("issued")}</span>
 
         <h4 className="buy-item__subheader">{i18n("country")}</h4>
         <select
@@ -184,7 +182,8 @@ export const ISPBuyCard = () => {
         )}
 
         <div className="buy-item__price">
-          {i18n("price")} <span>{`$${(2.4 * value).toFixed(2)} / ${value} IP`}</span>
+          {i18n("price")}{" "}
+          <span>{`$${(2.4 * value).toFixed(2)} / ${value} IP`}</span>
         </div>
         <div className="mt-8" />
         <Button

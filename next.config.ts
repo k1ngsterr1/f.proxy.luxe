@@ -7,12 +7,12 @@ const baseConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['api.proxy.luxe'],
+    domains: ["api.proxy.luxe"],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'api.proxy.luxe',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "api.proxy.luxe",
+        pathname: "/**",
       },
     ],
   },

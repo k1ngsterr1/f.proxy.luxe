@@ -1,11 +1,9 @@
 "use client";
-
 import type React from "react";
-
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Plus, X, Edit, Trash2 } from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
-import { apiClient } from "@/shared/config/apiClient";
+import { useModifyResidentProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-modify-resident-proxy.mutation";
 
 const rotationOptions = [
   { label: "General", value: "general" },
@@ -55,6 +53,7 @@ export const ResidentProxyConstructor = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [availableIsps, setAvailableIsps] = useState<string[]>([]);
   const [cities, setCities] = useState<any[]>([]);
+  const { mutate: modifyProxy, isPending } = useModifyResidentProxy();
 
   // Get geo references data
   const {
@@ -115,38 +114,27 @@ export const ResidentProxyConstructor = ({
     setWhitelist(updatedWhitelist);
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
+  const handleSubmit = () => {
     setSuccessMessage(null);
     setErrorMessage(null);
 
-    try {
-      const payload = {
-        package_key, // Use the prop instead of hardcoded value
-        ports: Number(ports),
-        whitelist: whitelist.join(";"),
-        title: listName,
-        rotation: rotation === "general" ? 0 : rotation === "sticky" ? -1 : 1, // Convert rotation to numerical value
-        geo: { country: country, region: region, city: city, isp: isp },
-      };
+    const payload = {
+      package_key,
+      ports: Number(ports),
+      whitelist: whitelist.join(";"),
+      title: listName,
+      rotation: rotation === "general" ? 0 : rotation === "sticky" ? -1 : 1,
+      geo: { country, region, city, isp },
+    };
 
-      const response = await apiClient.post(
-        "/api/v1/products/modify-proxy/resident",
-        payload
-      );
-
-      if (response.status === 200) {
+    modifyProxy(payload, {
+      onSuccess: () => {
         setSuccessMessage("Proxy settings updated successfully!");
-      } else {
-        setErrorMessage(
-          `Failed to update proxy settings. Status: ${response.status}`
-        );
-      }
-    } catch (error: any) {
-      setErrorMessage(error.message || "An unexpected error occurred.");
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      onError: (error: any) => {
+        setErrorMessage(error?.message || "An unexpected error occurred.");
+      },
+    });
   };
 
   return (
@@ -628,7 +616,7 @@ export const ResidentProxyConstructor = ({
                 style={{
                   width: "100%",
                   padding: "6px 8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  backgroundColor: "rgba(0, 0, 0, 0.1)",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
@@ -855,9 +843,9 @@ export const ResidentProxyConstructor = ({
             fontWeight: "500",
           }}
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={isPending}
         >
-          {isLoading ? "Creating..." : "Create"}
+          {isPending ? "Creating..." : "Create"}
         </button>
       </div>
     </div>

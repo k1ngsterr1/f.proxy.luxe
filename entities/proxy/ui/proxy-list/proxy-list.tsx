@@ -481,7 +481,6 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       </div>
     );
   }
-  console.log(proxies);
   return (
     <div style={cardStyle}>
       <style>{scrollbarStyles}</style>
