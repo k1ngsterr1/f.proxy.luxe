@@ -10,9 +10,11 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Download,
   Search,
-  Filter,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 // Define the payment interface based on the provided data structure
@@ -23,7 +25,22 @@ interface Payment {
   createdAt: string;
   updatedAt: string;
   status?: string; // Optional since it's not in the original data
+  type: "replenishment"; // Payments are replenishments
 }
+
+// Define the order interface
+interface Order {
+  id: string;
+  totalPrice: string;
+  createdAt: string;
+  status: string;
+  type: "write-off"; // Orders are write-offs
+}
+
+// Combined type for table display
+type TransactionItem = (Payment | Order) & {
+  displayPrice?: string;
+};
 
 export default function PaymentsPage() {
   const { data, isLoading: isUserLoading } = useGetUser();
@@ -34,14 +51,49 @@ export default function PaymentsPage() {
   } = useGetPaymentHistory();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<TransactionItem | null>(null);
   const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false);
+  const [combinedTransactions, setCombinedTransactions] = useState<
+    TransactionItem[]
+  >([]);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const t = useTranslations("personal-payments");
 
   useEffect(() => {
-    console.log("data:", paymentsData, isUserLoading, isPaymentsLoading);
-  }, [paymentsData, isUserLoading, isPaymentsLoading]);
+    if (paymentsData) {
+      // Process payments data
+      const payments =
+        paymentsData.payments?.map((payment: any) => ({
+          ...payment,
+          type: "replenishment",
+          displayPrice: `+${payment.price}`,
+        })) || [];
+
+      // Process orders data
+      const orders =
+        paymentsData.orders?.map((order: any) => ({
+          ...order,
+          type: "write-off",
+          displayPrice: `-${order.totalPrice}`,
+        })) || [];
+
+      // Combine and sort by date (newest first)
+      const combined = [...payments, ...orders].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      setCombinedTransactions(combined);
+      // Reset to first page when data changes
+      setCurrentPage(1);
+    }
+  }, [paymentsData]);
 
   // Function to format date
   const formatDate = (dateString: string) => {
@@ -67,6 +119,7 @@ export default function PaymentsPage() {
     switch (status.toLowerCase()) {
       case "completed":
       case "success":
+      case "paid":
         return {
           bg: "rgba(76, 175, 80, 0.1)",
           border: "rgba(76, 175, 80, 0.3)",
@@ -103,23 +156,115 @@ export default function PaymentsPage() {
     }
   };
 
-  const filteredPayments = paymentsData?.data;
+  // Get type badge style based on transaction type
+  const getTypeBadge = (type: string) => {
+    switch (type) {
+      case "replenishment":
+        return {
+          bg: "rgba(76, 175, 80, 0.1)",
+          border: "rgba(76, 175, 80, 0.3)",
+          color: "#4CAF50",
+          icon: <ArrowUpCircle size={14} />,
+          text: t("type.replenishment"),
+        };
+      case "write-off":
+        return {
+          bg: "rgba(255, 82, 82, 0.1)",
+          border: "rgba(255, 82, 82, 0.3)",
+          color: "#FF5252",
+          icon: <ArrowDownCircle size={14} />,
+          text: t("type.write-off"),
+        };
+      default:
+        return {
+          bg: "rgba(158, 158, 158, 0.1)",
+          border: "rgba(158, 158, 158, 0.3)",
+          color: "#9E9E9E",
+          icon: null,
+          text: type,
+        };
+    }
+  };
 
-  useEffect(() => {
-    console.log("payments data:", paymentsData);
-  }, []);
-
-  paymentsData?.filter((payment: Payment) => {
+  const filteredTransactions = combinedTransactions.filter((transaction) => {
     const matchesSearch =
       searchTerm === "" ||
-      payment.id.toLowerCase().includes(searchTerm.toLowerCase());
+      transaction.id.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const paymentStatus = payment.status || "completed";
+    const transactionStatus = transaction.status || "completed";
     const matchesStatus =
-      statusFilter === "all" || paymentStatus.toLowerCase() === statusFilter;
+      statusFilter === "all" ||
+      transactionStatus.toLowerCase() === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    const matchesType = typeFilter === "all" || transaction.type === typeFilter;
+
+    return matchesSearch && matchesStatus && matchesType;
   });
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTransactions = filteredTransactions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+
+  // Generate page numbers array
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxPagesToShow = 5; // Show at most 5 page numbers
+
+    if (totalPages <= maxPagesToShow) {
+      // If we have 5 or fewer pages, show all of them
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Always include first page
+      pageNumbers.push(1);
+
+      // Calculate start and end of page numbers to show
+      let startPage = Math.max(2, currentPage - 1);
+      let endPage = Math.min(totalPages - 1, currentPage + 1);
+
+      // Adjust if we're near the beginning
+      if (currentPage <= 3) {
+        endPage = 4;
+      }
+
+      // Adjust if we're near the end
+      if (currentPage >= totalPages - 2) {
+        startPage = totalPages - 3;
+      }
+
+      // Add ellipsis after first page if needed
+      if (startPage > 2) {
+        pageNumbers.push("...");
+      }
+
+      // Add middle pages
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+
+      // Add ellipsis before last page if needed
+      if (endPage < totalPages - 1) {
+        pageNumbers.push("...");
+      }
+
+      // Always include last page
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
+  };
 
   return (
     <div
@@ -132,11 +277,7 @@ export default function PaymentsPage() {
       }}
     >
       {data?.isVerified === false && (
-        <AlertMessage
-          type="warning"
-          isEmail
-          message={t("verify-email")}
-        />
+        <AlertMessage type="warning" isEmail message={t("verify-email")} />
       )}
 
       <div
@@ -221,6 +362,63 @@ export default function PaymentsPage() {
             }}
           />
         </div>
+
+        {/* Type filter */}
+        <div style={{ minWidth: "150px" }}>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px 12px",
+              backgroundColor: "rgba(243, 214, 117, 0.1)",
+              border: "1px solid rgba(243, 214, 117, 0.2)",
+              borderRadius: "4px",
+              color: "#f3d675",
+              fontSize: "14px",
+              appearance: "none",
+              backgroundImage:
+                'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23f3d675" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\')',
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 10px center",
+              backgroundSize: "16px",
+            }}
+          >
+            <option value="all">{t("filter.all-types")}</option>
+            <option value="replenishment">{t("type.replenishment")}</option>
+            <option value="write-off">{t("type.write-off")}</option>
+          </select>
+        </div>
+
+        {/* Items per page selector */}
+        <div style={{ minWidth: "120px" }}>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1); // Reset to first page when changing items per page
+            }}
+            style={{
+              width: "100%",
+              padding: "10px 12px",
+              backgroundColor: "rgba(243, 214, 117, 0.1)",
+              border: "1px solid rgba(243, 214, 117, 0.2)",
+              borderRadius: "4px",
+              color: "#f3d675",
+              fontSize: "14px",
+              appearance: "none",
+              backgroundImage:
+                'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23f3d675" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\')',
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right 10px center",
+              backgroundSize: "16px",
+            }}
+          >
+            <option value="5">5 {t("per-page")}</option>
+            <option value="10">10 {t("per-page")}</option>
+            <option value="20">20 {t("per-page")}</option>
+          </select>
+        </div>
       </div>
 
       {/* Loading State */}
@@ -262,11 +460,10 @@ export default function PaymentsPage() {
         </div>
       )}
 
-      {/* Payments Table */}
+      {/* Transactions Table */}
       {!isPaymentsLoading &&
-        !paymentsError &&
-        paymentsData &&
-        paymentsData.length > 0 ? (
+      !paymentsError &&
+      combinedTransactions.length > 0 ? (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -293,39 +490,81 @@ export default function PaymentsPage() {
                 >
                   <th style={{ padding: "12px 16px" }}>{t("table.id")}</th>
                   <th style={{ padding: "12px 16px" }}>{t("table.date")}</th>
+                  <th style={{ padding: "12px 16px" }}>{t("table.type")}</th>
                   <th style={{ padding: "12px 16px" }}>{t("table.amount")}</th>
                   <th style={{ padding: "12px 16px" }}>{t("table.status")}</th>
                 </tr>
               </thead>
               <tbody>
-                {paymentsData?.map((payment: Payment) => {
+                {currentTransactions.map((transaction) => {
                   // Default to "completed" status if not provided
                   const statusBadge = getStatusBadge(
-                    payment.status || "completed"
+                    transaction.status || "completed"
                   );
+                  const typeBadge = getTypeBadge(transaction.type);
+
+                  // Determine price display
+                  const priceDisplay =
+                    transaction.type === "replenishment"
+                      ? `+${
+                          transaction.price || (transaction as any).totalPrice
+                        }`
+                      : `-${
+                          (transaction as any).totalPrice ||
+                          (transaction as any).price
+                        }`;
+
+                  // Determine price color
+                  const priceColor =
+                    transaction.type === "replenishment"
+                      ? "#4CAF50"
+                      : "#FF5252";
 
                   return (
                     <tr
-                      key={payment.id}
+                      key={transaction.id}
                       style={{
                         borderTop: "1px solid rgba(243, 214, 117, 0.1)",
                         color: "#FFFFFF",
                         cursor: "pointer",
                       }}
-                      onClick={() => setSelectedPayment(payment)}
+                      onClick={() => setSelectedTransaction(transaction)}
                     >
-                      <td style={{ padding: "12px 16px" }}>{payment.id}</td>
+                      <td style={{ padding: "12px 16px" }}>{transaction.id}</td>
                       <td style={{ padding: "12px 16px" }}>
-                        {formatDate(payment.createdAt)}
+                        {formatDate(transaction.createdAt)}
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <div
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            padding: "4px 8px",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            backgroundColor: typeBadge.bg,
+                            color: typeBadge.color,
+                            border: `1px solid ${typeBadge.border}`,
+                          }}
+                        >
+                          {typeBadge.icon}
+                          {typeBadge.text}
+                        </div>
                       </td>
                       <td
                         style={{
                           padding: "12px 16px",
-                          color: "#f3d675",
+                          color: priceColor,
                           fontWeight: "500",
                         }}
                       >
-                        {formatCurrency(payment.price)}
+                        {formatCurrency(
+                          transaction.type === "replenishment"
+                            ? transaction.price
+                            : (transaction as any).totalPrice
+                        )}
                       </td>
                       <td style={{ padding: "12px 16px" }}>
                         <div
@@ -353,7 +592,7 @@ export default function PaymentsPage() {
             </table>
           </div>
 
-          {/* Pagination or Summary */}
+          {/* Pagination */}
           <div
             style={{
               padding: "12px 16px",
@@ -366,22 +605,97 @@ export default function PaymentsPage() {
             }}
           >
             <div>
-              {t("showing")} {filteredPayments?.length} {t("of")} {paymentsData?.length}{" "}
-              {t("payments")}
+              {t("showing")} {indexOfFirstItem + 1}-
+              {Math.min(indexOfLastItem, filteredTransactions.length)} {t("of")}{" "}
+              {filteredTransactions.length} {t("transactions")}
             </div>
-            {paymentsData?.total > paymentsData?.length && (
-              <button
-                style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  color: "#f3d675",
-                  cursor: "pointer",
-                  fontSize: "12px",
-                  textDecoration: "underline",
-                }}
+
+            {totalPages > 1 && (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
-                {t("load-more")}
-              </button>
+                <button
+                  onClick={prevPage}
+                  disabled={currentPage === 1}
+                  style={{
+                    backgroundColor:
+                      currentPage === 1
+                        ? "rgba(243, 214, 117, 0.05)"
+                        : "rgba(243, 214, 117, 0.1)",
+                    color: currentPage === 1 ? "#666666" : "#f3d675",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    width: "28px",
+                    height: "28px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <ChevronLeft size={16} />
+                </button>
+
+                {getPageNumbers().map((number, index) => (
+                  <button
+                    key={index}
+                    onClick={() =>
+                      typeof number === "number" ? paginate(number) : null
+                    }
+                    style={{
+                      backgroundColor:
+                        currentPage === number
+                          ? "rgba(243, 214, 117, 0.2)"
+                          : "rgba(243, 214, 117, 0.05)",
+                      color:
+                        typeof number === "number"
+                          ? currentPage === number
+                            ? "#f3d675"
+                            : "#f3d675"
+                          : "#999999",
+                      border:
+                        currentPage === number
+                          ? "1px solid rgba(243, 214, 117, 0.4)"
+                          : "1px solid rgba(243, 214, 117, 0.1)",
+                      borderRadius: "4px",
+                      minWidth: "28px",
+                      height: "28px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor:
+                        typeof number === "number" ? "pointer" : "default",
+                      fontWeight: currentPage === number ? "600" : "normal",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {number}
+                  </button>
+                ))}
+
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                  style={{
+                    backgroundColor:
+                      currentPage === totalPages
+                        ? "rgba(243, 214, 117, 0.05)"
+                        : "rgba(243, 214, 117, 0.1)",
+                    color: currentPage === totalPages ? "#666666" : "#f3d675",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    width: "28px",
+                    height: "28px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor:
+                      currentPage === totalPages ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
             )}
           </div>
         </div>

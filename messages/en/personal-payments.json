@@ -10,13 +10,22 @@
       "date": "Date",
       "amount": "Amount",
       "status": "Status",
-      "description": "Description"
+      "description": "Description",
+      "type": "Type"
     },
     "status": {
       "success": "Success",
       "pending": "Processing",
       "failed": "Error"
     },
+    "type": {
+      "write-off": "write-off",
+      "replenishment": "replenishment"
+    },
+    "filter": {
+      "all-types": "All types"
+    },
+    "per-page": "per page",
     "loading": "Loading payments...",
     "error": "Error loading payments:",
     "unknown-error": "Unknown error",

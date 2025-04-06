@@ -30,7 +30,9 @@ export default function ChangePasswordPage() {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [codeError, setCodeError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
 
   const { closePopup } = usePopupStore();
 
@@ -126,17 +128,19 @@ export default function ChangePasswordPage() {
           navigate.push("/");
         },
         onError: (err: any) => {
-          const message =
+          let message =
             err?.response?.data?.message ||
             err?.message ||
             t("errors.generic-error");
+          if (err?.response?.data?.message === "Invalid code") {
+            message = t("errors.invalid-code");
+          }
+          setCodeError(message);
           setError(message);
         },
       }
     );
   };
-
-
 
   return (
     <div
@@ -248,8 +252,9 @@ export default function ChangePasswordPage() {
                       paddingTop: "10px",
                       paddingBottom: "10px",
                       backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      border: `1px solid ${emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
-                        }`,
+                      border: `1px solid ${
+                        emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
+                      }`,
                       borderRadius: "6px",
                       color: "#f3d675",
                       fontSize: "14px",
@@ -258,7 +263,13 @@ export default function ChangePasswordPage() {
                     }}
                   />
                   {emailError && (
-                    <div style={{ color: "#ff4d4f", fontSize: "12px", marginTop: "4px" }}>
+                    <div
+                      style={{
+                        color: "#ff4d4f",
+                        fontSize: "12px",
+                        marginTop: "4px",
+                      }}
+                    >
                       {emailError}
                     </div>
                   )}

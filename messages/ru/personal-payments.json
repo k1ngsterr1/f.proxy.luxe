@@ -10,13 +10,22 @@
       "date": "Дата",
       "amount": "Сумма",
       "status": "Статус",
-      "description": "Описание"
+      "description": "Описание",
+      "type": "Тип операции"
     },
     "status": {
       "success": "Успешно",
       "pending": "В обработке",
       "failed": "Ошибка"
     },
+    "type": {
+      "write-off": "Списание",
+      "replenishment": "Пополнение"
+    },
+    "filter": {
+      "all-types": "Все типы"
+    },
+    "per-page": "на страницу",
     "loading": "Загрузка платежей...",
     "error": "Ошибка загрузки платежей:",
     "unknown-error": "Неизвестная ошибка",

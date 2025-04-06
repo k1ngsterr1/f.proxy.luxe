@@ -1,5 +1,6 @@
 "use client";
-import type React from "react";
+import React from "react";
+
 import { useState, useCallback } from "react";
 import { Plus, X, Edit, Trash2 } from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
@@ -27,6 +28,11 @@ const radioCheckedStyle: React.CSSProperties = {
   ...radioStyle,
   backgroundColor: "#f3d675",
   boxShadow: "inset 0 0 0 3px #000000",
+};
+
+const selectOptionStyle = {
+  backgroundColor: "#111111",
+  color: "#f3d675",
 };
 
 export const ResidentProxyConstructor = ({
@@ -82,6 +88,30 @@ export const ResidentProxyConstructor = ({
   const selectedCountry = countries.find((c: any) => c.code === country);
   const regions = selectedCountry?.regions || [];
 
+  // Add a useEffect to update cities when region changes
+  React.useEffect(() => {
+    if (region && selectedCountry) {
+      const selectedRegion = selectedCountry.regions.find(
+        (r: any) => r.name === region
+      );
+      if (selectedRegion && selectedRegion.cities) {
+        setCities(selectedRegion.cities);
+      } else {
+        setCities([]);
+      }
+      // Reset city and ISP when region changes
+      setCity("");
+      setIsp("");
+    } else {
+      setCities([]);
+    }
+  }, [region, selectedCountry]);
+
+  // Add useEffect to call updateAvailableIsps when city changes
+  React.useEffect(() => {
+    updateAvailableIsps();
+  }, [city, updateAvailableIsps]);
+
   const handleAddIp = () => {
     if (newIp.trim() !== "") {
       setWhitelist([...whitelist, newIp.trim()]);
@@ -136,6 +166,21 @@ export const ResidentProxyConstructor = ({
       },
     });
   };
+
+  // Add global style for select options
+  React.useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+    .dark-select option {
+      background-color: #111111;
+      color: #f3d675;
+    }
+  `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <div
@@ -616,13 +661,14 @@ export const ResidentProxyConstructor = ({
                 style={{
                   width: "100%",
                   padding: "6px 8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
                 disabled={isLoadingGeo}
+                className="dark-select"
               >
                 <option value="">Select country</option>
                 {countries.map((countryItem: any) => (
@@ -669,13 +715,14 @@ export const ResidentProxyConstructor = ({
                 style={{
                   width: "100%",
                   padding: "6px 8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
                 disabled={!country || isLoadingGeo}
+                className="dark-select"
               >
                 <option value="">Select region</option>
                 {regions.map((regionItem: any) => (
@@ -717,13 +764,14 @@ export const ResidentProxyConstructor = ({
                 style={{
                   width: "100%",
                   padding: "6px 8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
                 disabled={!region || isLoadingGeo}
+                className="dark-select"
               >
                 <option value="">Select city</option>
                 {cities.map((cityItem: any, index: number) => (
@@ -765,13 +813,14 @@ export const ResidentProxyConstructor = ({
                 style={{
                   width: "100%",
                   padding: "6px 8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
                   fontSize: "14px",
                 }}
                 disabled={!city || availableIsps.length === 0}
+                className="dark-select"
               >
                 <option value="">Select ISP</option>
                 {availableIsps.map((ispItem: string, index: number) => (
