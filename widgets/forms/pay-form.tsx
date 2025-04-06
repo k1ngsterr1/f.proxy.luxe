@@ -71,17 +71,14 @@ export const PayForm = ({ userId }: { userId?: string }) => {
           await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "visa") {
           setShowVisaPopup(true);
-          return
+          return;
         } else if (values.paymentMethod === "litecoin") {
           await processWebMoneyPayment(
             values.paymentAmount,
             values.paymentMethod
           );
         } else if (values.paymentMethod === "bitcoin") {
-          await processWebMoneyPayment(
-            values.paymentAmount,
-            values.paymentMethod
-          );
+          await processPayeerPayment(values.paymentAmount);
         } else {
           await processDigisellerPayment(
             Math.floor(Number.parseFloat(values.paymentAmount)),
@@ -205,7 +202,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                   value={method.id}
                   checked={formik.values.paymentMethod === method.id}
                   onChange={formik.handleChange}
-                // Remove required attribute
+                  // Remove required attribute
                 />
                 <span className="method_cont">
                   <span className="img">
@@ -237,7 +234,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               placeholder="1000$"
               value={formik.values.paymentAmount}
               onChange={formik.handleChange}
-            // Keep required for this input as it's a standard input
+              // Keep required for this input as it's a standard input
             />
             <Button
               type="submit"
@@ -266,7 +263,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               type="checkbox"
               checked={formik.values.agreed}
               onChange={formik.handleChange}
-            // Remove required attribute
+              // Remove required attribute
             />
             <span className="checkbox-box"></span>
             <span className="checkbox-text">{i18n("agreement")}</span>
