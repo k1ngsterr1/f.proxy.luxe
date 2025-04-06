@@ -126,7 +126,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
         if (index > 0) return;
         proxy.package_list.forEach((item) => {
-          const ip = "104.22.51.115";
+          const ip = "185.162.130.86";
           const login = item.login;
           const password = item.password;
           for (let port = 10000; port < 10000 + item.export.ports; port++) {
@@ -180,7 +180,7 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
         if (index > 0) return;
         proxy.package_list.forEach((item) => {
-          const ip = "104.22.51.115";
+          const ip = "185.162.130.86";
           const login = item.login;
           const password = item.password;
           for (let port = 10000; port < 10000 + item.export.ports; port++) {

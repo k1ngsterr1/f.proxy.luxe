@@ -191,7 +191,7 @@ export default function ProxyPage() {
             if (proxyType === "resident" && item.package_list) {
               return item.package_list.map((pkg): any => ({
                 id: pkg.id.toString(), // ✅ Обязательное поле
-                ip: "104.22.51.115", // или pkg.ip если есть
+                ip: "185.162.130.86", // или pkg.ip если есть
                 type: proxyType,
                 ports:
                   pkg.export.ports >= 3
