@@ -20,6 +20,7 @@ export interface Proxy {
   package_items: any;
   package_info?: any;
   package_list?: any[];
+  order_number: string;
 }
 
 export interface ProxyListResponse {

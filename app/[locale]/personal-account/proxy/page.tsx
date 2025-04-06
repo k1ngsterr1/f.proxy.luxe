@@ -217,6 +217,7 @@ export default function ProxyPage() {
               type: proxyType,
               login: item.login || "",
               password: item.password || "",
+              order_number: item.order_number || "",
             };
           })}
         />

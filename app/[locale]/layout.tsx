@@ -15,6 +15,7 @@ import { Loader } from "@/shared/ui/loader";
 import { NonAuthorizedPopup } from "@/entities/auth/ui/non-authorized-popup/non-authorized-popup";
 import ClientLayout from "./client-layout";
 import Script from "next/script";
+import { IpAuthForm } from "@/widgets/forms/id-auth-form";
 
 export default async function LocaleLayout({
   children,
@@ -60,6 +61,7 @@ export default async function LocaleLayout({
             <Footer />
             <NonAuthorizedPopup />
             <LoginForm />
+            <IpAuthForm />
             <RegisterForm />
           </Suspense>
         </ClientLayout>

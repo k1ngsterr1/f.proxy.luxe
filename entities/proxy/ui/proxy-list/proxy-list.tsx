@@ -4,6 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
 import { countryFlags } from "../../content/flags";
+import { usePopupStore } from "@/shared/store/use-popup.store";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -31,6 +32,7 @@ export interface Props {
 
 const ProxyList: React.FC<Props> = ({ proxies }) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const { openPopup } = usePopupStore();
 
   // Function to get protocol badge styles
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
@@ -531,13 +533,27 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
           <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
         </div>
         <div style={{ position: "relative" }}>
-          <button
-            style={exportButtonStyle}
-            onClick={() => setExportMenuOpen(!exportMenuOpen)}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "8px",
+            }}
           >
-            <Download size={16} />
-            <span>Экспорт</span>
-          </button>
+            <button
+              style={exportButtonStyle}
+              onClick={() => openPopup("ip-auth-enter")}
+            >
+              <span>Авторизация</span>
+            </button>
+            <button
+              style={exportButtonStyle}
+              onClick={() => setExportMenuOpen(!exportMenuOpen)}
+            >
+              <Download size={16} />
+              <span>Экспорт</span>
+            </button>
+          </div>
           <div style={exportMenuStyle}>
             <div
               style={exportMenuItemStyle}
