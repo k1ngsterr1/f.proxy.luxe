@@ -220,6 +220,7 @@ export default function ProxyPage() {
               order_number: item.order_number || "",
             };
           })}
+          type={proxyType}
         />
       ) : (
         !isLoading &&

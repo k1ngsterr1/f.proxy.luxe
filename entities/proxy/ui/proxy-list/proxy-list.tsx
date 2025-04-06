@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useState } from "react";
-import { AlertCircle, Download, FileJson, FileText } from "lucide-react";
+import { AlertCircle, Download, FileJson, FileText, Key } from "lucide-react";
 import { countryFlags } from "../../content/flags";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 
@@ -24,15 +24,20 @@ interface Proxy {
   password: string;
   title?: string;
   package_list: ProxyListItem[];
+  order_number?: string;
+  order_id?: string;
 }
 
 export interface Props {
   proxies: Proxy[] | undefined;
+  type: string;
 }
 
-const ProxyList: React.FC<Props> = ({ proxies }) => {
+const ProxyList: React.FC<Props> = ({ proxies, type }) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
-  const { openPopup } = usePopupStore();
+  const { openPopup } = usePopupStore() as {
+    openPopup: (name: string, params?: Record<string, any>) => void;
+  };
 
   // Function to get protocol badge styles
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
@@ -343,6 +348,19 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
     position: "relative",
   };
 
+  const actionButtonStyle: React.CSSProperties = {
+    backgroundColor: "rgba(243, 214, 117, 0.1)",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "4px",
+    color: "#f3d675",
+    padding: "6px 10px",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    cursor: "pointer",
+    fontSize: "12px",
+  };
+
   const exportMenuStyle: React.CSSProperties = {
     position: "absolute",
     top: "100%",
@@ -466,6 +484,9 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                   <th style={tableHeaderCellStyle}>Логин</th>
                   <th style={tableHeaderCellStyle}>Пароль</th>
                   <th style={tableHeaderCellStyle}>Страна</th>
+                  {type !== "resident" && (
+                    <th style={tableHeaderCellStyle}>Действия</th>
+                  )}
                 </tr>
               </thead>
               <tbody style={tableBodyStyle}>
@@ -494,6 +515,13 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "100px" }}></div>
                       </td>
+                      {type !== "resident" && (
+                        <td style={tableCellStyle}>
+                          <div
+                            style={{ ...skeletonStyle, width: "80px" }}
+                          ></div>
+                        </td>
+                      )}
                     </tr>
                   ))}
               </tbody>
@@ -542,12 +570,6 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
           >
             <button
               style={exportButtonStyle}
-              onClick={() => openPopup("ip-auth-enter")}
-            >
-              <span>Авторизация</span>
-            </button>
-            <button
-              style={exportButtonStyle}
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
             >
               <Download size={16} />
@@ -591,13 +613,18 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
           <table style={tableStyle}>
             <thead style={tableHeadStyle}>
               <tr>
-                <th style={tableHeaderCellStyle}>Название</th>
+                {type === "resident" && (
+                  <th style={tableHeaderCellStyle}>Название</th>
+                )}
                 <th style={tableHeaderCellStyle}>IP-адрес</th>
                 <th style={tableHeaderCellStyle}>Протокол</th>
                 <th style={tableHeaderCellStyle}>Порт HTTP</th>
                 <th style={tableHeaderCellStyle}>Логин</th>
                 <th style={tableHeaderCellStyle}>Пароль</th>
                 <th style={tableHeaderCellStyle}>Страна</th>
+                {type !== "resident" && (
+                  <th style={tableHeaderCellStyle}>Действия</th>
+                )}
               </tr>
             </thead>
             <tbody style={tableBodyStyle}>
@@ -628,7 +655,9 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                         index % 2 === 0 ? "" : "rgba(243, 214, 117, 0.03)";
                     }}
                   >
-                    <td style={tableCellEmphasisStyle}>{proxy.title}</td>
+                    {type === "resident" && (
+                      <td style={tableCellEmphasisStyle}>{proxy.title}</td>
+                    )}
                     <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
                     <td style={tableCellStyle}>
                       <span style={getProtocolStyles(proxy.protocol)}>
@@ -646,6 +675,21 @@ const ProxyList: React.FC<Props> = ({ proxies }) => {
                         {proxy.country}
                       </div>
                     </td>
+                    {type !== "resident" && (
+                      <td style={tableCellStyle}>
+                        <button
+                          style={actionButtonStyle}
+                          onClick={() =>
+                            openPopup("ip-auth-enter", {
+                              order_number: proxy.order_number || "",
+                            })
+                          }
+                        >
+                          <Key size={14} />
+                          <span>Авторизация</span>
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
