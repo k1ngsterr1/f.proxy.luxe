@@ -10,11 +10,14 @@ import { PartnersBlock } from "@/widgets/blocks/home-page/partners-block";
 import { FaqBlock } from "@/widgets/blocks/home-page/faq-block";
 import { AboutBlock } from "@/widgets/blocks/home-page/about-block";
 import { PaymentMethodsBlock } from "@/widgets/blocks/home-page/payments-block";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
+  const i18n = useTranslations();
   return (
     <>
       <QueryClientProvider client={reactQueryClient}>
+        <title>{i18n("homeSlider.title")}</title>
         <HomeSlider />
         <BuyPromoBlock />
         <BuyProxyBlock />
