@@ -23,7 +23,7 @@ export const IPV6BuyCard = () => {
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("");
 
-  const [value, setValue] = useState(50);
+  const [value, setValue] = useState(10);
   const rangeRef = useRef<HTMLInputElement>(null);
 
   const min = 10;
