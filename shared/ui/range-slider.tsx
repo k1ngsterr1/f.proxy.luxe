@@ -15,7 +15,7 @@ export function PureRangeSlider({
   value,
   ref,
   max,
-  min = 0,
+  min = 1,
   setValue,
 }: IPureRangeSlider) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
