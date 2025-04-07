@@ -60,7 +60,7 @@ export const ISPBuyCard = () => {
     setCountryId(e.target.value);
   };
 
-  const [value, setValue] = useState(500);
+  const [value, setValue] = useState(1);
   const rangeRef = useRef<HTMLInputElement>(null);
 
   const min = 1;
@@ -102,7 +102,7 @@ export const ISPBuyCard = () => {
           className="buy-item__subheader"
           style={{ marginTop: 16, marginBottom: 20 }}
         >
-          {i18n("quantity")}:
+          {i18n("quantity")}:{" "}
           <span style={{ left: `calc(${fillPercentage}% + 10px)` }}>
             {value}
           </span>
