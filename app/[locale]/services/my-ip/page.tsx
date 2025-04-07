@@ -144,6 +144,8 @@ export default function MyIpClient() {
           padding: isMobile ? "20px 16px" : "40px 20px",
         }}
       >
+        <title>Proxy Luxe | Мой IP</title>
+
         <div
           style={{
             maxWidth: "1200px",

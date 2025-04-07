@@ -173,6 +173,8 @@ export default function Faq() {
       className="inner-page"
       style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
     >
+      <title>Proxy Luxe | FAQ</title>
+
       <section className="faq" style={{ padding: "60px 0" }}>
         <div
           className="scontainer"

@@ -156,6 +156,8 @@ export default function ChangePasswordPage() {
         padding: "48px 16px",
       }}
     >
+      <title>Proxy Luxe | Смена пароля</title>
+
       <div
         style={{
           width: "100%",

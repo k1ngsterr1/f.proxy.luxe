@@ -5,8 +5,6 @@ import { Tag, Loader } from "lucide-react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
-import { useTranslations } from "next-intl";
-import Head from "next/head";
 
 // Categories for navigation
 const categories = [
@@ -94,9 +92,7 @@ export default function Articles() {
 
   return (
     <>
-      <Head>
-        <title>Proxy Luxe | Статьи</title>
-      </Head>
+      <title>Proxy Luxe | Статьи</title>
       <main
         className="inner-page"
         style={{ backgroundColor: "#000000", color: "#FFFFFF" }}

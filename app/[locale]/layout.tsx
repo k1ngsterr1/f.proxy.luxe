@@ -20,11 +20,11 @@ import { IpAuthForm } from "@/widgets/forms/id-auth-form";
 export default async function LocaleLayout({
   children,
   params: { locale },
-  title = "Proxy Luxe",
-}: {
+}: // title = "",
+{
   children: React.ReactNode;
   params: { locale: "en" | "ru" };
-  title?: string;
+  // title?: string;
 }) {
   // 1. Validate locale
   if (!routing.locales.includes(locale)) {
@@ -55,7 +55,7 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{title}</title>
+        {/* <title>{title}</title> */}
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>

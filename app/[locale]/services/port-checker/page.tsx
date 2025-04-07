@@ -76,15 +76,15 @@ export default function PortChecker() {
 
   return (
     <main className="inner-page">
+      <title>Proxy Luxe | Проверка Портов</title>
+
       <section className="prcheck">
         <div className="scontainer">
           <h1 className="section-header">
             <span>{t("title")}</span>
           </h1>
 
-          <p className="prcheck-text">
-            {t("description")}
-          </p>
+          <p className="prcheck-text">{t("description")}</p>
 
           <div className="port" style={{ marginTop: "24px" }}>
             <form
@@ -298,7 +298,9 @@ export default function PortChecker() {
                           : "1px solid rgba(255, 82, 82, 0.3)",
                     }}
                   >
-                    {result.status === "open" ? t("results.open") : t("results.closed")}
+                    {result.status === "open"
+                      ? t("results.open")
+                      : t("results.closed")}
                   </span>
                 </div>
 
@@ -324,8 +326,11 @@ export default function PortChecker() {
                         fontWeight: "500",
                       }}
                     >
-                      {t("results.port")} {result.port} {t("results.on")} {result.ip}{" "}
-                      {result.status === "open" ? t("results.open") : t("results.closed")}
+                      {t("results.port")} {result.port} {t("results.on")}{" "}
+                      {result.ip}{" "}
+                      {result.status === "open"
+                        ? t("results.open")
+                        : t("results.closed")}
                     </span>
                   </div>
 
@@ -366,7 +371,8 @@ export default function PortChecker() {
                       marginTop: "16px",
                     }}
                   >
-                    {t("results.checkCompleted")}: {formatDate(result.timestamp)}
+                    {t("results.checkCompleted")}:{" "}
+                    {formatDate(result.timestamp)}
                   </div>
                 </div>
               </div>

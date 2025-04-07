@@ -112,6 +112,7 @@ export default function ContactsPage() {
         minHeight: "100vh",
       }}
     >
+      <title>Proxy Luxe | Контакты</title>
       <section style={{ padding: isMobile ? "20px 16px" : "40px 20px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           {/* Hero Section */}

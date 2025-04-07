@@ -32,6 +32,8 @@ export default function Partners() {
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
+      <title>Proxy Luxe | Партнеры</title>
+
       <section
         style={{
           maxWidth: "1200px",

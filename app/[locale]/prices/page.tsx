@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
-import Flags from "@/assets/images/flags.png";
 import {
   LucideChevronRight,
   LucideTag,
@@ -22,6 +20,8 @@ export default function Prices() {
         padding: "2rem 0 4rem",
       }}
     >
+      <title>Proxy Luxe | Цены</title>
+
       <div
         style={{
           width: "100%",

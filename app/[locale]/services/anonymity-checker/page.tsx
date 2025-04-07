@@ -288,6 +288,8 @@ export default function AnonymityChecker() {
           padding: "20px",
         }}
       >
+        <title>Proxy Luxe | Проверка Анонимности</title>
+
         <div
           style={{
             display: "flex",

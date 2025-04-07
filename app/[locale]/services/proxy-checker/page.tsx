@@ -89,6 +89,8 @@ export default function ProxyCheckerPage() {
         minHeight: "100vh",
       }}
     >
+      <title>Proxy Luxe | Проверка Прокси</title>
+
       <section style={{ padding: isMobile ? "20px 16px" : "40px 20px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h1
@@ -545,8 +547,8 @@ export default function ProxyCheckerPage() {
                             result.status !== "valid"
                               ? "rgba(255, 82, 82, 0.05)"
                               : index % 2 === 0
-                                ? "transparent"
-                                : "rgba(243, 214, 117, 0.03)",
+                              ? "transparent"
+                              : "rgba(243, 214, 117, 0.03)",
                         }}
                       >
                         <td
@@ -602,10 +604,11 @@ export default function ProxyCheckerPage() {
                             fontSize: isMobile ? "11px" : "14px",
                           }}
                         >
-                          {`${result.status !== "valid"
+                          {`${
+                            result.status !== "valid"
                               ? result.raw
                               : `${result.ip}:${result.port}`
-                            }`}
+                          }`}
                         </td>
                         <td
                           style={{
@@ -632,7 +635,7 @@ export default function ProxyCheckerPage() {
                           {result.supportsIPv6
                             ? `${result.type || "HTTP(s)"} + IPv6`
                             : result.type ||
-                            (result.status === "valid" ? "HTTP(s)" : "Error")}
+                              (result.status === "valid" ? "HTTP(s)" : "Error")}
                         </td>
                         <td
                           style={{
@@ -643,8 +646,8 @@ export default function ProxyCheckerPage() {
                           {result.responseTime
                             ? `${result.responseTime}${i18n("results.ms")}`
                             : result.status === "valid"
-                              ? "—"
-                              : "—"}
+                            ? "—"
+                            : "—"}
                         </td>
                       </tr>
                     ))}

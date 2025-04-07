@@ -77,6 +77,8 @@ export default function Whois() {
 
   return (
     <main className="inner-page">
+      <title>Proxy Luxe | WHOIS</title>
+
       <section className="blist">
         <div className="scontainer">
           <h1 className="section-header">

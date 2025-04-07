@@ -56,6 +56,8 @@ export default function Page() {
 
   return (
     <main className="inner-page">
+      <title>Proxy Luxe | Проверка IPV6</title>
+
       <section className="prcheck">
         <div className="scontainer">
           <h1 className="section-header">
