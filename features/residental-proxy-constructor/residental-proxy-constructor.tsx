@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 
-import { useState, useCallback } from "react";
-import { Plus, X, Edit, Trash2 } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Plus, X, Edit, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
 import { useModifyResidentProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-modify-resident-proxy.mutation";
 
@@ -10,6 +10,16 @@ const rotationOptions = [
   { label: "General", value: "general" },
   { label: "Sticky", value: "sticky" },
   { label: "Rotating", value: "rotating" },
+];
+
+const rotationPeriodOptions = [
+  { label: "For each request", value: "each_request" },
+  { label: "5 minutes", value: "5_min" },
+  { label: "10 minutes", value: "10_min" },
+  { label: "15 minutes", value: "15_min" },
+  { label: "20 minutes", value: "20_min" },
+  { label: "60 minutes", value: "60_min" },
+  { label: "Custom input", value: "custom" },
 ];
 
 const radioStyle: React.CSSProperties = {
@@ -42,6 +52,9 @@ export const ResidentProxyConstructor = ({
 }) => {
   const [listName, setListName] = useState("");
   const [rotation, setRotation] = useState("general");
+  const [rotationPeriod, setRotationPeriod] = useState("10_min");
+  const [isRotationPeriodOpen, setIsRotationPeriodOpen] = useState(false);
+  const rotationPeriodRef = useRef<HTMLDivElement>(null);
   const [authMethod, setAuthMethod] = useState("username");
   const [exportFormat, setExportFormat] = useState("link");
   const [country, setCountry] = useState("");
@@ -69,8 +82,22 @@ export const ResidentProxyConstructor = ({
     error: errorGeo,
   } = useGetGeoReferences();
 
-  // Reset dependent fields when parent field changes
+  // Close rotation period dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        rotationPeriodRef.current &&
+        !rotationPeriodRef.current.contains(event.target as Node)
+      ) {
+        setIsRotationPeriodOpen(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Reset dependent fields when parent field changes
   const updateAvailableIsps = useCallback(() => {
     if (city) {
       const selectedCity = cities.find((c: any) => c.name === city);
@@ -148,12 +175,14 @@ export const ResidentProxyConstructor = ({
     setSuccessMessage(null);
     setErrorMessage(null);
 
+    // Include rotation period in the payload when rotation is "rotating"
     const payload = {
       package_key,
       ports: Number(ports),
       whitelist: whitelist.join(";"),
       title: listName,
       rotation: rotation === "general" ? 0 : rotation === "sticky" ? -1 : 1,
+      rotation_period: rotation === "rotating" ? rotationPeriod : undefined,
       geo: { country, region, city, isp },
     };
 
@@ -554,6 +583,106 @@ export const ResidentProxyConstructor = ({
             </label>
           ))}
         </div>
+
+        {/* Rotation Period Dropdown - Only visible when Rotating is selected */}
+        {rotation === "rotating" && (
+          <div style={{ marginBottom: "16px" }} ref={rotationPeriodRef}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "14px",
+                color: "#999999",
+                marginBottom: "6px",
+              }}
+            >
+              Choose period:
+            </label>
+            <div style={{ position: "relative" }}>
+              <button
+                type="button"
+                onClick={() => setIsRotationPeriodOpen(!isRotationPeriodOpen)}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  borderRadius: "4px",
+                  color: "#f3d675",
+                  fontSize: "14px",
+                  textAlign: "left",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+              >
+                <span>
+                  {rotationPeriodOptions.find(
+                    (option) => option.value === rotationPeriod
+                  )?.label || "Select period"}
+                </span>
+                {isRotationPeriodOpen ? (
+                  <ChevronUp size={16} color="#f3d675" />
+                ) : (
+                  <ChevronDown size={16} color="#f3d675" />
+                )}
+              </button>
+
+              {isRotationPeriodOpen && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    width: "100%",
+                    backgroundColor: "#111111",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    marginTop: "4px",
+                    zIndex: 10,
+                    maxHeight: "240px",
+                    overflowY: "auto",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+                  }}
+                >
+                  {rotationPeriodOptions.map((option) => (
+                    <div
+                      key={option.value}
+                      onClick={() => {
+                        setRotationPeriod(option.value);
+                        setIsRotationPeriodOpen(false);
+                      }}
+                      style={{
+                        padding: "8px 12px",
+                        color: "#f3d675",
+                        cursor: "pointer",
+                        fontSize: "14px",
+                        backgroundColor:
+                          option.value === rotationPeriod
+                            ? "rgba(243, 214, 117, 0.1)"
+                            : "transparent",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(243, 214, 117, 0.15)";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          option.value === rotationPeriod
+                            ? "rgba(243, 214, 117, 0.1)"
+                            : "transparent";
+                      }}
+                    >
+                      {option.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Authorization method */}
         <div style={{ marginBottom: "16px" }}>

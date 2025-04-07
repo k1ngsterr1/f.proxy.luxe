@@ -250,11 +250,6 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
           alignItems: "center",
         }}
       >
-        <button style={primaryButton}>+ Add GB</button>
-
-        <div style={{ display: "flex", gap: "16px" }}>
-          <button style={ghostButton}>Tariff history</button>
-        </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
             Bandwidth in this package

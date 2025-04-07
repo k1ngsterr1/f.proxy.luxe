@@ -6,6 +6,7 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
 import { useTranslations } from "next-intl";
+import Head from "next/head";
 
 // Categories for navigation
 const categories = [
@@ -51,8 +52,8 @@ export default function Articles() {
   // Filter articles by category if one is selected
   const filteredArticles = activeCategory
     ? formattedArticles.filter((article: any) =>
-      article.tags.some((tag: any) => tag.slug === activeCategory)
-    )
+        article.tags.some((tag: any) => tag.slug === activeCategory)
+      )
     : formattedArticles;
 
   // Helper function to extract date from content (simplified example)
@@ -92,113 +93,118 @@ export default function Articles() {
   }
 
   return (
-    <main
-      className="inner-page"
-      style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
-    >
-      <section className="articles" style={{ padding: "40px 0" }}>
-        <div
-          className="scontainer"
-          style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}
-        >
-          <h1
-            className="section-header"
-            style={{
-              fontSize: "32px",
-              fontWeight: "bold",
-              marginBottom: "32px",
-              textTransform: "uppercase",
-              textAlign: "center",
-              position: "relative",
-            }}
+    <>
+      <Head>
+        <title>Proxy Luxe | Статьи</title>
+      </Head>
+      <main
+        className="inner-page"
+        style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
+      >
+        <section className="articles" style={{ padding: "40px 0" }}>
+          <div
+            className="scontainer"
+            style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}
           >
-            <span
+            <h1
+              className="section-header"
               style={{
-                color: "#f3d675",
+                fontSize: "32px",
+                fontWeight: "bold",
+                marginBottom: "32px",
+                textTransform: "uppercase",
+                textAlign: "center",
                 position: "relative",
-                display: "inline-block",
-                padding: "0 20px",
               }}
             >
-              статьи
-            </span>
-          </h1>
-          {isLoading && (
-            <div
-              style={{
-                backgroundColor: "rgba(243, 214, 117, 0.05)",
-                border: "1px solid rgba(243, 214, 117, 0.2)",
-                borderRadius: "8px",
-                padding: "40px 20px",
-                textAlign: "center",
-              }}
-            >
-              <Loader
-                size={40}
-                className="animate-spin"
-                style={{ color: "#f3d675", marginBottom: "16px" }}
-              />
-              <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
-                Загрузка статей...
-              </h3>
-            </div>
-          )}
-          {isError && (
-            <div
-              style={{
-                backgroundColor: "rgba(255, 82, 82, 0.1)",
-                border: "1px solid rgba(255, 82, 82, 0.2)",
-                borderRadius: "8px",
-                padding: "40px 20px",
-                textAlign: "center",
-              }}
-            >
-              <Tag
-                size={40}
-                style={{ color: "#FF5252", marginBottom: "16px" }}
-              />
-              <h3 style={{ color: "#FF5252", marginBottom: "8px" }}>
-                Ошибка загрузки статей
-              </h3>
-              <p style={{ color: "#999999" }}>
-                {error?.message ||
-                  "Произошла ошибка при загрузке статей. Пожалуйста, попробуйте позже."}
-              </p>
-            </div>
-          )}
-          {!isLoading && !isError && (
-            <div className="articles-inner">
-              {filteredArticles.length > 0 ? (
-                <ArticleGrid
-                  articles={filteredArticles}
-                  columns={isMobile ? 1 : 3}
+              <span
+                style={{
+                  color: "#f3d675",
+                  position: "relative",
+                  display: "inline-block",
+                  padding: "0 20px",
+                }}
+              >
+                статьи
+              </span>
+            </h1>
+            {isLoading && (
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                  borderRadius: "8px",
+                  padding: "40px 20px",
+                  textAlign: "center",
+                }}
+              >
+                <Loader
+                  size={40}
+                  className="animate-spin"
+                  style={{ color: "#f3d675", marginBottom: "16px" }}
                 />
-              ) : (
-                <div
-                  style={{
-                    backgroundColor: "rgba(243, 214, 117, 0.05)",
-                    border: "1px solid rgba(243, 214, 117, 0.2)",
-                    borderRadius: "8px",
-                    padding: "40px 20px",
-                    textAlign: "center",
-                  }}
-                >
-                  <Tag
-                    size={40}
-                    style={{ color: "#f3d675", marginBottom: "16px" }}
+                <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
+                  Загрузка статей...
+                </h3>
+              </div>
+            )}
+            {isError && (
+              <div
+                style={{
+                  backgroundColor: "rgba(255, 82, 82, 0.1)",
+                  border: "1px solid rgba(255, 82, 82, 0.2)",
+                  borderRadius: "8px",
+                  padding: "40px 20px",
+                  textAlign: "center",
+                }}
+              >
+                <Tag
+                  size={40}
+                  style={{ color: "#FF5252", marginBottom: "16px" }}
+                />
+                <h3 style={{ color: "#FF5252", marginBottom: "8px" }}>
+                  Ошибка загрузки статей
+                </h3>
+                <p style={{ color: "#999999" }}>
+                  {error?.message ||
+                    "Произошла ошибка при загрузке статей. Пожалуйста, попробуйте позже."}
+                </p>
+              </div>
+            )}
+            {!isLoading && !isError && (
+              <div className="articles-inner">
+                {filteredArticles.length > 0 ? (
+                  <ArticleGrid
+                    articles={filteredArticles}
+                    columns={isMobile ? 1 : 3}
                   />
-                  <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
-                    Статьи не найдены
-                  </h3>
-                  <p style={{ color: "#999999" }}>
-                    По выбранной категории статей пока нет
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-    </main>
+                ) : (
+                  <div
+                    style={{
+                      backgroundColor: "rgba(243, 214, 117, 0.05)",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "8px",
+                      padding: "40px 20px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Tag
+                      size={40}
+                      style={{ color: "#f3d675", marginBottom: "16px" }}
+                    />
+                    <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
+                      Статьи не найдены
+                    </h3>
+                    <p style={{ color: "#999999" }}>
+                      По выбранной категории статей пока нет
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
