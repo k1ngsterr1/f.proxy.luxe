@@ -2,7 +2,7 @@
   "proxy-cards": {
     "isp": {
       "title": "ISP IPv4 PROXY STATIC",
-      "description": "Suitable for all sites. Except payment systems. Issued to one user",
+      "description": "Suitable for all websites except payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY",
       "quantity": "QUANTITY",
@@ -32,7 +32,7 @@
       "loading": "Loading...",
       "option": "More than 220 countries, millions of IP adresses",
       "title": "RESIDENTIAL IPv4 PROXY DYNAMIC",
-      "description": "Suitable for all sites. Except payment systems. Issued to one user",
+      "description": "Suitable for all websites except payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY (WORLDWIDE)",
       "quantity": "QUANTITY (NO LIMIT)",
@@ -54,7 +54,7 @@
     },
     "ipv6": {
       "title": "IPv6 PROXY",
-      "description": "Suitable for sites with IPv6 support. Except payment systems.",
+      "description": "Suitable for websites that support IPv6, except for payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY",
       "quantity": "QUANTITY",
