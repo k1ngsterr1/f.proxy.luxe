@@ -63,7 +63,7 @@ export const ISPBuyCard = () => {
   const [value, setValue] = useState(500);
   const rangeRef = useRef<HTMLInputElement>(null);
 
-  const min = 0;
+  const min = 1;
   const max = 500;
 
   const fillPercentage = ((value - min) / (max - min)) * 100;
