@@ -28,12 +28,17 @@
       "continue": "continue",
       "processing": "processing...",
       "agreement": "I have read the FAQ section. I know what I'm buying and agree to the terms of use",
+      "popup": {
+        "copyUserIdText": "You need to copy this code and paste it in the \"User ID\" field:",
+        "cancel": "Cancel",
+        "continue": "Continue"
+      },
       "errors": {
         "selectPaymentMethod": "Select a payment method",
         "enterAmount": "Enter payment amount",
         "invalidAmount": "Enter a valid amount",
         "minAmount": "Minimum amount is $1",
-        "maxAmount": "Maximum amount is $1000",
+        "maxAmount": "Maximum amount is $1500",
         "agreeToTerms": "You must confirm that you have read the FAQ",
         "generalError": "An error occurred while processing the payment. Please try again later."
       }

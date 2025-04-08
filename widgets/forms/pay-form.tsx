@@ -23,7 +23,7 @@ import { useDigisellerPayment } from "@/entities/payments/hooks/general/use-digi
 //     paymentAmount: Yup.number()
 //       .typeError(i18n("invalidAmount"))
 //       .min(1, i18n("minAmount"))
-//       .max(1000, i18n("maxAmount"))
+//       .max(1500, i18n("maxAmount"))
 //       .required(i18n("enterAmount")),
 //     agreed: Yup.boolean().oneOf([true], i18n("agreeToTerms")),
 //   });
@@ -41,6 +41,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
   const [showVisaPopup, setShowVisaPopup] = useState(false);
   const i18n = useTranslations("forms.payment");
   const errorI18n = useTranslations("forms.payment.errors");
+  const popupI18n = useTranslations("forms.payment.popup");
   const locale = useLocale();
 
   const formik = useFormik({
@@ -170,7 +171,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
       return;
     }
 
-    if (amount > 1000) {
+    if (amount > 1500) {
       alert(errorI18n("maxAmount"));
       return;
     }
@@ -245,8 +246,8 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               name="paymentAmount"
               type="number"
               min={1}
-              max={1000}
-              placeholder="1000$"
+              max={1500}
+              placeholder="1500$"
               value={formik.values.paymentAmount}
               onChange={formik.handleChange}
               // Keep required for this input as it's a standard input
@@ -330,8 +331,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                 lineHeight: 1.5,
               }}
             >
-              Вам нужно скопировать этот код и вставить в поле "Номер
-              пользователя":
+              {popupI18n("copyUserIdText")}
               <br />{" "}
               <strong style={{ color: "#f3d675" }}>
                 {userId || "Loading..."}
@@ -356,7 +356,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                   fontSize: "14px",
                 }}
               >
-                Отмена
+                {popupI18n("cancel")}
               </button>
               <button
                 onClick={handleDigisellerContinue}
@@ -371,7 +371,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                   fontWeight: "bold",
                 }}
               >
-                Далее
+                {popupI18n("continue")}
               </button>
             </div>
           </div>
@@ -421,8 +421,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                 lineHeight: 1.5,
               }}
             >
-              Вам нужно скопировать этот код и вставить в поле "Номер
-              пользователя":
+              {popupI18n("copyUserIdText")}
               <br />{" "}
               <strong style={{ color: "#f3d675" }}>
                 {userId || "Loading..."}
@@ -447,7 +446,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                   fontSize: "14px",
                 }}
               >
-                Отмена
+                {popupI18n("cancel")}
               </button>
               <button
                 onClick={handleVisaContinue}
@@ -462,7 +461,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                   fontWeight: "bold",
                 }}
               >
-                Далее
+                {popupI18n("continue")}
               </button>
             </div>
           </div>
