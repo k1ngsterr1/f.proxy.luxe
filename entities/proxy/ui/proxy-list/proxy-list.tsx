@@ -11,9 +11,9 @@ import {
   Key,
   Trash2,
 } from "lucide-react";
-import { countryFlags } from "../../content/flags";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
+import { useDeleteProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-delete-resident-proxy.mutation";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -35,12 +35,13 @@ interface Proxy {
   package_list: ProxyListItem[];
   order_number?: string;
   order_id?: string;
+  package_key?: string;
 }
 
 export interface Props {
   proxies: Proxy[] | undefined;
   type: string;
-  onDelete?: (proxyId: string) => void;
+  onDelete?: (proxyId: string, packageKey?: string) => void;
   onEdit?: (proxy: Proxy) => void;
   availableCountries?: { code: string; name: string }[];
 }
@@ -58,6 +59,8 @@ const ProxyList: React.FC<Props> = ({
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
   };
+
+  const { deleteProxy, isDeleting, deleteError } = useDeleteProxy();
 
   // Function to get protocol badge styles
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
@@ -353,10 +356,29 @@ const ProxyList: React.FC<Props> = ({
     setDeleteConfirmId(proxyId);
   };
 
-  const confirmDelete = (proxyId: string) => {
-    if (onDelete) {
-      onDelete(proxyId);
+  // Update the confirmDelete function to use the deleteProxy function directly
+  const confirmDelete = (proxyId: string, packageKey?: string) => {
+    if (packageKey) {
+      // If we have both the ID and package key, send the delete request
+      deleteProxy({ listId: proxyId, packageKey });
+    } else {
+      // Find the package key for this proxy if not provided
+      const proxy = proxies?.find((p) => p.id === proxyId);
+      if (proxy?.package_list?.[0]?.export?.ext) {
+        deleteProxy({
+          listId: proxyId,
+          packageKey: proxy.package_list[0].export.ext,
+        });
+      } else {
+        console.error("Could not find package key for proxy", proxyId);
+      }
     }
+
+    // Still call the onDelete prop if provided (for compatibility)
+    if (onDelete) {
+      onDelete(proxyId, packageKey);
+    }
+
     setDeleteConfirmId(null);
   };
 
@@ -911,8 +933,15 @@ const ProxyList: React.FC<Props> = ({
                 )}
                 <th style={tableHeaderCellStyle}>IP-адрес</th>
                 <th style={tableHeaderCellStyle}>Протокол</th>
-                <th style={tableHeaderCellStyle}>Порт HTTP</th>
-                <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                {type === "resident" && (
+                  <th style={tableHeaderCellStyle}>Порты</th>
+                )}
+                {type !== "resident" && (
+                  <th style={tableHeaderCellStyle}>Порт HTTP</th>
+                )}
+                {type !== "resident" && (
+                  <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                )}
                 <th style={tableHeaderCellStyle}>Логин</th>
                 <th style={tableHeaderCellStyle}>Пароль</th>
                 <th style={tableHeaderCellStyle}>Страна</th>
@@ -956,10 +985,19 @@ const ProxyList: React.FC<Props> = ({
                         {proxy.protocol?.toUpperCase()}
                       </span>
                     </td>
-                    <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
-                    <td style={tableCellMonoStyle}>
-                      {proxy.port_socks || "—"}
-                    </td>
+                    {type === "resident" && (
+                      <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
+                    )}
+                    {type !== "resident" && (
+                      <td style={tableCellMonoStyle}>
+                        {proxy.port_http || "—"}
+                      </td>
+                    )}
+                    {type !== "resident" && (
+                      <td style={tableCellMonoStyle}>
+                        {proxy.port_socks || "—"}
+                      </td>
+                    )}
                     <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
                     <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
                     <td style={tableCellStyle}>
@@ -971,7 +1009,9 @@ const ProxyList: React.FC<Props> = ({
                           <span style={deleteConfirmTextStyle}>Удалить?</span>
                           <button
                             style={deleteConfirmButtonStyle}
-                            onClick={() => confirmDelete(proxy.id)}
+                            onClick={() =>
+                              confirmDelete(proxy.id, proxy.package_key)
+                            }
                           >
                             Да
                           </button>

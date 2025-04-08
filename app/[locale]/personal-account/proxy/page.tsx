@@ -208,6 +208,7 @@ export default function ProxyPage() {
                 password: pkg.password,
                 title: pkg.title?.slice(0, 6).trim() + "...",
                 package_list: item.package_list || [], // ✅ строго массив
+                package_key: item.package_info.package_key,
               }));
             }
 
