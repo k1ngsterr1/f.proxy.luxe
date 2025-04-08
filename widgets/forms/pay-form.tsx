@@ -121,6 +121,21 @@ export const PayForm = ({ userId }: { userId?: string }) => {
     setIsSubmitting(false);
   };
 
+  const handleVisaContinue = async () => {
+    setShowVisaPopup(false);
+    try {
+      await processDigisellerPayment(
+        Math.floor(Number.parseFloat(formik.values.paymentAmount)),
+        locale
+      );
+    } catch (error) {
+      console.error("Digiseller payment processing error:", error);
+      alert(error instanceof Error ? error.message : errorI18n("generalError"));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Handle form submission with native alert for validation errors
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -435,7 +450,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                 Отмена
               </button>
               <button
-                onClick={handleVisaCancel}
+                onClick={handleVisaContinue}
                 style={{
                   backgroundColor: "#f3d675",
                   color: "#000000",

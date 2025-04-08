@@ -350,7 +350,7 @@ export default function PaymentsPage() {
             style={{
               width: "100%",
               padding: "10px 12px",
-              backgroundColor: "rgba(243, 214, 117, 0.1)",
+              backgroundColor: "#000000",
               border: "1px solid rgba(243, 214, 117, 0.2)",
               borderRadius: "4px",
               color: "#f3d675",
@@ -380,7 +380,7 @@ export default function PaymentsPage() {
             style={{
               width: "100%",
               padding: "10px 12px",
-              backgroundColor: "rgba(243, 214, 117, 0.1)",
+              backgroundColor: "#000000",
               border: "1px solid rgba(243, 214, 117, 0.2)",
               borderRadius: "4px",
               color: "#f3d675",
