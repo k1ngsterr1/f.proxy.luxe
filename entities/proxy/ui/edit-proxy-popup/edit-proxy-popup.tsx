@@ -2,8 +2,8 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
-import { X, Save } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { X, Save, ChevronDown, ChevronUp } from "lucide-react";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -23,6 +23,7 @@ interface Proxy {
   login: string;
   password: string;
   title?: string;
+  rotation?: number;
   package_list: ProxyListItem[];
   order_number?: string;
   order_id?: string;
@@ -43,13 +44,42 @@ export const EditProxyPopup = ({
 }: EditProxyPopupProps) => {
   const [formData, setFormData] = useState<Proxy | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [rotationType, setRotationType] = useState<string>("general");
+  const [customRotationValue, setCustomRotationValue] = useState<string>("300");
+  const [showRotationOptions, setShowRotationOptions] = useState(false);
+  const rotationOptionsRef = useRef<HTMLDivElement>(null);
 
   // Initialize form data when proxy changes
   useEffect(() => {
     if (proxy) {
       setFormData({ ...proxy });
+
+      // Set rotation type based on proxy.rotation value
+      if (proxy.rotation === -1) {
+        setRotationType("sticky");
+      } else if (proxy.rotation === 0 || proxy.rotation === undefined) {
+        setRotationType("general");
+      } else {
+        setRotationType("rotating");
+        setCustomRotationValue(String(proxy.rotation));
+      }
     }
   }, [proxy]);
+
+  // Close rotation options dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        rotationOptionsRef.current &&
+        !rotationOptionsRef.current.contains(event.target as Node)
+      ) {
+        setShowRotationOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (!proxy || !formData) {
     return null;
@@ -74,37 +104,59 @@ export const EditProxyPopup = ({
     }
   };
 
+  const handleRotationTypeChange = (type: string) => {
+    setRotationType(type);
+    setShowRotationOptions(false);
+
+    // Update rotation value based on type
+    let rotationValue: number;
+    if (type === "sticky") {
+      rotationValue = -1;
+    } else if (type === "general") {
+      rotationValue = 0;
+    } else {
+      rotationValue = Number.parseInt(customRotationValue, 10);
+      if (isNaN(rotationValue) || rotationValue < 1) {
+        rotationValue = 300; // Default to 5 minutes
+      }
+    }
+
+    setFormData((prev) => {
+      if (!prev) return null;
+      return { ...prev, rotation: rotationValue };
+    });
+  };
+
+  const handleCustomRotationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    setCustomRotationValue(value);
+
+    // Update rotation value if it's a valid number
+    const numValue = Number.parseInt(value, 10);
+    if (!isNaN(numValue) && numValue >= 1 && numValue <= 3600) {
+      setFormData((prev) => {
+        if (!prev) return null;
+        return { ...prev, rotation: numValue };
+      });
+    }
+  };
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Required fields
-    if (!formData.ip) newErrors.ip = "IP адрес обязателен";
-    if (!formData.protocol) newErrors.protocol = "Протокол обязателен";
-    if (!formData.country) newErrors.country = "Страна обязательна";
-
-    // IP validation
-    const ipPattern = /^(\d{1,3}\.){3}\d{1,3}$/;
-    if (formData.ip && !ipPattern.test(formData.ip)) {
-      newErrors.ip = "Неверный формат IP адреса";
+    // Only validate title field
+    if (!formData.title) {
+      newErrors.title = "Название обязательно";
     }
 
-    // Port validation
-    if (
-      formData.port_http &&
-      (isNaN(Number(formData.port_http)) ||
-        Number(formData.port_http) < 1 ||
-        Number(formData.port_http) > 65535)
-    ) {
-      newErrors.port_http = "Порт должен быть числом от 1 до 65535";
-    }
-
-    if (
-      formData.port_socks &&
-      (isNaN(Number(formData.port_socks)) ||
-        Number(formData.port_socks) < 1 ||
-        Number(formData.port_socks) > 65535)
-    ) {
-      newErrors.port_socks = "Порт должен быть числом от 1 до 65535";
+    // Validate custom rotation value if rotating type is selected
+    if (rotationType === "rotating") {
+      const rotationValue = Number.parseInt(customRotationValue, 10);
+      if (isNaN(rotationValue) || rotationValue < 1 || rotationValue > 3600) {
+        newErrors.rotation = "Значение должно быть от 1 до 3600 секунд";
+      }
     }
 
     setErrors(newErrors);
@@ -115,9 +167,44 @@ export const EditProxyPopup = ({
     e.preventDefault();
 
     if (validateForm() && formData) {
-      onSave(formData);
+      // Set final rotation value based on type
+      let finalRotation: number;
+      if (rotationType === "sticky") {
+        finalRotation = -1;
+      } else if (rotationType === "general") {
+        finalRotation = 0;
+      } else {
+        finalRotation = Number.parseInt(customRotationValue, 10);
+      }
+
+      const updatedProxy = {
+        ...formData,
+        rotation: finalRotation,
+      };
+
+      onSave(updatedProxy);
     }
   };
+
+  // Rotation options
+  const rotationOptions = [
+    { label: "General", value: "general" },
+    { label: "Sticky", value: "sticky" },
+    { label: "Rotating", value: "rotating" },
+  ];
+
+  // Predefined rotation periods
+  const predefinedPeriods = [
+    { label: "5 seconds", value: "5" },
+    { label: "30 seconds", value: "30" },
+    { label: "1 minute", value: "60" },
+    { label: "5 minutes", value: "300" },
+    { label: "10 minutes", value: "600" },
+    { label: "15 minutes", value: "900" },
+    { label: "30 minutes", value: "1800" },
+    { label: "60 minutes", value: "3600" },
+    { label: "Custom", value: "custom" },
+  ];
 
   // Styles
   const overlayStyle: React.CSSProperties = {
@@ -204,11 +291,6 @@ export const EditProxyPopup = ({
     marginTop: "4px",
   };
 
-  const selectStyle: React.CSSProperties = {
-    ...inputStyle,
-    appearance: "auto",
-  };
-
   const buttonContainerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "flex-end",
@@ -241,6 +323,58 @@ export const EditProxyPopup = ({
     fontSize: "14px",
   };
 
+  const dropdownButtonStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "10px 14px",
+    backgroundColor: "#1a1a1a",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "6px",
+    color: "#f3d675",
+    fontSize: "14px",
+    textAlign: "left",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    cursor: "pointer",
+  };
+
+  const dropdownMenuStyle: React.CSSProperties = {
+    position: "absolute",
+    width: "100%",
+    backgroundColor: "#1a1a1a",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "6px",
+    marginTop: "4px",
+    zIndex: 10,
+    maxHeight: "200px",
+    overflowY: "auto",
+  };
+
+  const dropdownItemStyle: React.CSSProperties = {
+    padding: "10px 14px",
+    color: "#f3d675",
+    cursor: "pointer",
+    borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+  };
+
+  const radioStyle: React.CSSProperties = {
+    appearance: "none",
+    width: "16px",
+    height: "16px",
+    backgroundColor: "transparent",
+    border: "1px solid #f3d675",
+    borderRadius: "50%",
+    cursor: "pointer",
+    position: "relative",
+    marginRight: "8px",
+  };
+
+  const radioCheckedStyle: React.CSSProperties = {
+    ...radioStyle,
+    backgroundColor: "#f3d675",
+    boxShadow: "inset 0 0 0 3px #1a1a1a",
+  };
+
   const formGridStyle: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
@@ -258,180 +392,136 @@ export const EditProxyPopup = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={formGridStyle}>
-            {/* Left column */}
-            <div>
-              {/* Title */}
-              <div style={formGroupStyle}>
-                <label htmlFor="title" style={labelStyle}>
-                  Название
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={formData.title || ""}
-                  onChange={handleChange}
-                  style={errors.title ? errorInputStyle : inputStyle}
-                />
-                {errors.title && <p style={errorTextStyle}>{errors.title}</p>}
-              </div>
+          {/* Title */}
+          <div style={formGroupStyle}>
+            <label htmlFor="title" style={labelStyle}>
+              Название *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title || ""}
+              onChange={handleChange}
+              style={errors.title ? errorInputStyle : inputStyle}
+              required
+            />
+            {errors.title && <p style={errorTextStyle}>{errors.title}</p>}
+          </div>
 
-              {/* IP Address */}
-              <div style={formGroupStyle}>
-                <label htmlFor="ip" style={labelStyle}>
-                  IP-адрес *
-                </label>
-                <input
-                  type="text"
-                  id="ip"
-                  name="ip"
-                  value={formData.ip}
-                  onChange={handleChange}
-                  style={errors.ip ? errorInputStyle : inputStyle}
-                  required
-                />
-                {errors.ip && <p style={errorTextStyle}>{errors.ip}</p>}
-              </div>
-
-              {/* Protocol */}
-              <div style={formGroupStyle}>
-                <label htmlFor="protocol" style={labelStyle}>
-                  Протокол *
-                </label>
-                <select
-                  id="protocol"
-                  name="protocol"
-                  value={formData.protocol}
-                  onChange={handleChange}
-                  style={errors.protocol ? errorInputStyle : selectStyle}
-                  required
+          {/* Rotation Type */}
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Rotation Type</label>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
+              {rotationOptions.map((option) => (
+                <label
+                  key={option.value}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    color: "#f3d675",
+                  }}
                 >
-                  <option value="">Выберите протокол</option>
-                  <option value="http">HTTP</option>
-                  <option value="https">HTTPS</option>
-                  <option value="socks5">SOCKS5</option>
-                </select>
-                {errors.protocol && (
-                  <p style={errorTextStyle}>{errors.protocol}</p>
-                )}
-              </div>
-
-              {/* HTTP Port */}
-              <div style={formGroupStyle}>
-                <label htmlFor="port_http" style={labelStyle}>
-                  Порт HTTP
+                  <input
+                    type="radio"
+                    name="rotationType"
+                    value={option.value}
+                    checked={rotationType === option.value}
+                    onChange={() => handleRotationTypeChange(option.value)}
+                    style={
+                      rotationType === option.value
+                        ? radioCheckedStyle
+                        : radioStyle
+                    }
+                  />
+                  {option.label}
                 </label>
-                <input
-                  type="number"
-                  id="port_http"
-                  name="port_http"
-                  value={formData.port_http || ""}
-                  onChange={handleChange}
-                  style={errors.port_http ? errorInputStyle : inputStyle}
-                  min="1"
-                  max="65535"
-                />
-                {errors.port_http && (
-                  <p style={errorTextStyle}>{errors.port_http}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Right column */}
-            <div>
-              {/* SOCKS Port */}
-              <div style={formGroupStyle}>
-                <label htmlFor="port_socks" style={labelStyle}>
-                  Порт SOCKS
-                </label>
-                <input
-                  type="number"
-                  id="port_socks"
-                  name="port_socks"
-                  value={formData.port_socks || ""}
-                  onChange={handleChange}
-                  style={errors.port_socks ? errorInputStyle : inputStyle}
-                  min="1"
-                  max="65535"
-                />
-                {errors.port_socks && (
-                  <p style={errorTextStyle}>{errors.port_socks}</p>
-                )}
-              </div>
-
-              {/* Country */}
-              <div style={formGroupStyle}>
-                <label htmlFor="country" style={labelStyle}>
-                  Страна *
-                </label>
-                <select
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  style={errors.country ? errorInputStyle : selectStyle}
-                  required
-                >
-                  <option value="">Выберите страну</option>
-                  {availableCountries.length > 0 ? (
-                    availableCountries.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.name}
-                      </option>
-                    ))
-                  ) : (
-                    <>
-                      <option value="US">США</option>
-                      <option value="GB">Великобритания</option>
-                      <option value="DE">Германия</option>
-                      <option value="FR">Франция</option>
-                      <option value="RU">Россия</option>
-                      <option value="JP">Япония</option>
-                      <option value="CN">Китай</option>
-                    </>
-                  )}
-                </select>
-                {errors.country && (
-                  <p style={errorTextStyle}>{errors.country}</p>
-                )}
-              </div>
-
-              {/* Login */}
-              <div style={formGroupStyle}>
-                <label htmlFor="login" style={labelStyle}>
-                  Логин
-                </label>
-                <input
-                  type="text"
-                  id="login"
-                  name="login"
-                  value={formData.login}
-                  onChange={handleChange}
-                  style={errors.login ? errorInputStyle : inputStyle}
-                />
-                {errors.login && <p style={errorTextStyle}>{errors.login}</p>}
-              </div>
-
-              {/* Password */}
-              <div style={formGroupStyle}>
-                <label htmlFor="password" style={labelStyle}>
-                  Пароль
-                </label>
-                <input
-                  type="text"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  style={errors.password ? errorInputStyle : inputStyle}
-                />
-                {errors.password && (
-                  <p style={errorTextStyle}>{errors.password}</p>
-                )}
-              </div>
+              ))}
             </div>
           </div>
+
+          {/* Rotation Period - Only visible when Rotating is selected */}
+          {rotationType === "rotating" && (
+            <div style={formGroupStyle}>
+              <label style={labelStyle}>Rotation Period (seconds)</label>
+              <div style={{ position: "relative" }} ref={rotationOptionsRef}>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <input
+                    type="number"
+                    value={customRotationValue}
+                    onChange={handleCustomRotationChange}
+                    min="1"
+                    max="3600"
+                    style={{
+                      ...inputStyle,
+                      flex: 1,
+                      ...(errors.rotation ? { borderColor: "#ff3b30" } : {}),
+                    }}
+                    placeholder="Enter seconds (1-3600)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowRotationOptions(!showRotationOptions)}
+                    style={{
+                      backgroundColor: "#1a1a1a",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "6px",
+                      color: "#f3d675",
+                      padding: "0 10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {showRotationOptions ? (
+                      <ChevronUp size={20} />
+                    ) : (
+                      <ChevronDown size={20} />
+                    )}
+                  </button>
+                </div>
+
+                {showRotationOptions && (
+                  <div style={dropdownMenuStyle}>
+                    {predefinedPeriods.map((period) => (
+                      <div
+                        key={period.value}
+                        style={{
+                          ...dropdownItemStyle,
+                          backgroundColor:
+                            customRotationValue === period.value
+                              ? "rgba(243, 214, 117, 0.1)"
+                              : "transparent",
+                        }}
+                        onClick={() => {
+                          setCustomRotationValue(period.value);
+                          setFormData((prev) => {
+                            if (!prev) return null;
+                            return {
+                              ...prev,
+                              rotation: Number.parseInt(period.value, 10),
+                            };
+                          });
+                          setShowRotationOptions(false);
+                        }}
+                      >
+                        {period.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {errors.rotation && (
+                <p style={errorTextStyle}>{errors.rotation}</p>
+              )}
+              <p
+                style={{ fontSize: "12px", color: "#999999", marginTop: "4px" }}
+              >
+                Enter a value between 1 and 3600 seconds (60 minutes)
+              </p>
+            </div>
+          )}
 
           <div style={buttonContainerStyle}>
             <button type="button" style={cancelButtonStyle} onClick={onClose}>

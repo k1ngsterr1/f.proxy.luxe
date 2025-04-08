@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies.queries";
@@ -12,6 +12,7 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useTranslations } from "next-intl";
 import { TrafficBar } from "@/features/traffic-bar/traffic-bar";
 import { ResidentProxyConstructor } from "@/features/residental-proxy-constructor/residental-proxy-constructor";
+import { useUpdateProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-update-list-resident.mutation";
 
 export default function ProxyPage() {
   const t = useTranslations("personal-proxy");
@@ -28,6 +29,26 @@ export default function ProxyPage() {
   const [proxyType, setProxyType] = useState<any>(
     proxy === null ? "isp" : proxy
   );
+
+  const { updateProxy, isUpdating } = useUpdateProxy();
+
+  // Handle proxy edit with the correct parameters
+  const handleEditProxy = (proxy: any) => {
+    // Extract the numeric listId from the proxy.id
+    const listId = Number.parseInt(proxy.id, 10);
+
+    if (isNaN(listId)) {
+      console.error("Invalid proxy ID:", proxy.id);
+      return;
+    }
+
+    updateProxy({
+      listId: listId,
+      title: proxy.title,
+      rotation: proxy.rotation,
+      packageKey: proxy.package_key,
+    });
+  };
 
   const { data } = useGetUser();
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
@@ -206,9 +227,10 @@ export default function ProxyPage() {
                 country: pkg.geo?.[0]?.country || "",
                 login: pkg.login,
                 password: pkg.password,
-                title: pkg.title?.slice(0, 6).trim() + "...",
+                title: pkg.title,
                 package_list: item.package_list || [], // ✅ строго массив
                 package_key: item.package_info.package_key,
+                rotation: pkg.rotation,
               }));
             }
 
@@ -222,6 +244,7 @@ export default function ProxyPage() {
             };
           })}
           type={proxyType}
+          onEdit={handleEditProxy}
         />
       ) : (
         !isLoading &&

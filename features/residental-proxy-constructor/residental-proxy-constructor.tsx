@@ -6,20 +6,21 @@ import { Plus, X, Edit, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
 import { useModifyResidentProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-modify-resident-proxy.mutation";
 
+// Update the rotationPeriodOptions array to include a custom option
+const rotationPeriodOptions = [
+  { label: "For each request", value: "each_request" },
+  { label: "5 minutes", value: "300" },
+  { label: "10 minutes", value: "600" },
+  { label: "15 minutes", value: "900" },
+  { label: "20 minutes", value: "1200" },
+  { label: "60 minutes", value: "3600" },
+  { label: "Custom", value: "custom" },
+];
+
 const rotationOptions = [
   { label: "General", value: "general" },
   { label: "Sticky", value: "sticky" },
   { label: "Rotating", value: "rotating" },
-];
-
-const rotationPeriodOptions = [
-  { label: "For each request", value: "each_request" },
-  { label: "5 minutes", value: "5_min" },
-  { label: "10 minutes", value: "10_min" },
-  { label: "15 minutes", value: "15_min" },
-  { label: "20 minutes", value: "20_min" },
-  { label: "60 minutes", value: "60_min" },
-  { label: "Custom input", value: "custom" },
 ];
 
 const radioStyle: React.CSSProperties = {
@@ -72,6 +73,9 @@ export const ResidentProxyConstructor = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [availableIsps, setAvailableIsps] = useState<string[]>([]);
   const [cities, setCities] = useState<any[]>([]);
+  // Move these state declarations inside the component
+  const [customRotationValue, setCustomRotationValue] = useState("300");
+  const [showCustomRotationInput, setShowCustomRotationInput] = useState(false);
   const { mutate: modifyProxy, isPending } = useModifyResidentProxy();
 
   // Get geo references data
@@ -171,9 +175,30 @@ export const ResidentProxyConstructor = ({
     setWhitelist(updatedWhitelist);
   };
 
+  // Update the handleSubmit function to use the custom rotation value
   const handleSubmit = () => {
     setSuccessMessage(null);
     setErrorMessage(null);
+
+    // Calculate rotation period in seconds
+    let rotationPeriodSeconds = 0;
+    if (rotation === "rotating") {
+      if (rotationPeriod === "custom") {
+        rotationPeriodSeconds = Number.parseInt(customRotationValue, 10);
+        if (
+          isNaN(rotationPeriodSeconds) ||
+          rotationPeriodSeconds < 1 ||
+          rotationPeriodSeconds > 3600
+        ) {
+          setErrorMessage(
+            "Custom rotation period must be between 1 and 3600 seconds"
+          );
+          return;
+        }
+      } else {
+        rotationPeriodSeconds = Number.parseInt(rotationPeriod, 10);
+      }
+    }
 
     // Include rotation period in the payload when rotation is "rotating"
     const payload = {
@@ -181,8 +206,12 @@ export const ResidentProxyConstructor = ({
       ports: Number(ports),
       whitelist: whitelist.join(";"),
       title: listName,
-      rotation: rotation === "general" ? 0 : rotation === "sticky" ? -1 : 1,
-      rotation_period: rotation === "rotating" ? rotationPeriod : undefined,
+      rotation:
+        rotation === "general"
+          ? 0
+          : rotation === "sticky"
+          ? -1
+          : rotationPeriodSeconds,
       geo: { country, region, city, isp },
     };
 
@@ -598,37 +627,93 @@ export const ResidentProxyConstructor = ({
               Choose period:
             </label>
             <div style={{ position: "relative" }}>
-              <button
-                type="button"
-                onClick={() => setIsRotationPeriodOpen(!isRotationPeriodOpen)}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  backgroundColor: "rgba(0, 0, 0, 0.3)",
-                  border: "1px solid rgba(243, 214, 117, 0.2)",
-                  borderRadius: "4px",
-                  color: "#f3d675",
-                  fontSize: "14px",
-                  textAlign: "left",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <span>
-                  {rotationPeriodOptions.find(
-                    (option) => option.value === rotationPeriod
-                  )?.label || "Select period"}
-                </span>
-                {isRotationPeriodOpen ? (
-                  <ChevronUp size={16} color="#f3d675" />
-                ) : (
-                  <ChevronDown size={16} color="#f3d675" />
-                )}
-              </button>
+              {showCustomRotationInput ? (
+                <div
+                  style={{ display: "flex", gap: "8px", alignItems: "center" }}
+                >
+                  <input
+                    type="number"
+                    value={customRotationValue}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      const numValue = Number.parseInt(value, 10);
+                      if (
+                        !isNaN(numValue) &&
+                        numValue >= 1 &&
+                        numValue <= 3600
+                      ) {
+                        setCustomRotationValue(value);
+                        setRotationPeriod("custom");
+                      } else if (value === "") {
+                        setCustomRotationValue(value);
+                      }
+                    }}
+                    min="1"
+                    max="3600"
+                    style={{
+                      flex: 1,
+                      padding: "8px 12px",
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "4px",
+                      color: "#f3d675",
+                      fontSize: "14px",
+                    }}
+                    placeholder="Enter seconds (1-3600)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCustomRotationInput(false);
+                      setIsRotationPeriodOpen(true);
+                    }}
+                    style={{
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "4px",
+                      color: "#f3d675",
+                      padding: "8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ChevronDown size={16} color="#f3d675" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsRotationPeriodOpen(!isRotationPeriodOpen)}
+                  style={{
+                    width: "100%",
+                    padding: "8px 12px",
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    textAlign: "left",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span>
+                    {rotationPeriod === "custom"
+                      ? `Custom: ${customRotationValue} seconds`
+                      : rotationPeriodOptions.find(
+                          (option) => option.value === rotationPeriod
+                        )?.label || "Select period"}
+                  </span>
+                  {isRotationPeriodOpen ? (
+                    <ChevronUp size={16} color="#f3d675" />
+                  ) : (
+                    <ChevronDown size={16} color="#f3d675" />
+                  )}
+                </button>
+              )}
 
-              {isRotationPeriodOpen && (
+              {isRotationPeriodOpen && !showCustomRotationInput && (
                 <div
                   style={{
                     position: "absolute",
@@ -649,8 +734,13 @@ export const ResidentProxyConstructor = ({
                     <div
                       key={option.value}
                       onClick={() => {
-                        setRotationPeriod(option.value);
-                        setIsRotationPeriodOpen(false);
+                        if (option.value === "custom") {
+                          setShowCustomRotationInput(true);
+                          setIsRotationPeriodOpen(false);
+                        } else {
+                          setRotationPeriod(option.value);
+                          setIsRotationPeriodOpen(false);
+                        }
                       }}
                       style={{
                         padding: "8px 12px",
@@ -681,6 +771,13 @@ export const ResidentProxyConstructor = ({
                 </div>
               )}
             </div>
+            {rotationPeriod === "custom" && (
+              <p
+                style={{ fontSize: "12px", color: "#999999", marginTop: "4px" }}
+              >
+                Enter a value between 1 and 3600 seconds (60 minutes)
+              </p>
+            )}
           </div>
         )}
         <div style={{ marginBottom: "16px" }}>

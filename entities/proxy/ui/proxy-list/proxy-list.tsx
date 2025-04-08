@@ -977,7 +977,9 @@ const ProxyList: React.FC<Props> = ({
                     }}
                   >
                     {type === "resident" && (
-                      <td style={tableCellEmphasisStyle}>{proxy.title}</td>
+                      <td style={tableCellEmphasisStyle}>
+                        {proxy.title?.slice(0, 6).trim() + "..."}
+                      </td>
                     )}
                     <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
                     <td style={tableCellStyle}>
