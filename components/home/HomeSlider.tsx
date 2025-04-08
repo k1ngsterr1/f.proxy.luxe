@@ -63,7 +63,6 @@ export const HomeSlider: FC = () => {
                 style={{
                   width: "60%",
                   textAlign: "left",
-                  textDecoration: "upperCase",
                 }}
               >
                 {i18n("main")}
@@ -74,7 +73,6 @@ export const HomeSlider: FC = () => {
               style={{
                 width: "60%",
                 textAlign: "left",
-                textDecoration: "upperCase",
               }}
             >
               {i18n("main2")}
@@ -90,7 +88,6 @@ export const HomeSlider: FC = () => {
                 style={{
                   width: "60%",
                   textAlign: "left",
-                  textDecoration: "upperCase",
                 }}
               >
                 {i18n("main")}
@@ -101,7 +98,6 @@ export const HomeSlider: FC = () => {
               style={{
                 width: "60%",
                 textAlign: "left",
-                textDecoration: "upperCase",
               }}
             >
               {i18n("main2")}

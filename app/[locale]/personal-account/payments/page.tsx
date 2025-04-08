@@ -298,28 +298,7 @@ export default function PaymentsPage() {
         >
           {t("title")}
         </h1>
-
-        <button
-          onClick={() => setIsAddFundsModalOpen(true)}
-          style={{
-            backgroundColor: "#f3d675",
-            color: "#000000",
-            border: "none",
-            padding: "10px 16px",
-            borderRadius: "4px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          {t("add-funds")}
-        </button>
       </div>
-
-      {/* Search and Filter */}
       <div
         style={{
           display: "flex",

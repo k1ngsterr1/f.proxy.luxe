@@ -14,13 +14,10 @@ interface LayoutProps {
 
 export default async function Layout({ children, params }: LayoutProps) {
   const locale = (await params).locale;
-
-  // Validate locale
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
 
-  // Get messages for the current locale
   const messages = await getMessages();
 
   return (

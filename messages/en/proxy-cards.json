@@ -13,6 +13,7 @@
       "buy": "Buy",
       "loading": "Loading...",
       "goals": {
+        "placeholder": "Select a Goal",
         "surfing": "Web Surfing",
         "socialMedia": "Social Media",
         "seo": "SEO & Marketing",
@@ -39,6 +40,7 @@
       "plan": "TARIFF PLAN (GB)",
       "usage": "USAGE PURPOSE",
       "goals": {
+        "placeholder": "Select a Goal",
         "surfing": "Web Surfing",
         "socialMedia": "Social Media",
         "seo": "SEO & Marketing",
@@ -62,6 +64,7 @@
       "month": "1 month",
       "usage": "USAGE PURPOSE",
       "goals": {
+        "placeholder": "Select a Goal",
         "surfing": "Web Surfing",
         "socialMedia": "Social Media",
         "seo": "SEO & Marketing",

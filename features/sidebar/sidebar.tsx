@@ -685,17 +685,20 @@ export const Sidebar = () => {
 
           <li
             style={getItemStyle("/partners")}
-            onMouseEnter={() => setHoveredItem("/partners")}
+            onMouseEnter={() => setHoveredItem("/partner")}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <ActiveLink activeClassName="active" href="/partners">
-              <div style={getLinkStyle("/partners")}>
+            <ActiveLink
+              activeClassName="active"
+              href="/personal-account/partner"
+            >
+              <div style={getLinkStyle("/personal-account/partner")}>
                 <div style={getIconContainerStyle}>
-                  <UsersIcon isActive={pathname.includes("/partners")} />
+                  <UsersIcon isActive={pathname.includes("/partner")} />
                 </div>
                 {i18n("menu.partners")}
-                {pathname.includes("/partners") && (
-                  <ChevronRight style={getChevronStyle("/partners")} />
+                {pathname.includes("/partner") && (
+                  <ChevronRight style={getChevronStyle("/partner")} />
                 )}
               </div>
             </ActiveLink>

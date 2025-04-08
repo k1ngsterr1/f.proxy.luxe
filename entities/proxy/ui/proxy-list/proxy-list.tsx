@@ -2,9 +2,18 @@
 
 import type React from "react";
 import { useState } from "react";
-import { AlertCircle, Download, FileJson, FileText, Key } from "lucide-react";
+import {
+  AlertCircle,
+  Download,
+  Edit,
+  FileJson,
+  FileText,
+  Key,
+  Trash2,
+} from "lucide-react";
 import { countryFlags } from "../../content/flags";
 import { usePopupStore } from "@/shared/store/use-popup.store";
+import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -31,10 +40,21 @@ interface Proxy {
 export interface Props {
   proxies: Proxy[] | undefined;
   type: string;
+  onDelete?: (proxyId: string) => void;
+  onEdit?: (proxy: Proxy) => void;
+  availableCountries?: { code: string; name: string }[];
 }
 
-const ProxyList: React.FC<Props> = ({ proxies, type }) => {
+const ProxyList: React.FC<Props> = ({
+  proxies,
+  type,
+  onDelete,
+  onEdit,
+  availableCountries = [],
+}) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [editingProxy, setEditingProxy] = useState<Proxy | null>(null);
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
   };
@@ -83,30 +103,237 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
     }
   };
 
-  // Get country flag emoji
+  // Optional: ISO 3166-1 alpha-2 codes
+  const validCountryCodes = [
+    "AF",
+    "AL",
+    "DZ",
+    "AS",
+    "AD",
+    "AO",
+    "AI",
+    "AQ",
+    "AG",
+    "AR",
+    "AM",
+    "AW",
+    "AU",
+    "AT",
+    "AZ",
+    "BS",
+    "BH",
+    "BD",
+    "BB",
+    "BY",
+    "BE",
+    "BZ",
+    "BJ",
+    "BM",
+    "BT",
+    "BO",
+    "BA",
+    "BW",
+    "BR",
+    "BN",
+    "BG",
+    "BF",
+    "BI",
+    "KH",
+    "CM",
+    "CA",
+    "CV",
+    "KY",
+    "CF",
+    "TD",
+    "CL",
+    "CN",
+    "CO",
+    "KM",
+    "CG",
+    "CD",
+    "CR",
+    "HR",
+    "CU",
+    "CY",
+    "CZ",
+    "DK",
+    "DJ",
+    "DM",
+    "DO",
+    "EC",
+    "EG",
+    "SV",
+    "GQ",
+    "ER",
+    "EE",
+    "SZ",
+    "ET",
+    "FJ",
+    "FI",
+    "FR",
+    "GA",
+    "GM",
+    "GE",
+    "DE",
+    "GH",
+    "GR",
+    "GD",
+    "GT",
+    "GN",
+    "GW",
+    "GY",
+    "HT",
+    "HN",
+    "HU",
+    "IS",
+    "IN",
+    "ID",
+    "IR",
+    "IQ",
+    "IE",
+    "IL",
+    "IT",
+    "CI",
+    "JM",
+    "JP",
+    "JO",
+    "KZ",
+    "KE",
+    "KI",
+    "KP",
+    "KR",
+    "KW",
+    "KG",
+    "LA",
+    "LV",
+    "LB",
+    "LS",
+    "LR",
+    "LY",
+    "LI",
+    "LT",
+    "LU",
+    "MG",
+    "MW",
+    "MY",
+    "MV",
+    "ML",
+    "MT",
+    "MH",
+    "MR",
+    "MU",
+    "MX",
+    "FM",
+    "MD",
+    "MC",
+    "MN",
+    "ME",
+    "MA",
+    "MZ",
+    "MM",
+    "NA",
+    "NR",
+    "NP",
+    "NL",
+    "NZ",
+    "NI",
+    "NE",
+    "NG",
+    "MK",
+    "NO",
+    "OM",
+    "PK",
+    "PW",
+    "PA",
+    "PG",
+    "PY",
+    "PE",
+    "PH",
+    "PL",
+    "PT",
+    "QA",
+    "RO",
+    "RU",
+    "RW",
+    "KN",
+    "LC",
+    "VC",
+    "WS",
+    "SM",
+    "ST",
+    "SA",
+    "SN",
+    "RS",
+    "SC",
+    "SL",
+    "SG",
+    "SK",
+    "SI",
+    "SB",
+    "SO",
+    "ZA",
+    "SS",
+    "ES",
+    "LK",
+    "SD",
+    "SR",
+    "SE",
+    "CH",
+    "SY",
+    "TW",
+    "TJ",
+    "TZ",
+    "TH",
+    "TL",
+    "TG",
+    "TO",
+    "TT",
+    "TN",
+    "TR",
+    "TM",
+    "TV",
+    "UG",
+    "UA",
+    "AE",
+    "GB",
+    "US",
+    "UY",
+    "UZ",
+    "VU",
+    "VA",
+    "VE",
+    "VN",
+    "YE",
+    "ZM",
+    "ZW",
+  ];
+
+  // Optional overrides
+  const countryFlags: Record<string, string> = {
+    UK: "🇬🇧", // United Kingdom (ISO code is GB)
+    SU: "🇷🇺", // Soviet Union fallback
+    AN: "🇳🇱", // Netherlands Antilles → Netherlands
+  };
+
   const getCountryFlag = (countryCode: string): string => {
     if (!countryCode || typeof countryCode !== "string") return "🌐";
 
     const code = countryCode.toUpperCase().substring(0, 2);
+    const normalizedCode = countryFlags[code] ? code : code;
 
-    const specialCases: Record<string, string> = {
-      UK: "GB",
-      AN: "NL",
-      SU: "RU",
-    };
-
-    const normalizedCode = specialCases[code] || code;
-
+    // Use override if available
     if (countryFlags[normalizedCode]) {
       return countryFlags[normalizedCode];
     }
+
+    // Validate the code if you want to restrict to known ISO codes
+    if (!validCountryCodes.includes(normalizedCode)) return "🌐";
 
     try {
       const regionalIndicatorA = 0x1f1e6;
       const asciiA = "A".charCodeAt(0);
 
-      // Проверяем что код состоит из 2 букв A-Z
-      if (normalizedCode.length === 2 && /^[A-Z]{2}$/.test(normalizedCode)) {
+      if (/^[A-Z]{2}$/.test(normalizedCode)) {
         const firstChar =
           normalizedCode.charCodeAt(0) - asciiA + regionalIndicatorA;
         const secondChar =
@@ -121,7 +348,37 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
     return "🌐";
   };
 
-  // Export functions
+  // Handle delete confirmation
+  const handleDeleteClick = (proxyId: string) => {
+    setDeleteConfirmId(proxyId);
+  };
+
+  const confirmDelete = (proxyId: string) => {
+    if (onDelete) {
+      onDelete(proxyId);
+    }
+    setDeleteConfirmId(null);
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmId(null);
+  };
+
+  const handleEditClick = (proxy: Proxy) => {
+    setEditingProxy(proxy);
+  };
+
+  const handleSaveEdit = (updatedProxy: Proxy) => {
+    if (onEdit) {
+      onEdit(updatedProxy);
+    }
+    setEditingProxy(null);
+  };
+
+  const handleCloseEdit = () => {
+    setEditingProxy(null);
+  };
+
   const exportToTxt = () => {
     if (!proxies || proxies.length === 0) return;
 
@@ -231,9 +488,6 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
     setExportMenuOpen(false);
   };
 
-  console.log(proxies);
-
-  // Styles - Black and Gold theme
   const cardStyle: React.CSSProperties = {
     backgroundColor: "#000000",
     borderRadius: "8px",
@@ -359,6 +613,19 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
     gap: "6px",
     cursor: "pointer",
     fontSize: "12px",
+    marginRight: "6px",
+  };
+
+  const actionButtonDangerStyle: React.CSSProperties = {
+    ...actionButtonStyle,
+    backgroundColor: "rgba(255, 59, 48, 0.1)",
+    borderColor: "rgba(255, 59, 48, 0.2)",
+    color: "#ff3b30",
+  };
+
+  const actionButtonsContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
   };
 
   const exportMenuStyle: React.CSSProperties = {
@@ -384,6 +651,38 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
     gap: "8px",
     cursor: "pointer",
     transition: "background-color 0.2s",
+  };
+
+  // Delete confirmation styles
+  const deleteConfirmContainerStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  };
+
+  const deleteConfirmTextStyle: React.CSSProperties = {
+    fontSize: "12px",
+    color: "#ff3b30",
+  };
+
+  const deleteConfirmButtonStyle: React.CSSProperties = {
+    backgroundColor: "rgba(255, 59, 48, 0.1)",
+    border: "1px solid rgba(255, 59, 48, 0.2)",
+    borderRadius: "4px",
+    color: "#ff3b30",
+    padding: "4px 8px",
+    fontSize: "12px",
+    cursor: "pointer",
+  };
+
+  const deleteCancelButtonStyle: React.CSSProperties = {
+    backgroundColor: "transparent",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "4px",
+    color: "#f3d675",
+    padding: "4px 8px",
+    fontSize: "12px",
+    cursor: "pointer",
   };
 
   // Loading skeleton styles
@@ -484,9 +783,7 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
                   <th style={tableHeaderCellStyle}>Логин</th>
                   <th style={tableHeaderCellStyle}>Пароль</th>
                   <th style={tableHeaderCellStyle}>Страна</th>
-                  {type !== "resident" && (
-                    <th style={tableHeaderCellStyle}>Действия</th>
-                  )}
+                  <th style={tableHeaderCellStyle}>Действия</th>
                 </tr>
               </thead>
               <tbody style={tableBodyStyle}>
@@ -515,13 +812,9 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "100px" }}></div>
                       </td>
-                      {type !== "resident" && (
-                        <td style={tableCellStyle}>
-                          <div
-                            style={{ ...skeletonStyle, width: "80px" }}
-                          ></div>
-                        </td>
-                      )}
+                      <td style={tableCellStyle}>
+                        <div style={{ ...skeletonStyle, width: "120px" }}></div>
+                      </td>
                     </tr>
                   ))}
               </tbody>
@@ -619,12 +912,11 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
                 <th style={tableHeaderCellStyle}>IP-адрес</th>
                 <th style={tableHeaderCellStyle}>Протокол</th>
                 <th style={tableHeaderCellStyle}>Порт HTTP</th>
+                <th style={tableHeaderCellStyle}>Порт SOCKS</th>
                 <th style={tableHeaderCellStyle}>Логин</th>
                 <th style={tableHeaderCellStyle}>Пароль</th>
                 <th style={tableHeaderCellStyle}>Страна</th>
-                {type !== "resident" && (
-                  <th style={tableHeaderCellStyle}>Действия</th>
-                )}
+                <th style={tableHeaderCellStyle}>Действия</th>
               </tr>
             </thead>
             <tbody style={tableBodyStyle}>
@@ -665,31 +957,63 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
                       </span>
                     </td>
                     <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
+                    <td style={tableCellMonoStyle}>
+                      {proxy.port_socks || "—"}
+                    </td>
                     <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
                     <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
                     <td style={tableCellStyle}>
-                      <div style={countryContainerStyle}>
-                        <span style={flagStyle}>
-                          {getCountryFlag(proxy.country)}
-                        </span>
-                        {proxy.country}
-                      </div>
+                      <div style={countryContainerStyle}>{proxy.country}</div>
                     </td>
-                    {type !== "resident" && (
-                      <td style={tableCellStyle}>
-                        <button
-                          style={actionButtonStyle}
-                          onClick={() =>
-                            openPopup("ip-auth-enter", {
-                              order_number: proxy.order_number || "",
-                            })
-                          }
-                        >
-                          <Key size={14} />
-                          <span>Авторизация</span>
-                        </button>
-                      </td>
-                    )}
+                    <td style={tableCellStyle}>
+                      {deleteConfirmId === proxy.id ? (
+                        <div style={deleteConfirmContainerStyle}>
+                          <span style={deleteConfirmTextStyle}>Удалить?</span>
+                          <button
+                            style={deleteConfirmButtonStyle}
+                            onClick={() => confirmDelete(proxy.id)}
+                          >
+                            Да
+                          </button>
+                          <button
+                            style={deleteCancelButtonStyle}
+                            onClick={cancelDelete}
+                          >
+                            Нет
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={actionButtonsContainerStyle}>
+                          <button
+                            style={actionButtonStyle}
+                            onClick={() => handleEditClick(proxy)}
+                            title="Редактировать"
+                          >
+                            <Edit size={14} />
+                          </button>
+                          <button
+                            style={actionButtonDangerStyle}
+                            onClick={() => handleDeleteClick(proxy.id)}
+                            title="Удалить"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                          {type !== "resident" && (
+                            <button
+                              style={actionButtonStyle}
+                              onClick={() =>
+                                openPopup("ip-auth-enter", {
+                                  order_number: proxy.order_number || "",
+                                })
+                              }
+                              title="Авторизация"
+                            >
+                              <Key size={14} />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 );
               })}
@@ -697,6 +1021,14 @@ const ProxyList: React.FC<Props> = ({ proxies, type }) => {
           </table>
         </div>
       </div>
+      {editingProxy && (
+        <EditProxyPopup
+          proxy={editingProxy}
+          onClose={handleCloseEdit}
+          onSave={handleSaveEdit}
+          availableCountries={availableCountries}
+        />
+      )}
     </div>
   );
 };

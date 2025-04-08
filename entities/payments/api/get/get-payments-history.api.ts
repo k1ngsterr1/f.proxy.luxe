@@ -1,6 +1,5 @@
 import { apiClient } from "@/shared/config/apiClient";
 import axios from "axios";
-import { UserRDO } from "@/shared/interfaces/user.interface";
 
 export const getPaymentsHistory = async (): Promise<any> => {
   try {

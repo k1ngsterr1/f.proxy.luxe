@@ -42,3 +42,11 @@ a {
     color-scheme: dark;
   }
 }
+
+select {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+select option {
+  background: rgba(0, 0, 0, 0.3);
+}

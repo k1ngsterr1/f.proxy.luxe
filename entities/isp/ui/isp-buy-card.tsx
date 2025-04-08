@@ -139,6 +139,9 @@ export const ISPBuyCard = () => {
             }}
             required
           >
+            <option value="" disabled hidden>
+              {i18n("goals.placeholder") || "Select a goal"}
+            </option>
             <option value="surfing">
               {i18n("goals.surfing") || "Surfing"}
             </option>
