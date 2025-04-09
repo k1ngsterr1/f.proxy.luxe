@@ -14,6 +14,7 @@ import {
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
 import { useDeleteProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-delete-resident-proxy.mutation";
+import NotificationPopup from "../notification-popup/notification-popup";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -56,6 +57,13 @@ const ProxyList: React.FC<Props> = ({
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [editingProxy, setEditingProxy] = useState<Proxy | null>(null);
+  const [notification, setNotification] = useState<{
+    show: boolean;
+    message: string;
+    type: "success" | "error" | "info";
+    showRefresh: boolean;
+  } | null>(null);
+
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
   };
@@ -360,17 +368,73 @@ const ProxyList: React.FC<Props> = ({
   const confirmDelete = (proxyId: string, packageKey?: string) => {
     if (packageKey) {
       // If we have both the ID and package key, send the delete request
-      deleteProxy({ listId: proxyId, packageKey });
+      deleteProxy(
+        { listId: proxyId, packageKey },
+        {
+          onSuccess: () => {
+            // Show success notification
+            setNotification({
+              show: true,
+              message:
+                "Прокси был успешно удалён. Чтобы увидеть изменения, обновите страницу.",
+              type: "success",
+              showRefresh: true,
+            });
+          },
+          onError: (error: any) => {
+            // Show error notification
+            setNotification({
+              show: true,
+              message: `Ошибка при удалении прокси: ${
+                error?.message || "Неизвестная ошибка"
+              }`,
+              type: "error",
+              showRefresh: false,
+            });
+          },
+        }
+      );
     } else {
       // Find the package key for this proxy if not provided
       const proxy = proxies?.find((p) => p.id === proxyId);
       if (proxy?.package_list?.[0]?.export?.ext) {
-        deleteProxy({
-          listId: proxyId,
-          packageKey: proxy.package_list[0].export.ext,
-        });
+        deleteProxy(
+          {
+            listId: proxyId,
+            packageKey: proxy.package_list[0].export.ext,
+          },
+          {
+            onSuccess: () => {
+              // Show success notification
+              setNotification({
+                show: true,
+                message:
+                  "Прокси был успешно удалён. Чтобы увидеть изменения, обновите страницу.",
+                type: "success",
+                showRefresh: true,
+              });
+            },
+            onError: (error: any) => {
+              // Show error notification
+              setNotification({
+                show: true,
+                message: `Ошибка при удалении прокси: ${
+                  error?.message || "Неизвестная ошибка"
+                }`,
+                type: "error",
+                showRefresh: false,
+              });
+            },
+          }
+        );
       } else {
         console.error("Could not find package key for proxy", proxyId);
+        setNotification({
+          show: true,
+          message: "Ошибка при удалении прокси: не найден ключ пакета",
+          type: "error",
+          showRefresh: false,
+        });
       }
     }
 
@@ -393,12 +457,25 @@ const ProxyList: React.FC<Props> = ({
   const handleSaveEdit = (updatedProxy: Proxy) => {
     if (onEdit) {
       onEdit(updatedProxy);
+
+      // Show success notification
+      setNotification({
+        show: true,
+        message:
+          "Прокси был успешно отредактирован. Чтобы увидеть изменения, обновите страницу.",
+        type: "success",
+        showRefresh: true,
+      });
     }
     setEditingProxy(null);
   };
 
   const handleCloseEdit = () => {
     setEditingProxy(null);
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   const exportToTxt = () => {
@@ -1063,12 +1140,25 @@ const ProxyList: React.FC<Props> = ({
           </table>
         </div>
       </div>
+
+      {/* Edit Proxy Popup */}
       {editingProxy && (
         <EditProxyPopup
           proxy={editingProxy}
           onClose={handleCloseEdit}
           onSave={handleSaveEdit}
           availableCountries={availableCountries}
+        />
+      )}
+
+      {/* Notification Popup */}
+      {notification && notification.show && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+          onClose={closeNotification}
+          showRefreshButton={notification.showRefresh}
+          countdown={5}
         />
       )}
     </div>
