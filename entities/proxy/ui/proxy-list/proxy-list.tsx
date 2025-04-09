@@ -427,8 +427,8 @@ const ProxyList: React.FC<Props> = ({
         const portHttp = proxy.port_http;
 
         if (portHttp) {
-          contentHttpFirstFormat += `${ip}:${portHttp}:${login}:${password}\n`;
-          contentHttpSecondFormat += `${login}:${password}@${ip}:${portHttp}\n`;
+          contentHttpFirstFormat += `${ip}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${ip}\n`;
         }
       }
     });
@@ -481,8 +481,8 @@ const ProxyList: React.FC<Props> = ({
         const password = proxy.password || "pass";
 
         if (portSocks) {
-          contentSocksFirstFormat += `${ip}:${portSocks}:${login}:${password}\n`;
-          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${portSocks}\n`;
+          contentSocksFirstFormat += `${ip}:${login}:${password}\n`;
+          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}\n`;
         }
       }
     });
