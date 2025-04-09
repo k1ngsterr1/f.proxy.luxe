@@ -21,7 +21,7 @@ export const IPV6BuyCard = () => {
   const [countryId, setCountryId] = useState<string>("");
   const [goal, setGoal] = useState<string>("Surfing");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
-  const [period, setPeriod] = useState<string>("");
+  const [period, setPeriod] = useState<string>("1m");
 
   const [value, setValue] = useState(10);
   const rangeRef = useRef<HTMLInputElement>(null);
