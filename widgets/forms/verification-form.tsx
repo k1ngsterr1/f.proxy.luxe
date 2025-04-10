@@ -46,7 +46,7 @@ export const VerificationForm = () => {
       {
         onSuccess: () => {
           navigate.push("/");
-          openPopup("auth-enter");
+          // openPopup("auth-enter");
         },
       }
     );
