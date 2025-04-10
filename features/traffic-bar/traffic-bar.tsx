@@ -1,6 +1,9 @@
 "use client";
 
+import type React from "react";
+
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface TrafficBarProps {
   totalBandwidthGB: number;
@@ -10,6 +13,7 @@ interface TrafficBarProps {
   rotationType: "sticky" | "rotating";
   rotationInterval: number;
   autoRenewal: boolean;
+  expiryDate: string;
 }
 
 const buttonBase: React.CSSProperties = {
@@ -43,7 +47,10 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
   rotationType,
   rotationInterval,
   autoRenewal,
+  expiryDate,
 }) => {
+  const i18n = useTranslations("trafficBar");
+
   const [isRotating, setIsRotating] = useState(rotationType === "rotating");
   const [isAutoRenewal, setIsAutoRenewal] = useState(autoRenewal);
 
@@ -80,13 +87,16 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               borderRadius: "50%",
               border: "2px solid",
               borderColor: isRotating ? "#999999" : "#4CAF50",
-              backgroundColor: isRotating ? "#4CAF50" : "transparent",
+              backgroundColor: isRotating ? "transparent" : "#4CAF50",
               padding: 0,
             }}
             onClick={() => setIsRotating(false)}
+            aria-label={i18n("rotationTypes.sticky")}
           />
 
-          <span style={{ fontSize: "14px", color: "#f3d675" }}>Sticky</span>
+          <span style={{ fontSize: "14px", color: "#f3d675" }}>
+            {i18n("rotationTypes.sticky")}
+          </span>
           <button
             style={{
               ...buttonBase,
@@ -99,9 +109,12 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               padding: 0,
             }}
             onClick={() => setIsRotating(true)}
+            aria-label={i18n("rotationTypes.rotating")}
           />
 
-          <span style={{ fontSize: "14px", color: "#f3d675" }}>Rotating</span>
+          <span style={{ fontSize: "14px", color: "#f3d675" }}>
+            {i18n("rotationTypes.rotating")}
+          </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <select
@@ -113,14 +126,15 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               fontSize: "14px",
               color: "#f3d675",
             }}
+            aria-label={i18n("rotationInterval")}
           >
-            <option>60 minutes</option>
+            <option>{i18n("rotationIntervals.sixtyMinutes")}</option>
           </select>
-          <button style={primaryButton}>Change</button>
+          <button style={primaryButton}>{i18n("changeButton")}</button>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ fontSize: "14px", color: "#f3d675" }}>
-            Auto-renewal
+            {i18n("autoRenewal")}
           </span>
           <button
             onClick={() => setIsAutoRenewal(!isAutoRenewal)}
@@ -134,6 +148,9 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               position: "relative",
               padding: 0,
             }}
+            aria-checked={isAutoRenewal}
+            aria-label={i18n("autoRenewal")}
+            role="switch"
           >
             <div
               style={{
@@ -161,7 +178,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
             color: "#f3d675",
           }}
         >
-          Bandwidth statistics
+          {i18n("bandwidthStatistics")}
         </h4>
         <div
           style={{
@@ -181,6 +198,9 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               top: 0,
               width: `${usedBandwidthPercentage}%`,
             }}
+            aria-label={`${Math.round(usedBandwidthPercentage)}% ${i18n(
+              "used"
+            )}`}
           />
         </div>
         <div
@@ -211,11 +231,11 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         }}
       >
         <div>
-          Total used
+          {i18n("totalUsed")}
           <p style={{ color: "#4CAF50" }}>{usedBandwidthMB} MB</p>
         </div>
         <div>
-          Remains
+          {i18n("remains")}
           <p style={{ color: "#4CAF50" }}>
             {remainingBandwidthGB.toFixed(1)} GB
           </p>
@@ -233,11 +253,11 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         }}
       >
         <div>
-          Reserve used
+          {i18n("reserveUsed")}
           <p style={{ color: "#FFC107" }}>{reserveUsedMB} B</p>
         </div>
         <div>
-          Remaining reserve
+          {i18n("remainingReserve")}
           <p style={{ color: "#4CAF50" }}>{reserveBandwidthGB} GB</p>
         </div>
       </div>
@@ -252,11 +272,11 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
       >
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
-            Bandwidth in this package
+            {i18n("bandwidthInPackage")}
           </div>
           <div style={{ color: "#4CAF50" }}>{totalBandwidthGB} GB</div>
           <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
-            Active until 28.04.2025 23:59:59
+            {i18n("activeUntil", { date: expiryDate })}
           </div>
         </div>
       </div>

@@ -1,0 +1,70 @@
+{
+  "residentProxy": {
+    "ipWhitelist": {
+      "title": "Белый список IP:",
+      "noIps": "Вы еще не добавили IP-адреса",
+      "addButton": "Добавить",
+      "saveButton": "Сохранить",
+      "cancelButton": "Отмена",
+      "addPopupTitle": "Добавить IP в белый список",
+      "ipPlaceholder": "например 123.123.123.123"
+    },
+    "export": {
+      "title": "Экспорт",
+      "listName": "Название списка",
+      "rotation": "Ротация:",
+      "choosePeriod": "Выберите период:",
+      "customPeriodHelp": "Введите значение от 1 до 3600 секунд (60 минут)",
+      "customPeriodPlaceholder": "Введите секунды (1-3600)",
+      "filter": "Фильтр:",
+      "country": "Страна:",
+      "region": "Регион:",
+      "city": "Город:",
+      "isp": "Провайдер:",
+      "ports": "Порты:",
+      "portsMax": "макс. 1к",
+      "createButton": "Создать",
+      "creatingButton": "Создание..."
+    },
+    "rotationOptions": {
+      "general": "Общая",
+      "sticky": "Постоянная",
+      "rotating": "Ротационная"
+    },
+    "rotationPeriodOptions": {
+      "each_request": "Для каждого запроса",
+      "300": "5 минут",
+      "600": "10 минут",
+      "900": "15 минут",
+      "1200": "20 минут",
+      "3600": "60 минут",
+      "custom": "Свой вариант"
+    },
+    "rotationPeriods": {
+      "eachRequest": "Для каждого запроса",
+      "fiveMinutes": "5 минут",
+      "tenMinutes": "10 минут",
+      "fifteenMinutes": "15 минут",
+      "twentyMinutes": "20 минут",
+      "sixtyMinutes": "60 минут",
+      "custom": "Свой вариант"
+    },
+    "selectOptions": {
+      "selectCountry": "Выберите страну",
+      "selectRegion": "Выберите регион",
+      "selectCity": "Выберите город",
+      "selectIsp": "Выберите провайдера",
+      "noRegions": "Нет доступных регионов",
+      "noCities": "Нет доступных городов",
+      "noIsps": "Нет доступных провайдеров",
+      "loadingCountries": "Загрузка стран..."
+    },
+    "errors": {
+      "geoDataError": "Ошибка загрузки геоданных",
+      "customRotationPeriod": "Период ротации должен быть от 1 до 3600 секунд"
+    },
+    "messages": {
+      "success": "Настройки прокси успешно обновлены!"
+    }
+  }
+}

@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 
@@ -15,7 +14,11 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale,
     messages: {
       ...(await import(`../messages/${locale}/header.json`)),
+      ...(await import(
+        `../messages/${locale}/residental-proxy-constructor.json`
+      )),
       ...(await import(`../messages/${locale}/public-offer.json`)),
+      ...(await import(`../messages/${locale}/traffic-bar.json`)),
       ...(await import(`../messages/${locale}/contacts.json`)),
       ...(await import(`../messages/${locale}/sidebar.json`)),
       ...(await import(`../messages/${locale}/forgot-password-page.json`)),

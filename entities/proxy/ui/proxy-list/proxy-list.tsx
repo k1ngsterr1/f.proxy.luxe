@@ -1146,8 +1146,6 @@ const ProxyList: React.FC<Props> = ({
           availableCountries={availableCountries}
         />
       )}
-
-      {/* Notification Popup */}
       {notification && notification.show && (
         <NotificationPopup
           message={notification.message}

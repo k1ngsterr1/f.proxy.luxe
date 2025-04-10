@@ -5,23 +5,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Plus, X, Edit, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
 import { useModifyResidentProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-modify-resident-proxy.mutation";
-
-// Update the rotationPeriodOptions array to include a custom option
-const rotationPeriodOptions = [
-  { label: "For each request", value: "each_request" },
-  { label: "5 minutes", value: "300" },
-  { label: "10 minutes", value: "600" },
-  { label: "15 minutes", value: "900" },
-  { label: "20 minutes", value: "1200" },
-  { label: "60 minutes", value: "3600" },
-  { label: "Custom", value: "custom" },
-];
-
-const rotationOptions = [
-  { label: "General", value: "general" },
-  { label: "Sticky", value: "sticky" },
-  { label: "Rotating", value: "rotating" },
-];
+import { useTranslations } from "next-intl";
 
 const radioStyle: React.CSSProperties = {
   appearance: "none",
@@ -41,16 +25,29 @@ const radioCheckedStyle: React.CSSProperties = {
   boxShadow: "inset 0 0 0 3px #000000",
 };
 
-const selectOptionStyle = {
-  backgroundColor: "#111111",
-  color: "#f3d675",
-};
-
 export const ResidentProxyConstructor = ({
   package_key,
 }: {
   package_key: string;
 }) => {
+  const i18n = useTranslations("residentProxy");
+
+  const rotationPeriodOptions = [
+    { label: i18n("rotationPeriods.eachRequest"), value: "each_request" },
+    { label: i18n("rotationPeriods.fiveMinutes"), value: "300" },
+    { label: i18n("rotationPeriods.tenMinutes"), value: "600" },
+    { label: i18n("rotationPeriods.fifteenMinutes"), value: "900" },
+    { label: i18n("rotationPeriods.twentyMinutes"), value: "1200" },
+    { label: i18n("rotationPeriods.sixtyMinutes"), value: "3600" },
+    { label: i18n("rotationPeriods.custom"), value: "custom" },
+  ];
+
+  const rotationOptions = [
+    { label: i18n("rotationOptions.general"), value: "general" },
+    { label: i18n("rotationOptions.sticky"), value: "sticky" },
+    { label: i18n("rotationOptions.rotating"), value: "rotating" },
+  ];
+
   const [listName, setListName] = useState("");
   const [rotation, setRotation] = useState("general");
   const [rotationPeriod, setRotationPeriod] = useState("10_min");
@@ -73,7 +70,6 @@ export const ResidentProxyConstructor = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [availableIsps, setAvailableIsps] = useState<string[]>([]);
   const [cities, setCities] = useState<any[]>([]);
-  // Move these state declarations inside the component
   const [customRotationValue, setCustomRotationValue] = useState("300");
   const [showCustomRotationInput, setShowCustomRotationInput] = useState(false);
   const { mutate: modifyProxy, isPending } = useModifyResidentProxy();
@@ -190,9 +186,7 @@ export const ResidentProxyConstructor = ({
           rotationPeriodSeconds < 1 ||
           rotationPeriodSeconds > 3600
         ) {
-          setErrorMessage(
-            "Custom rotation period must be between 1 and 3600 seconds"
-          );
+          setErrorMessage(i18n("errors.customRotationPeriod"));
           return;
         }
       } else {
@@ -217,7 +211,7 @@ export const ResidentProxyConstructor = ({
 
     modifyProxy(payload, {
       onSuccess: () => {
-        setSuccessMessage("Proxy settings updated successfully!");
+        setSuccessMessage(i18n("messages.success"));
       },
       onError: (error: any) => {
         setErrorMessage(error?.message || "An unexpected error occurred.");
@@ -271,13 +265,13 @@ export const ResidentProxyConstructor = ({
             marginBottom: "12px",
           }}
         >
-          IP Whitelist:
+          {i18n("ipWhitelist.title")}
         </h3>
         {whitelist.length === 0 ? (
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "16px" }}
           >
-            You have not added any IPs yet
+            {i18n("ipWhitelist.noIps")}
           </p>
         ) : (
           <ul style={{ listStyle: "none", padding: 0 }}>
@@ -330,7 +324,7 @@ export const ResidentProxyConstructor = ({
                           marginRight: "5px",
                         }}
                       >
-                        Save
+                        {i18n("ipWhitelist.saveButton")}
                       </button>
                       <button
                         onClick={() => setEditIndex(null)}
@@ -345,7 +339,7 @@ export const ResidentProxyConstructor = ({
                           fontWeight: "500",
                         }}
                       >
-                        Cancel
+                        {i18n("ipWhitelist.cancelButton")}
                       </button>
                     </>
                   ) : (
@@ -396,7 +390,7 @@ export const ResidentProxyConstructor = ({
           onClick={() => setShowAddIpPopup(true)}
         >
           <Plus size={16} style={{ marginRight: "8px" }} />
-          Add
+          {i18n("ipWhitelist.addButton")}
         </button>
 
         {/* Add IP Popup */}
@@ -457,14 +451,14 @@ export const ResidentProxyConstructor = ({
                   marginBottom: "16px",
                 }}
               >
-                Add Whitelisted IP
+                {i18n("ipWhitelist.addPopupTitle")}
               </h4>
 
               <input
                 type="text"
                 value={newIp}
                 onChange={(e) => setNewIp(e.target.value)}
-                placeholder="e.g. 123.123.123.123"
+                placeholder={i18n("ipWhitelist.ipPlaceholder")}
                 style={{
                   width: "100%",
                   padding: "10px 14px",
@@ -497,7 +491,7 @@ export const ResidentProxyConstructor = ({
                     fontSize: "14px",
                   }}
                 >
-                  Add
+                  {i18n("ipWhitelist.addButton")}
                 </button>
                 <button
                   onClick={handleCancelAddIp}
@@ -512,7 +506,7 @@ export const ResidentProxyConstructor = ({
                     fontSize: "14px",
                   }}
                 >
-                  Cancel
+                  {i18n("ipWhitelist.cancelButton")}
                 </button>
               </div>
             </div>
@@ -537,7 +531,7 @@ export const ResidentProxyConstructor = ({
             marginBottom: "12px",
           }}
         >
-          Export
+          {i18n("export.title")}
         </h3>
 
         {successMessage && (
@@ -562,7 +556,7 @@ export const ResidentProxyConstructor = ({
               marginBottom: "6px",
             }}
           >
-            Name of the list
+            {i18n("export.listName")}
           </label>
           <input
             type="text"
@@ -584,7 +578,7 @@ export const ResidentProxyConstructor = ({
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
           >
-            Rotation:
+            {i18n("export.rotation")}
           </p>
           {rotationOptions.map((option) => (
             <label
@@ -624,7 +618,7 @@ export const ResidentProxyConstructor = ({
                 marginBottom: "6px",
               }}
             >
-              Choose period:
+              {i18n("export.choosePeriod")}
             </label>
             <div style={{ position: "relative" }}>
               {showCustomRotationInput ? (
@@ -659,7 +653,7 @@ export const ResidentProxyConstructor = ({
                       color: "#f3d675",
                       fontSize: "14px",
                     }}
-                    placeholder="Enter seconds (1-3600)"
+                    placeholder={i18n("export.customPeriodPlaceholder")}
                   />
                   <button
                     type="button"
@@ -700,7 +694,9 @@ export const ResidentProxyConstructor = ({
                 >
                   <span>
                     {rotationPeriod === "custom"
-                      ? `Custom: ${customRotationValue} seconds`
+                      ? `${i18n(
+                          "rotationPeriodOptions.custom"
+                        )}: ${customRotationValue} seconds`
                       : rotationPeriodOptions.find(
                           (option) => option.value === rotationPeriod
                         )?.label || "Select period"}
@@ -775,7 +771,7 @@ export const ResidentProxyConstructor = ({
               <p
                 style={{ fontSize: "12px", color: "#999999", marginTop: "4px" }}
               >
-                Enter a value between 1 and 3600 seconds (60 minutes)
+                {i18n("export.customPeriodHelp")}
               </p>
             )}
           </div>
@@ -784,7 +780,7 @@ export const ResidentProxyConstructor = ({
           <p
             style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
           >
-            Filter:
+            {i18n("export.filter")}
           </p>
           <div
             style={{
@@ -804,7 +800,7 @@ export const ResidentProxyConstructor = ({
                   marginBottom: "4px",
                 }}
               >
-                Country:
+                {i18n("export.country")}
               </label>
               <select
                 id="country"
@@ -822,7 +818,7 @@ export const ResidentProxyConstructor = ({
                 disabled={isLoadingGeo}
                 className="dark-select"
               >
-                <option value="">Select country</option>
+                <option value="">{i18n("selectOptions.selectCountry")}</option>
                 {countries.map((countryItem: any) => (
                   <option key={countryItem.code} value={countryItem.code}>
                     {countryItem.name}
@@ -837,12 +833,12 @@ export const ResidentProxyConstructor = ({
                     marginTop: "4px",
                   }}
                 >
-                  Loading countries...
+                  {i18n("selectOptions.loadingCountries")}
                 </p>
               )}
               {isErrorGeo && (
                 <p style={{ fontSize: "10px", color: "red", marginTop: "4px" }}>
-                  Error loading geo data
+                  {i18n("errors.geoDataError")}
                 </p>
               )}
             </div>
@@ -858,7 +854,7 @@ export const ResidentProxyConstructor = ({
                   marginBottom: "4px",
                 }}
               >
-                Region:
+                {i18n("export.region")}
               </label>
               <select
                 id="region"
@@ -876,7 +872,7 @@ export const ResidentProxyConstructor = ({
                 disabled={!country || isLoadingGeo}
                 className="dark-select"
               >
-                <option value="">Select region</option>
+                <option value="">{i18n("selectOptions.selectRegion")}</option>
                 {regions.map((regionItem: any) => (
                   <option key={regionItem.code} value={regionItem.name}>
                     {regionItem.name}
@@ -891,7 +887,7 @@ export const ResidentProxyConstructor = ({
                     marginTop: "4px",
                   }}
                 >
-                  No regions available
+                  {i18n("selectOptions.noRegions")}
                 </p>
               )}
             </div>
@@ -907,7 +903,7 @@ export const ResidentProxyConstructor = ({
                   marginBottom: "4px",
                 }}
               >
-                City:
+                {i18n("export.city")}
               </label>
               <select
                 id="city"
@@ -925,7 +921,7 @@ export const ResidentProxyConstructor = ({
                 disabled={!region || isLoadingGeo}
                 className="dark-select"
               >
-                <option value="">Select city</option>
+                <option value="">{i18n("selectOptions.selectCity")}</option>
                 {cities.map((cityItem: any, index: number) => (
                   <option key={index} value={cityItem.name}>
                     {cityItem.name}
@@ -940,7 +936,7 @@ export const ResidentProxyConstructor = ({
                     marginTop: "4px",
                   }}
                 >
-                  No cities available
+                  {i18n("selectOptions.noCities")}
                 </p>
               )}
             </div>
@@ -956,7 +952,7 @@ export const ResidentProxyConstructor = ({
                   marginBottom: "4px",
                 }}
               >
-                ISP:
+                {i18n("export.isp")}
               </label>
               <select
                 id="isp"
@@ -974,7 +970,7 @@ export const ResidentProxyConstructor = ({
                 disabled={!city || availableIsps.length === 0}
                 className="dark-select"
               >
-                <option value="">Select ISP</option>
+                <option value="">{i18n("selectOptions.selectIsp")}</option>
                 {availableIsps.map((ispItem: string, index: number) => (
                   <option key={index} value={ispItem}>
                     {ispItem}
@@ -989,7 +985,7 @@ export const ResidentProxyConstructor = ({
                     marginTop: "4px",
                   }}
                 >
-                  No ISPs available
+                  {i18n("selectOptions.noIsps")}
                 </p>
               )}
             </div>
@@ -1007,7 +1003,7 @@ export const ResidentProxyConstructor = ({
               marginBottom: "4px",
             }}
           >
-            Ports:
+            {i18n("export.ports")}
           </label>
           <input
             type="number"
@@ -1025,7 +1021,7 @@ export const ResidentProxyConstructor = ({
             }}
           />
           <p style={{ fontSize: "10px", color: "#999999", marginTop: "4px" }}>
-            max. 1k
+            {i18n("export.portsMax")}
           </p>
         </div>
       </div>
@@ -1046,7 +1042,9 @@ export const ResidentProxyConstructor = ({
           onClick={handleSubmit}
           disabled={isPending}
         >
-          {isPending ? "Creating..." : "Create"}
+          {isPending
+            ? i18n("export.creatingButton")
+            : i18n("export.createButton")}
         </button>
       </div>
     </div>
