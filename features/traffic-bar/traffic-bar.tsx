@@ -262,7 +262,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Package Info and Expiry Date */}
       <div
         style={{
           display: "flex",
@@ -270,13 +270,32 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
           alignItems: "center",
         }}
       >
-        <div style={{ textAlign: "right" }}>
+        <div>
           <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
             {i18n("bandwidthInPackage")}
           </div>
-          <div style={{ color: "#4CAF50" }}>{totalBandwidthGB} GB</div>
+          <div
+            style={{ color: "#4CAF50", fontWeight: "600", fontSize: "16px" }}
+          >
+            {totalBandwidthGB} GB
+          </div>
+        </div>
+        <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
-            {i18n("activeUntil", { date: expiryDate })}
+            {i18n("activeUntil", { date: "" })}
+          </div>
+          <div
+            style={{
+              color: "#f3d675",
+              fontWeight: "600",
+              fontSize: "16px",
+              background: "rgba(243, 214, 117, 0.1)",
+              padding: "4px 12px",
+              borderRadius: "4px",
+              display: "inline-block",
+            }}
+          >
+            {expiryDate}
           </div>
         </div>
       </div>

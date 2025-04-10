@@ -54,13 +54,15 @@ export default function ProxyPage() {
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
   const isMobile = useIsMobile();
 
+  // Calculate total traffic limit and find max expiry date
   const trafficData =
     proxies?.data?.items && proxies.data.items.length > 0
       ? {
           totalBandwidthGB:
-            //@ts-ignore
-            Number(proxies.data.items[0].package_info?.traffic_limit) /
-            1073741824, // Convert bytes to GB
+            proxies.data.items.reduce((sum, item) => {
+              // Sum up all traffic limits
+              return sum + (Number(item.package_info?.traffic_limit) || 0);
+            }, 0) / 1073741824, // Convert bytes to GB
           usedBandwidthMB:
             //@ts-ignore
             Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
@@ -69,6 +71,18 @@ export default function ProxyPage() {
           rotationType: "rotating" as const,
           rotationInterval: 60,
           autoRenewal: true,
+          expiryDate:
+            proxies.data.items
+              .reduce((maxDate, item) => {
+                // Find the maximum expiry date
+                if (!item.package_info?.expired_at?.date) return maxDate;
+                const currentDate = new Date(item.package_info.expired_at.date);
+                return !maxDate || currentDate > maxDate
+                  ? currentDate
+                  : maxDate;
+              }, null as Date | null)
+              ?.toISOString()
+              .split("T")[0] || "",
         }
       : null;
 
@@ -165,6 +179,7 @@ export default function ProxyPage() {
           rotationType={trafficData.rotationType}
           rotationInterval={trafficData.rotationInterval}
           autoRenewal={trafficData.autoRenewal}
+          expiryDate={trafficData.expiryDate}
         />
       )}
       {isLoading && (
