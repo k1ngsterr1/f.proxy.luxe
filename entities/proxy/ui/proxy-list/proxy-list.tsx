@@ -15,6 +15,7 @@ import { usePopupStore } from "@/shared/store/use-popup.store";
 import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
 import { useDeleteProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-delete-resident-proxy.mutation";
 import NotificationPopup from "../notification-popup/notification-popup";
+import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-prolong-proxy.mutatuion";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -37,6 +38,7 @@ interface Proxy {
   order_number?: string;
   order_id?: string;
   package_key?: string;
+  orderId?: string;
 }
 
 export interface Props {
@@ -63,6 +65,10 @@ const ProxyList: React.FC<Props> = ({
     type: "success" | "error" | "info";
     showRefresh: boolean;
   } | null>(null);
+
+  // Add a new state for the prolong popup
+  const [prolongProxy, setProlongProxy] = useState<Proxy | null>(null);
+  const [prolongPeriod, setProlongPeriod] = useState<string>("1m");
 
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
@@ -581,6 +587,148 @@ const ProxyList: React.FC<Props> = ({
     }
 
     setExportMenuOpen(false);
+  };
+
+  // Add a function to handle the prolong button click
+  const handleProlongClick = (proxy: Proxy) => {
+    setProlongProxy(proxy);
+  };
+
+  // Replace the existing confirmProlong function with this new implementation
+  const {
+    prolongProxy: prolongProxyHook,
+    isProlonging,
+    prolongError,
+  } = useProlongProxy();
+
+  // Add a function to handle the prolong action
+  const confirmProlong = () => {
+    // Check if we have the required data
+    if (!prolongProxy?.order_id) {
+      setNotification({
+        show: true,
+        message: "Ошибка: Не найден ID заказа для продления",
+        type: "error",
+        showRefresh: false,
+      });
+      setProlongProxy(null);
+      return;
+    }
+
+    prolongProxyHook(
+      {
+        orderId: prolongProxy.orderId as string,
+        type: prolongProxy.type,
+        id: prolongProxy.id,
+        periodId: prolongPeriod,
+      },
+      {
+        onSuccess: () => {
+          setNotification({
+            show: true,
+            message: "Прокси успешно продлен",
+            type: "success",
+            showRefresh: true,
+          });
+          setProlongProxy(null);
+        },
+        onError: (error: any) => {
+          setNotification({
+            show: true,
+            message: `Ошибка при продлении прокси: ${
+              error?.message || "Неизвестная ошибка"
+            }`,
+            type: "error",
+            showRefresh: false,
+          });
+          setProlongProxy(null);
+        },
+      }
+    );
+  };
+
+  // Add a function to cancel the prolong action
+  const cancelProlong = () => {
+    setProlongProxy(null);
+  };
+
+  // Add styles for the popup
+  const popupOverlayStyle: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  };
+
+  const popupContentStyle: React.CSSProperties = {
+    backgroundColor: "#111111",
+    borderRadius: "8px",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    padding: "24px",
+    width: "400px",
+    maxWidth: "90%",
+  };
+
+  const popupTitleStyle: React.CSSProperties = {
+    fontSize: "18px",
+    fontWeight: 600,
+    color: "#FFFFFF",
+    marginTop: 0,
+    marginBottom: "16px",
+  };
+
+  const popupFormGroupStyle: React.CSSProperties = {
+    marginBottom: "20px",
+  };
+
+  const popupLabelStyle: React.CSSProperties = {
+    display: "block",
+    fontSize: "14px",
+    color: "#f3d675",
+    marginBottom: "8px",
+  };
+
+  const popupSelectStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "10px 12px",
+    backgroundColor: "#000000",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "4px",
+    color: "#FFFFFF",
+    fontSize: "14px",
+  };
+
+  const popupButtonsContainerStyle: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "12px",
+    marginTop: "24px",
+  };
+
+  const popupButtonStyle: React.CSSProperties = {
+    padding: "8px 16px",
+    borderRadius: "4px",
+    fontSize: "14px",
+    cursor: "pointer",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+  };
+
+  const popupConfirmButtonStyle: React.CSSProperties = {
+    ...popupButtonStyle,
+    backgroundColor: "rgba(243, 214, 117, 0.1)",
+    color: "#f3d675",
+  };
+
+  const popupCancelButtonStyle: React.CSSProperties = {
+    ...popupButtonStyle,
+    backgroundColor: "transparent",
+    color: "#FFFFFF",
   };
 
   const cardStyle: React.CSSProperties = {
@@ -1114,17 +1262,26 @@ const ProxyList: React.FC<Props> = ({
                             <Trash2 size={14} />
                           </button>
                           {type !== "resident" && (
-                            <button
-                              style={actionButtonStyle}
-                              onClick={() =>
-                                openPopup("ip-auth-enter", {
-                                  order_number: proxy.order_number || "",
-                                })
-                              }
-                              title="Авторизация"
-                            >
-                              <Key size={14} />
-                            </button>
+                            <>
+                              <button
+                                style={actionButtonStyle}
+                                onClick={() =>
+                                  openPopup("ip-auth-enter", {
+                                    order_number: proxy.order_number || "",
+                                  })
+                                }
+                                title="Авторизация"
+                              >
+                                <Key size={14} />
+                              </button>
+                              <button
+                                style={actionButtonStyle}
+                                onClick={() => handleProlongClick(proxy)}
+                                title="Продлить"
+                              >
+                                <span>Продлить</span>
+                              </button>
+                            </>
                           )}
                         </div>
                       )}
@@ -1136,6 +1293,33 @@ const ProxyList: React.FC<Props> = ({
           </table>
         </div>
       </div>
+
+      {/* Prolong Popup */}
+      {prolongProxy && (
+        <div style={popupOverlayStyle}>
+          <div style={popupContentStyle}>
+            <h3 style={popupTitleStyle}>Продление прокси</h3>
+            <div style={popupFormGroupStyle}>
+              <label style={popupLabelStyle}>Выберите период продления:</label>
+              <select
+                style={popupSelectStyle}
+                value={prolongPeriod}
+                onChange={(e) => setProlongPeriod(e.target.value)}
+              >
+                <option value="1m">1 месяц</option>
+              </select>
+            </div>
+            <div style={popupButtonsContainerStyle}>
+              <button style={popupCancelButtonStyle} onClick={cancelProlong}>
+                Отмена
+              </button>
+              <button style={popupConfirmButtonStyle} onClick={confirmProlong}>
+                Продлить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Proxy Popup */}
       {editingProxy && (
