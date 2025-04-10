@@ -51,11 +51,11 @@ export default function PartnerPage() {
   const referralLinks = [
     {
       label: "Реферальная ссылка №1:",
-      value: "https://px6.me/ru/?r=735461",
+      value: "https://test.me/ru/?r=735461",
     },
     {
       label: "№2:",
-      value: "https://px6.me/ru/e/735461",
+      value: "https://test.me/ru/e/735461",
     },
   ];
 
