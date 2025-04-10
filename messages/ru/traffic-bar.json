@@ -1,0 +1,27 @@
+{
+  "trafficBar": {
+    "rotationTypes": {
+      "sticky": "Постоянная",
+      "rotating": "Ротационная"
+    },
+    "rotationInterval": "Интервал ротации",
+    "rotationIntervals": {
+      "fiveMinutes": "5 минут",
+      "tenMinutes": "10 минут",
+      "fifteenMinutes": "15 минут",
+      "twentyMinutes": "20 минут",
+      "thirtyMinutes": "30 минут",
+      "sixtyMinutes": "60 минут"
+    },
+    "changeButton": "Изменить",
+    "autoRenewal": "Автопродление",
+    "bandwidthStatistics": "Статистика трафика",
+    "used": "использовано",
+    "totalUsed": "Всего использовано",
+    "remains": "Остаток",
+    "reserveUsed": "Использовано из резерва",
+    "remainingReserve": "Остаток резерва",
+    "bandwidthInPackage": "Трафик в этом пакете",
+    "activeUntil": "Активно до {date}"
+  }
+}

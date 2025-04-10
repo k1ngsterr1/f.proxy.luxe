@@ -1,0 +1,70 @@
+{
+  "residentProxy": {
+    "ipWhitelist": {
+      "title": "IP Whitelist:",
+      "noIps": "You have not added any IPs yet",
+      "addButton": "Add",
+      "saveButton": "Save",
+      "cancelButton": "Cancel",
+      "addPopupTitle": "Add Whitelisted IP",
+      "ipPlaceholder": "e.g. 123.123.123.123"
+    },
+    "export": {
+      "title": "Export",
+      "listName": "Name of the list",
+      "rotation": "Rotation:",
+      "choosePeriod": "Choose period:",
+      "customPeriodHelp": "Enter a value between 1 and 3600 seconds (60 minutes)",
+      "customPeriodPlaceholder": "Enter seconds (1-3600)",
+      "filter": "Filter:",
+      "country": "Country:",
+      "region": "Region:",
+      "city": "City:",
+      "isp": "ISP:",
+      "ports": "Ports:",
+      "portsMax": "max. 1k",
+      "createButton": "Create",
+      "creatingButton": "Creating..."
+    },
+    "rotationOptions": {
+      "general": "General",
+      "sticky": "Sticky",
+      "rotating": "Rotating"
+    },
+    "rotationPeriodOptions": {
+      "each_request": "For each request",
+      "300": "5 minutes",
+      "600": "10 minutes",
+      "900": "15 minutes",
+      "1200": "20 minutes",
+      "3600": "60 minutes",
+      "custom": "Custom"
+    },
+    "rotationPeriods": {
+      "eachRequest": "For each request",
+      "fiveMinutes": "5 minutes",
+      "tenMinutes": "10 minutes",
+      "fifteenMinutes": "15 minutes",
+      "twentyMinutes": "20 minutes",
+      "sixtyMinutes": "60 minutes",
+      "custom": "Custom"
+    },
+    "selectOptions": {
+      "selectCountry": "Select country",
+      "selectRegion": "Select region",
+      "selectCity": "Select city",
+      "selectIsp": "Select ISP",
+      "noRegions": "No regions available",
+      "noCities": "No cities available",
+      "noIsps": "No ISPs available",
+      "loadingCountries": "Loading countries..."
+    },
+    "errors": {
+      "geoDataError": "Error loading geo data",
+      "customRotationPeriod": "Custom rotation period must be between 1 and 3600 seconds"
+    },
+    "messages": {
+      "success": "Proxy settings updated successfully!"
+    }
+  }
+}

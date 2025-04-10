@@ -1,0 +1,27 @@
+{
+  "trafficBar": {
+    "rotationTypes": {
+      "sticky": "Sticky",
+      "rotating": "Rotating"
+    },
+    "rotationInterval": "Rotation interval",
+    "rotationIntervals": {
+      "fiveMinutes": "5 minutes",
+      "tenMinutes": "10 minutes",
+      "fifteenMinutes": "15 minutes",
+      "twentyMinutes": "20 minutes",
+      "thirtyMinutes": "30 minutes",
+      "sixtyMinutes": "60 minutes"
+    },
+    "changeButton": "Change",
+    "autoRenewal": "Auto-renewal",
+    "bandwidthStatistics": "Bandwidth statistics",
+    "used": "used",
+    "totalUsed": "Total used",
+    "remains": "Remains",
+    "reserveUsed": "Reserve used",
+    "remainingReserve": "Remaining reserve",
+    "bandwidthInPackage": "Bandwidth in this package",
+    "activeUntil": "Active until {date}"
+  }
+}
