@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
-import { usePopupStore } from "../store/use-popup.store";
 
 // DEV SERVER
 // const BASE_URL = "https://aproxyluxe-production.up.railway.app";
@@ -82,7 +81,6 @@ apiClient.interceptors.response.use(
       !(originalRequest as any)._retry
     ) {
       (originalRequest as any)._retry = true;
-      // usePopupStore.getState().openPopup("non-auth");
 
       const newJwtToken = await refreshJwtToken();
 

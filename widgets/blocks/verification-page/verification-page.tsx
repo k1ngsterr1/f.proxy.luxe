@@ -2,8 +2,10 @@
 
 import { VerificationForm } from "@/widgets/forms/verification-form";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export const VerificationPageBlock = () => {
+  const i18n = useTranslations("verification");
   return (
     <div
       style={{
@@ -24,7 +26,7 @@ export const VerificationPageBlock = () => {
             fontWeight: "bold",
           }}
         >
-          ПОДТВЕРЖДЕНИЕ АККАУНТА
+          {i18n("title")}
         </h1>
       </div>
       <VerificationForm />
