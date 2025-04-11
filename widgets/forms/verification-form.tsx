@@ -108,7 +108,7 @@ export const VerificationForm = () => {
         {/* Error */}
         {error instanceof Error && (
           <p style={{ color: "red", fontSize: "14px", marginBottom: "8px" }}>
-            {error.message}
+            {i18n("errors.invalid-code")}
           </p>
         )}
 

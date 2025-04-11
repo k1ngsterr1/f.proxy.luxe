@@ -18,7 +18,8 @@
       "success": "Code successfully confirmed!",
       "errors": {
         "required": "Please enter the verification code",
-        "length": "Verification code must be at least 6 characters"
+        "length": "Verification code must be at least 6 characters",
+        "invalid-code": "НЕПРАВИЛЬНЫЙ КОД"
       }
     },
     "payment": {
