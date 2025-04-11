@@ -635,9 +635,7 @@ const ProxyList: React.FC<Props> = ({
         onError: (error: any) => {
           setNotification({
             show: true,
-            message: `Ошибка при продлении прокси: ${
-              error?.message || "Неизвестная ошибка"
-            }`,
+            message: `Не получилось продлить, попробуйте позже`,
             type: "error",
             showRefresh: false,
           });

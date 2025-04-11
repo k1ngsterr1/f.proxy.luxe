@@ -68,8 +68,13 @@ export default function ProxyPage() {
             Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
           reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
           reserveUsedMB: 0, // Assuming a fixed value for reserve used
-          rotationType: "rotating" as const,
-          rotationInterval: 60,
+          // Determine rotation type based on package_info.rotation
+          rotationType:
+            proxies.data.items[0].package_info?.rotation === -1
+              ? "sticky"
+              : ("rotating" as const),
+          // Use the actual rotation value from package_info
+          rotationInterval: proxies.data.items[0].package_info?.rotation || 60,
           autoRenewal: true,
           expiryDate:
             proxies.data.items
@@ -170,16 +175,17 @@ export default function ProxyPage() {
           </button>
         ))}
       </div>
-      {proxyType === "resident" && trafficData && (
+      {proxyType === "resident" && trafficData && package_key && (
         <TrafficBar
           totalBandwidthGB={trafficData.totalBandwidthGB}
           usedBandwidthMB={trafficData.usedBandwidthMB}
           reserveBandwidthGB={trafficData.reserveBandwidthGB}
           reserveUsedMB={trafficData.reserveUsedMB}
-          rotationType={trafficData.rotationType}
+          rotationType={trafficData.rotationType as "sticky" | "rotating"}
           rotationInterval={trafficData.rotationInterval}
           autoRenewal={trafficData.autoRenewal}
           expiryDate={trafficData.expiryDate}
+          package_key={package_key}
         />
       )}
       {isLoading && (

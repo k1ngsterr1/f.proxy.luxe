@@ -13,6 +13,7 @@ import {
   MapPin,
   Lock,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface IpData {
   ip: string;
@@ -39,6 +40,7 @@ interface BlacklistData {
 
 export default function AnonymityChecker() {
   const t = useTranslations();
+  const navigate = useRouter();
   const [ipData, setIpData] = useState<IpData | null>(null);
   const [userData, setUserData] = useState<any>(null);
   const [proxyData, setProxyData] = useState<ProxyData>({
@@ -415,6 +417,9 @@ export default function AnonymityChecker() {
                   display: "flex",
                   alignItems: "center",
                   gap: "8px",
+                }}
+                onClick={() => {
+                  navigate.push("/buy-proxy");
                 }}
               >
                 <Lock size={16} />

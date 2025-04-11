@@ -14,6 +14,7 @@
       "sixtyMinutes": "60 минут"
     },
     "changeButton": "Изменить",
+    "updateButton": "Обновление...",
     "autoRenewal": "Автопродление",
     "bandwidthStatistics": "Статистика трафика",
     "used": "использовано",

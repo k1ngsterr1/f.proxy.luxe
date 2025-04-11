@@ -4,6 +4,7 @@
     "loading": "Loading order information...",
     "error": "Error loading order: ",
     "unknown-error": "Unknown error",
+    "insufficient-funds": "Insufficient balance to pay the order",
     "table": {
       "order-number": "Order number:",
       "order-date": "Order date:",

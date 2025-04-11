@@ -1,9 +1,9 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useUpdateRotation } from "@/entities/proxy/hooks/mutation/use-update-rotation.mutation";
 
 interface TrafficBarProps {
   totalBandwidthGB: number;
@@ -14,6 +14,7 @@ interface TrafficBarProps {
   rotationInterval: number;
   autoRenewal: boolean;
   expiryDate: string;
+  package_key: string;
 }
 
 const buttonBase: React.CSSProperties = {
@@ -39,6 +40,9 @@ const ghostButton: React.CSSProperties = {
   border: "1px solid #4CAF50",
 };
 
+// Rotation interval options in minutes
+const ROTATION_INTERVALS = [5, 10, 15, 20, 60];
+
 export const TrafficBar: React.FC<TrafficBarProps> = ({
   totalBandwidthGB,
   usedBandwidthMB,
@@ -48,15 +52,94 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
   rotationInterval,
   autoRenewal,
   expiryDate,
+  package_key,
 }) => {
   const i18n = useTranslations("trafficBar");
+  const { mutate: updateRotation, isPending: isUpdatingRotation } =
+    useUpdateRotation();
 
   const [isRotating, setIsRotating] = useState(rotationType === "rotating");
   const [isAutoRenewal, setIsAutoRenewal] = useState(autoRenewal);
+  const [selectedInterval, setSelectedInterval] = useState<number>(() => {
+    // Initialize with the closest matching interval from our options
+    // If rotationInterval is -1 (sticky), default to 60 minutes
+    if (rotationInterval === -1) return 60;
+
+    const intervalInMinutes = rotationInterval / 60;
+    return ROTATION_INTERVALS.reduce((prev, curr) =>
+      Math.abs(curr - intervalInMinutes) < Math.abs(prev - intervalInMinutes)
+        ? curr
+        : prev
+    );
+  });
+
+  // Update isRotating and selectedInterval when rotationType or rotationInterval changes
+  useEffect(() => {
+    setIsRotating(rotationType === "rotating");
+
+    if (rotationInterval !== -1) {
+      const intervalInMinutes = rotationInterval / 60;
+      const closestInterval = ROTATION_INTERVALS.reduce((prev, curr) =>
+        Math.abs(curr - intervalInMinutes) < Math.abs(prev - intervalInMinutes)
+          ? curr
+          : prev
+      );
+      setSelectedInterval(closestInterval);
+    }
+  }, [rotationType, rotationInterval]);
 
   const usedBandwidthPercentage =
     (usedBandwidthMB / (totalBandwidthGB * 1024)) * 100;
   const remainingBandwidthGB = totalBandwidthGB - usedBandwidthMB / 1024;
+
+  // Handle rotation type change
+  const handleRotationTypeChange = (rotating: boolean) => {
+    setIsRotating(rotating);
+
+    // When switching to sticky, set rotation to -1
+    // When switching to rotating, use the selected interval
+    const newRotation = rotating ? selectedInterval * 60 : -1;
+
+    updateRotation({
+      package_key,
+      rotation: newRotation,
+    });
+  };
+
+  // Handle interval change
+  const handleIntervalChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const minutes = Number.parseInt(e.target.value, 10);
+    setSelectedInterval(minutes);
+  };
+
+  // Apply rotation change
+  const handleApplyRotation = () => {
+    // Only send update if rotating
+    if (isRotating) {
+      updateRotation({
+        package_key,
+        rotation: selectedInterval * 60, // Convert minutes to seconds
+      });
+    }
+  };
+
+  // Get the translation key for a specific minute value
+  const getIntervalTranslation = (minutes: number) => {
+    switch (minutes) {
+      case 5:
+        return i18n("rotationIntervals.fiveMinutes");
+      case 10:
+        return i18n("rotationIntervals.tenMinutes");
+      case 15:
+        return i18n("rotationIntervals.fifteenMinutes");
+      case 20:
+        return i18n("rotationIntervals.twentyMinutes");
+      case 60:
+        return i18n("rotationIntervals.sixtyMinutes");
+      default:
+        return `${minutes} ${i18n("rotationIntervals.minutes")}`;
+    }
+  };
 
   return (
     <div
@@ -90,7 +173,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               backgroundColor: isRotating ? "transparent" : "#4CAF50",
               padding: 0,
             }}
-            onClick={() => setIsRotating(false)}
+            onClick={() => handleRotationTypeChange(false)}
             aria-label={i18n("rotationTypes.sticky")}
           />
 
@@ -108,7 +191,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               backgroundColor: isRotating ? "#4CAF50" : "transparent",
               padding: 0,
             }}
-            onClick={() => setIsRotating(true)}
+            onClick={() => handleRotationTypeChange(true)}
             aria-label={i18n("rotationTypes.rotating")}
           />
 
@@ -125,12 +208,40 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               padding: "4px 8px",
               fontSize: "14px",
               color: "#f3d675",
+              opacity: isRotating ? 1 : 0.5,
+              pointerEvents: isRotating ? "auto" : "none",
+              appearance: "auto", // Ensure native dropdown styling
             }}
+            value={selectedInterval}
+            onChange={handleIntervalChange}
+            disabled={!isRotating}
             aria-label={i18n("rotationInterval")}
           >
-            <option>{i18n("rotationIntervals.sixtyMinutes")}</option>
+            {ROTATION_INTERVALS.map((minutes) => (
+              <option
+                key={minutes}
+                value={minutes}
+                style={{
+                  backgroundColor: "#1a1a1a", // Dark background for dropdown options
+                  color: "#f3d675", // Gold text color
+                  padding: "8px",
+                }}
+              >
+                {getIntervalTranslation(minutes)}
+              </option>
+            ))}
           </select>
-          <button style={primaryButton}>{i18n("changeButton")}</button>
+          <button
+            style={{
+              ...primaryButton,
+              opacity: isRotating ? 1 : 0.5,
+              cursor: isRotating ? "pointer" : "not-allowed",
+            }}
+            onClick={handleApplyRotation}
+            disabled={!isRotating || isUpdatingRotation}
+          >
+            {isUpdatingRotation ? i18n("updateButton") : i18n("changeButton")}
+          </button>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <span style={{ fontSize: "14px", color: "#f3d675" }}>

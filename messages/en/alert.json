@@ -5,8 +5,8 @@
       "sent": "Sent ✅",
       "error": "Error 🔁",
       "resend": "Resend",
-      "insufficient-funds": "Insufficient funds",
-      "verify-email": "Verify email"
-    }
+      "verify-email": "You need to verify your email by clicking the link in the message."
+    },
+    "insufficient-funds": "Insufficient funds to pay the order"
   }
 }

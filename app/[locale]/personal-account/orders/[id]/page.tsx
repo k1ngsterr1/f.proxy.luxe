@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2, ChevronRight } from "lucide-react";
@@ -11,6 +11,7 @@ import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { Button } from "@/shared/ui/button";
 import { useDeleteOrder } from "@/entities/orders/hooks/mutation/use-delete-order.mutation";
 import { useTranslations } from "next-intl";
+import { useCheckCouponValidity } from "@/entities/orders/hooks/mutation/use-check-coupong.mutation";
 
 export default function OrderDetailPage() {
   const t = useTranslations("order-detail");
@@ -25,8 +26,11 @@ export default function OrderDetailPage() {
   } = useGetOrderDetails(orderId as any);
   const { data: user } = useGetUser();
   const [couponCode, setCouponCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState<number | null>(null);
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
+  const { mutate: checkCouponValidity, isPending: isCheckingCoupon } =
+    useCheckCouponValidity();
   const navigate = useRouter();
 
   const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
@@ -41,33 +45,53 @@ export default function OrderDetailPage() {
 
   const handleApplyCoupon = () => {
     if (!couponCode) return;
-    alert(`Применение купона: ${couponCode}`);
+
+    checkCouponValidity(couponCode, {
+      onSuccess: (data) => {
+        if (data.isValid && data.coupon) {
+          // Store the discount
+          setAppliedDiscount(data.coupon.discount);
+          // Show success message
+          alert(`Coupon applied: ${data.coupon.discount}% discount`);
+        } else {
+          // Reset discount if coupon is invalid
+          setAppliedDiscount(null);
+          // Show invalid coupon message
+          alert("Invalid coupon code");
+        }
+      },
+      onError: (error) => {
+        setAppliedDiscount(null);
+        alert(`Error checking coupon: ${error.message}`);
+      },
+    });
   };
 
   const handleContinue = () => {
-    finishOrder(
-      { orderId: orderId, promocode: couponCode },
-      {
-        onSuccess: (order: any) => {
-          localStorage.setItem("proxyType", order.type);
-          navigate.push(`/personal-account/proxy`);
-        },
-        onError: (error: any) => {
-          const errorMessage =
-            error?.response?.data?.message ||
-            error?.message ||
-            alertT("generic");
-          if (
-            errorMessage.toLowerCase().includes("insufficient funds") ||
-            errorMessage.toLowerCase().includes("недостаточно средств")
-          ) {
-            alert(alertT("insufficient-funds"));
-          } else {
-            alert(errorMessage);
-          }
-        },
-      }
-    );
+    const payload = {
+      orderId: orderId,
+      promocode: couponCode,
+    };
+
+    finishOrder(payload, {
+      onSuccess: (order: any) => {
+        localStorage.setItem("proxyType", order.type);
+        navigate.push(`/personal-account/proxy`);
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error?.response?.data?.message || error?.message || alertT("generic");
+
+        if (errorMessage === "Insufficient balance") {
+          // Access the translation directly as a property instead of using the function call
+          // This ensures we get the exact translation we want
+          const insufficientFundsMessage = alertT.raw("insufficient-funds");
+          alert(insufficientFundsMessage);
+        } else {
+          alert(errorMessage);
+        }
+      },
+    });
   };
 
   const formatDate = (dateString: string) => {
@@ -85,7 +109,11 @@ export default function OrderDetailPage() {
       }}
     >
       {user?.isVerified === false && (
-        <AlertMessage type="warning" isEmail message={alertT("verify-email")} />
+        <AlertMessage
+          type="warning"
+          isEmail
+          message={alertT("resend.verify-email")}
+        />
       )}
       <div
         style={{
@@ -296,7 +324,37 @@ export default function OrderDetailPage() {
                     fontWeight: "bold",
                   }}
                 >
-                  ${order.totalPrice}
+                  {appliedDiscount ? (
+                    <div>
+                      <span
+                        style={{
+                          textDecoration: "line-through",
+                          color: "#999999",
+                          marginRight: "8px",
+                        }}
+                      >
+                        ${order.totalPrice}
+                      </span>
+                      <span style={{ color: "#f3d675" }}>
+                        $
+                        {(
+                          order.totalPrice *
+                          (1 - appliedDiscount / 100)
+                        ).toFixed(2)}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "12px",
+                          color: "#f3d675",
+                          marginLeft: "4px",
+                        }}
+                      >
+                        (-{appliedDiscount}%)
+                      </span>
+                    </div>
+                  ) : (
+                    `$${order.totalPrice}`
+                  )}
                 </td>
               </tr>
               <tr>

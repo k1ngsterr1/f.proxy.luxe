@@ -14,6 +14,7 @@
       "sixtyMinutes": "60 minutes"
     },
     "changeButton": "Change",
+    "updateButton": "Updating...",
     "autoRenewal": "Auto-renewal",
     "bandwidthStatistics": "Bandwidth statistics",
     "used": "used",

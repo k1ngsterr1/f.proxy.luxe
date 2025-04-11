@@ -45,8 +45,7 @@ export const VerificationForm = () => {
       { code: verificationCode, email: email },
       {
         onSuccess: () => {
-          navigate.push("/");
-          openPopup("auth-enter");
+          navigate.push("/personal-account");
         },
       }
     );
