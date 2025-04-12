@@ -1,16 +1,29 @@
 import axios from "axios";
 
-const BASE_URL = `https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_Qh5c6mbVT8vhMNQAyTGQ4wfZ81skygsEhlqrJgVa&currencies=RUB`;
+const BASE_URL = "https://api.currencyapi.com/v3/latest";
+const API_KEY = "C6x7R3ce2DBYdou9uq8CkflAKXrYVZ4ynbHolmF9"; // store in .env in real projects
 
-export const getExchangeRate = async (): Promise<number | null> => {
+export const getExchangeRate = async (
+  amount: number = 1, // default to 1 for rate
+  from: string = "USD",
+  to: string = "RUB"
+): Promise<number | null> => {
   try {
-    const response = await axios.get(BASE_URL);
-    if (response.data && response.data.data.RUB) {
-      return response.data.data.RUB;
-    }
-    throw new Error("RUB exchange rate not found");
+    const response = await axios.get(BASE_URL, {
+      params: {
+        apikey: API_KEY,
+        base_currency: from,
+        currencies: to,
+      },
+    });
+
+    const rate = response.data?.data?.[to]?.value;
+
+    if (!rate) throw new Error("Conversion rate not found");
+
+    return amount * rate;
   } catch (error) {
-    console.error("Error fetching exchange rate:", error);
+    console.error("Currency conversion failed:", error);
     return null;
   }
 };
