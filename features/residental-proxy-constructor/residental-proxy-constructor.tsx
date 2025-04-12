@@ -131,18 +131,8 @@ export const ResidentProxyConstructor = ({
   // Get available countries, regions, and cities based on selections
   const countries = geoReferences || [];
 
-  // Add continent options
-  const continentOptions = [
-    { code: "worldwide", name: "Worldwide" },
-    { code: "europe", name: "Europe" },
-    { code: "asia", name: "Asia" },
-    { code: "south_america", name: "South America" },
-    { code: "north_america", name: "North America" },
-    { code: "africa", name: "Africa" },
-  ];
-
   // Combine continents and countries for the dropdown
-  const countryOptions = [...continentOptions, ...countries];
+  const countryOptions = [...countries];
 
   // Filter countries based on search
   const filteredCountries = countrySearch

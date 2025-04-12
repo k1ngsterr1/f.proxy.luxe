@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   AlertCircle,
   Download,
@@ -10,6 +10,7 @@ import {
   FileText,
   Key,
   Trash2,
+  Check,
 } from "lucide-react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
@@ -70,11 +71,167 @@ const ProxyList: React.FC<Props> = ({
   const [prolongProxy, setProlongProxy] = useState<Proxy | null>(null);
   const [prolongPeriod, setProlongPeriod] = useState<string>("1m");
 
+  // Add states for checkbox selection
+  const [selectedProxies, setSelectedProxies] = useState<Set<string>>(
+    new Set()
+  );
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [batchActionMenuOpen, setBatchActionMenuOpen] = useState(false);
+  const [isSubmittingBatchProlong, setIsSubmittingBatchProlong] =
+    useState(false);
+
+  // Store unique proxies by ID to avoid duplicates
+  const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
+
+  // Process proxies to ensure uniqueness by ID
+  useEffect(() => {
+    if (proxies) {
+      const uniqueProxiesMap = new Map<string, Proxy>();
+      proxies.forEach((proxy) => {
+        if (!uniqueProxiesMap.has(proxy.id)) {
+          uniqueProxiesMap.set(proxy.id, proxy);
+        }
+      });
+      setUniqueProxies(Array.from(uniqueProxiesMap.values()));
+    }
+  }, [proxies]);
+
+  // Update selectAllChecked when all proxies are selected
+  useEffect(() => {
+    if (
+      uniqueProxies.length > 0 &&
+      selectedProxies.size === uniqueProxies.length
+    ) {
+      setSelectAllChecked(true);
+    } else {
+      setSelectAllChecked(false);
+    }
+  }, [selectedProxies, uniqueProxies]);
+
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
   };
 
   const { deleteProxy, isDeleting, deleteError } = useDeleteProxy();
+  const {
+    prolongProxy: prolongProxyHook,
+    isProlonging,
+    prolongError,
+  } = useProlongProxy();
+
+  // Function to handle checkbox selection
+  const handleCheckboxChange = (proxyId: string) => {
+    setSelectedProxies((prev) => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(proxyId)) {
+        newSelected.delete(proxyId);
+      } else {
+        newSelected.add(proxyId);
+      }
+      return newSelected;
+    });
+  };
+
+  // Function to handle select all
+  const handleSelectAll = () => {
+    if (selectAllChecked) {
+      setSelectedProxies(new Set());
+    } else {
+      const allIds = uniqueProxies.map((proxy) => proxy.id);
+      setSelectedProxies(new Set(allIds));
+    }
+    setSelectAllChecked(!selectAllChecked);
+  };
+
+  // Function to handle batch prolong
+  const handleBatchProlong = () => {
+    if (selectedProxies.size < 1) {
+      setNotification({
+        show: true,
+        message: "Выберите хотя бы один прокси для продления",
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
+    // Open prolong popup with the first selected proxy
+    const firstSelectedId = Array.from(selectedProxies)[0];
+    const firstSelectedProxy = uniqueProxies.find(
+      (p) => p.id === firstSelectedId
+    );
+    if (firstSelectedProxy) {
+      setProlongProxy({
+        ...firstSelectedProxy,
+        isBatchOperation: true,
+      } as Proxy & { isBatchOperation: boolean });
+    }
+  };
+
+  // Function to confirm batch prolong
+  const confirmBatchProlong = () => {
+    if (!prolongProxy) return;
+
+    setIsSubmittingBatchProlong(true);
+
+    // Get all selected proxies
+    const selectedProxiesArray = uniqueProxies.filter((proxy) =>
+      selectedProxies.has(proxy.id)
+    );
+
+    // Track progress
+    let successCount = 0;
+    let failCount = 0;
+    const totalCount = selectedProxiesArray.length;
+
+    // Process each proxy sequentially
+    const processProxy = (index: number) => {
+      if (index >= selectedProxiesArray.length) {
+        // All proxies processed
+        setNotification({
+          show: true,
+          message: `Продление завершено: ${successCount} успешно, ${failCount} с ошибками`,
+          type: successCount > 0 ? "success" : "error",
+          showRefresh: true,
+        });
+        setProlongProxy(null);
+        setIsSubmittingBatchProlong(false);
+        setSelectedProxies(new Set());
+        return;
+      }
+
+      const proxy = selectedProxiesArray[index];
+
+      if (!proxy.order_id) {
+        // Skip this proxy and move to the next
+        failCount++;
+        processProxy(index + 1);
+        return;
+      }
+
+      prolongProxyHook(
+        {
+          orderId: proxy.orderId as any,
+          type: proxy.type,
+          id: proxy.id,
+          periodId: prolongPeriod,
+        },
+        {
+          onSuccess: () => {
+            successCount++;
+            processProxy(index + 1);
+          },
+          onError: () => {
+            failCount++;
+            processProxy(index + 1);
+          },
+        }
+      );
+    };
+
+    // Start processing
+    processProxy(0);
+  };
 
   // Function to get protocol badge styles
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
@@ -402,7 +559,7 @@ const ProxyList: React.FC<Props> = ({
       );
     } else {
       // Find the package key for this proxy if not provided
-      const proxy = proxies?.find((p) => p.id === proxyId);
+      const proxy = uniqueProxies.find((p) => p.id === proxyId);
       if (proxy?.package_list?.[0]?.export?.ext) {
         deleteProxy(
           {
@@ -485,13 +642,12 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const exportToTxt = () => {
-    if (!proxies || proxies.length === 0) return;
+    if (!uniqueProxies || uniqueProxies.length === 0) return;
 
     let contentHttpFirstFormat = "";
     let contentHttpSecondFormat = "";
-    console.log(proxies);
 
-    proxies.forEach((proxy, index) => {
+    uniqueProxies.forEach((proxy, index) => {
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
         if (index > 0) return;
         proxy.package_list.forEach((item) => {
@@ -538,12 +694,12 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const exportSocksToTxt = () => {
-    if (!proxies || proxies.length === 0) return;
+    if (!uniqueProxies || uniqueProxies.length === 0) return;
 
     let contentSocksFirstFormat = "";
     let contentSocksSecondFormat = "";
 
-    proxies.forEach((proxy, index) => {
+    uniqueProxies.forEach((proxy, index) => {
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
         if (index > 0) return;
         proxy.package_list.forEach((item) => {
@@ -594,13 +750,6 @@ const ProxyList: React.FC<Props> = ({
     setProlongProxy(proxy);
   };
 
-  // Replace the existing confirmProlong function with this new implementation
-  const {
-    prolongProxy: prolongProxyHook,
-    isProlonging,
-    prolongError,
-  } = useProlongProxy();
-
   // Add a function to handle the prolong action
   const confirmProlong = () => {
     // Check if we have the required data
@@ -615,9 +764,15 @@ const ProxyList: React.FC<Props> = ({
       return;
     }
 
+    // Check if this is a batch operation
+    if ((prolongProxy as any).isBatchOperation) {
+      confirmBatchProlong();
+      return;
+    }
+
     prolongProxyHook(
       {
-        orderId: prolongProxy.orderId as string,
+        orderId: prolongProxy.order_id,
         type: prolongProxy.type,
         id: prolongProxy.id,
         periodId: prolongPeriod,
@@ -648,6 +803,42 @@ const ProxyList: React.FC<Props> = ({
   // Add a function to cancel the prolong action
   const cancelProlong = () => {
     setProlongProxy(null);
+    setIsSubmittingBatchProlong(false);
+  };
+
+  // Checkbox styles
+  const checkboxContainerStyle: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "20px",
+    height: "20px",
+    borderRadius: "4px",
+    border: "1px solid rgba(243, 214, 117, 0.3)",
+    backgroundColor: "rgba(243, 214, 117, 0.05)",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  };
+
+  const checkboxCheckedStyle: React.CSSProperties = {
+    ...checkboxContainerStyle,
+    backgroundColor: "rgba(243, 214, 117, 0.2)",
+    borderColor: "rgba(243, 214, 117, 0.5)",
+  };
+
+  // Batch action button styles
+  const batchActionButtonStyle: React.CSSProperties = {
+    backgroundColor: "rgba(243, 214, 117, 0.1)",
+    border: "1px solid rgba(243, 214, 117, 0.2)",
+    borderRadius: "4px",
+    color: "#f3d675",
+    padding: "8px 12px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    cursor: selectedProxies.size > 0 ? "pointer" : "not-allowed",
+    fontSize: "14px",
+    opacity: selectedProxies.size > 0 ? 1 : 0.5,
   };
 
   // Add styles for the popup
@@ -721,6 +912,8 @@ const ProxyList: React.FC<Props> = ({
     ...popupButtonStyle,
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     color: "#f3d675",
+    opacity: isSubmittingBatchProlong ? 0.5 : 1,
+    cursor: isSubmittingBatchProlong ? "not-allowed" : "pointer",
   };
 
   const popupCancelButtonStyle: React.CSSProperties = {
@@ -1000,7 +1193,7 @@ const ProxyList: React.FC<Props> = ({
   `;
 
   // Loading state
-  if (proxies === undefined) {
+  if (uniqueProxies === undefined) {
     return (
       <div style={cardStyle}>
         <style>{scrollbarStyles}</style>
@@ -1067,7 +1260,7 @@ const ProxyList: React.FC<Props> = ({
   }
 
   // Empty state
-  if (proxies?.length === 0) {
+  if (uniqueProxies?.length === 0) {
     return (
       <div style={cardStyle}>
         <div style={cardHeaderStyle}>
@@ -1086,6 +1279,7 @@ const ProxyList: React.FC<Props> = ({
       </div>
     );
   }
+
   return (
     <div style={cardStyle}>
       <style>{scrollbarStyles}</style>
@@ -1094,14 +1288,17 @@ const ProxyList: React.FC<Props> = ({
           <h3 style={cardTitleStyle}>Список прокси</h3>
           <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
         </div>
-        <div style={{ position: "relative" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: "8px",
-            }}
-          >
+        <div style={{ display: "flex", gap: "10px" }}>
+          {selectedProxies.size > 0 && (
+            <button
+              style={batchActionButtonStyle}
+              onClick={handleBatchProlong}
+              disabled={selectedProxies.size === 0}
+            >
+              <span>Продлить выбранные ({selectedProxies.size})</span>
+            </button>
+          )}
+          <div style={{ position: "relative" }}>
             <button
               style={exportButtonStyle}
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
@@ -1109,35 +1306,35 @@ const ProxyList: React.FC<Props> = ({
               <Download size={16} />
               <span>Экспорт</span>
             </button>
-          </div>
-          <div style={exportMenuStyle}>
-            <div
-              style={exportMenuItemStyle}
-              onClick={exportToTxt}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "rgba(243, 214, 117, 0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-              }}
-            >
-              <FileText size={16} />
-              <span>Сохранить HTTP(s)</span>
-            </div>
-            <div
-              style={exportMenuItemStyle}
-              onClick={exportSocksToTxt}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor =
-                  "rgba(243, 214, 117, 0.1)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-              }}
-            >
-              <FileJson size={16} />
-              <span>Сохранить SOCKS</span>
+            <div style={exportMenuStyle}>
+              <div
+                style={exportMenuItemStyle}
+                onClick={exportToTxt}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
+              >
+                <FileText size={16} />
+                <span>Сохранить HTTP(s)</span>
+              </div>
+              <div
+                style={exportMenuItemStyle}
+                onClick={exportSocksToTxt}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
+              >
+                <FileJson size={16} />
+                <span>Сохранить SOCKS</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1147,6 +1344,18 @@ const ProxyList: React.FC<Props> = ({
           <table style={tableStyle}>
             <thead style={tableHeadStyle}>
               <tr>
+                <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
+                  <div
+                    style={
+                      selectAllChecked
+                        ? checkboxCheckedStyle
+                        : checkboxContainerStyle
+                    }
+                    onClick={handleSelectAll}
+                  >
+                    {selectAllChecked && <Check size={14} color="#f3d675" />}
+                  </div>
+                </th>
                 {type === "resident" && (
                   <th style={tableHeaderCellStyle}>Название</th>
                 )}
@@ -1168,33 +1377,53 @@ const ProxyList: React.FC<Props> = ({
               </tr>
             </thead>
             <tbody style={tableBodyStyle}>
-              {proxies.map((proxy, index) => {
+              {uniqueProxies.map((proxy, index) => {
                 // Get title from package_list if available
                 const title =
                   proxy.package_list && proxy.package_list[0]
                     ? proxy.package_list[0].export.ext
                     : "—";
 
+                const isSelected = selectedProxies.has(proxy.id);
+
                 return (
                   <tr
                     key={index}
-                    style={
-                      index % 2 === 0
-                        ? tableRowStyle
-                        : {
-                            ...tableRowStyle,
-                            backgroundColor: "rgba(243, 214, 117, 0.03)",
-                          }
-                    }
+                    style={{
+                      ...tableRowStyle,
+                      backgroundColor: isSelected
+                        ? "rgba(243, 214, 117, 0.07)"
+                        : index % 2 === 0
+                        ? "transparent"
+                        : "rgba(243, 214, 117, 0.03)",
+                    }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.07)";
+                      if (!isSelected) {
+                        e.currentTarget.style.backgroundColor =
+                          "rgba(243, 214, 117, 0.05)";
+                      }
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        index % 2 === 0 ? "" : "rgba(243, 214, 117, 0.03)";
+                      if (!isSelected) {
+                        e.currentTarget.style.backgroundColor =
+                          index % 2 === 0
+                            ? "transparent"
+                            : "rgba(243, 214, 117, 0.03)";
+                      }
                     }}
                   >
+                    <td style={tableCellStyle}>
+                      <div
+                        style={
+                          isSelected
+                            ? checkboxCheckedStyle
+                            : checkboxContainerStyle
+                        }
+                        onClick={() => handleCheckboxChange(proxy.id)}
+                      >
+                        {isSelected && <Check size={14} color="#f3d675" />}
+                      </div>
+                    </td>
                     {type === "resident" && (
                       <td style={tableCellEmphasisStyle}>
                         {proxy.title?.slice(0, 6).trim() + "..."}
@@ -1296,7 +1525,11 @@ const ProxyList: React.FC<Props> = ({
       {prolongProxy && (
         <div style={popupOverlayStyle}>
           <div style={popupContentStyle}>
-            <h3 style={popupTitleStyle}>Продление прокси</h3>
+            <h3 style={popupTitleStyle}>
+              {(prolongProxy as any).isBatchOperation
+                ? `Продление ${selectedProxies.size} прокси`
+                : "Продление прокси"}
+            </h3>
             <div style={popupFormGroupStyle}>
               <label style={popupLabelStyle}>Выберите период продления:</label>
               <select
@@ -1311,8 +1544,12 @@ const ProxyList: React.FC<Props> = ({
               <button style={popupCancelButtonStyle} onClick={cancelProlong}>
                 Отмена
               </button>
-              <button style={popupConfirmButtonStyle} onClick={confirmProlong}>
-                Продлить
+              <button
+                style={popupConfirmButtonStyle}
+                onClick={confirmProlong}
+                disabled={isSubmittingBatchProlong}
+              >
+                {isSubmittingBatchProlong ? "Обработка..." : "Продлить"}
               </button>
             </div>
           </div>
