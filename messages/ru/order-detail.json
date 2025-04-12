@@ -14,7 +14,8 @@
       "days-quantity": "Кол-во дней:",
       "order-amount": "Сумма заказа:",
       "discount-coupon": "Купон на скидку:",
-      "purchase": "Покупка"
+      "purchase": "Покупка",
+      "tariff": "Тариф"
     },
     "coupon": {
       "placeholder": "Купон на скидку",

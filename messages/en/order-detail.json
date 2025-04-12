@@ -13,7 +13,8 @@
       "days-quantity": "Days quantity:",
       "order-amount": "Order amount:",
       "discount-coupon": "Discount coupon:",
-      "purchase": "Purchase"
+      "purchase": "Purchase",
+      "tariff": "Tariff"
     },
     "coupon": {
       "placeholder": "Discount coupon",

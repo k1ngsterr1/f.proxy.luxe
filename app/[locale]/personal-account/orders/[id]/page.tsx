@@ -281,7 +281,7 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  {order.quantity}
+                  {order.type === "resident" ? "∞" : order.quantity}
                 </td>
               </tr>
               <tr>
@@ -305,6 +305,29 @@ export default function OrderDetailPage() {
                   {order.periodDays}
                 </td>
               </tr>
+              {order.type === "resident" && (
+                <tr>
+                  <td
+                    style={{
+                      padding: "12px 16px",
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.tariff")}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px 16px",
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {order.tariff || "-"}
+                  </td>
+                </tr>
+              )}
               <tr>
                 <td
                   style={{

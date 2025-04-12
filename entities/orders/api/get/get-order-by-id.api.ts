@@ -6,6 +6,7 @@ export interface OrderDetail {
   orderNumber: string;
   date: string;
   type: string;
+  tariff: string;
   quantity: number;
   periodDays: number;
   totalPrice: number;

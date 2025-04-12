@@ -2,7 +2,15 @@
 import React from "react";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Plus, X, Edit, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import {
+  Plus,
+  X,
+  Edit,
+  Trash2,
+  ChevronUp,
+  ChevronDown,
+  Search,
+} from "lucide-react";
 import { useGetGeoReferences } from "@/entities/geo/hooks/queries/use-get-references.query";
 import { useModifyResidentProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-modify-resident-proxy.mutation";
 import { useTranslations } from "next-intl";
@@ -74,6 +82,11 @@ export const ResidentProxyConstructor = ({
   const [showCustomRotationInput, setShowCustomRotationInput] = useState(false);
   const { mutate: modifyProxy, isPending } = useModifyResidentProxy();
 
+  // Country dropdown states
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
+
   // Get geo references data
   const {
     data: geoReferences,
@@ -90,6 +103,12 @@ export const ResidentProxyConstructor = ({
         !rotationPeriodRef.current.contains(event.target as Node)
       ) {
         setIsRotationPeriodOpen(false);
+      }
+      if (
+        countryDropdownRef.current &&
+        !countryDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCountryDropdownOpen(false);
       }
     };
 
@@ -111,6 +130,26 @@ export const ResidentProxyConstructor = ({
 
   // Get available countries, regions, and cities based on selections
   const countries = geoReferences || [];
+
+  // Add continent options
+  const continentOptions = [
+    { code: "worldwide", name: "Worldwide" },
+    { code: "europe", name: "Europe" },
+    { code: "asia", name: "Asia" },
+    { code: "south_america", name: "South America" },
+    { code: "north_america", name: "North America" },
+    { code: "africa", name: "Africa" },
+  ];
+
+  // Combine continents and countries for the dropdown
+  const countryOptions = [...continentOptions, ...countries];
+
+  // Filter countries based on search
+  const filteredCountries = countrySearch
+    ? countryOptions.filter((c: any) =>
+        c.name.toLowerCase().includes(countrySearch.toLowerCase())
+      )
+    : countryOptions;
 
   const selectedCountry = countries.find((c: any) => c.code === country);
   const regions = selectedCountry?.regions || [];
@@ -789,7 +828,7 @@ export const ResidentProxyConstructor = ({
               gap: "10px",
             }}
           >
-            {/* Country dropdown with dynamic data */}
+            {/* Country dropdown with search */}
             <div>
               <label
                 htmlFor="country"
@@ -802,29 +841,147 @@ export const ResidentProxyConstructor = ({
               >
                 {i18n("export.country")}
               </label>
-              <select
-                id="country"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "6px 8px",
-                  backgroundColor: "#111111",
-                  border: "1px solid rgba(243, 214, 117, 0.2)",
-                  borderRadius: "4px",
-                  color: "#f3d675",
-                  fontSize: "14px",
-                }}
-                disabled={isLoadingGeo}
-                className="dark-select"
-              >
-                <option value="">{i18n("selectOptions.selectCountry")}</option>
-                {countries.map((countryItem: any) => (
-                  <option key={countryItem.code} value={countryItem.code}>
-                    {countryItem.name}
-                  </option>
-                ))}
-              </select>
+              <div ref={countryDropdownRef} style={{ position: "relative" }}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIsCountryDropdownOpen(!isCountryDropdownOpen)
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "8px 12px",
+                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    textAlign: "left",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span>
+                    {country
+                      ? countryOptions.find((c: any) => c.code === country)
+                          ?.name || country
+                      : i18n("selectOptions.selectCountry")}
+                  </span>
+                  {isCountryDropdownOpen ? (
+                    <ChevronUp size={16} color="#f3d675" />
+                  ) : (
+                    <ChevronDown size={16} color="#f3d675" />
+                  )}
+                </button>
+
+                {isCountryDropdownOpen && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      width: "100%",
+                      backgroundColor: "#000000",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "4px",
+                      marginTop: "4px",
+                      zIndex: 10,
+                      maxHeight: "300px",
+                      overflowY: "auto",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: "8px",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
+                        position: "sticky",
+                        top: 0,
+                        backgroundColor: "#000000",
+                        zIndex: 1,
+                      }}
+                    >
+                      <div style={{ position: "relative" }}>
+                        <input
+                          type="text"
+                          placeholder="Search..."
+                          value={countrySearch}
+                          onChange={(e) => setCountrySearch(e.target.value)}
+                          style={{
+                            width: "100%",
+                            padding: "8px 12px 8px 32px",
+                            backgroundColor: "#111111",
+                            border: "1px solid rgba(243, 214, 117, 0.2)",
+                            borderRadius: "4px",
+                            fontSize: "14px",
+                            color: "#f3d675",
+                          }}
+                        />
+                        <Search
+                          size={16}
+                          style={{
+                            position: "absolute",
+                            left: "10px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            color: "#f3d675",
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      {filteredCountries.map((countryItem: any) => (
+                        <div
+                          key={countryItem.code}
+                          onClick={() => {
+                            setCountry(countryItem.code);
+                            setIsCountryDropdownOpen(false);
+                            setCountrySearch("");
+                            // Reset dependent fields
+                            setRegion("");
+                            setCity("");
+                            setIsp("");
+                          }}
+                          style={{
+                            padding: "10px 12px",
+                            cursor: "pointer",
+                            color: "#f3d675",
+                            borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
+                            backgroundColor:
+                              country === countryItem.code
+                                ? "rgba(243, 214, 117, 0.1)"
+                                : "transparent",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "rgba(243, 214, 117, 0.15)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              country === countryItem.code
+                                ? "rgba(243, 214, 117, 0.1)"
+                                : "transparent";
+                          }}
+                        >
+                          {countryItem.name}
+                        </div>
+                      ))}
+                      {filteredCountries.length === 0 && (
+                        <div
+                          style={{
+                            padding: "10px 12px",
+                            color: "#999999",
+                            textAlign: "center",
+                          }}
+                        >
+                          No results found
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
               {isLoadingGeo && (
                 <p
                   style={{
