@@ -19,8 +19,10 @@ export interface UpdateArticleDto {
   images?: string[];
 }
 
-export const getArticles = async (): Promise<Article[]> => {
-  const response = await apiClient.get<Article[]>("/api/v1/articles");
+export const getArticles = async (lang: "ru" | "en"): Promise<Article[]> => {
+  const response = await apiClient.get<Article[]>(
+    `/api/v1/articles?lang=${lang}`
+  );
   return response.data;
 };
 

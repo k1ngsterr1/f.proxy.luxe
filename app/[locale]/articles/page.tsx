@@ -5,6 +5,7 @@ import { Tag, Loader } from "lucide-react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
+import { useLocale } from "next-intl";
 
 // Categories for navigation
 const categories = [
@@ -23,10 +24,16 @@ const categories = [
 
 export default function Articles() {
   const isMobile = useIsMobile();
+  const lang = useLocale();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   // Fetch articles using React Query
-  const { data: articles, isLoading, isError, error } = useGetArticles();
+  const {
+    data: articles,
+    isLoading,
+    isError,
+    error,
+  } = useGetArticles(lang as "ru" | "en");
 
   // Format API articles to match the ArticleGrid component requirements
   const formattedArticles =
