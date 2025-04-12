@@ -7,7 +7,7 @@
       "country": "COUNTRY",
       "quantity": "QUANTITY",
       "period": "PERIOD",
-      "month": "1 month",
+      "month": "30 days",
       "usage": "USAGE PURPOSE",
       "price": "PRICE",
       "buy": "Buy",
@@ -61,7 +61,7 @@
       "country": "COUNTRY",
       "quantity": "QUANTITY",
       "period": "PERIOD",
-      "month": "1 month",
+      "month": "30 days",
       "usage": "USAGE PURPOSE",
       "goals": {
         "placeholder": "Select a Goal",
