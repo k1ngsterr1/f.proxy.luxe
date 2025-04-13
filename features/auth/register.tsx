@@ -10,7 +10,7 @@ import {
 } from "formik";
 import * as Yup from "yup";
 import { register } from "@/entities/auth/api/post/register.api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { Button } from "@/shared/ui/button";
@@ -24,6 +24,12 @@ interface FormValues {
 }
 
 export const RegisterAuthForm = () => {
+
+  const searchParams = useSearchParams();
+  const referralId = searchParams.get("ref");
+
+  console.log("referral id из ссылки:", referralId);
+
   const navigate = useRouter();
   const { closePopup } = usePopupStore();
   const { saveAccessToken } = useAuthStore();
@@ -50,7 +56,11 @@ export const RegisterAuthForm = () => {
       const registerData = await register({
         email: values.email,
         password: values.password,
+        referralId: referralId,
       });
+
+      console.log(registerData)
+
       localStorage.setItem("email", values.email);
       saveAccessToken(registerData.accessToken);
       closePopup("auth-reg");

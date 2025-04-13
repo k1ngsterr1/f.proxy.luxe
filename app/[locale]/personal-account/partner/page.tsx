@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Copy,
   AlertTriangle,
@@ -10,12 +10,54 @@ import {
 } from "lucide-react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/shared/config/apiClient";
+
+const useGetPartnerDetails = () => {
+  return useQuery({
+    queryKey: ["partner-details"],
+    queryFn: async () => {
+      const { data } = await apiClient.get("/api/v1/user/partner/details");
+      return data;
+    },
+    staleTime: 60 * 1000,
+  });
+};
+
 export default function PartnerPage() {
+  const { data: partnerDetails, isLoading } = useGetPartnerDetails();
   const { data: user } = useGetUser();
   const [couponCreated, setCouponCreated] = useState(false);
   const [showCopyNotification, setShowCopyNotification] = useState<
     string | null
   >(null);
+  const [isPayoutPopupOpen, setPayoutPopupOpen] = useState(false);
+  const [wallet, setWallet] = useState("");
+  const [payoutError, setPayoutError] = useState("");
+  const [isPayoutLoading, setPayoutLoading] = useState(false);
+
+  console.log(partnerDetails)
+
+  const handlePayoutSubmit = async () => {
+    setPayoutError("");
+    setPayoutLoading(true);
+    try {
+      await apiClient.post("/api/v1/user/partner/payout", { wallet });
+      setPayoutPopupOpen(false);
+      setWallet("");
+    } catch (err: any) {
+      setPayoutError("Ошибка при отправке заявки на выплату");
+      console.error(err);
+    } finally {
+      setPayoutLoading(false);
+    }
+  };
+
+  const tdStyle = {
+    padding: "12px 16px",
+    borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  };
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -27,7 +69,9 @@ export default function PartnerPage() {
     setCouponCreated(true);
   };
 
-  // Statistics data
+  const id = user?.id
+  const referralLink = `${window.location.origin}/register?ref=${id}`;
+
   const stats = [
     {
       value: "743 551",
@@ -51,11 +95,7 @@ export default function PartnerPage() {
   const referralLinks = [
     {
       label: "Реферальная ссылка №1:",
-      value: "https://test.me/ru/?r=735461",
-    },
-    {
-      label: "№2:",
-      value: "https://test.me/ru/e/735461",
+      value: referralLink,
     },
   ];
 
@@ -549,22 +589,30 @@ export default function PartnerPage() {
                 </tr>
               </thead>
               <tbody>
-                {/* Empty state */}
-                <tr>
-                  <td
-                    colSpan={4}
-                    style={{
-                      padding: "40px 16px",
+                {partnerDetails?.referrals?.length ? (
+                  partnerDetails.referrals.map((referral: any, index: number) => (
+                    <tr key={`${referral.id}-${index}`}>
+                      <td style={tdStyle}>
+                        {new Date(referral.createdAt).toLocaleDateString()}
+                      </td>
+                      <td style={tdStyle}>{referral.userId}</td>
+                      <td style={tdStyle}>—</td>
+                      <td style={tdStyle}>—</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} style={{
                       textAlign: "center",
                       color: "#999999",
+                      padding: "12px 16px",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
                       backgroundColor: "rgba(0, 0, 0, 0.2)",
-                      border: "1px solid rgba(243, 214, 117, 0.05)",
-                    }}
-                  >
-                    У вас пока нет рефералов. Поделитесь своей реферальной
-                    ссылкой или купоном, чтобы начать зарабатывать!
-                  </td>
-                </tr>
+                    }}>
+                      У вас пока нет рефералов.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -599,7 +647,7 @@ export default function PartnerPage() {
                   fontWeight: "500",
                 }}
               >
-                0
+                {partnerDetails?.referrals?.length || 0}
               </span>
             </div>
             <div>
@@ -619,7 +667,7 @@ export default function PartnerPage() {
                   fontWeight: "500",
                 }}
               >
-                0.00 ₽
+                {partnerDetails?.allTimeEarn || "0.00"} $
               </span>
             </div>
             <div>
@@ -639,12 +687,119 @@ export default function PartnerPage() {
                   fontWeight: "500",
                 }}
               >
-                0.00 ₽
+                {partnerDetails?.availableBalance || "0.00"} $
               </span>
             </div>
           </div>
         </div>
+        {partnerDetails?.availableBalance >= 5 && (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 20,
+            }}
+          >
+            <button
+              onClick={() => setPayoutPopupOpen(true)}
+              style={{
+                padding: "12px 20px",
+                backgroundColor: "#f3d675",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                color: "#000000",
+                fontWeight: "500",
+                fontSize: "14px",
+                transition: "all 0.2s",
+              }}
+            >
+              Вывести
+            </button>
+          </div>
+        )}
       </div>
+      {isPayoutPopupOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              padding: "30px",
+              borderRadius: "10px",
+              maxWidth: "400px",
+              width: "100%",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+            }}
+          >
+            <h3 style={{ color: "#f3d675", marginBottom: "20px" }}>Укажите кошелёк для выплаты</h3>
+            <input
+              type="text"
+              value={wallet}
+              onChange={(e) => setWallet(e.target.value)}
+              placeholder="Например: Z123456789012"
+              style={{
+                width: "100%",
+                padding: "10px",
+                marginBottom: "12px",
+                borderRadius: "6px",
+                border: "1px solid #f3d675",
+                backgroundColor: "#2a2a2a",
+                color: "#f3d675",
+              }}
+            />
+            {payoutError && (
+              <div style={{ color: "#ff4d4d", fontSize: "13px", marginBottom: "10px" }}>
+                {payoutError}
+              </div>
+            )}
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+              <button
+                onClick={() => setPayoutPopupOpen(false)}
+                style={{
+                  padding: "10px 14px",
+                  backgroundColor: "#999999",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Отмена
+              </button>
+              <button
+                onClick={handlePayoutSubmit}
+                disabled={isPayoutLoading || wallet.trim() === ""}
+                style={{
+                  padding: "10px 14px",
+                  backgroundColor: "#f3d675",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#000",
+                  fontWeight: "bold",
+                  cursor: wallet.trim() ? "pointer" : "not-allowed",
+                  opacity: wallet.trim() ? 1 : 0.6,
+                }}
+              >
+                {isPayoutLoading ? "Отправка..." : "Отправить"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,9 @@ export default function RegisterPage() {
   return (
     <main className="inner-page">
       <title>Proxy Luxe | Регистрация</title>
-      <RegisterAuthForm />
+      <div style={{ maxWidth: "40%", margin: "auto" }}>
+        <RegisterAuthForm />
+      </div>
     </main>
   );
 }
