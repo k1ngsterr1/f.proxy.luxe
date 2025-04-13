@@ -95,9 +95,7 @@ export default function ProfilePage() {
                   setError(err.message);
                 }
               } else {
-                setError(
-                  err.message || t("errors.generic-error")
-                );
+                setError(err.message || t("errors.generic-error"));
               }
             } else {
               setError(t("errors.generic-error"));
@@ -129,10 +127,7 @@ export default function ProfilePage() {
       {error && <AlertMessage type="error" message={error} />}
       {success && <AlertMessage type="success" message={success} />}
       {sendResetEmailMutationIsSuccess && (
-        <AlertMessage
-          type="success"
-          message={t("success.reset-code-sent")}
-        />
+        <AlertMessage type="success" message={t("success.reset-code-sent")} />
       )}
       {sendResetEmailMutationIsError && (
         <AlertMessage
@@ -167,7 +162,8 @@ export default function ProfilePage() {
               fontSize: "14px",
             }}
           >
-            {t("email")} <span style={{ color: "#f3d675" }}>{t("email-required")}</span>
+            {t("email")}{" "}
+            <span style={{ color: "#f3d675" }}>{t("email-required")}</span>
           </label>
           <div
             style={{
@@ -276,27 +272,18 @@ export default function ProfilePage() {
               fontSize: "14px",
             }}
           >
-            {t("code")}{t("code-required")}
+            {t("code")}
+            {t("code-required")}
           </label>
           <div style={{ position: "relative" }}>
-            <KeyRound
-              size={16}
-              style={{
-                position: "absolute",
-                left: "12px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "#f3d675",
-              }}
-            />
             <input
-              type={showEmailCode ? "text" : "password"}
+              type={"text"}
               value={emailCode}
               onChange={(e) => setEmailCode(e.target.value)}
               placeholder={t("code-placeholder")}
               style={{
                 width: "100%",
-                padding: "10px 12px 10px 36px",
+                padding: "10px 12px 10px 8px",
                 backgroundColor: "rgba(243, 214, 117, 0.1)",
                 border: "1px solid rgba(243, 214, 117, 0.2)",
                 borderRadius: "4px",
@@ -318,9 +305,7 @@ export default function ProfilePage() {
                 cursor: "pointer",
                 color: "#f3d675",
               }}
-            >
-              {showEmailCode ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
+            ></button>
           </div>
           <div style={{ color: "#999999", fontSize: "12px", marginTop: "4px" }}>
             {t("success.reset-code-sent")}
