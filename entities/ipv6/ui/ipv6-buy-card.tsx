@@ -73,6 +73,9 @@ export const IPV6BuyCard = () => {
     createOrder(orderData, {
       onSuccess: (order: any) =>
         router.push(`/personal-account/orders/${order.id}`),
+      onError: () => {
+        alert(i18n("errors.login-required"));
+      },
     });
   };
 

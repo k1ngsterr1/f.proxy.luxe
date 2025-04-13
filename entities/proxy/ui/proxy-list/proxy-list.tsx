@@ -40,6 +40,7 @@ interface Proxy {
   order_id?: string;
   package_key?: string;
   orderId?: string;
+  date_end?: string;
 }
 
 export interface Props {
@@ -1373,6 +1374,7 @@ const ProxyList: React.FC<Props> = ({
                 <th style={tableHeaderCellStyle}>Логин</th>
                 <th style={tableHeaderCellStyle}>Пароль</th>
                 <th style={tableHeaderCellStyle}>Страна</th>
+                <th style={tableHeaderCellStyle}>Срок действия</th>
                 <th style={tableHeaderCellStyle}>Действия</th>
               </tr>
             </thead>
@@ -1453,6 +1455,7 @@ const ProxyList: React.FC<Props> = ({
                     <td style={tableCellStyle}>
                       <div style={countryContainerStyle}>{proxy.country}</div>
                     </td>
+                    <td style={tableCellStyle}>{proxy.date_end || "—"}</td>
                     <td style={tableCellStyle}>
                       {deleteConfirmId === proxy.id ? (
                         <div style={deleteConfirmContainerStyle}>

@@ -53,6 +53,9 @@ export const ISPBuyCard = () => {
     createOrder(orderData, {
       onSuccess: (order: any) =>
         router.push(`/personal-account/orders/${order.id}`),
+      onError: () => {
+        alert(i18n("errors.login-required"));
+      },
     });
   };
 

@@ -25,7 +25,8 @@
         "other": "Other"
       },
       "errors": {
-        "goalRequired": "Please select a usage goal"
+        "goalRequired": "Please select a usage goal",
+        "login-required": "You need to login or register to buy proxy"
       }
     },
     "residential": {
@@ -51,6 +52,10 @@
         "research": "Research",
         "other": "Other"
       },
+      "errors": {
+        "goalRequired": "Please select a usage goal",
+        "login-required": "You need to login or register to buy proxy"
+      },
       "price": "PRICE",
       "buy": "Buy"
     },
@@ -74,6 +79,10 @@
         "streaming": "Streaming",
         "research": "Research",
         "other": "Other"
+      },
+      "errors": {
+        "goalRequired": "Please select a usage goal",
+        "login-required": "You need to login or register to buy proxy"
       },
       "price": "PRICE",
       "processing": "Processing...",
