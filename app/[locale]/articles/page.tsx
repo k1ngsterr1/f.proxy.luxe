@@ -5,24 +5,25 @@ import { Tag, Loader } from "lucide-react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 // Categories for navigation
-const categories = [
-  { id: 1, name: "Инструкции", slug: "instructions" },
-  { id: 2, name: "Android", slug: "android" },
-  { id: 3, name: "SMTP - 25", slug: "smtp" },
-  { id: 4, name: "Proxy", slug: "proxy" },
-  { id: 5, name: "Mail", slug: "mail" },
-  { id: 6, name: "SSH - 22", slug: "ssh" },
-  { id: 7, name: "IMAP - 143", slug: "imap" },
-  { id: 8, name: "Apple", slug: "apple" },
-  { id: 9, name: "Dns", slug: "dns" },
-  { id: 10, name: "Вконтакте", slug: "vk" },
-  { id: 11, name: "POP3 - 110", slug: "pop3" },
+const getCategories = (t: (key: string) => string) => [
+  { id: 1, name: t("articles.categories.instructions"), slug: "instructions" },
+  { id: 2, name: t("articles.categories.android"), slug: "android" },
+  { id: 3, name: t("articles.categories.smtp"), slug: "smtp" },
+  { id: 4, name: t("articles.categories.proxy"), slug: "proxy" },
+  { id: 5, name: t("articles.categories.mail"), slug: "mail" },
+  { id: 6, name: t("articles.categories.ssh"), slug: "ssh" },
+  { id: 7, name: t("articles.categories.imap"), slug: "imap" },
+  { id: 8, name: t("articles.categories.apple"), slug: "apple" },
+  { id: 9, name: t("articles.categories.dns"), slug: "dns" },
+  { id: 10, name: t("articles.categories.vk"), slug: "vk" },
+  { id: 11, name: t("articles.categories.pop3"), slug: "pop3" },
 ];
 
 export default function Articles() {
+  const t = useTranslations();
   const isMobile = useIsMobile();
   const lang = useLocale();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -49,7 +50,7 @@ export default function Articles() {
         (article.content.length > 150 ? "..." : ""),
       // Extract tags from content or use default tags
       tags: extractTagsFromContent(article.content) || [
-        { id: 1, name: "статья", slug: "article" },
+        { id: 1, name: t("articles.categories.general"), slug: "general" },
       ],
       url: `/articles/${article.id}`,
     })) || [];
@@ -57,8 +58,8 @@ export default function Articles() {
   // Filter articles by category if one is selected
   const filteredArticles = activeCategory
     ? formattedArticles.filter((article: any) =>
-        article.tags.some((tag: any) => tag.slug === activeCategory)
-      )
+      article.tags.some((tag: any) => tag.slug === activeCategory)
+    )
     : formattedArticles;
 
   // Helper function to extract date from content (simplified example)
@@ -75,6 +76,7 @@ export default function Articles() {
     // For now, we'll just check if content contains certain keywords and map them to categories
     const tags = [];
 
+    const categories = getCategories(t);
     categories.forEach((category) => {
       if (content.toLowerCase().includes(category.name.toLowerCase())) {
         tags.push({
@@ -89,7 +91,7 @@ export default function Articles() {
     if (tags.length === 0) {
       tags.push({
         id: 999,
-        name: "Общее",
+        name: t("articles.categories.general"),
         slug: "general",
       });
     }
@@ -99,7 +101,7 @@ export default function Articles() {
 
   return (
     <>
-      <title>Proxy Luxe | Статьи</title>
+      <title>Proxy Luxe | {t("articles.title")}</title>
       <main
         className="inner-page"
         style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
@@ -128,7 +130,7 @@ export default function Articles() {
                   padding: "0 20px",
                 }}
               >
-                статьи
+                {t("articles.title")}
               </span>
             </h1>
             {isLoading && (
@@ -147,7 +149,7 @@ export default function Articles() {
                   style={{ color: "#f3d675", marginBottom: "16px" }}
                 />
                 <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
-                  Загрузка статей...
+                  {t("articles.loading")}
                 </h3>
               </div>
             )}
@@ -166,11 +168,11 @@ export default function Articles() {
                   style={{ color: "#FF5252", marginBottom: "16px" }}
                 />
                 <h3 style={{ color: "#FF5252", marginBottom: "8px" }}>
-                  Ошибка загрузки статей
+                  {t("articles.error.title")}
                 </h3>
                 <p style={{ color: "#999999" }}>
                   {error?.message ||
-                    "Произошла ошибка при загрузке статей. Пожалуйста, попробуйте позже."}
+                    t("articles.error.message")}
                 </p>
               </div>
             )}
@@ -196,10 +198,10 @@ export default function Articles() {
                       style={{ color: "#f3d675", marginBottom: "16px" }}
                     />
                     <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
-                      Статьи не найдены
+                      {t("articles.empty.title")}
                     </h3>
                     <p style={{ color: "#999999" }}>
-                      По выбранной категории статей пока нет
+                      {t("articles.empty.message")}
                     </p>
                   </div>
                 )}

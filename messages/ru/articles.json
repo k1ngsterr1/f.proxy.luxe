@@ -1,0 +1,28 @@
+{
+  "articles": {
+    "title": "Статьи",
+    "categories": {
+      "instructions": "Инструкции",
+      "android": "Android",
+      "smtp": "SMTP - 25",
+      "proxy": "Proxy",
+      "mail": "Mail",
+      "ssh": "SSH - 22",
+      "imap": "IMAP - 143",
+      "apple": "Apple",
+      "dns": "Dns",
+      "vk": "Вконтакте",
+      "pop3": "POP3 - 110",
+      "general": "Общее"
+    },
+    "loading": "Загрузка статей...",
+    "error": {
+      "title": "Ошибка загрузки статей",
+      "message": "Произошла ошибка при загрузке статей. Пожалуйста, попробуйте позже."
+    },
+    "empty": {
+      "title": "Статьи не найдены",
+      "message": "По выбранной категории статей пока нет"
+    }
+  }
+}

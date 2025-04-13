@@ -129,118 +129,59 @@ export default function Faq() {
     // Add new FAQ items here
     {
       question: i18n("faq.faqtext9"),
-      answer: <p>Да</p>,
+      answer: <p>{i18n("faq.answer.yes")}</p>,
     },
     {
       question: i18n("faq.faqtext10"),
-      answer: (
-        <p>
-          Нет, наши прокси не подходят для работы с букмекерскими конторами.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.no-bookmakers")}</p>,
     },
     {
       question: i18n("faq.faqtext12"),
-      answer: <p>Минимальный срок аренды прокси - 30 дней.</p>,
+      answer: <p>{i18n("faq.answer.min-period")}</p>,
     },
     {
       question: i18n("faq.faqtext13"),
-      answer: (
-        <p>
-          Прокси по протоколу ipv6 подходят только для сайтов которые
-          поддерживают протокол ipv6.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.ipv6-sites")}</p>,
     },
     {
       question: i18n("faq.faqtext14"),
-      answer: (
-        <p>
-          IPv6 прокси не подойдут для парсинга, вордстат и софта типа
-          кейколлектор так как вордстат не поддерживает IPv6.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.ipv6-parsing")}</p>,
     },
     {
       question: i18n("faq.faqtext15"),
-      answer: <p>Ничем, просто не все сайты их поддерживают.</p>,
+      answer: <p>{i18n("faq.answer.ipv6-difference")}</p>,
     },
     {
       question: i18n("faq.faqtext16"),
-      answer: (
-        <p>
-          IPv6 прокси сделаны по принципу туннеля с IPv4 на IPv6. Туннель нужен
-          для того, что бы софт корректно принимал прокси. Адрес туннеля сайты
-          не видят, видят только IPv6, что скрыт на порту туннеля. На каждом
-          порту туннеля расположен уникальный индивидуальный IPv6 адрес. Пример
-          как выглядят IPv4 - 164.0.32.25:3229 Пример как выглядят IPv6 который
-          скрыт за портом - fabc:de12:3456:7890:ABCD:EF98:7654:3210
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.ipv6-tunnel")}</p>,
     },
     {
       question: i18n("faq.faqtext17"),
-      answer: (
-        <p>
-          IPv4 - до 100 Мбит/с
-          <br />
-          IPv6 - до 30 Мбит/с
-        </p>
-      ),
+      answer: <p style={{ whiteSpace: "pre-line" }}>{i18n("faq.answer.proxy-speed")}</p>,
     },
     {
       question: i18n("faq.faqtext18"),
-      answer: (
-        <p>
-          Прокси в формате HTTPs и SOCKS5 - эти форматы, на данный момент,
-          поддерживает практически любой софт.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.proxy-format")}</p>,
     },
     {
       question: i18n("faq.faqtext19"),
-      answer: (
-        <p>Авторизация прокси происходит по логину и паролю, либо по ip.</p>
-      ),
+      answer: <p>{i18n("faq.answer.authorization")}</p>,
     },
     {
       question: i18n("faq.faqtext20"),
-      answer: (
-        <p>
-          Соблюдайте лимиты и не вешайте много аккаунтов на 1 прокси, не смотря
-          на то что прокси продаются в одни руки, не правильно используя прокси
-          можно получить блокировку. Проверить адреса можно здесь:
-          yandex.com/internet
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.usage-limits")}</p>,
     },
     {
       question: i18n("faq.faqtext21"),
-      answer: (
-        <p>
-          Для проверки поддерживает ли сайт или сервис IPv6, зайдите на страницу
-          website-ipv6-support и введите его адрес.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.ipv6-support-check")}</p>,
     },
     {
       question: i18n("faq.faqtext22"),
-      answer: (
-        <p>
-          Замена возможна в первые сутки после покупки по уважительной причине.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.proxy-replacement")}</p>,
     },
     {
       question: i18n("faq.faqtext23"),
-      answer: (
-        <p>
-          Мы гарантируем возврат денежных средств в течении 1 дня с момента
-          покупки прокси. Но это не означает, что мы осуществляем возврат в
-          любом случае! Возврат возможен только в случае неработоспособности
-          прокси, после нашей проверки.
-        </p>
-      ),
+      answer: <p>{i18n("faq.answer.refund-policy")}</p>,
     },
   ];
 
@@ -374,6 +315,7 @@ export default function Faq() {
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
+                  title={i18n("faq.clear")}
                   style={{
                     position: "absolute",
                     right: "20px",

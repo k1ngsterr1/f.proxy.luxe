@@ -1,5 +1,22 @@
 {
   "faq": {
+    "clear": "Clear",
+    "answer": {
+      "yes": "Yes",
+      "no-bookmakers": "No, our proxies are not suitable for working with bookmakers.",
+      "min-period": "The minimum proxy rental period is 30 days.",
+      "ipv6-sites": "IPv6 protocol proxies are only suitable for sites that support the IPv6 protocol.",
+      "ipv6-parsing": "IPv6 proxies are not suitable for parsing, Wordstat, and software like KeyCollector as Wordstat does not support IPv6.",
+      "ipv6-difference": "Nothing, just not all sites support them.",
+      "ipv6-tunnel": "IPv6 proxies are made on the principle of tunneling from IPv4 to IPv6. The tunnel is needed so that the software correctly accepts the proxy. Sites do not see the tunnel address, they only see the IPv6 that is hidden on the tunnel port. Each tunnel port has a unique individual IPv6 address. Example of how IPv4 looks - 164.0.32.25:3229 Example of how IPv6 looks which is hidden behind the port - fabc:de12:3456:7890:ABCD:EF98:7654:3210",
+      "proxy-speed": "IPv4 - up to 100 Mbps\nIPv6 - up to 30 Mbps",
+      "proxy-format": "Proxies in HTTPS and SOCKS5 format - these formats are currently supported by almost any software.",
+      "authorization": "Proxy authorization is done by login and password, or by IP.",
+      "usage-limits": "Follow the limits and don't put many accounts on 1 proxy, despite the fact that proxies are sold to one person, using proxies incorrectly can result in blocking. You can check addresses here: yandex.com/internet",
+      "ipv6-support-check": "To check if a site or service supports IPv6, go to the website-ipv6-support page and enter its address.",
+      "proxy-replacement": "Replacement is possible within the first day after purchase for a valid reason.",
+      "refund-policy": "We guarantee a refund within 1 day from the moment of proxy purchase. But this does not mean that we make a refund in any case! A refund is only possible if the proxy is inoperable, after our verification."
+    },
     "categories": {
       "general": "General",
       "technical": "Technical"

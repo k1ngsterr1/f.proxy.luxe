@@ -1,13 +1,50 @@
 {
   "personal-partner": {
     "title": "PARTNER PROGRAM",
+    "description": "Our partner program allows you to earn",
+    "description-2": "of payments from clients you refer.",
+    "requirements": "To participate in the program, you only need to:",
+    "verification": {
+      "message": "You need to verify your email by clicking the link sent to your email address."
+    },
     "stats": {
+      "clients": "CLIENTS CHOSE US",
+      "proxies-sold": "PROXIES SOLD",
+      "proxies-active": "ACTIVE PROXIES",
+      "orders-processed": "ORDERS PROCESSED",
       "title": "Your Statistics",
       "referrals": "Total Referrals",
       "earnings": "Total Earnings",
       "pending": "Pending Payouts",
       "available": "Available for Withdrawal"
     },
+    "participation": {
+      "title": "Ways to Participate",
+      "method1": {
+        "title": "Refer new clients using your referral link",
+        "description": "- users who register through your link will be permanently linked to your account, and you'll earn a percentage from all their payments"
+      },
+      "method2": {
+        "title": "Share your partner discount coupon",
+        "description": "- users who use your coupon get a 5% discount on their purchase and will be permanently linked to your account, earning you a percentage from all their payments"
+      }
+    },
+    "referral-links": {
+      "title": "Your Referral Links"
+    },
+    "partner-coupon": {
+      "title": "Partner Coupon",
+      "not-created": "Coupon not created",
+      "create": "Create"
+    },
+    "important-info": {
+      "title": "Important Information",
+      "daily-rewards": "Partner rewards are credited to your balance once per day.",
+      "withdrawal-info": "To withdraw your partner rewards, send a request to",
+      "withdrawal-info-2": "specifying your payment wallet - WebMoney (WMZ), Payeer. Payments are processed every 7-14 days.",
+      "warning": "Creating multiple accounts to receive partner payments is prohibited, i.e. you cannot be your own referral."
+    },
+    "copy-notification": "Copied!",
     "referral": {
       "title": "Your Referral Link",
       "description": "Share this link with others to earn commission from their purchases",
@@ -15,6 +52,8 @@
       "copied": "Copied!"
     },
     "withdrawal": {
+      "sending": "Sending...",
+      "cancel": "Cancel",
       "title": "Request Withdrawal",
       "amount": "Amount",
       "amount-placeholder": "Enter amount",

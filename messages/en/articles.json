@@ -1,0 +1,28 @@
+{
+  "articles": {
+    "title": "Articles",
+    "categories": {
+      "instructions": "Instructions",
+      "android": "Android",
+      "smtp": "SMTP - 25",
+      "proxy": "Proxy",
+      "mail": "Mail",
+      "ssh": "SSH - 22",
+      "imap": "IMAP - 143",
+      "apple": "Apple",
+      "dns": "DNS",
+      "vk": "VKontakte",
+      "pop3": "POP3 - 110",
+      "general": "General"
+    },
+    "loading": "Loading articles...",
+    "error": {
+      "title": "Error loading articles",
+      "message": "An error occurred while loading articles. Please try again later."
+    },
+    "empty": {
+      "title": "No articles found",
+      "message": "There are no articles in this category yet"
+    }
+  }
+}

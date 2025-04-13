@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Copy,
   AlertTriangle,
@@ -25,6 +26,7 @@ const useGetPartnerDetails = () => {
 };
 
 export default function PartnerPage() {
+  const t = useTranslations('personal-partner');
   const { data: partnerDetails, isLoading } = useGetPartnerDetails();
   const { data: user } = useGetUser();
   const [couponCreated, setCouponCreated] = useState(false);
@@ -46,7 +48,7 @@ export default function PartnerPage() {
       setPayoutPopupOpen(false);
       setWallet("");
     } catch (err: any) {
-      setPayoutError("Ошибка при отправке заявки на выплату");
+      setPayoutError(t('withdrawal.error'));
       console.error(err);
     } finally {
       setPayoutLoading(false);
@@ -75,26 +77,26 @@ export default function PartnerPage() {
   const stats = [
     {
       value: "743 551",
-      label: "КЛИЕНТОВ ВЫБРАЛИ НАС",
+      label: t('stats.clients'),
     },
     {
       value: "32 277 133",
-      label: "ПРОДАННЫХ ПРОКСИ",
+      label: t('stats.proxies-sold'),
     },
     {
       value: "477 489",
-      label: "ПРОКСИ В РАБОТЕ",
+      label: t('stats.proxies-active'),
     },
     {
       value: "9 206 727",
-      label: "ЗАКАЗОВ ОБРАБОТАНО",
+      label: t('stats.orders-processed'),
     },
   ];
 
   // Referral data
   const referralLinks = [
     {
-      label: "Реферальная ссылка №1:",
+      label: t('referral.title'),
       value: referralLink,
     },
   ];
@@ -136,8 +138,7 @@ export default function PartnerPage() {
             />
             <div>
               <p style={{ color: "#FFC107", fontSize: "14px", margin: 0 }}>
-                Вам необходимо подтвердить свой email перейдя по ссылке,
-                указанной в письме.
+                {t('verification.message')}
               </p>
             </div>
           </div>
@@ -154,16 +155,15 @@ export default function PartnerPage() {
               textTransform: "uppercase",
             }}
           >
-            Партнерская программа
+            {t('title')}
           </h1>
           <p
             style={{ color: "#f3d675", fontSize: "16px", marginBottom: "12px" }}
           >
-            Наша партнерская программа позволит Вам зарабатывать{" "}
-            <strong>30%</strong> от платежей привлеченных Вами клиентов.
+            {t('description')} <strong>30%</strong> {t('description-2')}
           </p>
           <p style={{ color: "#FFFFFF", fontSize: "15px" }}>
-            Для участия в программе Вам всего лишь нужно:
+            {t('requirements')}
           </p>
         </div>
 
@@ -223,7 +223,7 @@ export default function PartnerPage() {
               fontWeight: "bold",
             }}
           >
-            Способы участия
+            {t('participation.title')}
           </h2>
           <ul
             style={{
@@ -235,19 +235,16 @@ export default function PartnerPage() {
           >
             <li style={{ marginBottom: "16px" }}>
               <span style={{ color: "#f3d675", fontWeight: "500" }}>
-                Привлекать к нам новых клиентов по реферальной ссылке
+                {t('participation.method1.title')}
               </span>{" "}
-              - зарегистрировавшийся по вашей ссылке пользователь пожизненно
-              закрепляется за Вами и со всех его платежей вам будет идти
+              {t('participation.method1.description')}
               процент;
             </li>
             <li>
               <span style={{ color: "#f3d675", fontWeight: "500" }}>
-                Распространять партнерский купон на скидку
+                {t('participation.method2.title')}
               </span>{" "}
-              - пользователь, использовавший ваш купон, получает 5% скидку при
-              покупке, а так же пожизненно закрепляется за Вами и со всех его
-              платежей вам будет идти процент.
+              {t('participation.method2.description')}
             </li>
           </ul>
         </div>
@@ -274,7 +271,7 @@ export default function PartnerPage() {
               size={18}
               style={{ marginRight: "8px", verticalAlign: "text-bottom" }}
             />
-            Ваши реферальные ссылки
+            {t('referral-links.title')}
           </h2>
 
           {referralLinks.map((link, index) => (
@@ -347,7 +344,7 @@ export default function PartnerPage() {
                     }}
                   >
                     <CheckCircle size={14} />
-                    Скопировано!
+                    {t('copy-notification')}
                   </div>
                 )}
               </div>
@@ -368,12 +365,12 @@ export default function PartnerPage() {
                 size={18}
                 style={{ marginRight: "8px", verticalAlign: "text-bottom" }}
               />
-              Партнерский купон
+              {t('partner-coupon.title')}
             </h2>
             <div style={{ display: "flex", gap: "8px", position: "relative" }}>
               <input
                 type="text"
-                value={couponCreated ? "PARTNER5" : "Купон не создан"}
+                value={couponCreated ? "PARTNER5" : t('partner-coupon.not-created')}
                 readOnly
                 style={{
                   flex: 1,
@@ -430,7 +427,7 @@ export default function PartnerPage() {
                     e.currentTarget.style.backgroundColor = "#f3d675";
                   }}
                 >
-                  Создать
+                  {t('partner-coupon.create')}
                 </button>
               )}
               {showCopyNotification === "coupon" && (
@@ -451,7 +448,7 @@ export default function PartnerPage() {
                   }}
                 >
                   <CheckCircle size={14} />
-                  Скопировано!
+                  {t('copy-notification')}
                 </div>
               )}
             </div>
@@ -476,13 +473,12 @@ export default function PartnerPage() {
               fontWeight: "bold",
             }}
           >
-            Важная информация
+            {t('important-info.title')}
           </h2>
           <p
             style={{ color: "#4CAF50", fontSize: "15px", marginBottom: "16px" }}
           >
-            Начисление партнерских вознаграждений на баланс происходит каждый
-            день единождый.
+            {t('important-info.daily-rewards')}
           </p>
           <p
             style={{
@@ -492,19 +488,10 @@ export default function PartnerPage() {
               lineHeight: "1.5",
             }}
           >
-            Для выплаты партнерского вознаграждения напишите заявку на{" "}
-            <a
-              href="mailto:admin@proxy.luxe"
-              style={{ color: "#f3d675", textDecoration: "none" }}
-            >
-              admin@proxy.luxe
-            </a>{" "}
-            с указанием кошелька для выплаты - WebMoney (WMZ), Payeer. Выплаты
-            производятся каждые 7-14 дней.
+            {t('important-info.withdrawal-info')} <a href="mailto:admin@proxy.luxe" style={{ color: "#f3d675", textDecoration: "none" }}>admin@proxy.luxe</a> {t('important-info.withdrawal-info-2')}
           </p>
           <p style={{ color: "#FF5252", fontSize: "15px", margin: 0 }}>
-            Запрещена регистрация мультиаккаунтов с целью получения партнерских
-            выплат, т.е. нельзя быть рефералом самому себе.
+            {t('important-info.warning')}
           </p>
         </div>
 
@@ -526,7 +513,7 @@ export default function PartnerPage() {
               textTransform: "uppercase",
             }}
           >
-            Статистика
+            {t('stats.title')}
           </h2>
 
           {/* Statistics table */}
@@ -551,7 +538,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    Дата
+                    {t('referrals.table.date')}
                   </th>
                   <th
                     style={{
@@ -562,7 +549,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    Реферал
+                    {t('referrals.table.user')}
                   </th>
                   <th
                     style={{
@@ -573,7 +560,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    Сумма платежа
+                    {t('referrals.table.purchases')}
                   </th>
                   <th
                     style={{
@@ -584,7 +571,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    Вознаграждение
+                    {t('referrals.table.commission')}
                   </th>
                 </tr>
               </thead>
@@ -609,7 +596,7 @@ export default function PartnerPage() {
                       borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
                       backgroundColor: "rgba(0, 0, 0, 0.2)",
                     }}>
-                      У вас пока нет рефералов.
+                      {t('referrals.empty')}
                     </td>
                   </tr>
                 )}
@@ -638,7 +625,7 @@ export default function PartnerPage() {
                   marginRight: "8px",
                 }}
               >
-                Всего рефералов:
+                {t('stats.referrals')}:
               </span>
               <span
                 style={{
@@ -658,7 +645,7 @@ export default function PartnerPage() {
                   marginRight: "8px",
                 }}
               >
-                Заработано:
+                {t('stats.earnings')}:
               </span>
               <span
                 style={{
@@ -678,7 +665,7 @@ export default function PartnerPage() {
                   marginRight: "8px",
                 }}
               >
-                Доступно к выводу:
+                {t('stats.available')}:
               </span>
               <span
                 style={{
@@ -715,7 +702,7 @@ export default function PartnerPage() {
                 transition: "all 0.2s",
               }}
             >
-              Вывести
+              {t('withdrawal.submit-button')}
             </button>
           </div>
         )}
@@ -745,12 +732,12 @@ export default function PartnerPage() {
               boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
             }}
           >
-            <h3 style={{ color: "#f3d675", marginBottom: "20px" }}>Укажите кошелёк для выплаты</h3>
+            <h3 style={{ color: "#f3d675", marginBottom: "20px" }}>{t('withdrawal.title')}</h3>
             <input
               type="text"
               value={wallet}
               onChange={(e) => setWallet(e.target.value)}
-              placeholder="Например: Z123456789012"
+              placeholder={t('withdrawal.address-placeholder')}
               style={{
                 width: "100%",
                 padding: "10px",
@@ -778,7 +765,7 @@ export default function PartnerPage() {
                   cursor: "pointer",
                 }}
               >
-                Отмена
+                {t('withdrawal.cancel')}
               </button>
               <button
                 onClick={handlePayoutSubmit}
@@ -794,7 +781,7 @@ export default function PartnerPage() {
                   opacity: wallet.trim() ? 1 : 0.6,
                 }}
               >
-                {isPayoutLoading ? "Отправка..." : "Отправить"}
+                {isPayoutLoading ? t('withdrawal.sending') : t('withdrawal.submit-button')}
               </button>
             </div>
           </div>
