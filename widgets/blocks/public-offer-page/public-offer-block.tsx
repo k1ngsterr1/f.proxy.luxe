@@ -87,19 +87,6 @@ export default function PublicOfferPage() {
             <FileText size={28} />
             {i18n("header")}
           </h1>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              color: "#999999",
-              fontSize: "14px",
-              marginBottom: "24px",
-            }}
-          >
-            <Calendar size={16} />
-            {i18n("publishedDate")}
-          </div>
           <p
             style={{
               fontSize: "16px",
