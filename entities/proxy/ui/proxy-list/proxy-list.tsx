@@ -17,6 +17,7 @@ import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
 import { useDeleteProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-delete-resident-proxy.mutation";
 import NotificationPopup from "../notification-popup/notification-popup";
 import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-prolong-proxy.mutatuion";
+import { useTranslations } from "next-intl";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -62,6 +63,7 @@ const ProxyList: React.FC<Props> = ({
   selectedProxies: externalSelectedProxies,
   onSelectProxy,
 }) => {
+  const t = useTranslations('proxyList');
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [editingProxy, setEditingProxy] = useState<Proxy | null>(null);
@@ -236,7 +238,7 @@ const ProxyList: React.FC<Props> = ({
     if (selectedProxies.length < 1) {
       setNotification({
         show: true,
-        message: "Выберите хотя бы один прокси для продления",
+        message: t('prolongBatchError'),
         type: "error",
         showRefresh: false,
       });
@@ -278,7 +280,7 @@ const ProxyList: React.FC<Props> = ({
         // All proxies processed
         setNotification({
           show: true,
-          message: `Продление завершено: ${successCount} успешно, ${failCount} с ошибками`,
+          message: t('prolongBatchResult', { success: successCount, fail: failCount }),
           type: successCount > 0 ? "success" : "error",
           showRefresh: true,
         });
@@ -626,8 +628,7 @@ const ProxyList: React.FC<Props> = ({
             // Show success notification
             setNotification({
               show: true,
-              message:
-                "Прокси был успешно удалён. Чтобы увидеть изменения, обновите страницу.",
+              message: t('deleteSuccess'),
               type: "success",
               showRefresh: true,
             });
@@ -636,9 +637,7 @@ const ProxyList: React.FC<Props> = ({
             // Show error notification
             setNotification({
               show: true,
-              message: `Ошибка при удалении прокси: ${
-                error?.message || "Неизвестная ошибка"
-              }`,
+              message: t('deleteError', { error: error?.message || "Неизвестная ошибка" }),
               type: "error",
               showRefresh: false,
             });
@@ -669,9 +668,8 @@ const ProxyList: React.FC<Props> = ({
               // Show error notification
               setNotification({
                 show: true,
-                message: `Ошибка при удалении прокси: ${
-                  error?.message || "Неизвестная ошибка"
-                }`,
+                message: `Ошибка при удалении прокси: ${error?.message || "Неизвестная ошибка"
+                  }`,
                 type: "error",
                 showRefresh: false,
               });
@@ -682,7 +680,7 @@ const ProxyList: React.FC<Props> = ({
         console.error("Could not find package key for proxy", proxyId);
         setNotification({
           show: true,
-          message: "Ошибка при удалении прокси: не найден ключ пакета",
+          message: t('deleteMissingKey'),
           type: "error",
           showRefresh: false,
         });
@@ -712,8 +710,7 @@ const ProxyList: React.FC<Props> = ({
       // Show success notification
       setNotification({
         show: true,
-        message:
-          "Прокси был успешно отредактирован. Чтобы увидеть изменения, обновите страницу.",
+        message: t('editSuccess'),
         type: "success",
         showRefresh: true,
       });
@@ -844,7 +841,7 @@ const ProxyList: React.FC<Props> = ({
     if (!prolongProxy?.order_id) {
       setNotification({
         show: true,
-        message: "Ошибка: Не найден ID заказа для продления",
+        message: t('prolongError'),
         type: "error",
         showRefresh: false,
       });
@@ -869,7 +866,7 @@ const ProxyList: React.FC<Props> = ({
         onSuccess: () => {
           setNotification({
             show: true,
-            message: "Прокси успешно продлен",
+            message: t('prolongSuccess'),
             type: "success",
             showRefresh: true,
           });
@@ -878,7 +875,7 @@ const ProxyList: React.FC<Props> = ({
         onError: (error: any) => {
           setNotification({
             show: true,
-            message: `Не получилось продлить, попробуйте позже`,
+            message: t('prolongFailed'),
             type: "error",
             showRefresh: false,
           });
@@ -1287,9 +1284,9 @@ const ProxyList: React.FC<Props> = ({
         <style>{scrollbarStyles}</style>
         <div style={cardHeaderStyle}>
           <div>
-            <h3 style={cardTitleStyle}>Список прокси</h3>
+            <h3 style={cardTitleStyle}>{t('title')}</h3>
             <p style={cardDescriptionStyle}>
-              Загрузка доступных прокси-серверов...
+              {t('loading')}
             </p>
           </div>
         </div>
@@ -1298,14 +1295,14 @@ const ProxyList: React.FC<Props> = ({
             <table style={tableStyle}>
               <thead style={tableHeadStyle}>
                 <tr>
-                  <th style={tableHeaderCellStyle}>IP-адрес</th>
-                  <th style={tableHeaderCellStyle}>Протокол</th>
-                  <th style={tableHeaderCellStyle}>Порт HTTP</th>
-                  <th style={tableHeaderCellStyle}>Название</th>
-                  <th style={tableHeaderCellStyle}>Логин</th>
-                  <th style={tableHeaderCellStyle}>Пароль</th>
-                  <th style={tableHeaderCellStyle}>Страна</th>
-                  <th style={tableHeaderCellStyle}>Действия</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.ipAddress')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.protocol')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.httpPort')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.name')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.login')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.password')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.country')}</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.actions')}</th>
                 </tr>
               </thead>
               <tbody style={tableBodyStyle}>
@@ -1353,15 +1350,15 @@ const ProxyList: React.FC<Props> = ({
       <div style={cardStyle}>
         <div style={cardHeaderStyle}>
           <div>
-            <h3 style={cardTitleStyle}>Список прокси</h3>
-            <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+            <h3 style={cardTitleStyle}>{t('title')}</h3>
+            <p style={cardDescriptionStyle}>{t('description')}</p>
           </div>
         </div>
         <div style={emptyStateContainerStyle}>
           <AlertCircle style={emptyStateIconStyle} />
-          <h3 style={emptyStateTitleStyle}>Прокси не найдены</h3>
+          <h3 style={emptyStateTitleStyle}>{t('emptyTitle')}</h3>
           <p style={emptyStateDescriptionStyle}>
-            В данный момент нет доступных прокси-серверов.
+            {t('emptyDescription')}
           </p>
         </div>
       </div>
@@ -1373,8 +1370,8 @@ const ProxyList: React.FC<Props> = ({
       <style>{scrollbarStyles}</style>
       <div style={cardHeaderStyle}>
         <div>
-          <h3 style={cardTitleStyle}>Список прокси</h3>
-          <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
+          <h3 style={cardTitleStyle}>{t('title')}</h3>
+          <p style={cardDescriptionStyle}>{t('description')}</p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           {selectedProxies.length > 0 && (
@@ -1383,7 +1380,7 @@ const ProxyList: React.FC<Props> = ({
               onClick={handleBatchProlong}
               disabled={selectedProxies.length === 0}
             >
-              <span>Продлить выбранные ({selectedProxies.length})</span>
+              <span>{t('prolongBatchTitle', { count: selectedProxies.length })}</span>
             </button>
           )}
           <div style={{ position: "relative" }}>
@@ -1392,7 +1389,7 @@ const ProxyList: React.FC<Props> = ({
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
             >
               <Download size={16} />
-              <span>Экспорт</span>
+              <span>{t('export')}</span>
             </button>
             <div style={exportMenuStyle}>
               <div
@@ -1407,7 +1404,7 @@ const ProxyList: React.FC<Props> = ({
                 }}
               >
                 <FileText size={16} />
-                <span>Сохранить HTTP(s)</span>
+                <span>{t('exportHttp')}</span>
               </div>
               <div
                 style={exportMenuItemStyle}
@@ -1421,7 +1418,7 @@ const ProxyList: React.FC<Props> = ({
                 }}
               >
                 <FileJson size={16} />
-                <span>Сохранить SOCKS</span>
+                <span>{t('exportSocks')}</span>
               </div>
             </div>
           </div>
@@ -1445,24 +1442,24 @@ const ProxyList: React.FC<Props> = ({
                   </div>
                 </th>
                 {type === "resident" && (
-                  <th style={tableHeaderCellStyle}>Название</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.name')}</th>
                 )}
-                <th style={tableHeaderCellStyle}>IP-адрес</th>
-                <th style={tableHeaderCellStyle}>Протокол</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.ipAddress')}</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.protocol')}</th>
                 {type === "resident" && (
-                  <th style={tableHeaderCellStyle}>Порты</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.ports')}</th>
                 )}
                 {type !== "resident" && (
-                  <th style={tableHeaderCellStyle}>Порт HTTP</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.httpPort')}</th>
                 )}
                 {type !== "resident" && (
-                  <th style={tableHeaderCellStyle}>Порт SOCKS</th>
+                  <th style={tableHeaderCellStyle}>{t('table.headers.socksPort')}</th>
                 )}
-                <th style={tableHeaderCellStyle}>Логин</th>
-                <th style={tableHeaderCellStyle}>Пароль</th>
-                <th style={tableHeaderCellStyle}>Страна</th>
-                <th style={tableHeaderCellStyle}>Срок действия</th>
-                <th style={tableHeaderCellStyle}>Действия</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.login')}</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.password')}</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.country')}</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.expiryDate')}</th>
+                <th style={tableHeaderCellStyle}>{t('table.headers.actions')}</th>
               </tr>
             </thead>
             <tbody style={tableBodyStyle}>
@@ -1483,8 +1480,8 @@ const ProxyList: React.FC<Props> = ({
                       backgroundColor: isSelected
                         ? "rgba(243, 214, 117, 0.07)"
                         : index % 2 === 0
-                        ? "transparent"
-                        : "rgba(243, 214, 117, 0.03)",
+                          ? "transparent"
+                          : "rgba(243, 214, 117, 0.03)",
                     }}
                     onMouseEnter={(e) => {
                       if (!isSelected) {
@@ -1546,20 +1543,20 @@ const ProxyList: React.FC<Props> = ({
                     <td style={tableCellStyle}>
                       {deleteConfirmId === proxy.id ? (
                         <div style={deleteConfirmContainerStyle}>
-                          <span style={deleteConfirmTextStyle}>Удалить?</span>
+                          <span style={deleteConfirmTextStyle}>{t('deleteConfirm')}</span>
                           <button
                             style={deleteConfirmButtonStyle}
                             onClick={() =>
                               confirmDelete(proxy.id, proxy.package_key)
                             }
                           >
-                            Да
+                            {t('deleteYes')}
                           </button>
                           <button
                             style={deleteCancelButtonStyle}
                             onClick={cancelDelete}
                           >
-                            Нет
+                            {t('deleteNo')}
                           </button>
                         </div>
                       ) : (
@@ -1567,14 +1564,14 @@ const ProxyList: React.FC<Props> = ({
                           <button
                             style={actionButtonStyle}
                             onClick={() => handleEditClick(proxy)}
-                            title="Редактировать"
+                            title={t('table.buttons.edit')}
                           >
                             <Edit size={14} />
                           </button>
                           <button
                             style={actionButtonDangerStyle}
                             onClick={() => handleDeleteClick(proxy.id)}
-                            title="Удалить"
+                            title={t('table.buttons.delete')}
                           >
                             <Trash2 size={14} />
                           </button>
@@ -1587,16 +1584,16 @@ const ProxyList: React.FC<Props> = ({
                                     order_number: proxy.order_number || "",
                                   })
                                 }
-                                title="Авторизация"
+                                title={t('table.buttons.auth')}
                               >
                                 <Key size={14} />
                               </button>
                               <button
                                 style={actionButtonStyle}
                                 onClick={() => handleProlongClick(proxy)}
-                                title="Продлить"
+                                title={t('table.buttons.prolong')}
                               >
-                                <span>Продлить</span>
+                                <span>{t('prolongConfirm')}</span>
                               </button>
                             </>
                           )}
@@ -1617,29 +1614,29 @@ const ProxyList: React.FC<Props> = ({
           <div style={popupContentStyle}>
             <h3 style={popupTitleStyle}>
               {(prolongProxy as any).isBatchOperation
-                ? `Продление ${selectedProxies.length} прокси`
-                : "Продление прокси"}
+                ? t('prolongBatchTitle', { count: selectedProxies.length })
+                : t('prolongTitle')}
             </h3>
             <div style={popupFormGroupStyle}>
-              <label style={popupLabelStyle}>Выберите период продления:</label>
+              <label style={popupLabelStyle}>{t('prolongSelect')}</label>
               <select
                 style={popupSelectStyle}
                 value={prolongPeriod}
                 onChange={(e) => setProlongPeriod(e.target.value)}
               >
-                <option value="1m">1 месяц</option>
+                <option value="1m">{t('table.period.1month')}</option>
               </select>
             </div>
             <div style={popupButtonsContainerStyle}>
               <button style={popupCancelButtonStyle} onClick={cancelProlong}>
-                Отмена
+                {t('prolongCancel')}
               </button>
               <button
                 style={popupConfirmButtonStyle}
                 onClick={confirmProlong}
                 disabled={isSubmittingBatchProlong}
               >
-                {isSubmittingBatchProlong ? "Обработка..." : "Продлить"}
+                {isSubmittingBatchProlong ? t('prolongProcessing') : t('prolongConfirm')}
               </button>
             </div>
           </div>

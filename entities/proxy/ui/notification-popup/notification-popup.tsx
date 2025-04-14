@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface NotificationPopupProps {
   message: string;
@@ -20,6 +21,7 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
   showRefreshButton = false,
   countdown = 5,
 }) => {
+  const t = useTranslations('proxyList.notification');
   const [timeLeft, setTimeLeft] = useState(countdown);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -123,8 +125,8 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
           >
             <span style={{ fontSize: "14px", color: "#999999" }}>
               {timeLeft > 0
-                ? `Обновите страницу через ${timeLeft} сек.`
-                : "Пожалуйста, обновите страницу"}
+                ? t('refreshCountdown', { seconds: timeLeft })
+                : t('pleaseRefresh')}
             </span>
             <button
               onClick={handleRefresh}
@@ -139,7 +141,7 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
                 fontWeight: "500",
               }}
             >
-              Обновить сейчас
+              {t('refreshNow')}
             </button>
           </div>
         )}
