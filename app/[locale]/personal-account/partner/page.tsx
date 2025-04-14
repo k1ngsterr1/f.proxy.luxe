@@ -707,6 +707,43 @@ export default function PartnerPage() {
           </div>
         )}
       </div>
+
+      {/* Banner */}
+      <div
+        style={{
+          width: "98%",
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "30px",
+          marginBottom: "30px",
+        }}
+      >
+        <a
+          href="https://dolphin-anty.net/?utm_source=media&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=banner1"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: "block",
+            transition: "transform 0.2s ease-in-out",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = "scale(1.02)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        >
+          <img
+            src="/306_54.gif"
+            alt="Dolphin Anty Banner"
+            style={{
+              borderRadius: "4px",
+              boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+            }}
+          />
+        </a>
+      </div>
+
       {isPayoutPopupOpen && (
         <div
           style={{
