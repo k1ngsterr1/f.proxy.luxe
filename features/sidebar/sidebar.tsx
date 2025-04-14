@@ -14,8 +14,23 @@ import { ChevronRight } from "lucide-react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useExchangeRates } from "@/entities/exchange-rates/api/hooks/use-get-crypto-rates.query";
 import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/shared/config/apiClient";
+
+const useGetRuble = () => {
+  return useQuery({
+    queryKey: ["ruble"],
+    queryFn: async () => {
+      const response = await apiClient.get("/api/v1/user/currency")
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    retry: 2
+  })
+}
 
 export const Sidebar = () => {
+  const { data: ruble } = useGetRuble()
   const queryClient = useQueryClient();
   const i18n = useTranslations("sidebar");
   const pathname = usePathname();
@@ -574,7 +589,7 @@ export const Sidebar = () => {
           <div style={currencyRowStyle}>
             <UsdIcon />1 USD =
           </div>
-          <span style={rateValueStyle}>{formatNumber(ratesData.USD)} RUB</span>
+          <span style={rateValueStyle}>{Math.round(ruble?.value)} RUB</span>
         </li>
         <li style={rateItemStyle}>
           <div style={currencyRowStyle}>
