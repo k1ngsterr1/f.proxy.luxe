@@ -14,7 +14,8 @@
       "order-amount": "Order amount:",
       "discount-coupon": "Discount coupon:",
       "purchase": "Purchase",
-      "tariff": "Tariff"
+      "tariff": "Tariff",
+      "thirty-days": "30 days"
     },
     "coupon": {
       "placeholder": "Discount coupon",
