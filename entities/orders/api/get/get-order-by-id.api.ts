@@ -8,7 +8,7 @@ export interface OrderDetail {
   type: string;
   tariff: string;
   quantity: number;
-  periodDays: number;
+  periodDays: string;
   totalPrice: number;
   status: "PENDING" | "ACTIVE" | "EXPIRED";
   proxyType: "HTTP" | "SOCKS5";

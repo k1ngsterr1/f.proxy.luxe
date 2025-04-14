@@ -16,7 +16,8 @@
       "order-amount": "Сумма заказа:",
       "discount-coupon": "Купон на скидку:",
       "purchase": "Покупка",
-      "tariff": "Тариф"
+      "tariff": "Тариф",
+      "thirty-days": "30 дней"
     },
     "coupon": {
       "placeholder": "Купон на скидку",
