@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "@/assets/styles/normalize.css";
 import "@/assets/styles/lk.css";
 import "@/assets/styles/style.css";
@@ -11,7 +11,6 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 
-import { useEffect } from "react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useExchangeRates } from "@/entities/exchange-rates/api/hooks/use-get-crypto-rates.query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +21,9 @@ export const Sidebar = () => {
   const pathname = usePathname();
   const { data: userData } = useGetUser();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
   const {
     data: ratesData,
     isLoading: ratesLoading,
@@ -34,37 +36,62 @@ export const Sidebar = () => {
     });
   }, [userData]);
 
+  // Track window width for responsive adjustments
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Determine if mobile based on window width
+  const isMobile = windowWidth < 768;
+
+  // Responsive styles
+  const sidebarWidth = isMobile ? "240px" : "280px";
+  const fontSize = isMobile ? "13px" : "14px";
+  const headerFontSize = isMobile ? "14px" : "16px";
+  const iconSize = isMobile ? "18px" : "20px";
+  const padding = isMobile ? "16px 16px" : "24px 24px";
+  const itemPadding = isMobile ? "12px 16px" : "16px 24px";
+  const verticalLineLeft = isMobile ? "28px" : "32px";
+  const gapSize = isMobile ? "10px" : "12px";
+
   const sidebarStyle = {
     backgroundColor: "#0A0A0A",
     color: "#ffffff",
-    width: "280px",
+    width: sidebarWidth,
     minHeight: "80vh",
     display: "flex",
     flexDirection: "column" as const,
     position: "relative" as const,
+    overflowY: "auto" as const,
+    overflowX: "hidden" as const,
   };
 
   const sidebarHeaderStyle = {
-    fontSize: "16px",
+    fontSize: headerFontSize,
     fontWeight: 600,
     textTransform: "uppercase" as const,
-    padding: "24px 24px",
+    padding: padding,
     borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
     color: "#F3D675",
     display: "flex",
     alignItems: "center",
-    gap: "12px",
+    gap: gapSize,
   };
 
   const userIconStyle = {
-    width: "20px",
-    height: "20px",
+    width: iconSize,
+    height: iconSize,
     color: "#F3D675",
   };
 
   const balanceWrapperStyle = {
-    padding: "16px 24px",
-    marginBottom: "24px",
+    padding: isMobile ? "12px 16px" : "16px 24px",
+    marginBottom: isMobile ? "16px" : "24px",
   };
 
   const balanceLinkStyle = {
@@ -73,16 +100,17 @@ export const Sidebar = () => {
     backgroundColor: "rgba(20, 20, 20, 0.8)",
     border: "1px solid rgba(255, 255, 255, 0.05)",
     borderRadius: "8px",
-    padding: "16px",
+    padding: isMobile ? "12px" : "16px",
     color: "#F3D675",
     textDecoration: "none",
     fontWeight: 600,
-    gap: "12px",
+    gap: gapSize,
+    fontSize: fontSize,
   };
 
   const walletIconStyle = {
-    width: "20px",
-    height: "20px",
+    width: iconSize,
+    height: iconSize,
     color: "#F3D675",
   };
 
@@ -102,14 +130,12 @@ export const Sidebar = () => {
     position: "absolute" as const,
     top: "0",
     bottom: "0",
-    left: "32px",
+    left: verticalLineLeft,
     width: "1px",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
   };
 
   const getItemStyle = (path: string) => {
-    const isActive = pathname.includes(path);
-
     return {
       position: "relative" as const,
     };
@@ -117,35 +143,35 @@ export const Sidebar = () => {
 
   const getLinkStyle = (path: string) => {
     const isActive = pathname.includes(path);
-    const isHovered = hoveredItem === path;
 
     return {
       color: isActive ? "#F3D675" : "#ffffff",
       textDecoration: "none",
       display: "flex",
       alignItems: "center",
-      padding: "16px 24px",
-      fontSize: "14px",
+      padding: itemPadding,
+      fontSize: fontSize,
       fontWeight: isActive ? 600 : 500,
       position: "relative" as const,
-      gap: "16px",
+      gap: gapSize,
     };
   };
 
   const getIconContainerStyle = {
-    width: "20px",
-    height: "20px",
+    width: iconSize,
+    height: iconSize,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    flexShrink: 0,
   };
 
   const getIconStyle = (path: string) => {
     const isActive = pathname.includes(path);
 
     return {
-      width: "20px",
-      height: "20px",
+      width: iconSize,
+      height: iconSize,
       color: isActive ? "#F3D675" : "#ffffff",
     };
   };
@@ -156,8 +182,8 @@ export const Sidebar = () => {
     return {
       marginLeft: "auto",
       color: "#F3D675",
-      width: "16px",
-      height: "16px",
+      width: isMobile ? "14px" : "16px",
+      height: isMobile ? "14px" : "16px",
       opacity: isActive ? 1 : 0,
     };
   };
@@ -166,38 +192,38 @@ export const Sidebar = () => {
     background: "none",
     border: "none",
     color: "#ffffff",
-    padding: "16px 24px",
-    fontSize: "14px",
+    padding: itemPadding,
+    fontSize: fontSize,
     cursor: "pointer",
     fontWeight: 500,
     width: "100%",
     textAlign: "left" as const,
     display: "flex",
     alignItems: "center",
-    gap: "16px",
+    gap: gapSize,
   };
 
   const logoutIconStyle = {
-    width: "20px",
-    height: "20px",
+    width: iconSize,
+    height: iconSize,
     color: "#ffffff",
   };
 
   const exchangeRatesHeaderStyle = {
-    fontSize: "14px",
+    fontSize: fontSize,
     fontWeight: 600,
     textTransform: "uppercase" as const,
-    padding: "24px 24px 16px",
+    padding: isMobile ? "16px 16px 12px" : "24px 24px 16px",
     borderTop: "1px solid rgba(255, 255, 255, 0.05)",
-    marginTop: "24px",
+    marginTop: isMobile ? "16px" : "24px",
     color: "#F3D675",
     display: "flex",
     alignItems: "center",
-    gap: "12px",
+    gap: gapSize,
   };
 
   const exchangeRatesContainerStyle = {
-    padding: "0 24px 16px",
+    padding: isMobile ? "0 16px 12px" : "0 24px 16px",
   };
 
   // Exchange rates styles
@@ -211,9 +237,9 @@ export const Sidebar = () => {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 0",
+    padding: isMobile ? "8px 0" : "10px 0",
     borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-    fontSize: "14px",
+    fontSize: fontSize,
     color: "#ffffff",
   };
 
@@ -223,18 +249,18 @@ export const Sidebar = () => {
   };
 
   const loadingContainerStyle = {
-    padding: "20px 0",
+    padding: isMobile ? "16px 0" : "20px 0",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: "rgba(255, 255, 255, 0.6)",
-    fontSize: "14px",
+    fontSize: fontSize,
   };
 
   const errorContainerStyle = {
-    padding: "20px 0",
+    padding: isMobile ? "16px 0" : "20px 0",
     color: "#ff6b6b",
-    fontSize: "14px",
+    fontSize: fontSize,
     textAlign: "center" as const,
   };
 
@@ -410,7 +436,7 @@ export const Sidebar = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ width: "20px", height: "20px" }}
+      style={{ width: iconSize, height: iconSize }}
     >
       <line x1="12" y1="1" x2="12" y2="23"></line>
       <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -420,8 +446,8 @@ export const Sidebar = () => {
   // Currency icons for exchange rates
   const UsdIcon = () => (
     <svg
-      width="16"
-      height="16"
+      width={isMobile ? "14" : "16"}
+      height={isMobile ? "14" : "16"}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -445,8 +471,8 @@ export const Sidebar = () => {
 
   const BtcIcon = () => (
     <svg
-      width="16"
-      height="16"
+      width={isMobile ? "14" : "16"}
+      height={isMobile ? "14" : "16"}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -463,8 +489,8 @@ export const Sidebar = () => {
 
   const LtcIcon = () => (
     <svg
-      width="16"
-      height="16"
+      width={isMobile ? "14" : "16"}
+      height={isMobile ? "14" : "16"}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -494,8 +520,8 @@ export const Sidebar = () => {
       return (
         <div style={loadingContainerStyle}>
           <svg
-            width="20"
-            height="20"
+            width={isMobile ? "16" : "20"}
+            height={isMobile ? "16" : "20"}
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -521,8 +547,8 @@ export const Sidebar = () => {
       return (
         <div style={errorContainerStyle}>
           <svg
-            width="16"
-            height="16"
+            width={isMobile ? "14" : "16"}
+            height={isMobile ? "14" : "16"}
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

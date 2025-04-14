@@ -2592,6 +2592,13 @@ img {
   padding-right: 150px;
   z-index: 995;
 }
+
+@media screen and (min-width: 100px) and (max-width: 600px) {
+  .subemnu {
+    display: none !important;
+  }
+}
+
 .submenu-item {
   font-size: 14px;
   font-weight: 500;
@@ -2791,7 +2798,7 @@ img {
     cursor: pointer;
   }
   .submenu {
-   display: none
+    display: none;
   }
   .submenu-item {
     margin: 5px 0;

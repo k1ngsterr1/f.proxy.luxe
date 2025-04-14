@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { ChevronUp, Copy, Check, Calendar, FileText } from "lucide-react";
+import { ChevronUp, Copy, Check, FileText, Menu, X } from "lucide-react";
 import Link from "next/link";
 
 export default function PublicOfferPage() {
@@ -11,6 +11,7 @@ export default function PublicOfferPage() {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   const toggleSection = (section: string) => {
@@ -31,6 +32,8 @@ export default function PublicOfferPage() {
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
       setActiveSection(sectionId);
+      // Close sidebar on mobile after clicking a section
+      setSidebarOpen(false);
     }
   };
 
@@ -49,14 +52,32 @@ export default function PublicOfferPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Check if the screen is mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
+
   return (
     <main
       style={{
         backgroundColor: "#000000",
         color: "#FFFFFF",
         minHeight: "100vh",
-        paddingTop: "50px",
-        paddingBottom: "50px",
+        paddingTop: isMobile ? "30px" : "50px",
+        paddingBottom: isMobile ? "30px" : "50px",
       }}
     >
       <div
@@ -69,13 +90,13 @@ export default function PublicOfferPage() {
         {/* Header */}
         <div
           style={{
-            marginBottom: "40px",
+            marginBottom: isMobile ? "30px" : "40px",
             position: "relative",
           }}
         >
           <h1
             style={{
-              fontSize: "32px",
+              fontSize: isMobile ? "24px" : "32px",
               fontWeight: "bold",
               color: "#f3d675",
               marginBottom: "16px",
@@ -84,15 +105,15 @@ export default function PublicOfferPage() {
               gap: "12px",
             }}
           >
-            <FileText size={28} />
+            <FileText size={isMobile ? 22 : 28} />
             {i18n("header")}
           </h1>
           <p
             style={{
-              fontSize: "16px",
+              fontSize: isMobile ? "14px" : "16px",
               lineHeight: "1.6",
               color: "#CCCCCC",
-              marginBottom: "32px",
+              marginBottom: isMobile ? "24px" : "32px",
               maxWidth: "800px",
             }}
           >
@@ -100,167 +121,368 @@ export default function PublicOfferPage() {
           </p>
         </div>
 
-        {/* Content layout with sidebar */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "280px 1fr",
-            gap: "40px",
-          }}
-        >
-          {/* Table of Contents Sidebar */}
-          <aside
+        {/* Mobile Sidebar Toggle */}
+        {isMobile && (
+          <div
             style={{
-              position: "sticky",
-              top: "100px",
-              height: "fit-content",
-              backgroundColor: "rgba(243, 214, 117, 0.05)",
-              borderRadius: "8px",
-              padding: "24px",
-              border: "1px solid rgba(243, 214, 117, 0.2)",
+              marginBottom: "20px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <h2
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
               style={{
-                fontSize: "18px",
-                fontWeight: "600",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(243, 214, 117, 0.1)",
+                border: "none",
                 color: "#f3d675",
-                marginBottom: "16px",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "14px",
               }}
             >
-              {i18n("tableOfContents")}
-            </h2>
-            <nav>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {[...Array(11)].map((_, index) => (
-                  <li
-                    key={`section${index + 1}`}
+              {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+              <span>{i18n("tableOfContents")}</span>
+            </button>
+          </div>
+        )}
+
+        {/* Content layout */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: isMobile ? "24px" : "40px",
+          }}
+        >
+          {/* Mobile Sidebar Overlay */}
+          {isMobile && sidebarOpen && (
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                zIndex: 1000,
+                padding: "20px",
+                paddingTop: "60px",
+                overflowY: "auto",
+              }}
+            >
+              <button
+                onClick={() => setSidebarOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: "20px",
+                  right: "20px",
+                  background: "none",
+                  border: "none",
+                  color: "#f3d675",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <X size={24} />
+              </button>
+
+              <div
+                style={{
+                  backgroundColor: "rgba(243, 214, 117, 0.05)",
+                  borderRadius: "8px",
+                  padding: "20px",
+                  border: "1px solid rgba(243, 214, 117, 0.2)",
+                }}
+              >
+                <h2
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    color: "#f3d675",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {i18n("tableOfContents")}
+                </h2>
+                <nav>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    {[...Array(11)].map((_, index) => (
+                      <li
+                        key={`mobile-section${index + 1}`}
+                        style={{
+                          marginBottom: "12px",
+                          borderBottom:
+                            index < 10
+                              ? "1px solid rgba(243, 214, 117, 0.1)"
+                              : "none",
+                          paddingBottom: "12px",
+                        }}
+                      >
+                        <button
+                          onClick={() => scrollToSection(`section${index + 1}`)}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color:
+                              activeSection === `section${index + 1}`
+                                ? "#f3d675"
+                                : "#FFFFFF",
+                            fontSize: "14px",
+                            textAlign: "left",
+                            cursor: "pointer",
+                            padding: "0",
+                            width: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            transition: "color 0.2s",
+                          }}
+                        >
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: "24px",
+                              height: "24px",
+                              borderRadius: "50%",
+                              backgroundColor:
+                                activeSection === `section${index + 1}`
+                                  ? "rgba(243, 214, 117, 0.2)"
+                                  : "rgba(255, 255, 255, 0.1)",
+                              color:
+                                activeSection === `section${index + 1}`
+                                  ? "#f3d675"
+                                  : "#FFFFFF",
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              flexShrink: 0,
+                            }}
+                          >
+                            {index + 1}
+                          </span>
+                          {i18n(`section${index + 1}.title`)}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+
+                <div
+                  style={{
+                    marginTop: "24px",
+                    padding: "16px",
+                    backgroundColor: "rgba(243, 214, 117, 0.1)",
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    color: "#CCCCCC",
+                  }}
+                >
+                  <p style={{ marginBottom: "12px" }}>
+                    {i18n("needHelp.question")}
+                  </p>
+                  <div
                     style={{
-                      marginBottom: "12px",
-                      borderBottom:
-                        index < 10
-                          ? "1px solid rgba(243, 214, 117, 0.1)"
-                          : "none",
-                      paddingBottom: "12px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
                     }}
                   >
-                    <button
-                      onClick={() => scrollToSection(`section${index + 1}`)}
+                    <Link
+                      href="/contacts"
                       style={{
-                        background: "none",
-                        border: "none",
-                        color:
-                          activeSection === `section${index + 1}`
-                            ? "#f3d675"
-                            : "#FFFFFF",
-                        fontSize: "14px",
-                        textAlign: "left",
-                        cursor: "pointer",
-                        padding: "0",
-                        width: "100%",
+                        color: "#f3d675",
+                        textDecoration: "none",
                         display: "flex",
                         alignItems: "center",
                         gap: "8px",
-                        transition: "color 0.2s",
                       }}
                     >
-                      <span
+                      {i18n("needHelp.contactUs")}
+                    </Link>
+                    <Link
+                      href="/faq"
+                      style={{
+                        color: "#f3d675",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      {i18n("needHelp.faq")}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Desktop Sidebar */}
+          {!isMobile && (
+            <aside
+              style={{
+                position: "sticky",
+                top: "100px",
+                height: "fit-content",
+                backgroundColor: "rgba(243, 214, 117, 0.05)",
+                borderRadius: "8px",
+                padding: "24px",
+                border: "1px solid rgba(243, 214, 117, 0.2)",
+                width: "280px",
+                flexShrink: 0,
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "16px",
+                }}
+              >
+                {i18n("tableOfContents")}
+              </h2>
+              <nav>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                  {[...Array(11)].map((_, index) => (
+                    <li
+                      key={`section${index + 1}`}
+                      style={{
+                        marginBottom: "12px",
+                        borderBottom:
+                          index < 10
+                            ? "1px solid rgba(243, 214, 117, 0.1)"
+                            : "none",
+                        paddingBottom: "12px",
+                      }}
+                    >
+                      <button
+                        onClick={() => scrollToSection(`section${index + 1}`)}
                         style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: "24px",
-                          height: "24px",
-                          borderRadius: "50%",
-                          backgroundColor:
-                            activeSection === `section${index + 1}`
-                              ? "rgba(243, 214, 117, 0.2)"
-                              : "rgba(255, 255, 255, 0.1)",
+                          background: "none",
+                          border: "none",
                           color:
                             activeSection === `section${index + 1}`
                               ? "#f3d675"
                               : "#FFFFFF",
-                          fontSize: "12px",
-                          fontWeight: "bold",
-                          flexShrink: 0,
+                          fontSize: "14px",
+                          textAlign: "left",
+                          cursor: "pointer",
+                          padding: "0",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          transition: "color 0.2s",
                         }}
                       >
-                        {index + 1}
-                      </span>
-                      {i18n(`section${index + 1}.title`)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "24px",
+                            height: "24px",
+                            borderRadius: "50%",
+                            backgroundColor:
+                              activeSection === `section${index + 1}`
+                                ? "rgba(243, 214, 117, 0.2)"
+                                : "rgba(255, 255, 255, 0.1)",
+                            color:
+                              activeSection === `section${index + 1}`
+                                ? "#f3d675"
+                                : "#FFFFFF",
+                            fontSize: "12px",
+                            fontWeight: "bold",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {index + 1}
+                        </span>
+                        {i18n(`section${index + 1}.title`)}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-            <div
-              style={{
-                marginTop: "24px",
-                padding: "16px",
-                backgroundColor: "rgba(243, 214, 117, 0.1)",
-                borderRadius: "8px",
-                fontSize: "14px",
-                color: "#CCCCCC",
-              }}
-            >
-              <p style={{ marginBottom: "12px" }}>
-                {i18n("needHelp.question")}
-              </p>
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
+                  marginTop: "24px",
+                  padding: "16px",
+                  backgroundColor: "rgba(243, 214, 117, 0.1)",
+                  borderRadius: "8px",
+                  fontSize: "14px",
+                  color: "#CCCCCC",
                 }}
               >
-                <Link
-                  href="/contacts"
+                <p style={{ marginBottom: "12px" }}>
+                  {i18n("needHelp.question")}
+                </p>
+                <div
                   style={{
-                    color: "#f3d675",
-                    textDecoration: "none",
                     display: "flex",
-                    alignItems: "center",
+                    flexDirection: "column",
                     gap: "8px",
                   }}
                 >
-                  {i18n("needHelp.contactUs")}
-                </Link>
-                <Link
-                  href="/faq"
-                  style={{
-                    color: "#f3d675",
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
-                >
-                  {i18n("needHelp.faq")}
-                </Link>
+                  <Link
+                    href="/contacts"
+                    style={{
+                      color: "#f3d675",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    {i18n("needHelp.contactUs")}
+                  </Link>
+                  <Link
+                    href="/faq"
+                    style={{
+                      color: "#f3d675",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    {i18n("needHelp.faq")}
+                  </Link>
+                </div>
               </div>
-            </div>
-          </aside>
+            </aside>
+          )}
 
           {/* Main Content */}
-          <div>
+          <div style={{ flex: 1 }}>
             {/* Section 1 */}
             <section
               ref={(el: any) => (sectionRefs.current.section1 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -271,8 +493,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -289,15 +511,16 @@ export default function PublicOfferPage() {
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "center",
+                  alignItems: isMobile ? "flex-start" : "center",
                   marginBottom: "16px",
                 }}
               >
                 <p
                   style={{
-                    fontSize: "16px",
+                    fontSize: isMobile ? "14px" : "16px",
                     lineHeight: "1.6",
                     color: "#FFFFFF",
+                    paddingRight: isMobile ? "30px" : "0",
                   }}
                 >
                   {i18n("section1.point1")}
@@ -313,6 +536,7 @@ export default function PublicOfferPage() {
                     alignItems: "center",
                     gap: "4px",
                     fontSize: "12px",
+                    flexShrink: 0,
                   }}
                   title={i18n("copyText")}
                 >
@@ -324,13 +548,13 @@ export default function PublicOfferPage() {
                 style={{
                   backgroundColor: "rgba(0, 0, 0, 0.3)",
                   borderRadius: "8px",
-                  padding: "16px",
+                  padding: isMobile ? "12px" : "16px",
                   marginBottom: "16px",
                 }}
               >
                 <p
                   style={{
-                    fontSize: "14px",
+                    fontSize: isMobile ? "12px" : "14px",
                     lineHeight: "1.6",
                     color: "#CCCCCC",
                     marginBottom: "12px",
@@ -340,7 +564,7 @@ export default function PublicOfferPage() {
                 </p>
                 <p
                   style={{
-                    fontSize: "14px",
+                    fontSize: isMobile ? "12px" : "14px",
                     lineHeight: "1.6",
                     color: "#CCCCCC",
                     marginBottom: "12px",
@@ -350,7 +574,7 @@ export default function PublicOfferPage() {
                 </p>
                 <p
                   style={{
-                    fontSize: "14px",
+                    fontSize: isMobile ? "12px" : "14px",
                     lineHeight: "1.6",
                     color: "#CCCCCC",
                     marginBottom: "12px",
@@ -360,7 +584,7 @@ export default function PublicOfferPage() {
                 </p>
                 <p
                   style={{
-                    fontSize: "14px",
+                    fontSize: isMobile ? "12px" : "14px",
                     lineHeight: "1.6",
                     color: "#CCCCCC",
                   }}
@@ -374,19 +598,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section2 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -397,8 +621,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -413,7 +637,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -424,7 +648,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -437,13 +661,13 @@ export default function PublicOfferPage() {
                 style={{
                   backgroundColor: "rgba(243, 214, 117, 0.05)",
                   borderRadius: "8px",
-                  padding: "16px",
+                  padding: isMobile ? "12px" : "16px",
                   marginBottom: "16px",
                 }}
               >
                 <h3
                   style={{
-                    fontSize: "16px",
+                    fontSize: isMobile ? "14px" : "16px",
                     fontWeight: "600",
                     color: "#f3d675",
                     marginBottom: "12px",
@@ -460,7 +684,7 @@ export default function PublicOfferPage() {
                 >
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -482,7 +706,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -504,7 +728,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -526,7 +750,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -548,7 +772,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       display: "flex",
@@ -575,19 +799,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section3 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -598,8 +822,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -614,7 +838,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -625,7 +849,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -636,7 +860,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -650,19 +874,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section4 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -673,8 +897,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -689,7 +913,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -700,7 +924,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -713,7 +937,7 @@ export default function PublicOfferPage() {
                 style={{
                   backgroundColor: "rgba(243, 214, 117, 0.05)",
                   borderRadius: "8px",
-                  padding: "16px",
+                  padding: isMobile ? "12px" : "16px",
                 }}
               >
                 <ul
@@ -725,7 +949,7 @@ export default function PublicOfferPage() {
                 >
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -747,7 +971,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -769,7 +993,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       marginBottom: "8px",
@@ -791,7 +1015,7 @@ export default function PublicOfferPage() {
                   </li>
                   <li
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#FFFFFF",
                       display: "flex",
@@ -818,19 +1042,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section5 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -841,8 +1065,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -857,7 +1081,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -868,7 +1092,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -879,7 +1103,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                 }}
@@ -892,19 +1116,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section6 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -915,8 +1139,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -931,7 +1155,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -942,7 +1166,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                 }}
@@ -955,19 +1179,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section7 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -978,8 +1202,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -994,7 +1218,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                 }}
@@ -1007,19 +1231,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section8 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -1030,8 +1254,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -1046,7 +1270,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -1057,7 +1281,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -1068,7 +1292,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                 }}
@@ -1081,19 +1305,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section9 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -1104,8 +1328,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -1120,7 +1344,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -1131,7 +1355,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -1142,7 +1366,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                 }}
@@ -1155,19 +1379,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section10 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.03)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.1)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -1178,8 +1402,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -1194,7 +1418,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -1205,7 +1429,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                   marginBottom: "16px",
@@ -1216,7 +1440,7 @@ export default function PublicOfferPage() {
 
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   color: "#FFFFFF",
                 }}
@@ -1229,19 +1453,19 @@ export default function PublicOfferPage() {
             <section
               ref={(el: any) => (sectionRefs.current.section11 = el)}
               style={{
-                marginBottom: "40px",
+                marginBottom: isMobile ? "30px" : "40px",
                 backgroundColor: "rgba(243, 214, 117, 0.05)",
                 borderRadius: "8px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 border: "1px solid rgba(243, 214, 117, 0.2)",
               }}
             >
               <h2
                 style={{
-                  fontSize: "24px",
+                  fontSize: isMobile ? "20px" : "24px",
                   fontWeight: "600",
                   color: "#f3d675",
-                  marginBottom: "24px",
+                  marginBottom: isMobile ? "20px" : "24px",
                   display: "flex",
                   alignItems: "center",
                   gap: "12px",
@@ -1252,8 +1476,8 @@ export default function PublicOfferPage() {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: "32px",
-                    height: "32px",
+                    width: isMobile ? "28px" : "32px",
+                    height: isMobile ? "28px" : "32px",
                     borderRadius: "50%",
                     backgroundColor: "rgba(243, 214, 117, 0.2)",
                     color: "#f3d675",
@@ -1269,7 +1493,7 @@ export default function PublicOfferPage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                   gap: "16px",
                 }}
               >
@@ -1277,12 +1501,12 @@ export default function PublicOfferPage() {
                   style={{
                     backgroundColor: "rgba(0, 0, 0, 0.3)",
                     borderRadius: "8px",
-                    padding: "16px",
+                    padding: isMobile ? "12px" : "16px",
                   }}
                 >
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#CCCCCC",
                       marginBottom: "8px",
@@ -1295,7 +1519,7 @@ export default function PublicOfferPage() {
                   </p>
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#CCCCCC",
                       marginBottom: "8px",
@@ -1308,7 +1532,7 @@ export default function PublicOfferPage() {
                   </p>
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#CCCCCC",
                       marginBottom: "8px",
@@ -1324,12 +1548,12 @@ export default function PublicOfferPage() {
                   style={{
                     backgroundColor: "rgba(0, 0, 0, 0.3)",
                     borderRadius: "8px",
-                    padding: "16px",
+                    padding: isMobile ? "12px" : "16px",
                   }}
                 >
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#CCCCCC",
                       marginBottom: "8px",
@@ -1342,7 +1566,7 @@ export default function PublicOfferPage() {
                   </p>
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#CCCCCC",
                       marginBottom: "8px",
@@ -1355,7 +1579,7 @@ export default function PublicOfferPage() {
                   </p>
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: isMobile ? "12px" : "14px",
                       lineHeight: "1.6",
                       color: "#CCCCCC",
                     }}
@@ -1388,10 +1612,10 @@ export default function PublicOfferPage() {
           onClick={scrollToTop}
           style={{
             position: "fixed",
-            bottom: "30px",
-            right: "30px",
-            width: "50px",
-            height: "50px",
+            bottom: isMobile ? "20px" : "30px",
+            right: isMobile ? "20px" : "30px",
+            width: isMobile ? "40px" : "50px",
+            height: isMobile ? "40px" : "50px",
             borderRadius: "50%",
             backgroundColor: "rgba(243, 214, 117, 0.2)",
             border: "1px solid rgba(243, 214, 117, 0.5)",
@@ -1403,8 +1627,9 @@ export default function PublicOfferPage() {
             zIndex: 100,
             transition: "all 0.3s ease",
           }}
+          aria-label="Back to top"
         >
-          <ChevronUp size={24} />
+          <ChevronUp size={isMobile ? 20 : 24} />
         </button>
       )}
     </main>

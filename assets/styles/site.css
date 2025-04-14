@@ -2296,6 +2296,13 @@ img {
   padding-right: 150px;
   z-index: 995;
 }
+
+@media screen and (min-width: 100px) and (max-width: 600px) {
+  .subemnu {
+    display: none !important;
+  }
+}
+
 .submenu-item {
   font-size: 14px;
   font-weight: 500;
@@ -2310,6 +2317,12 @@ img {
   position: relative;
   display: flex;
   justify-content: flex-end;
+}
+
+@media screen and (min-width: 100px) and (max-width: 600px) {
+  .subemnu {
+    display: none !important;
+  }
 }
 
 @media screen and (max-width: 1630px) {
