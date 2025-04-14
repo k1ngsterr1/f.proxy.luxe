@@ -1,5 +1,14 @@
 {
   "contacts": {
-    "title": "Contacts"
+    "title": "Contacts",
+    "website": "Website",
+    "name": "Full Name",
+    "name_value": "Individual entrepreneur Kolos Vladlena Olegovna",
+    "inn": "Tax ID",
+    "phone": "Phone",
+    "email": "Email",
+    "telegram": "Telegram",
+    "copy": "Copy",
+    "copied": "Copied"
   }
 }

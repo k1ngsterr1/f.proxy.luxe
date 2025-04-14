@@ -238,7 +238,7 @@ export default function PartnerPage() {
                 {t('participation.method1.title')}
               </span>{" "}
               {t('participation.method1.description')}
-              процент;
+              {t(`percent`)}
             </li>
             <li>
               <span style={{ color: "#f3d675", fontWeight: "500" }}>

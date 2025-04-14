@@ -13,7 +13,6 @@ import {
   User,
   Copy,
   Check,
-  Send,
   MessageSquare,
   ExternalLink,
 } from "lucide-react";
@@ -43,12 +42,12 @@ export default function ContactsPage() {
       id: "name",
       icon: <User size={20} />,
       label: i18n("name"),
-      value: "Самозанятая Колос Владлена Олеговна",
+      value: i18n("name_value"),
     },
     {
       id: "inn",
       icon: <FileText size={20} />,
-      label: "ИНН",
+      label: i18n("inn"),
       value: "590621469075",
     },
     {
@@ -244,11 +243,11 @@ export default function ContactsPage() {
                             {item.value}
                             {(item.id === "website" ||
                               item.id === "telegram") && (
-                              <ExternalLink
-                                size={14}
-                                style={{ opacity: 0.6 }}
-                              />
-                            )}
+                                <ExternalLink
+                                  size={14}
+                                  style={{ opacity: 0.6 }}
+                                />
+                              )}
                           </a>
                         ) : (
                           <span

@@ -1,0 +1,16 @@
+{
+    "article": {
+        "loading": "Loading article...",
+        "error_title": "Failed to load the article",
+        "error_description": "An error occurred while loading the article. Please try again later.",
+        "not_found": "Article not found",
+        "author": "Administrator",
+        "reading_time": "{{count}} min read",
+        "default_date": "01.01.2023",
+        "share": "Share this article:",
+        "all_articles": "All articles"
+    },
+    "tags": {
+        "general": "General"
+    }
+}
