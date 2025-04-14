@@ -5,6 +5,7 @@
     "error": "Error loading order: ",
     "unknown-error": "Unknown error",
     "insufficient-funds": "Insufficient balance to pay the order",
+    "month": "30 days",
     "table": {
       "order-number": "Order number:",
       "order-date": "Order date:",

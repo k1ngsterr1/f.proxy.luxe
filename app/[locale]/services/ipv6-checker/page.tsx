@@ -187,8 +187,8 @@ export default function Page() {
                     {result.hasIpv6
                       ? t("result.summary.supported", { domain: result.domain })
                       : t("result.summary.notSupported", {
-                          domain: result.domain,
-                        })}
+                        domain: result.domain,
+                      })}
                   </span>
                 </div>
                 {result.hasIPv6 && result.ipv6Addresses.length > 0 && (

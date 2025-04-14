@@ -302,9 +302,9 @@ export default function OrderDetailPage() {
                     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                   }}
                 >
-                  {order.periodDays === "1m"
-                    ? t("table.thirty-days")
-                    : t("table.thirty-days")}
+                  {(order.periodDays as any) == "1m"
+                    ? t("month")
+                    : order.periodDays}
                 </td>
               </tr>
               {order.type === "resident" && (

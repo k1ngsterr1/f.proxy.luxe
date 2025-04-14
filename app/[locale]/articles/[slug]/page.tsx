@@ -18,6 +18,7 @@ import {
   Loader,
 } from "lucide-react";
 import { useGetArticleById } from "@/entities/articles/hooks/queries/use-get-article-by-id.queries";
+import { useTranslations } from "next-intl";
 
 // Helper function to extract date from content (simplified example)
 function extractDateFromContent(content?: string): string | null {
@@ -72,6 +73,7 @@ function extractTagsFromContent(content?: string) {
 }
 
 export default function ArticlePage() {
+  const t = useTranslations("article-slug");
   const params = useParams();
   const articleId = params.slug as string;
 
@@ -172,7 +174,7 @@ export default function ArticlePage() {
                 style={{ color: "#f3d675", marginBottom: "16px" }}
               />
               <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
-                Загрузка статьи...
+                {t("article.loading")}
               </h3>
             </div>
           ) : isError ? (
@@ -191,11 +193,10 @@ export default function ArticlePage() {
                 style={{ color: "#FF5252", marginBottom: "16px" }}
               />
               <h3 style={{ color: "#FF5252", marginBottom: "8px" }}>
-                Ошибка загрузки статьи
+                {t("article.error_title")}
               </h3>
               <p style={{ color: "#999999" }}>
-                {error?.message ||
-                  "Произошла ошибка при загрузке статьи. Пожалуйста, попробуйте позже."}
+                {error?.message || t("article.error_description")}
               </p>
             </div>
           ) : (
@@ -220,7 +221,7 @@ export default function ArticlePage() {
                     padding: "0 20px",
                   }}
                 >
-                  {article?.title || "Статья не найдена"}
+                  {article?.title || t("article.not_found")}
                 </span>
               </h1>
 
@@ -257,7 +258,7 @@ export default function ArticlePage() {
                   }}
                 >
                   <User size={16} style={{ color: "#f3d675" }} />
-                  <span style={{ fontSize: "14px" }}>Администратор</span>
+                  <span style={{ fontSize: "14px" }}>{t("article.author")}</span>
                 </div>
                 <div
                   style={{
@@ -269,7 +270,7 @@ export default function ArticlePage() {
                 >
                   <Clock size={16} style={{ color: "#f3d675" }} />
                   <span style={{ fontSize: "14px" }}>
-                    {readingTime} мин. чтения
+                    {t("article.reading_time", { count: readingTime })}
                   </span>
                 </div>
               </div>
@@ -292,7 +293,7 @@ export default function ArticlePage() {
                       ? article.images[0]
                       : "/placeholder.svg?height=800&width=1200"
                   }
-                  alt={article?.title || "Article Image"}
+                  alt={article?.title || t("article.image_alt")}
                   fill
                   style={{ objectFit: "cover" }}
                 />
@@ -314,7 +315,7 @@ export default function ArticlePage() {
               >
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: article?.content || "Содержимое статьи не найдено",
+                    __html: article?.content || t("article.content_not_found"),
                   }}
                 />
 
@@ -369,7 +370,9 @@ export default function ArticlePage() {
                             e.currentTarget.style.transform = "translateY(0)";
                           }}
                         >
-                          {tag.name}
+                          {tag.name === "Общее"
+                            ? t("tags.general")
+                            : tag.name}
                           {index <
                           extractTagsFromContent(article?.content).length - 1
                             ? ","
@@ -401,7 +404,7 @@ export default function ArticlePage() {
                       e.currentTarget.style.transform = "translateX(0)";
                     }}
                   >
-                    Все статьи
+                    {t("article.all_articles")}
                   </Link>
                 </div>
               </div>
@@ -418,7 +421,7 @@ export default function ArticlePage() {
                 }}
               >
                 <span style={{ color: "#999999", fontSize: "14px" }}>
-                  Поделиться статьей:
+                  {t("article.share")}
                 </span>
                 <div style={{ display: "flex", gap: "12px" }}>
                   <a

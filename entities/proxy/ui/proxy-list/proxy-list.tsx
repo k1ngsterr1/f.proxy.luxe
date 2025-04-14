@@ -49,6 +49,8 @@ export interface Props {
   onDelete?: (proxyId: string, packageKey?: string) => void;
   onEdit?: (proxy: Proxy) => void;
   availableCountries?: { code: string; name: string }[];
+  selectedProxies?: string[];
+  onSelectProxy?: (proxyId: string) => void;
 }
 
 const ProxyList: React.FC<Props> = ({
@@ -57,6 +59,8 @@ const ProxyList: React.FC<Props> = ({
   onDelete,
   onEdit,
   availableCountries = [],
+  selectedProxies: externalSelectedProxies,
+  onSelectProxy,
 }) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -73,9 +77,9 @@ const ProxyList: React.FC<Props> = ({
   const [prolongPeriod, setProlongPeriod] = useState<string>("1m");
 
   // Add states for checkbox selection
-  const [selectedProxies, setSelectedProxies] = useState<Set<string>>(
-    new Set()
-  );
+  const [internalSelectedProxies, setInternalSelectedProxies] = useState<
+    Set<string>
+  >(new Set());
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [batchActionMenuOpen, setBatchActionMenuOpen] = useState(false);
   const [isSubmittingBatchProlong, setIsSubmittingBatchProlong] =
@@ -83,6 +87,10 @@ const ProxyList: React.FC<Props> = ({
 
   // Store unique proxies by ID to avoid duplicates
   const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
+
+  // Use either external or internal selected proxies
+  const selectedProxies =
+    externalSelectedProxies || Array.from(internalSelectedProxies);
 
   // Process proxies to ensure uniqueness by ID
   useEffect(() => {
@@ -101,13 +109,15 @@ const ProxyList: React.FC<Props> = ({
   useEffect(() => {
     if (
       uniqueProxies.length > 0 &&
-      selectedProxies.size === uniqueProxies.length
+      (externalSelectedProxies
+        ? externalSelectedProxies.length === uniqueProxies.length
+        : internalSelectedProxies.size === uniqueProxies.length)
     ) {
       setSelectAllChecked(true);
     } else {
       setSelectAllChecked(false);
     }
-  }, [selectedProxies, uniqueProxies]);
+  }, [externalSelectedProxies, internalSelectedProxies, uniqueProxies]);
 
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
@@ -122,31 +132,108 @@ const ProxyList: React.FC<Props> = ({
 
   // Function to handle checkbox selection
   const handleCheckboxChange = (proxyId: string) => {
-    setSelectedProxies((prev) => {
-      const newSelected = new Set(prev);
-      if (newSelected.has(proxyId)) {
-        newSelected.delete(proxyId);
+    console.log("handleCheckboxChange called with proxyId:", proxyId);
+
+    // Find the proxy with this ID
+    const proxy = uniqueProxies.find((p) => p.id === proxyId);
+
+    if (!proxy) {
+      console.error("Proxy not found with ID:", proxyId);
+      return;
+    }
+
+    console.log("Found proxy:", proxy);
+    const orderId = proxy.order_id || proxy.orderId;
+    console.log("Order ID:", orderId);
+
+    if (!orderId) {
+      console.log("No order_id found, using single selection");
+      // Fall back to single selection if no order_id is available
+      if (onSelectProxy) {
+        onSelectProxy(proxyId);
       } else {
-        newSelected.add(proxyId);
+        setInternalSelectedProxies((prev) => {
+          const newSelected = new Set(prev);
+          if (newSelected.has(proxyId)) {
+            newSelected.delete(proxyId);
+          } else {
+            newSelected.add(proxyId);
+          }
+          return newSelected;
+        });
       }
-      return newSelected;
-    });
+      return;
+    }
+
+    // If we have an external handler, use it
+    if (onSelectProxy) {
+      console.log("Using external onSelectProxy handler");
+      onSelectProxy(proxyId);
+    } else {
+      // Find all proxies with the same order_id
+      const proxiesWithSameOrderId = uniqueProxies.filter(
+        (p) => p.order_id === orderId || p.orderId === orderId
+      );
+      console.log("Proxies with same order_id:", proxiesWithSameOrderId.length);
+
+      // Get all proxy IDs with this order_id
+      const proxyIdsWithSameOrderId = proxiesWithSameOrderId.map((p) => p.id);
+      console.log("Proxy IDs with same order_id:", proxyIdsWithSameOrderId);
+
+      setInternalSelectedProxies((prev) => {
+        const newSelected = new Set(prev);
+        // Check if the clicked proxy is already selected
+        if (newSelected.has(proxyId)) {
+          console.log(
+            "Proxy is already selected, deselecting all in this order"
+          );
+          // Deselect all proxies with this order_id
+          proxyIdsWithSameOrderId.forEach((id) => {
+            newSelected.delete(id);
+          });
+        } else {
+          console.log("Proxy is not selected, selecting all in this order");
+          // Select all proxies with this order_id
+          proxyIdsWithSameOrderId.forEach((id) => {
+            newSelected.add(id);
+          });
+        }
+        console.log("New selected proxies:", Array.from(newSelected));
+        return newSelected;
+      });
+    }
   };
 
   // Function to handle select all
   const handleSelectAll = () => {
-    if (selectAllChecked) {
-      setSelectedProxies(new Set());
+    if (onSelectProxy && externalSelectedProxies) {
+      // If we're using external selection, we need to call onSelectProxy for each proxy
+      if (selectAllChecked) {
+        // Deselect all - we'll just select the first one to trigger the parent's logic
+        if (uniqueProxies.length > 0) {
+          onSelectProxy(uniqueProxies[0].id);
+        }
+      } else {
+        // Select all - we'll just select the first one to trigger the parent's logic
+        if (uniqueProxies.length > 0) {
+          onSelectProxy(uniqueProxies[0].id);
+        }
+      }
     } else {
-      const allIds = uniqueProxies.map((proxy) => proxy.id);
-      setSelectedProxies(new Set(allIds));
+      // Using internal selection
+      if (selectAllChecked) {
+        setInternalSelectedProxies(new Set());
+      } else {
+        const allIds = uniqueProxies.map((proxy) => proxy.id);
+        setInternalSelectedProxies(new Set(allIds));
+      }
     }
     setSelectAllChecked(!selectAllChecked);
   };
 
   // Function to handle batch prolong
   const handleBatchProlong = () => {
-    if (selectedProxies.size < 1) {
+    if (selectedProxies.length < 1) {
       setNotification({
         show: true,
         message: "Выберите хотя бы один прокси для продления",
@@ -157,7 +244,7 @@ const ProxyList: React.FC<Props> = ({
     }
 
     // Open prolong popup with the first selected proxy
-    const firstSelectedId = Array.from(selectedProxies)[0];
+    const firstSelectedId = selectedProxies[0];
     const firstSelectedProxy = uniqueProxies.find(
       (p) => p.id === firstSelectedId
     );
@@ -177,7 +264,7 @@ const ProxyList: React.FC<Props> = ({
 
     // Get all selected proxies
     const selectedProxiesArray = uniqueProxies.filter((proxy) =>
-      selectedProxies.has(proxy.id)
+      selectedProxies.includes(proxy.id)
     );
 
     // Track progress
@@ -197,7 +284,7 @@ const ProxyList: React.FC<Props> = ({
         });
         setProlongProxy(null);
         setIsSubmittingBatchProlong(false);
-        setSelectedProxies(new Set());
+        setInternalSelectedProxies(new Set());
         return;
       }
 
@@ -837,9 +924,9 @@ const ProxyList: React.FC<Props> = ({
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    cursor: selectedProxies.size > 0 ? "pointer" : "not-allowed",
+    cursor: selectedProxies.length > 0 ? "pointer" : "not-allowed",
     fontSize: "14px",
-    opacity: selectedProxies.size > 0 ? 1 : 0.5,
+    opacity: selectedProxies.length > 0 ? 1 : 0.5,
   };
 
   // Add styles for the popup
@@ -1290,13 +1377,13 @@ const ProxyList: React.FC<Props> = ({
           <p style={cardDescriptionStyle}>Управление прокси-серверами</p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
-          {selectedProxies.size > 0 && (
+          {selectedProxies.length > 0 && (
             <button
               style={batchActionButtonStyle}
               onClick={handleBatchProlong}
-              disabled={selectedProxies.size === 0}
+              disabled={selectedProxies.length === 0}
             >
-              <span>Продлить выбранные ({selectedProxies.size})</span>
+              <span>Продлить выбранные ({selectedProxies.length})</span>
             </button>
           )}
           <div style={{ position: "relative" }}>
@@ -1386,7 +1473,7 @@ const ProxyList: React.FC<Props> = ({
                     ? proxy.package_list[0].export.ext
                     : "—";
 
-                const isSelected = selectedProxies.has(proxy.id);
+                const isSelected = selectedProxies.includes(proxy.id);
 
                 return (
                   <tr
@@ -1530,7 +1617,7 @@ const ProxyList: React.FC<Props> = ({
           <div style={popupContentStyle}>
             <h3 style={popupTitleStyle}>
               {(prolongProxy as any).isBatchOperation
-                ? `Продление ${selectedProxies.size} прокси`
+                ? `Продление ${selectedProxies.length} прокси`
                 : "Продление прокси"}
             </h3>
             <div style={popupFormGroupStyle}>
