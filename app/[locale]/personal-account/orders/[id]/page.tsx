@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, ChevronRight } from "lucide-react";
+import { Loader2, ChevronRight, ArrowLeft } from "lucide-react";
 import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
 import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-order.mutation";
 import { AlertMessage } from "@/shared/ui/alert";
@@ -12,6 +12,7 @@ import { Button } from "@/shared/ui/button";
 import { useDeleteOrder } from "@/entities/orders/hooks/mutation/use-delete-order.mutation";
 import { useTranslations } from "next-intl";
 import { useCheckCouponValidity } from "@/entities/orders/hooks/mutation/use-check-coupong.mutation";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 export default function OrderDetailPage() {
   const t = useTranslations("order-detail");
@@ -32,6 +33,20 @@ export default function OrderDetailPage() {
   const { mutate: checkCouponValidity, isPending: isCheckingCoupon } =
     useCheckCouponValidity();
   const navigate = useRouter();
+  const isMobile = useIsMobile();
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
+
+  // Track window width for responsive adjustments
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
 
@@ -99,33 +114,67 @@ export default function OrderDetailPage() {
     return date.toLocaleString("ru-RU");
   };
 
+  // Responsive styles
+  const containerPadding = isMobile ? "16px" : "20px";
+  const titleFontSize = isMobile ? "20px" : "32px";
+  const headerMarginBottom = isMobile ? "16px" : "24px";
+  const tableFontSize = isMobile ? "13px" : "14px";
+  const cellPadding = isMobile ? "10px 12px" : "12px 16px";
+  const buttonPadding = isMobile ? "8px 12px" : "10px 16px";
+  const inputPadding = isMobile ? "6px 10px" : "8px 12px";
+  const labelGap = isMobile ? "6px" : "8px";
+  const buttonGap = isMobile ? "8px" : "12px";
+  const alertMarginBottom = isMobile ? "16px" : "24px";
+
   return (
     <div
       style={{
-        padding: "20px",
+        padding: containerPadding,
         maxWidth: "1200px",
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
     >
       {user?.isVerified === false && (
-        <AlertMessage
-          type="warning"
-          isEmail
-          message={alertT("resend.verify-email")}
-        />
+        <div style={{ marginBottom: alertMarginBottom }}>
+          <AlertMessage
+            type="warning"
+            isEmail
+            message={alertT("resend.verify-email")}
+          />
+        </div>
       )}
+
+      {/* Header with back link */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          marginBottom: "24px",
+          marginBottom: headerMarginBottom,
+          flexWrap: isMobile ? "wrap" : "nowrap",
         }}
       >
+        {isMobile && (
+          <Link
+            href="/personal-account/orders"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              color: "#f3d675",
+              textDecoration: "none",
+              marginBottom: "8px",
+              width: "100%",
+            }}
+          >
+            <ArrowLeft size={16} style={{ marginRight: "4px" }} />
+            {t("back-to-orders")}
+          </Link>
+        )}
+
         <Link
           href="/orders"
           style={{
-            fontSize: "32px",
+            fontSize: titleFontSize,
             color: "#FFFFFF",
             fontWeight: "bold",
             textDecoration: "none",
@@ -134,28 +183,31 @@ export default function OrderDetailPage() {
           {t("title")}
         </Link>
         <ChevronRight
-          size={24}
-          style={{ color: "#f3d675", margin: "0 12px" }}
+          size={isMobile ? 16 : 24}
+          style={{ color: "#f3d675", margin: "0 8px" }}
         />
         <span
           style={{
-            fontSize: "32px",
+            fontSize: titleFontSize,
             color: "#f3d675",
             fontWeight: "bold",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {orderId}
         </span>
       </div>
+
       {isLoading && (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.1)",
-            padding: "24px",
+            padding: isMobile ? "16px" : "24px",
             textAlign: "center",
             borderRadius: "4px",
             color: "#f3d675",
-            fontSize: "14px",
+            fontSize: tableFontSize,
             border: "1px solid rgba(243, 214, 117, 0.2)",
             display: "flex",
             alignItems: "center",
@@ -163,25 +215,27 @@ export default function OrderDetailPage() {
             gap: "12px",
           }}
         >
-          <Loader2 size={20} className="animate-spin" />
+          <Loader2 size={isMobile ? 16 : 20} className="animate-spin" />
           {t("loading")}
         </div>
       )}
+
       {isError && (
         <div
           style={{
             backgroundColor: "rgba(255, 82, 82, 0.1)",
-            padding: "24px",
+            padding: isMobile ? "16px" : "24px",
             textAlign: "center",
             borderRadius: "4px",
             color: "#FF5252",
-            fontSize: "14px",
+            fontSize: tableFontSize,
             border: "1px solid rgba(255, 82, 82, 0.2)",
           }}
         >
           {t("error")} {error?.message || t("unknown-error")}
         </div>
       )}
+
       {!isLoading && !isError && order && (
         <div
           style={{
@@ -191,161 +245,182 @@ export default function OrderDetailPage() {
             overflow: "hidden",
           }}
         >
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontSize: "14px",
-            }}
-          >
-            <tbody>
-              <tr>
-                <td
+          {/* Mobile view: Display as stacked divs instead of table */}
+          {isMobile ? (
+            <div>
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    width: "30%",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.order-number")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                   }}
                 >
                   {order.orderNumber || orderId}
-                </td>
-              </tr>
-              <tr>
-                <td
+                </div>
+              </div>
+
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.order-date")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                   }}
                 >
                   {formatDate(order.createdAt)}
-                </td>
-              </tr>
-              <tr>
-                <td
+                </div>
+              </div>
+
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.order-type")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                   }}
                 >
                   {t("table.purchase")}
-                </td>
-              </tr>
-              <tr>
-                <td
+                </div>
+              </div>
+
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.ip-quantity")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                   }}
                 >
                   {order.type === "resident" ? "∞" : order.quantity}
-                </td>
-              </tr>
-              <tr>
-                <td
+                </div>
+              </div>
+
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.days-quantity")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                   }}
                 >
                   {(order.periodDays as any) == "1m"
                     ? t("month")
                     : order.periodDays}
-                </td>
-              </tr>
+                </div>
+              </div>
+
               {order.type === "resident" && (
-                <tr>
-                  <td
+                <div
+                  style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+                >
+                  <div
                     style={{
-                      padding: "12px 16px",
+                      padding: cellPadding,
                       backgroundColor: "rgba(243, 214, 117, 0.1)",
                       color: "#f3d675",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                      fontSize: tableFontSize,
+                      fontWeight: "500",
                     }}
                   >
                     {t("table.tariff")}
-                  </td>
-                  <td
+                  </div>
+                  <div
                     style={{
-                      padding: "12px 16px",
+                      padding: cellPadding,
                       color: "#FFFFFF",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                      fontSize: tableFontSize,
                     }}
                   >
                     {order.tariff || "-"}
-                  </td>
-                </tr>
+                  </div>
+                </div>
               )}
-              <tr>
-                <td
+
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.order-amount")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                     fontWeight: "bold",
                   }}
                 >
@@ -380,39 +455,50 @@ export default function OrderDetailPage() {
                   ) : (
                     `$${order.totalPrice}`
                   )}
-                </td>
-              </tr>
-              <tr>
-                <td
+                </div>
+              </div>
+
+              <div
+                style={{ borderBottom: "1px solid rgba(243, 214, 117, 0.2)" }}
+              >
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     color: "#f3d675",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
+                    fontWeight: "500",
                   }}
                 >
                   {t("table.discount-coupon")}
-                </td>
-                <td
+                </div>
+                <div
                   style={{
-                    padding: "12px 16px",
+                    padding: cellPadding,
                     color: "#FFFFFF",
-                    borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    fontSize: tableFontSize,
                   }}
                 >
-                  <div style={{ display: "flex", gap: "8px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                    }}
+                  >
                     <input
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                       placeholder={t("coupon.placeholder")}
                       style={{
-                        padding: "8px 12px",
+                        padding: inputPadding,
                         backgroundColor: "rgba(243, 214, 117, 0.1)",
                         border: "1px solid rgba(243, 214, 117, 0.2)",
                         borderRadius: "4px",
                         color: "#f3d675",
-                        fontSize: "14px",
+                        fontSize: tableFontSize,
+                        width: "100%",
                       }}
                     />
                     <Button
@@ -421,22 +507,262 @@ export default function OrderDetailPage() {
                       variant="default"
                     />
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Desktop view: Table layout
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: tableFontSize,
+              }}
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      width: "30%",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.order-number")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {order.orderNumber || orderId}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.order-date")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {formatDate(order.createdAt)}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.order-type")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.purchase")}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.ip-quantity")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {order.type === "resident" ? "∞" : order.quantity}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.days-quantity")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {(order.periodDays as any) == "1m"
+                      ? t("month")
+                      : order.periodDays}
+                  </td>
+                </tr>
+                {order.type === "resident" && (
+                  <tr>
+                    <td
+                      style={{
+                        padding: cellPadding,
+                        backgroundColor: "rgba(243, 214, 117, 0.1)",
+                        color: "#f3d675",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                      }}
+                    >
+                      {t("table.tariff")}
+                    </td>
+                    <td
+                      style={{
+                        padding: cellPadding,
+                        color: "#FFFFFF",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                      }}
+                    >
+                      {order.tariff || "-"}
+                    </td>
+                  </tr>
+                )}
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.order-amount")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {appliedDiscount ? (
+                      <div>
+                        <span
+                          style={{
+                            textDecoration: "line-through",
+                            color: "#999999",
+                            marginRight: "8px",
+                          }}
+                        >
+                          ${order.totalPrice}
+                        </span>
+                        <span style={{ color: "#f3d675" }}>
+                          $
+                          {(
+                            order.totalPrice *
+                            (1 - appliedDiscount / 100)
+                          ).toFixed(2)}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "12px",
+                            color: "#f3d675",
+                            marginLeft: "4px",
+                          }}
+                        >
+                          (-{appliedDiscount}%)
+                        </span>
+                      </div>
+                    ) : (
+                      `$${order.totalPrice}`
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      color: "#f3d675",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    {t("table.discount-coupon")}
+                  </td>
+                  <td
+                    style={{
+                      padding: cellPadding,
+                      color: "#FFFFFF",
+                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                    }}
+                  >
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        placeholder={t("coupon.placeholder")}
+                        style={{
+                          padding: inputPadding,
+                          backgroundColor: "rgba(243, 214, 117, 0.1)",
+                          border: "1px solid rgba(243, 214, 117, 0.2)",
+                          borderRadius: "4px",
+                          color: "#f3d675",
+                          fontSize: tableFontSize,
+                        }}
+                      />
+                      <Button
+                        name={t("coupon.apply")}
+                        onClick={handleApplyCoupon}
+                        variant="default"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
           <div
             style={{
-              padding: "16px",
+              padding: isMobile ? "12px" : "16px",
               borderTop: "1px solid rgba(243, 214, 117, 0.2)",
             }}
           >
             <div
               style={{
                 display: "flex",
-                gap: "16px",
+                gap: labelGap,
                 alignItems: "center",
                 marginBottom: "8px",
+                flexDirection: isMobile ? "column" : "row",
+                //@ts-ignore
+                alignItems: isMobile ? "flex-start" : "center",
               }}
             >
               <label
@@ -445,6 +771,8 @@ export default function OrderDetailPage() {
                   alignItems: "center",
                   gap: "8px",
                   cursor: "pointer",
+                  width: isMobile ? "100%" : "auto",
+                  marginBottom: isMobile ? "8px" : "0",
                 }}
               >
                 <input
@@ -464,6 +792,7 @@ export default function OrderDetailPage() {
                   alignItems: "center",
                   gap: "8px",
                   cursor: "pointer",
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 <input
@@ -490,24 +819,28 @@ export default function OrderDetailPage() {
               {t("proxy-type.label")}
             </p>
           </div>
+
           <div
             style={{
-              padding: "16px",
+              padding: isMobile ? "12px" : "16px",
               borderTop: "1px solid rgba(243, 214, 117, 0.2)",
               display: "flex",
               justifyContent: "flex-start",
-              gap: "12px",
+              gap: buttonGap,
+              flexDirection: isMobile ? "column" : "row",
             }}
           >
             <Button
               onClick={handleContinue}
               name={isFinishing ? t("buttons.loading") : t("buttons.pay")}
               variant="medium"
+              style={{ width: isMobile ? "100%" : "auto" }}
             />
             <Button
               onClick={handleDelete}
               name={isDeleting ? t("buttons.deleting") : t("buttons.delete")}
               variant="medium"
+              style={{ width: isMobile ? "100%" : "auto" }}
             />
           </div>
         </div>

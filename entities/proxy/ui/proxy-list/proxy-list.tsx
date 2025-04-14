@@ -172,35 +172,16 @@ const ProxyList: React.FC<Props> = ({
       console.log("Using external onSelectProxy handler");
       onSelectProxy(proxyId);
     } else {
-      // Find all proxies with the same order_id
-      const proxiesWithSameOrderId = uniqueProxies.filter(
-        (p) => p.order_id === orderId || p.orderId === orderId
-      );
-      console.log("Proxies with same order_id:", proxiesWithSameOrderId.length);
-
-      // Get all proxy IDs with this order_id
-      const proxyIdsWithSameOrderId = proxiesWithSameOrderId.map((p) => p.id);
-      console.log("Proxy IDs with same order_id:", proxyIdsWithSameOrderId);
-
+      // Modified behavior: Select/deselect only the clicked proxy
       setInternalSelectedProxies((prev) => {
         const newSelected = new Set(prev);
-        // Check if the clicked proxy is already selected
         if (newSelected.has(proxyId)) {
-          console.log(
-            "Proxy is already selected, deselecting all in this order"
-          );
-          // Deselect all proxies with this order_id
-          proxyIdsWithSameOrderId.forEach((id) => {
-            newSelected.delete(id);
-          });
+          // Deselect only this proxy
+          newSelected.delete(proxyId);
         } else {
-          console.log("Proxy is not selected, selecting all in this order");
-          // Select all proxies with this order_id
-          proxyIdsWithSameOrderId.forEach((id) => {
-            newSelected.add(id);
-          });
+          // Select only this proxy
+          newSelected.add(proxyId);
         }
-        console.log("New selected proxies:", Array.from(newSelected));
         return newSelected;
       });
     }
@@ -1054,7 +1035,7 @@ const ProxyList: React.FC<Props> = ({
     borderSpacing: 0,
   };
 
-  const tableHeadStyle: React.CSSProperties = {
+  const tableHeadBaseStyle: React.CSSProperties = {
     backgroundColor: "rgba(0, 0, 0, 0.95)", // Slightly transparent to show content underneath
     position: "sticky",
     top: 0,
@@ -1293,7 +1274,7 @@ const ProxyList: React.FC<Props> = ({
         <div style={cardContentStyle}>
           <div className="proxy-table-container" style={tableContainerStyle}>
             <table style={tableStyle}>
-              <thead style={tableHeadStyle}>
+              <thead style={tableHeadBaseStyle}>
                 <tr>
                   <th style={tableHeaderCellStyle}>{t('table.headers.ipAddress')}</th>
                   <th style={tableHeaderCellStyle}>{t('table.headers.protocol')}</th>
@@ -1427,7 +1408,7 @@ const ProxyList: React.FC<Props> = ({
       <div style={cardContentStyle}>
         <div className="proxy-table-container" style={tableContainerStyle}>
           <table style={tableStyle}>
-            <thead style={tableHeadStyle}>
+            <thead style={tableHeadBaseStyle}>
               <tr>
                 <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
                   <div
