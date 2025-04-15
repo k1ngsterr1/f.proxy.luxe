@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Calendar, Tag } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export interface ArticleTag {
   id: string | number;
@@ -56,6 +57,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   url,
   className = "",
 }) => {
+  const i18n = useTranslations("personal-announcements");
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -234,7 +236,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               e.currentTarget.style.transform = "translateX(0)";
             }}
           >
-            Читать далее...
+            {i18n("read-more")}
           </Link>
         </div>
       </div>
