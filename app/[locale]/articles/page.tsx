@@ -58,8 +58,8 @@ export default function Articles() {
   // Filter articles by category if one is selected
   const filteredArticles = activeCategory
     ? formattedArticles.filter((article: any) =>
-        article.tags.some((tag: any) => tag.slug === activeCategory)
-      )
+      article.tags.some((tag: any) => tag.slug === activeCategory)
+    )
     : formattedArticles;
 
   // Helper function to extract date from content (simplified example)
@@ -101,7 +101,7 @@ export default function Articles() {
 
   return (
     <>
-      <title>Proxy Luxe | {t("articles.title")}</title>
+      <title>{t("articless.title")}</title>
       <main
         className="inner-page"
         style={{ backgroundColor: "#000000", color: "#FFFFFF" }}

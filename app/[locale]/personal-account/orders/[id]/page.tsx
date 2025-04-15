@@ -15,6 +15,7 @@ import { useCheckCouponValidity } from "@/entities/orders/hooks/mutation/use-che
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 export default function OrderDetailPage() {
+  const i18n = useTranslations();
   const t = useTranslations("order-detail");
   const alertT = useTranslations("alert");
   const { id } = useParams();
@@ -29,6 +30,23 @@ export default function OrderDetailPage() {
   const [couponCode, setCouponCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState<number | null>(null);
   const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Автоматически скрываем сообщения через 5 секунд
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
   const { mutate: checkCouponValidity, isPending: isCheckingCoupon } =
     useCheckCouponValidity();
@@ -67,17 +85,17 @@ export default function OrderDetailPage() {
           // Store the discount
           setAppliedDiscount(data.coupon.discount);
           // Show success message
-          alert(`Coupon applied: ${data.coupon.discount}% discount`);
+          setSuccessMessage(`Coupon applied: ${data.coupon.discount}% discount`);
         } else {
           // Reset discount if coupon is invalid
           setAppliedDiscount(null);
           // Show invalid coupon message
-          alert("Invalid coupon code");
+          setErrorMessage("Invalid coupon code");
         }
       },
       onError: (error) => {
         setAppliedDiscount(null);
-        alert(`Error checking coupon: ${error.message}`);
+        setErrorMessage(`Error checking coupon: ${error.message}`);
       },
     });
   };
@@ -94,16 +112,16 @@ export default function OrderDetailPage() {
         navigate.push(`/personal-account/proxy`);
       },
       onError: (error: any) => {
-        const errorMessage =
+        const message =
           error?.response?.data?.message || error?.message || alertT("generic");
 
-        if (errorMessage === "Insufficient balance") {
+        if (message === "Insufficient balance") {
           // Access the translation directly as a property instead of using the function call
           // This ensures we get the exact translation we want
           const insufficientFundsMessage = alertT.raw("insufficient-funds");
-          alert(insufficientFundsMessage);
+          setErrorMessage(insufficientFundsMessage);
         } else {
-          alert(errorMessage);
+          setErrorMessage(message);
         }
       },
     });
@@ -135,6 +153,23 @@ export default function OrderDetailPage() {
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("orderDetail.title")}</title>
+      <div style={{ marginBottom: alertMarginBottom }}>
+        <AlertMessage
+          type="error"
+          message={errorMessage || ""}
+          show={!!errorMessage}
+        />
+      </div>
+
+      <div style={{ marginBottom: alertMarginBottom }}>
+        <AlertMessage
+          type="success"
+          message={successMessage || ""}
+          show={!!successMessage}
+        />
+      </div>
+
       {user?.isVerified === false && (
         <div style={{ marginBottom: alertMarginBottom }}>
           <AlertMessage

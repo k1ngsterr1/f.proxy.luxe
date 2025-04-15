@@ -29,34 +29,6 @@ export const WebMoneyButton: React.FC<WebMoneyButtonProps> = ({
     }
   }, [isScriptLoaded]);
 
-  // useEffect(() => {
-  //   if (isScriptLoaded && window.webmoney && wmWidgetRef.current) {
-  //     window.webmoney
-  //       .widgets()
-  //       .button.create({
-  //         data: {
-  //           amount: amount.toString(), // Ensure amount is a string
-  //           purse: purse,
-  //           desc: `Order ID: ${orderId}`, // Dynamically set order ID
-  //           paymentType: "wm",
-  //           forcePay: true,
-  //         },
-  //         style: {
-  //           theme: "wm",
-  //           showAmount: true,
-  //           titleNum: 1,
-  //           title: "Оплатить",
-  //           design: "skeuomorph",
-  //         },
-  //         lang: "ru",
-  //       })
-  //       .on("paymentComplete", function (data: any) {
-  //         console.log("Payment Complete", data);
-  //         alert("Оплата успешно завершена!");
-  //       })
-  //       .mount(wmWidgetRef.current);
-  //   }
-  // }, [isScriptLoaded, orderId, amount, purse]);
 
   return (
     <div>

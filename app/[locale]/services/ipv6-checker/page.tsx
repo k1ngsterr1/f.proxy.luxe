@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useCheckIpv6 } from "@/entities/ipv6/hooks/mutate/use-ipv6-check.mutate";
 
 export default function Page() {
+  const i18n = useTranslations();
   const t = useTranslations("ipv6");
   const [domain, setDomain] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +57,7 @@ export default function Page() {
 
   return (
     <main className="inner-page">
-      <title>Proxy Luxe | Проверка IPV6</title>
+      <title>{i18n("ipv6s.title")}</title>
 
       <section className="prcheck">
         <div className="scontainer">

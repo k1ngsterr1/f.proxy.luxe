@@ -25,6 +25,7 @@ const useGetPartnerDetails = () => {
 };
 
 export default function PartnerPage() {
+  const i18n = useTranslations();
   const t = useTranslations("personal-partner");
   const { data: partnerDetails, isLoading } = useGetPartnerDetails();
   const { data: user } = useGetUser();
@@ -126,7 +127,6 @@ export default function PartnerPage() {
         color: "#FFFFFF",
       }}
     >
-      {/* Main content container */}
       <div
         style={{
           padding: isMobile ? "20px 16px" : "40px 20px",
@@ -134,6 +134,8 @@ export default function PartnerPage() {
           margin: "0 auto",
         }}
       >
+        <title>{i18n("partnerProgramm.title")}</title>
+
         {/* Email verification warning */}
         {user?.isVerified === false && (
           <div

@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 
 export default function Prices() {
+  const t = useTranslations();
   const i18n = useTranslations("prices");
   const [isMobile, setIsMobile] = useState(false);
 
@@ -56,7 +57,7 @@ export default function Prices() {
         padding: isMobile ? "1rem 0 2rem" : "2rem 0 4rem",
       }}
     >
-      <title>Proxy Luxe | Цены</title>
+      <title>{t("price.title")}</title>
 
       <div
         style={{

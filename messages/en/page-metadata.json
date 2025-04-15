@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Proxy Luxe | Home"
+  },
+  "personal-accounts": {
+    "title": "Proxy Luxe | Personal Account"
+  },
+  "orderss": {
+    "title": "Proxy Luxe | My Orders"
+  },
+  "orderDetail": {
+    "title": "Proxy Luxe | Order Details"
+  },
+  "personalProxy": {
+    "title": "Proxy Luxe | My Proxies"
+  },
+  "personalPayment": {
+    "title": "Proxy Luxe | Payment History"
+  },
+  "personalProfile": {
+    "title": "Proxy Luxe | My Profile"
+  },
+  "partnerProgramm": {
+    "title": "Proxy Luxe | Partner Program"
+  },
+  "announcements": {
+    "title": "Proxy Luxe | Announcements"
+  },
+  "faqs": {
+    "title": "Proxy Luxe | FAQ"
+  },
+  "buyProxy": {
+    "title": "Proxy Luxe | Buy Proxy"
+  },
+  "price": {
+    "title": "Proxy Luxe | Prices"
+  },
+  "partnerss": {
+    "title": "Proxy Luxe | Partners"
+  },
+  "privacy-policys": {
+    "title": "Proxy Luxe | Privacy Policy"
+  },
+  "public-offers": {
+    "title": "Proxy Luxe | Public Offer"
+  },
+  "contactss": {
+    "title": "Proxy Luxe | Contact Us"
+  },
+  "myIps": {
+    "title": "Proxy Luxe | My IP"
+  },
+  "proxy-checkers": {
+    "title": "Proxy Luxe | Proxy Checker"
+  },
+  "anonymityCheckers": {
+    "title": "Proxy Luxe | Anonymity Checker"
+  },
+  "port-checkers": {
+    "title": "Proxy Luxe | Port Checker"
+  },
+  "whois": {
+    "title": "Proxy Luxe | WHOIS Lookup"
+  },
+  "blacklists": {
+    "title": "Proxy Luxe | IP Blacklist Check"
+  },
+  "ipv6s": {
+    "title": "Proxy Luxe | IPv6 Compatibility"
+  },
+  "articless": {
+    "title": "Proxy Luxe | Articles"
+  },
+  "verification-codes": {
+    "title": "Proxy Luxe | Verification"
+  },
+  "forgot-passwords": {
+    "title": "Proxy Luxe | Reset Password"
+  },
+  "login": {
+    "title": "Proxy Luxe | Login"
+  },
+  "registers": {
+    "title": "Proxy Luxe | Register"
+  },
+  "auths": {
+    "title": "Proxy Luxe | Authorization"
+  },
+  "responsibility-principless": {
+    "title": "Proxy Luxe | Responsibility Principles"
+  }
+}

@@ -10,7 +10,7 @@ export default function BuyProxy() {
   const i18n = useTranslations();
   return (
     <QueryClientProvider client={reactQueryClient}>
-      <title>Proxy Luxe | Купить Прокси</title>
+      <title>{i18n("buyProxy.title")}</title>
 
       <main className="inner-page">
         <section className="ibuy">

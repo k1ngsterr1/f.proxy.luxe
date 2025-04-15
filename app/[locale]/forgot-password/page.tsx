@@ -15,6 +15,7 @@ import { usePopupStore } from "@/shared/store/use-popup.store";
 export default function ChangePasswordPage() {
   const isMobile = useIsMobile();
   const t = useTranslations("forgot-password-page");
+  const i18n = useTranslations();
   const navigate = useRouter();
 
   const [email, setEmail] = useState("");
@@ -156,7 +157,7 @@ export default function ChangePasswordPage() {
         padding: "48px 16px",
       }}
     >
-      <title>Proxy Luxe | Смена пароля</title>
+      <title>{i18n("forgot-passwords.title")}</title>
 
       <div
         style={{
@@ -254,9 +255,8 @@ export default function ChangePasswordPage() {
                       paddingTop: "10px",
                       paddingBottom: "10px",
                       backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      border: `1px solid ${
-                        emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
-                      }`,
+                      border: `1px solid ${emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
+                        }`,
                       borderRadius: "6px",
                       color: "#f3d675",
                       fontSize: "14px",

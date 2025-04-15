@@ -15,6 +15,7 @@ import { ResidentProxyConstructor } from "@/features/residental-proxy-constructo
 import { useUpdateProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-update-list-resident.mutation";
 
 export default function ProxyPage() {
+  const i18n = useTranslations()
   const t = useTranslations("personal-proxy");
   const [proxy, setProxy] = useState<string | null>(null);
   const [package_key, setPackage_key] = useState<string | null>(null);
@@ -72,37 +73,37 @@ export default function ProxyPage() {
   const trafficData =
     proxies?.data?.items && proxies.data.items.length > 0
       ? {
-          totalBandwidthGB:
-            proxies.data.items.reduce((sum, item) => {
-              // Sum up all traffic limits
-              return sum + (Number(item.package_info?.traffic_limit) || 0);
-            }, 0) / 1073741824, // Convert bytes to GB
-          usedBandwidthMB:
-            //@ts-ignore
-            Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
-          reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
-          reserveUsedMB: 0, // Assuming a fixed value for reserve used
-          // Determine rotation type based on package_info.rotation
-          rotationType:
-            proxies.data.items[0].package_info?.rotation === -1
-              ? "sticky"
-              : ("rotating" as const),
-          // Use the actual rotation value from package_info
-          rotationInterval: proxies.data.items[0].package_info?.rotation || 60,
-          autoRenewal: true,
-          expiryDate:
-            proxies.data.items
-              .reduce((maxDate, item) => {
-                // Find the maximum expiry date
-                if (!item.package_info?.expired_at?.date) return maxDate;
-                const currentDate = new Date(item.package_info.expired_at.date);
-                return !maxDate || currentDate > maxDate
-                  ? currentDate
-                  : maxDate;
-              }, null as Date | null)
-              ?.toISOString()
-              .split("T")[0] || "",
-        }
+        totalBandwidthGB:
+          proxies.data.items.reduce((sum, item) => {
+            // Sum up all traffic limits
+            return sum + (Number(item.package_info?.traffic_limit) || 0);
+          }, 0) / 1073741824, // Convert bytes to GB
+        usedBandwidthMB:
+          //@ts-ignore
+          Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
+        reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
+        reserveUsedMB: 0, // Assuming a fixed value for reserve used
+        // Determine rotation type based on package_info.rotation
+        rotationType:
+          proxies.data.items[0].package_info?.rotation === -1
+            ? "sticky"
+            : ("rotating" as const),
+        // Use the actual rotation value from package_info
+        rotationInterval: proxies.data.items[0].package_info?.rotation || 60,
+        autoRenewal: true,
+        expiryDate:
+          proxies.data.items
+            .reduce((maxDate, item) => {
+              // Find the maximum expiry date
+              if (!item.package_info?.expired_at?.date) return maxDate;
+              const currentDate = new Date(item.package_info.expired_at.date);
+              return !maxDate || currentDate > maxDate
+                ? currentDate
+                : maxDate;
+            }, null as Date | null)
+            ?.toISOString()
+            .split("T")[0] || "",
+      }
       : null;
 
   useEffect(() => {
@@ -133,9 +134,9 @@ export default function ProxyPage() {
                 pkg.export.ports >= 3
                   ? `10000,...,${10000 + pkg.export.ports - 1}`
                   : Array.from(
-                      { length: pkg.export.ports },
-                      (_, i) => 10000 + i
-                    ).join(","),
+                    { length: pkg.export.ports },
+                    (_, i) => 10000 + i
+                  ).join(","),
               protocol: "SOCKS5/HTTP",
               port_http: pkg.port_http ?? 0,
               port_socks: pkg.port_socks ?? 0,
@@ -282,6 +283,7 @@ export default function ProxyPage() {
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("personalProxy.title")}</title>
       {data?.isVerified === false && (
         <div style={{ marginBottom: alertMarginBottom }}>
           <AlertMessage type="warning" isEmail message={t("verify-email")} />

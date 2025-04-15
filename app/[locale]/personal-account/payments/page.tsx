@@ -43,6 +43,7 @@ type TransactionItem = (Payment | Order) & {
 };
 
 export default function PaymentsPage() {
+  const i18n = useTranslations();
   const { data, isLoading: isUserLoading } = useGetUser();
   const {
     data: paymentsData,
@@ -276,6 +277,7 @@ export default function PaymentsPage() {
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("personalPayment.title")}</title>
       {data?.isVerified === false && (
         <AlertMessage type="warning" isEmail message={t("verify-email")} />
       )}
@@ -441,8 +443,8 @@ export default function PaymentsPage() {
 
       {/* Transactions Table */}
       {!isPaymentsLoading &&
-      !paymentsError &&
-      combinedTransactions.length > 0 ? (
+        !paymentsError &&
+        combinedTransactions.length > 0 ? (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -485,13 +487,11 @@ export default function PaymentsPage() {
                   // Determine price display
                   const priceDisplay =
                     transaction.type === "replenishment"
-                      ? `+${
-                          transaction.price || (transaction as any).totalPrice
-                        }`
-                      : `-${
-                          (transaction as any).totalPrice ||
-                          (transaction as any).price
-                        }`;
+                      ? `+${transaction.price || (transaction as any).totalPrice
+                      }`
+                      : `-${(transaction as any).totalPrice ||
+                      (transaction as any).price
+                      }`;
 
                   // Determine price color
                   const priceColor =

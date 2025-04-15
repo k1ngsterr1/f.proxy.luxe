@@ -28,6 +28,8 @@ export default function PersonalAccount() {
     }
   }, [token, navigate]);
   const i18n = useTranslations("personal-account");
+  const t = useTranslations();
+
 
   return (
     <>
@@ -39,9 +41,10 @@ export default function PersonalAccount() {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: isMobile ? "100%" : "85%",
+            width: isMobile ? "100%" : "75%",
           }}
         >
+          <title>{t("personal-accounts.title")}</title>
           <div
             style={{
               display: "flex",

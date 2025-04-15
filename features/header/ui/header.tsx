@@ -26,8 +26,9 @@ export const Header: FC = () => {
 
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 1100);
     };
+
 
     // Initial check
     checkIfMobile();
@@ -67,7 +68,7 @@ export const Header: FC = () => {
               <Image
                 src={Logo}
                 alt="Proxy Luxe"
-                width={isMobile ? 180 : 250}
+                width={isMobile ? 180 : 350}
                 height={isMobile ? 50 : 75}
               />
             </Link>

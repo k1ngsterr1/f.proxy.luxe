@@ -1,10 +1,11 @@
 import ResponsibilityBlock from "@/widgets/blocks/responsibility-page/responsibility-page";
+import { useTranslations } from "next-intl";
 
 export default function ResponsibilityPrinciple() {
+  const i18n = useTranslations();
   return (
     <main className="inner-page">
-      <title>Proxy Luxe | Основные обязанности</title>
-
+      <title>{i18n("responsibility-principless.title")}</title>
       <ResponsibilityBlock />
     </main>
   );

@@ -19,6 +19,7 @@ import {
 
 export default function ContactsPage() {
   const i18n = useTranslations("contacts");
+  const t = useTranslations();
   const isMobile = useIsMobile();
   const [copied, setCopied] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -111,7 +112,7 @@ export default function ContactsPage() {
         minHeight: "100vh",
       }}
     >
-      <title>Proxy Luxe | Контакты</title>
+      <title>{t("contactss.title")}</title>
       <section style={{ padding: isMobile ? "20px 16px" : "40px 20px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           {/* Hero Section */}

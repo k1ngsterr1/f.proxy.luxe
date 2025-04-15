@@ -32,7 +32,7 @@ export default function Partners() {
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
-      <title>Proxy Luxe | Партнеры</title>
+      <title>{i18n("partnerss.title")}</title>
 
       <section
         style={{

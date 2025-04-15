@@ -23,6 +23,7 @@ export default function ProfilePage() {
   const [success, setSuccess] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
+  const i18n = useTranslations();
   const t = useTranslations("personal-profile");
 
   const {
@@ -118,6 +119,7 @@ export default function ProfilePage() {
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("personalProfile.title")}</title>
       {data?.isVerified === false && (
         <AlertMessage
           type="warning"

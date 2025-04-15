@@ -43,6 +43,7 @@ export default function OrdersPage() {
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("orderss.title")}</title>
       {user?.isVerified === false && (
         <AlertMessage
           type="warning"
@@ -110,9 +111,9 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       {!isLoading &&
-      !isError &&
-      ordersData?.data &&
-      ordersData.data.length > 0 ? (
+        !isError &&
+        ordersData?.data &&
+        ordersData.data.length > 0 ? (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -199,21 +200,21 @@ export default function OrdersPage() {
                             order.status === "ACTIVE"
                               ? "rgba(76, 175, 80, 0.1)"
                               : order.status === "PENDING"
-                              ? "rgba(255, 193, 7, 0.1)"
-                              : "rgba(255, 82, 82, 0.1)",
+                                ? "rgba(255, 193, 7, 0.1)"
+                                : "rgba(255, 82, 82, 0.1)",
                           color:
                             order.status === "ACTIVE"
                               ? "#4CAF50"
                               : order.status === "PENDING"
-                              ? "#FFC107"
-                              : "#FF5252",
+                                ? "#FFC107"
+                                : "#FF5252",
                         }}
                       >
                         {order.status === "ACTIVE"
                           ? `${i18n("personal-orders.status.active")}`
                           : order.status === "PENDING"
-                          ? `${i18n("personal-orders.status.pending")}`
-                          : `${i18n("personal-orders.status.expired")}`}
+                            ? `${i18n("personal-orders.status.pending")}`
+                            : `${i18n("personal-orders.status.expired")}`}
                       </span>
                     </td>
                     <td style={{ padding: "12px 16px", marginRight: "16px" }}>

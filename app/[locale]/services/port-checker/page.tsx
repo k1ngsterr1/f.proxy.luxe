@@ -14,6 +14,7 @@ interface PortCheckResult {
 }
 
 export default function PortChecker() {
+  const i18n = useTranslations();
   const t = useTranslations("portChecker");
   const [ip, setIP] = useState<string>("");
   const [port, setPort] = useState<string>("");
@@ -76,7 +77,7 @@ export default function PortChecker() {
 
   return (
     <main className="inner-page">
-      <title>Proxy Luxe | Проверка Портов</title>
+      <title>{i18n("port-checkers.title")}</title>
 
       <section className="prcheck">
         <div className="scontainer">

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { UAParser } from "ua-parser-js";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useTranslations } from "next-intl";
+
 import {
   AlertCircle,
   CheckCircle,
@@ -39,6 +40,7 @@ interface BlacklistData {
 }
 
 export default function AnonymityChecker() {
+  const i18n = useTranslations();
   const t = useTranslations();
   const navigate = useRouter();
   const [ipData, setIpData] = useState<IpData | null>(null);
@@ -152,7 +154,7 @@ export default function AnonymityChecker() {
         pc.createDataChannel("");
         pc.createOffer()
           .then((offer) => pc.setLocalDescription(offer))
-          .catch(() => {});
+          .catch(() => { });
 
         pc.onicecandidate = (ice) => {
           if (!ice.candidate) {
@@ -290,7 +292,7 @@ export default function AnonymityChecker() {
           padding: "20px",
         }}
       >
-        <title>Proxy Luxe | Проверка Анонимности</title>
+        <title>{t("anonymityChecker.title")}</title>
 
         <div
           style={{
@@ -338,6 +340,7 @@ export default function AnonymityChecker() {
         paddingTop: isMobile ? 356 : 256,
       }}
     >
+      <title>{i18n("anonymityCheckers.title")}</title>
       <section style={{ padding: isMobile ? "20px 16px" : "40px 20px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h1
@@ -1056,9 +1059,8 @@ export default function AnonymityChecker() {
                         <CheckCircle size={12} />
                       )}
                       {blacklistData.isBlacklisted
-                        ? `${t("anonymityStatus.detected")} (${
-                            blacklistData.reports
-                          } ${t("anonymityStatus.blacklistReports")})`
+                        ? `${t("anonymityStatus.detected")} (${blacklistData.reports
+                        } ${t("anonymityStatus.blacklistReports")})`
                         : t("anonymityStatus.notDetected")}
                     </div>
                   </div>
