@@ -39,6 +39,25 @@ export const ResidentProxyConstructor = ({
   package_key: string;
 }) => {
   const i18n = useTranslations("residentProxy");
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if the device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
+  }, []);
 
   const rotationPeriodOptions = [
     { label: i18n("rotationPeriods.eachRequest"), value: "each_request" },
@@ -267,11 +286,11 @@ export const ResidentProxyConstructor = ({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: "20px",
+        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+        gap: isMobile ? "16px" : "20px",
         backgroundColor: "#000000",
         color: "#FFFFFF",
-        padding: "20px",
+        padding: isMobile ? "16px" : "20px",
         borderRadius: "8px",
         border: "1px solid rgba(243, 214, 117, 0.2)",
       }}
@@ -282,13 +301,13 @@ export const ResidentProxyConstructor = ({
           backgroundColor: "rgba(243, 214, 117, 0.05)",
           border: "1px solid rgba(243, 214, 117, 0.2)",
           borderRadius: "8px",
-          padding: "20px",
+          padding: isMobile ? "16px" : "20px",
           position: "relative",
         }}
       >
         <h3
           style={{
-            fontSize: "16px",
+            fontSize: isMobile ? "15px" : "16px",
             fontWeight: "bold",
             color: "#f3d675",
             marginBottom: "12px",
@@ -298,7 +317,11 @@ export const ResidentProxyConstructor = ({
         </h3>
         {whitelist.length === 0 ? (
           <p
-            style={{ fontSize: "14px", color: "#999999", marginBottom: "16px" }}
+            style={{
+              fontSize: isMobile ? "13px" : "14px",
+              color: "#999999",
+              marginBottom: "16px",
+            }}
           >
             {i18n("ipWhitelist.noIps")}
           </p>
@@ -311,11 +334,12 @@ export const ResidentProxyConstructor = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "8px 12px",
+                  padding: isMobile ? "10px" : "8px 12px",
                   marginBottom: "8px",
                   borderRadius: "4px",
                   backgroundColor: "rgba(0, 0, 0, 0.2)",
                   color: "#f3d675",
+                  flexWrap: isMobile ? "wrap" : "nowrap",
                 }}
               >
                 {editIndex === index ? (
@@ -324,19 +348,33 @@ export const ResidentProxyConstructor = ({
                     value={editIp}
                     onChange={(e) => setEditIp(e.target.value)}
                     style={{
-                      width: "70%",
+                      width: isMobile ? "100%" : "70%",
                       padding: "6px 8px",
                       backgroundColor: "rgba(0, 0, 0, 0.3)",
                       border: "1px solid rgba(243, 214, 117, 0.2)",
                       borderRadius: "4px",
                       color: "#f3d675",
-                      fontSize: "14px",
+                      fontSize: isMobile ? "13px" : "14px",
+                      marginBottom: isMobile ? "8px" : "0",
                     }}
                   />
                 ) : (
-                  <span>{ip}</span>
+                  <span
+                    style={{
+                      width: isMobile ? "100%" : "auto",
+                      marginBottom: isMobile ? "8px" : "0",
+                    }}
+                  >
+                    {ip}
+                  </span>
                 )}
-                <div>
+                <div
+                  style={{
+                    width: isMobile ? "100%" : "auto",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
                   {editIndex === index ? (
                     <>
                       <button
@@ -345,10 +383,10 @@ export const ResidentProxyConstructor = ({
                           backgroundColor: "#f3d675",
                           color: "#000000",
                           border: "none",
-                          padding: "4px 8px",
+                          padding: isMobile ? "6px 12px" : "4px 8px",
                           borderRadius: "4px",
                           cursor: "pointer",
-                          fontSize: "12px",
+                          fontSize: isMobile ? "13px" : "12px",
                           fontWeight: "500",
                           marginRight: "5px",
                         }}
@@ -361,10 +399,10 @@ export const ResidentProxyConstructor = ({
                           backgroundColor: "transparent",
                           color: "#f3d675",
                           border: "1px solid rgba(243, 214, 117, 0.2)",
-                          padding: "4px 8px",
+                          padding: isMobile ? "6px 12px" : "4px 8px",
                           borderRadius: "4px",
                           cursor: "pointer",
-                          fontSize: "12px",
+                          fontSize: isMobile ? "13px" : "12px",
                           fontWeight: "500",
                         }}
                       >
@@ -382,9 +420,10 @@ export const ResidentProxyConstructor = ({
                           cursor: "pointer",
                           fontSize: "12px",
                           marginRight: "5px",
+                          padding: isMobile ? "8px" : "4px",
                         }}
                       >
-                        <Edit size={16} />
+                        <Edit size={isMobile ? 18 : 16} />
                       </button>
                       <button
                         onClick={() => handleDeleteIp(index)}
@@ -394,9 +433,10 @@ export const ResidentProxyConstructor = ({
                           border: "none",
                           cursor: "pointer",
                           fontSize: "12px",
+                          padding: isMobile ? "8px" : "4px",
                         }}
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={isMobile ? 18 : 16} />
                       </button>
                     </>
                   )}
@@ -410,11 +450,12 @@ export const ResidentProxyConstructor = ({
             backgroundColor: "#f3d675",
             color: "#000000",
             border: "none",
-            padding: "8px 16px",
+            padding: isMobile ? "10px 16px" : "8px 16px",
             borderRadius: "4px",
             cursor: "pointer",
-            fontSize: "14px",
+            fontSize: isMobile ? "14px" : "14px",
             fontWeight: "500",
+            width: isMobile ? "100%" : "auto",
           }}
           onClick={() => setShowAddIpPopup(true)}
         >
@@ -446,9 +487,9 @@ export const ResidentProxyConstructor = ({
                 backgroundColor: "#111111",
                 border: "1px solid rgba(243, 214, 117, 0.25)",
                 borderRadius: "12px",
-                padding: "24px",
+                padding: isMobile ? "20px" : "24px",
                 zIndex: 1000,
-                width: "90%",
+                width: isMobile ? "90%" : "90%",
                 maxWidth: "400px",
                 boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
                 animation: "fadeIn 0.25s ease-out",
@@ -459,22 +500,23 @@ export const ResidentProxyConstructor = ({
                 onClick={handleCancelAddIp}
                 style={{
                   position: "absolute",
-                  top: "10px",
-                  right: "12px",
+                  top: isMobile ? "12px" : "10px",
+                  right: isMobile ? "12px" : "12px",
                   background: "none",
                   border: "none",
                   color: "#f3d675",
                   fontSize: "16px",
                   cursor: "pointer",
+                  padding: isMobile ? "8px" : "4px",
                 }}
                 aria-label="Close"
               >
-                <X size={18} />
+                <X size={isMobile ? 20 : 18} />
               </button>
 
               <h4
                 style={{
-                  fontSize: "18px",
+                  fontSize: isMobile ? "16px" : "18px",
                   fontWeight: "600",
                   color: "#f3d675",
                   marginBottom: "16px",
@@ -490,12 +532,12 @@ export const ResidentProxyConstructor = ({
                 placeholder={i18n("ipWhitelist.ipPlaceholder")}
                 style={{
                   width: "100%",
-                  padding: "10px 14px",
+                  padding: isMobile ? "12px 14px" : "10px 14px",
                   backgroundColor: "#1a1a1a",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "6px",
                   color: "#f3d675",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "14px" : "14px",
                   marginBottom: "20px",
                 }}
               />
@@ -505,37 +547,40 @@ export const ResidentProxyConstructor = ({
                   display: "flex",
                   justifyContent: "flex-end",
                   gap: "10px",
+                  flexDirection: isMobile ? "column" : "row",
                 }}
               >
-                <button
-                  onClick={handleAddIp}
-                  style={{
-                    backgroundColor: "#f3d675",
-                    color: "#000000",
-                    border: "none",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                  }}
-                >
-                  {i18n("ipWhitelist.addButton")}
-                </button>
                 <button
                   onClick={handleCancelAddIp}
                   style={{
                     backgroundColor: "transparent",
                     color: "#f3d675",
                     border: "1px solid rgba(243, 214, 117, 0.25)",
-                    padding: "8px 16px",
+                    padding: isMobile ? "12px 16px" : "8px 16px",
                     borderRadius: "4px",
                     fontWeight: "500",
                     cursor: "pointer",
-                    fontSize: "14px",
+                    fontSize: isMobile ? "14px" : "14px",
+                    order: isMobile ? 2 : 1,
                   }}
                 >
                   {i18n("ipWhitelist.cancelButton")}
+                </button>
+                <button
+                  onClick={handleAddIp}
+                  style={{
+                    backgroundColor: "#f3d675",
+                    color: "#000000",
+                    border: "none",
+                    padding: isMobile ? "12px 16px" : "8px 16px",
+                    borderRadius: "4px",
+                    fontWeight: "500",
+                    cursor: "pointer",
+                    fontSize: isMobile ? "14px" : "14px",
+                    order: isMobile ? 1 : 2,
+                  }}
+                >
+                  {i18n("ipWhitelist.addButton")}
                 </button>
               </div>
             </div>
@@ -549,12 +594,12 @@ export const ResidentProxyConstructor = ({
           backgroundColor: "rgba(243, 214, 117, 0.05)",
           border: "1px solid rgba(243, 214, 117, 0.2)",
           borderRadius: "8px",
-          padding: "20px",
+          padding: isMobile ? "16px" : "20px",
         }}
       >
         <h3
           style={{
-            fontSize: "16px",
+            fontSize: isMobile ? "15px" : "16px",
             fontWeight: "bold",
             color: "#f3d675",
             marginBottom: "12px",
@@ -564,12 +609,30 @@ export const ResidentProxyConstructor = ({
         </h3>
 
         {successMessage && (
-          <div style={{ color: "green", marginBottom: "10px" }}>
+          <div
+            style={{
+              color: "green",
+              marginBottom: "10px",
+              padding: "8px",
+              backgroundColor: "rgba(0, 128, 0, 0.1)",
+              borderRadius: "4px",
+              fontSize: isMobile ? "13px" : "14px",
+            }}
+          >
             {successMessage}
           </div>
         )}
         {errorMessage && (
-          <div style={{ color: "red", marginBottom: "10px" }}>
+          <div
+            style={{
+              color: "red",
+              marginBottom: "10px",
+              padding: "8px",
+              backgroundColor: "rgba(255, 0, 0, 0.1)",
+              borderRadius: "4px",
+              fontSize: isMobile ? "13px" : "14px",
+            }}
+          >
             {errorMessage}
           </div>
         )}
@@ -580,7 +643,7 @@ export const ResidentProxyConstructor = ({
             htmlFor="listName"
             style={{
               display: "block",
-              fontSize: "14px",
+              fontSize: isMobile ? "13px" : "14px",
               color: "#999999",
               marginBottom: "6px",
             }}
@@ -594,46 +657,58 @@ export const ResidentProxyConstructor = ({
             onChange={(e) => setListName(e.target.value)}
             style={{
               width: "100%",
-              padding: "8px 12px",
+              padding: isMobile ? "10px 12px" : "8px 12px",
               backgroundColor: "rgba(0, 0, 0, 0.3)",
               border: "1px solid rgba(243, 214, 117, 0.2)",
               borderRadius: "4px",
               color: "#f3d675",
-              fontSize: "14px",
+              fontSize: isMobile ? "14px" : "14px",
             }}
           />
         </div>
         <div style={{ marginBottom: "16px" }}>
           <p
-            style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
+            style={{
+              fontSize: isMobile ? "13px" : "14px",
+              color: "#999999",
+              marginBottom: "6px",
+            }}
           >
             {i18n("export.rotation")}
           </p>
-          {rotationOptions.map((option) => (
-            <label
-              key={option.value}
-              style={{
-                marginRight: "16px",
-                display: "inline-flex",
-                alignItems: "center",
-                fontSize: "14px",
-                color: "#f3d675",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="radio"
-                name="rotation"
-                value={option.value}
-                checked={rotation === option.value}
-                onChange={() => setRotation(option.value)}
-                style={
-                  rotation === option.value ? radioCheckedStyle : radioStyle
-                }
-              />
-              {option.label}
-            </label>
-          ))}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              gap: isMobile ? "10px" : "0",
+            }}
+          >
+            {rotationOptions.map((option) => (
+              <label
+                key={option.value}
+                style={{
+                  marginRight: isMobile ? "0" : "16px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  fontSize: isMobile ? "14px" : "14px",
+                  color: "#f3d675",
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="radio"
+                  name="rotation"
+                  value={option.value}
+                  checked={rotation === option.value}
+                  onChange={() => setRotation(option.value)}
+                  style={
+                    rotation === option.value ? radioCheckedStyle : radioStyle
+                  }
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Rotation Period Dropdown - Only visible when Rotating is selected */}
@@ -642,7 +717,7 @@ export const ResidentProxyConstructor = ({
             <label
               style={{
                 display: "block",
-                fontSize: "14px",
+                fontSize: isMobile ? "13px" : "14px",
                 color: "#999999",
                 marginBottom: "6px",
               }}
@@ -675,12 +750,12 @@ export const ResidentProxyConstructor = ({
                     max="3600"
                     style={{
                       flex: 1,
-                      padding: "8px 12px",
+                      padding: isMobile ? "10px 12px" : "8px 12px",
                       backgroundColor: "rgba(0, 0, 0, 0.3)",
                       border: "1px solid rgba(243, 214, 117, 0.2)",
                       borderRadius: "4px",
                       color: "#f3d675",
-                      fontSize: "14px",
+                      fontSize: isMobile ? "14px" : "14px",
                     }}
                     placeholder={i18n("export.customPeriodPlaceholder")}
                   />
@@ -695,11 +770,15 @@ export const ResidentProxyConstructor = ({
                       border: "1px solid rgba(243, 214, 117, 0.2)",
                       borderRadius: "4px",
                       color: "#f3d675",
-                      padding: "8px",
+                      padding: isMobile ? "10px" : "8px",
                       cursor: "pointer",
+                      minWidth: isMobile ? "44px" : "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <ChevronDown size={16} color="#f3d675" />
+                    <ChevronDown size={isMobile ? 20 : 16} color="#f3d675" />
                   </button>
                 </div>
               ) : (
@@ -708,17 +787,18 @@ export const ResidentProxyConstructor = ({
                   onClick={() => setIsRotationPeriodOpen(!isRotationPeriodOpen)}
                   style={{
                     width: "100%",
-                    padding: "8px 12px",
+                    padding: isMobile ? "10px 12px" : "8px 12px",
                     backgroundColor: "rgba(0, 0, 0, 0.3)",
                     border: "1px solid rgba(243, 214, 117, 0.2)",
                     borderRadius: "4px",
                     color: "#f3d675",
-                    fontSize: "14px",
+                    fontSize: isMobile ? "14px" : "14px",
                     textAlign: "left",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
                     cursor: "pointer",
+                    minHeight: isMobile ? "44px" : "auto",
                   }}
                 >
                   <span>
@@ -731,9 +811,9 @@ export const ResidentProxyConstructor = ({
                         )?.label || "Select period"}
                   </span>
                   {isRotationPeriodOpen ? (
-                    <ChevronUp size={16} color="#f3d675" />
+                    <ChevronUp size={isMobile ? 20 : 16} color="#f3d675" />
                   ) : (
-                    <ChevronDown size={16} color="#f3d675" />
+                    <ChevronDown size={isMobile ? 20 : 16} color="#f3d675" />
                   )}
                 </button>
               )}
@@ -750,7 +830,7 @@ export const ResidentProxyConstructor = ({
                     borderRadius: "4px",
                     marginTop: "4px",
                     zIndex: 10,
-                    maxHeight: "240px",
+                    maxHeight: isMobile ? "200px" : "240px",
                     overflowY: "auto",
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
                   }}
@@ -768,15 +848,16 @@ export const ResidentProxyConstructor = ({
                         }
                       }}
                       style={{
-                        padding: "8px 12px",
+                        padding: isMobile ? "12px" : "8px 12px",
                         color: "#f3d675",
                         cursor: "pointer",
-                        fontSize: "14px",
+                        fontSize: isMobile ? "14px" : "14px",
                         backgroundColor:
                           option.value === rotationPeriod
                             ? "rgba(243, 214, 117, 0.1)"
                             : "transparent",
-                        borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
+                        borderBottom:
+                          '1px solid rgba(243, 214214,117,0.1)" : "transparent',
                         transition: "background-color 0.2s",
                       }}
                       onMouseOver={(e) => {
@@ -798,7 +879,11 @@ export const ResidentProxyConstructor = ({
             </div>
             {rotationPeriod === "custom" && (
               <p
-                style={{ fontSize: "12px", color: "#999999", marginTop: "4px" }}
+                style={{
+                  fontSize: isMobile ? "11px" : "12px",
+                  color: "#999999",
+                  marginTop: "4px",
+                }}
               >
                 {i18n("export.customPeriodHelp")}
               </p>
@@ -807,15 +892,19 @@ export const ResidentProxyConstructor = ({
         )}
         <div style={{ marginBottom: "16px" }}>
           <p
-            style={{ fontSize: "14px", color: "#999999", marginBottom: "6px" }}
+            style={{
+              fontSize: isMobile ? "13px" : "14px",
+              color: "#999999",
+              marginBottom: "6px",
+            }}
           >
             {i18n("export.filter")}
           </p>
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "10px",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: isMobile ? "12px" : "10px",
             }}
           >
             {/* Country dropdown with search */}
@@ -824,7 +913,7 @@ export const ResidentProxyConstructor = ({
                 htmlFor="country"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: isMobile ? "12px" : "12px",
                   color: "#999999",
                   marginBottom: "4px",
                 }}
@@ -839,17 +928,18 @@ export const ResidentProxyConstructor = ({
                   }
                   style={{
                     width: "100%",
-                    padding: "8px 12px",
+                    padding: isMobile ? "10px 12px" : "8px 12px",
                     backgroundColor: "rgba(0, 0, 0, 0.3)",
                     border: "1px solid rgba(243, 214, 117, 0.2)",
                     borderRadius: "4px",
                     color: "#f3d675",
-                    fontSize: "14px",
+                    fontSize: isMobile ? "14px" : "14px",
                     textAlign: "left",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
                     cursor: "pointer",
+                    minHeight: isMobile ? "44px" : "auto",
                   }}
                 >
                   <span>
@@ -859,9 +949,9 @@ export const ResidentProxyConstructor = ({
                       : i18n("selectOptions.selectCountry")}
                   </span>
                   {isCountryDropdownOpen ? (
-                    <ChevronUp size={16} color="#f3d675" />
+                    <ChevronUp size={isMobile ? 20 : 16} color="#f3d675" />
                   ) : (
-                    <ChevronDown size={16} color="#f3d675" />
+                    <ChevronDown size={isMobile ? 20 : 16} color="#f3d675" />
                   )}
                 </button>
 
@@ -877,7 +967,7 @@ export const ResidentProxyConstructor = ({
                       borderRadius: "4px",
                       marginTop: "4px",
                       zIndex: 10,
-                      maxHeight: "300px",
+                      maxHeight: isMobile ? "250px" : "300px",
                       overflowY: "auto",
                       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
                     }}
@@ -900,16 +990,18 @@ export const ResidentProxyConstructor = ({
                           onChange={(e) => setCountrySearch(e.target.value)}
                           style={{
                             width: "100%",
-                            padding: "8px 12px 8px 32px",
+                            padding: isMobile
+                              ? "10px 12px 10px 32px"
+                              : "8px 12px 8px 32px",
                             backgroundColor: "#111111",
                             border: "1px solid rgba(243, 214, 117, 0.2)",
                             borderRadius: "4px",
-                            fontSize: "14px",
+                            fontSize: isMobile ? "14px" : "14px",
                             color: "#f3d675",
                           }}
                         />
                         <Search
-                          size={16}
+                          size={isMobile ? 18 : 16}
                           style={{
                             position: "absolute",
                             left: "10px",
@@ -934,7 +1026,7 @@ export const ResidentProxyConstructor = ({
                             setIsp("");
                           }}
                           style={{
-                            padding: "10px 12px",
+                            padding: isMobile ? "12px" : "10px 12px",
                             cursor: "pointer",
                             color: "#f3d675",
                             borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
@@ -975,7 +1067,7 @@ export const ResidentProxyConstructor = ({
               {isLoadingGeo && (
                 <p
                   style={{
-                    fontSize: "10px",
+                    fontSize: isMobile ? "10px" : "10px",
                     color: "#999999",
                     marginTop: "4px",
                   }}
@@ -984,7 +1076,13 @@ export const ResidentProxyConstructor = ({
                 </p>
               )}
               {isErrorGeo && (
-                <p style={{ fontSize: "10px", color: "red", marginTop: "4px" }}>
+                <p
+                  style={{
+                    fontSize: isMobile ? "10px" : "10px",
+                    color: "red",
+                    marginTop: "4px",
+                  }}
+                >
                   {i18n("errors.geoDataError")}
                 </p>
               )}
@@ -996,7 +1094,7 @@ export const ResidentProxyConstructor = ({
                 htmlFor="region"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: isMobile ? "12px" : "12px",
                   color: "#999999",
                   marginBottom: "4px",
                 }}
@@ -1009,12 +1107,20 @@ export const ResidentProxyConstructor = ({
                 onChange={(e) => setRegion(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "6px 8px",
+                  padding: isMobile ? "10px 12px" : "6px 8px",
                   backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "14px" : "14px",
+                  minHeight: isMobile ? "44px" : "auto",
+                  appearance: isMobile ? "none" : "auto",
+                  backgroundImage: isMobile
+                    ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f3d675' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")"
+                    : "none",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 8px center",
+                  backgroundSize: "16px",
                 }}
                 disabled={!country || isLoadingGeo}
                 className="dark-select"
@@ -1029,7 +1135,7 @@ export const ResidentProxyConstructor = ({
               {country && regions.length === 0 && !isLoadingGeo && (
                 <p
                   style={{
-                    fontSize: "10px",
+                    fontSize: isMobile ? "10px" : "10px",
                     color: "#999999",
                     marginTop: "4px",
                   }}
@@ -1045,7 +1151,7 @@ export const ResidentProxyConstructor = ({
                 htmlFor="city"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: isMobile ? "12px" : "12px",
                   color: "#999999",
                   marginBottom: "4px",
                 }}
@@ -1058,12 +1164,20 @@ export const ResidentProxyConstructor = ({
                 onChange={(e) => setCity(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "6px 8px",
+                  padding: isMobile ? "10px 12px" : "6px 8px",
                   backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "14px" : "14px",
+                  minHeight: isMobile ? "44px" : "auto",
+                  appearance: isMobile ? "none" : "auto",
+                  backgroundImage: isMobile
+                    ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f3d675' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")"
+                    : "none",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 8px center",
+                  backgroundSize: "16px",
                 }}
                 disabled={!region || isLoadingGeo}
                 className="dark-select"
@@ -1078,7 +1192,7 @@ export const ResidentProxyConstructor = ({
               {region && cities.length === 0 && !isLoadingGeo && (
                 <p
                   style={{
-                    fontSize: "10px",
+                    fontSize: isMobile ? "10px" : "10px",
                     color: "#999999",
                     marginTop: "4px",
                   }}
@@ -1094,7 +1208,7 @@ export const ResidentProxyConstructor = ({
                 htmlFor="isp"
                 style={{
                   display: "block",
-                  fontSize: "12px",
+                  fontSize: isMobile ? "12px" : "12px",
                   color: "#999999",
                   marginBottom: "4px",
                 }}
@@ -1107,12 +1221,20 @@ export const ResidentProxyConstructor = ({
                 onChange={(e) => setIsp(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "6px 8px",
+                  padding: isMobile ? "10px 12px" : "6px 8px",
                   backgroundColor: "#111111",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "4px",
                   color: "#f3d675",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "14px" : "14px",
+                  minHeight: isMobile ? "44px" : "auto",
+                  appearance: isMobile ? "none" : "auto",
+                  backgroundImage: isMobile
+                    ? "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f3d675' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E\")"
+                    : "none",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 8px center",
+                  backgroundSize: "16px",
                 }}
                 disabled={!city || availableIsps.length === 0}
                 className="dark-select"
@@ -1127,7 +1249,7 @@ export const ResidentProxyConstructor = ({
               {city && availableIsps.length === 0 && !isLoadingGeo && (
                 <p
                   style={{
-                    fontSize: "10px",
+                    fontSize: isMobile ? "10px" : "10px",
                     color: "#999999",
                     marginTop: "4px",
                   }}
@@ -1145,7 +1267,7 @@ export const ResidentProxyConstructor = ({
             htmlFor="ports"
             style={{
               display: "block",
-              fontSize: "12px",
+              fontSize: isMobile ? "12px" : "12px",
               color: "#999999",
               marginBottom: "4px",
             }}
@@ -1159,32 +1281,46 @@ export const ResidentProxyConstructor = ({
             onChange={(e) => setPorts(e.target.value)}
             style={{
               width: "100%",
-              padding: "6px 8px",
+              padding: isMobile ? "10px 12px" : "6px 8px",
               backgroundColor: "rgba(0, 0, 0, 0.3)",
               border: "1px solid rgba(243, 214, 117, 0.2)",
               borderRadius: "4px",
               color: "#f3d675",
-              fontSize: "14px",
+              fontSize: isMobile ? "14px" : "14px",
+              minHeight: isMobile ? "44px" : "auto",
             }}
           />
-          <p style={{ fontSize: "10px", color: "#999999", marginTop: "4px" }}>
+          <p
+            style={{
+              fontSize: isMobile ? "10px" : "10px",
+              color: "#999999",
+              marginTop: "4px",
+            }}
+          >
             {i18n("export.portsMax")}
           </p>
         </div>
       </div>
 
       {/* Output Section - Placeholder */}
-      <div style={{ textAlign: "left", marginTop: "20px" }}>
+      <div
+        style={{
+          textAlign: "left",
+          marginTop: isMobile ? "16px" : "20px",
+          gridColumn: isMobile ? "1" : "1 / span 2",
+        }}
+      >
         <button
           style={{
             backgroundColor: "#f3d675",
             color: "#000000",
             border: "none",
-            padding: "8px 16px",
+            padding: isMobile ? "12px 16px" : "8px 16px",
             borderRadius: "4px",
             cursor: "pointer",
-            fontSize: "14px",
+            fontSize: isMobile ? "14px" : "14px",
             fontWeight: "500",
+            width: isMobile ? "100%" : "auto",
           }}
           onClick={handleSubmit}
           disabled={isPending}

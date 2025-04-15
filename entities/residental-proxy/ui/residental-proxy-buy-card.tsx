@@ -257,7 +257,6 @@ export const ResidentalProxyBuyCard = () => {
           onClick={handleBuyClick}
           disabled={isLoadingOrder || !selectedTariff}
         />
-        g
       </div>
     </div>
   );

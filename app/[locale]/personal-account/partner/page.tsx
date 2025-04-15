@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import {
   Copy,
@@ -10,7 +10,6 @@ import {
   Gift,
 } from "lucide-react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
-
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/config/apiClient";
 
@@ -37,8 +36,25 @@ export default function PartnerPage() {
   const [wallet, setWallet] = useState("");
   const [payoutError, setPayoutError] = useState("");
   const [isPayoutLoading, setPayoutLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  console.log(partnerDetails);
+  // Check if the device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
+  }, []);
 
   const handlePayoutSubmit = async () => {
     setPayoutError("");
@@ -56,9 +72,10 @@ export default function PartnerPage() {
   };
 
   const tdStyle = {
-    padding: "12px 16px",
+    padding: isMobile ? "10px 12px" : "12px 16px",
     borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
     backgroundColor: "rgba(0, 0, 0, 0.2)",
+    fontSize: isMobile ? "13px" : "14px",
   };
 
   const copyToClipboard = (text: string, type: string) => {
@@ -112,7 +129,7 @@ export default function PartnerPage() {
       {/* Main content container */}
       <div
         style={{
-          padding: "40px 20px",
+          padding: isMobile ? "20px 16px" : "40px 20px",
           maxWidth: "900px",
           margin: "0 auto",
         }}
@@ -124,7 +141,7 @@ export default function PartnerPage() {
               backgroundColor: "rgba(255, 193, 7, 0.1)",
               border: "1px solid rgba(255, 193, 7, 0.3)",
               borderRadius: "8px",
-              padding: "16px",
+              padding: isMobile ? "12px" : "16px",
               marginBottom: "24px",
               display: "flex",
               alignItems: "flex-start",
@@ -132,12 +149,18 @@ export default function PartnerPage() {
             }}
           >
             <AlertTriangle
-              size={20}
+              size={isMobile ? 18 : 20}
               color="#FFC107"
-              style={{ marginTop: "2px" }}
+              style={{ marginTop: "2px", flexShrink: 0 }}
             />
             <div>
-              <p style={{ color: "#FFC107", fontSize: "14px", margin: 0 }}>
+              <p
+                style={{
+                  color: "#FFC107",
+                  fontSize: isMobile ? "13px" : "14px",
+                  margin: 0,
+                }}
+              >
                 {t("verification.message")}
               </p>
             </div>
@@ -145,10 +168,10 @@ export default function PartnerPage() {
         )}
 
         {/* Header section */}
-        <div style={{ marginBottom: "40px" }}>
+        <div style={{ marginBottom: isMobile ? "30px" : "40px" }}>
           <h1
             style={{
-              fontSize: "32px",
+              fontSize: isMobile ? "24px" : "32px",
               margin: "0 0 16px 0",
               color: "#FFFFFF",
               fontWeight: "bold",
@@ -158,11 +181,15 @@ export default function PartnerPage() {
             {t("title")}
           </h1>
           <p
-            style={{ color: "#f3d675", fontSize: "16px", marginBottom: "12px" }}
+            style={{
+              color: "#f3d675",
+              fontSize: isMobile ? "15px" : "16px",
+              marginBottom: "12px",
+            }}
           >
             {t("description")} <strong>30%</strong> {t("description-2")}
           </p>
-          <p style={{ color: "#FFFFFF", fontSize: "15px" }}>
+          <p style={{ color: "#FFFFFF", fontSize: isMobile ? "14px" : "15px" }}>
             {t("requirements")}
           </p>
         </div>
@@ -172,14 +199,14 @@ export default function PartnerPage() {
           style={{
             marginBottom: "30px",
             backgroundColor: "rgba(243, 214, 117, 0.05)",
-            padding: "20px",
+            padding: isMobile ? "16px" : "20px",
             borderRadius: "8px",
             border: "1px solid rgba(243, 214, 117, 0.1)",
           }}
         >
           <h2
             style={{
-              fontSize: "20px",
+              fontSize: isMobile ? "18px" : "20px",
               margin: "0 0 16px 0",
               color: "#f3d675",
               fontWeight: "bold",
@@ -190,8 +217,8 @@ export default function PartnerPage() {
           <ul
             style={{
               color: "#FFFFFF",
-              fontSize: "15px",
-              paddingLeft: "20px",
+              fontSize: isMobile ? "14px" : "15px",
+              paddingLeft: isMobile ? "16px" : "20px",
               margin: 0,
             }}
           >
@@ -216,21 +243,21 @@ export default function PartnerPage() {
           style={{
             marginBottom: "30px",
             backgroundColor: "rgba(0, 0, 0, 0.3)",
-            padding: "20px",
+            padding: isMobile ? "16px" : "20px",
             borderRadius: "8px",
             border: "1px solid rgba(243, 214, 117, 0.1)",
           }}
         >
           <h2
             style={{
-              fontSize: "20px",
+              fontSize: isMobile ? "18px" : "20px",
               margin: "0 0 20px 0",
               color: "#f3d675",
               fontWeight: "bold",
             }}
           >
             <Clipboard
-              size={18}
+              size={isMobile ? 16 : 18}
               style={{ marginRight: "8px", verticalAlign: "text-bottom" }}
             />
             {t("referral-links.title")}
@@ -243,7 +270,7 @@ export default function PartnerPage() {
                   display: "block",
                   marginBottom: "8px",
                   color: "#FFFFFF",
-                  fontSize: "15px",
+                  fontSize: isMobile ? "14px" : "15px",
                 }}
               >
                 {link.label}
@@ -257,25 +284,28 @@ export default function PartnerPage() {
                   readOnly
                   style={{
                     flex: 1,
-                    padding: "12px 14px",
+                    padding: isMobile ? "10px 12px" : "12px 14px",
                     backgroundColor: "rgba(243, 214, 117, 0.05)",
                     border: "1px solid rgba(243, 214, 117, 0.2)",
                     borderRadius: "6px",
                     color: "#f3d675",
-                    fontSize: "14px",
+                    fontSize: isMobile ? "12px" : "14px",
                     fontFamily: "monospace",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                 />
                 <button
                   onClick={() => copyToClipboard(link.value, `link${index}`)}
                   style={{
-                    padding: "12px",
+                    padding: isMobile ? "10px" : "12px",
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     border: "1px solid rgba(243, 214, 117, 0.2)",
                     borderRadius: "6px",
                     cursor: "pointer",
                     color: "#f3d675",
                     transition: "all 0.2s",
+                    flexShrink: 0,
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor =
@@ -286,15 +316,15 @@ export default function PartnerPage() {
                       "rgba(243, 214, 117, 0.1)";
                   }}
                 >
-                  <Copy size={18} />
+                  <Copy size={isMobile ? 16 : 18} />
                 </button>
                 {showCopyNotification === `link${index}` && (
                   <div
                     style={{
                       position: "absolute",
-                      right: "50px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
+                      right: isMobile ? "0" : "50px",
+                      top: isMobile ? "-30px" : "50%",
+                      transform: isMobile ? "none" : "translateY(-50%)",
                       backgroundColor: "rgba(0, 0, 0, 0.8)",
                       color: "#f3d675",
                       padding: "6px 12px",
@@ -303,6 +333,7 @@ export default function PartnerPage() {
                       display: "flex",
                       alignItems: "center",
                       gap: "6px",
+                      zIndex: 10,
                     }}
                   >
                     <CheckCircle size={14} />
@@ -317,14 +348,14 @@ export default function PartnerPage() {
           <div style={{ marginTop: "24px" }}>
             <h2
               style={{
-                fontSize: "20px",
+                fontSize: isMobile ? "18px" : "20px",
                 margin: "0 0 20px 0",
                 color: "#f3d675",
                 fontWeight: "bold",
               }}
             >
               <Gift
-                size={18}
+                size={isMobile ? 16 : 18}
                 style={{ marginRight: "8px", verticalAlign: "text-bottom" }}
               />
               {t("partner-coupon.title")}
@@ -338,12 +369,12 @@ export default function PartnerPage() {
                 readOnly
                 style={{
                   flex: 1,
-                  padding: "12px 14px",
+                  padding: isMobile ? "10px 12px" : "12px 14px",
                   backgroundColor: "rgba(243, 214, 117, 0.05)",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "6px",
                   color: couponCreated ? "#f3d675" : "#666666",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "12px" : "14px",
                   fontFamily: "monospace",
                 }}
               />
@@ -351,13 +382,14 @@ export default function PartnerPage() {
                 <button
                   onClick={() => copyToClipboard("PARTNER5", "coupon")}
                   style={{
-                    padding: "12px",
+                    padding: isMobile ? "10px" : "12px",
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
                     border: "1px solid rgba(243, 214, 117, 0.2)",
                     borderRadius: "6px",
                     cursor: "pointer",
                     color: "#f3d675",
                     transition: "all 0.2s",
+                    flexShrink: 0,
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor =
@@ -368,21 +400,22 @@ export default function PartnerPage() {
                       "rgba(243, 214, 117, 0.1)";
                   }}
                 >
-                  <Copy size={18} />
+                  <Copy size={isMobile ? 16 : 18} />
                 </button>
               ) : (
                 <button
                   onClick={createCoupon}
                   style={{
-                    padding: "12px 20px",
+                    padding: isMobile ? "10px 16px" : "12px 20px",
                     backgroundColor: "#f3d675",
                     border: "none",
                     borderRadius: "6px",
                     cursor: "pointer",
                     color: "#000000",
                     fontWeight: "500",
-                    fontSize: "14px",
+                    fontSize: isMobile ? "13px" : "14px",
                     transition: "all 0.2s",
+                    flexShrink: 0,
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "#e5c968";
@@ -398,9 +431,9 @@ export default function PartnerPage() {
                 <div
                   style={{
                     position: "absolute",
-                    right: "50px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
+                    right: isMobile ? "0" : "50px",
+                    top: isMobile ? "-30px" : "50%",
+                    transform: isMobile ? "none" : "translateY(-50%)",
                     backgroundColor: "rgba(0, 0, 0, 0.8)",
                     color: "#f3d675",
                     padding: "6px 12px",
@@ -409,6 +442,7 @@ export default function PartnerPage() {
                     display: "flex",
                     alignItems: "center",
                     gap: "6px",
+                    zIndex: 10,
                   }}
                 >
                   <CheckCircle size={14} />
@@ -424,14 +458,14 @@ export default function PartnerPage() {
           style={{
             marginBottom: "30px",
             backgroundColor: "rgba(243, 214, 117, 0.05)",
-            padding: "20px",
+            padding: isMobile ? "16px" : "20px",
             borderRadius: "8px",
             border: "1px solid rgba(243, 214, 117, 0.1)",
           }}
         >
           <h2
             style={{
-              fontSize: "20px",
+              fontSize: isMobile ? "18px" : "20px",
               margin: "0 0 16px 0",
               color: "#f3d675",
               fontWeight: "bold",
@@ -440,14 +474,18 @@ export default function PartnerPage() {
             {t("important-info.title")}
           </h2>
           <p
-            style={{ color: "#4CAF50", fontSize: "15px", marginBottom: "16px" }}
+            style={{
+              color: "#4CAF50",
+              fontSize: isMobile ? "14px" : "15px",
+              marginBottom: "16px",
+            }}
           >
             {t("important-info.daily-rewards")}
           </p>
           <p
             style={{
               color: "#FFFFFF",
-              fontSize: "15px",
+              fontSize: isMobile ? "14px" : "15px",
               marginBottom: "16px",
               lineHeight: "1.5",
             }}
@@ -461,7 +499,13 @@ export default function PartnerPage() {
             </a>{" "}
             {t("important-info.withdrawal-info-2")}
           </p>
-          <p style={{ color: "#FF5252", fontSize: "15px", margin: 0 }}>
+          <p
+            style={{
+              color: "#FF5252",
+              fontSize: isMobile ? "14px" : "15px",
+              margin: 0,
+            }}
+          >
             {t("important-info.warning")}
           </p>
         </div>
@@ -470,14 +514,14 @@ export default function PartnerPage() {
         <div
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.3)",
-            padding: "20px",
+            padding: isMobile ? "16px" : "20px",
             borderRadius: "8px",
             border: "1px solid rgba(243, 214, 117, 0.1)",
           }}
         >
           <h2
             style={{
-              fontSize: "24px",
+              fontSize: isMobile ? "20px" : "24px",
               margin: "0 0 24px 0",
               color: "#FFFFFF",
               fontWeight: "bold",
@@ -487,107 +531,199 @@ export default function PartnerPage() {
             {t("stats.title")}
           </h2>
 
-          {/* Statistics table */}
-          <div style={{ overflowX: "auto" }}>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "separate",
-                borderSpacing: 0,
-                color: "#FFFFFF",
-                fontSize: "14px",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th
+          {/* Statistics table - Mobile version */}
+          {isMobile && (
+            <div>
+              {partnerDetails?.referrals?.length ? (
+                partnerDetails.referrals.map((referral: any, index: number) => (
+                  <div
+                    key={`${referral.id}-${index}`}
                     style={{
-                      padding: "12px 16px",
-                      textAlign: "left",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
-                      color: "#f3d675",
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      borderRadius: "6px",
+                      padding: "12px",
+                      marginBottom: "12px",
+                      border: "1px solid rgba(243, 214, 117, 0.05)",
                     }}
                   >
-                    {t("referrals.table.date")}
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px 16px",
-                      textAlign: "left",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
-                      color: "#f3d675",
-                    }}
-                  >
-                    {t("referrals.table.user")}
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px 16px",
-                      textAlign: "left",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
-                      color: "#f3d675",
-                    }}
-                  >
-                    {t("referrals.table.purchases")}
-                  </th>
-                  <th
-                    style={{
-                      padding: "12px 16px",
-                      textAlign: "left",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
-                      color: "#f3d675",
-                    }}
-                  >
-                    {t("referrals.table.commission")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {partnerDetails?.referrals?.length ? (
-                  partnerDetails.referrals.map(
-                    (referral: any, index: number) => (
-                      <tr key={`${referral.id}-${index}`}>
-                        <td style={tdStyle}>
-                          {new Date(referral.createdAt).toLocaleDateString()}
-                        </td>
-                        <td style={tdStyle}>{referral.userId}</td>
-                        <td style={tdStyle}>—</td>
-                        <td style={tdStyle}>—</td>
-                      </tr>
-                    )
-                  )
-                ) : (
+                    <div style={{ marginBottom: "8px" }}>
+                      <span
+                        style={{
+                          color: "#999",
+                          fontSize: "12px",
+                          marginRight: "6px",
+                        }}
+                      >
+                        {t("referrals.table.date")}:
+                      </span>
+                      <span style={{ color: "#fff", fontSize: "13px" }}>
+                        {new Date(referral.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div style={{ marginBottom: "8px" }}>
+                      <span
+                        style={{
+                          color: "#999",
+                          fontSize: "12px",
+                          marginRight: "6px",
+                        }}
+                      >
+                        {t("referrals.table.user")}:
+                      </span>
+                      <span style={{ color: "#fff", fontSize: "13px" }}>
+                        {referral.userId}
+                      </span>
+                    </div>
+                    <div style={{ marginBottom: "8px" }}>
+                      <span
+                        style={{
+                          color: "#999",
+                          fontSize: "12px",
+                          marginRight: "6px",
+                        }}
+                      >
+                        {t("referrals.table.purchases")}:
+                      </span>
+                      <span style={{ color: "#fff", fontSize: "13px" }}>—</span>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          color: "#999",
+                          fontSize: "12px",
+                          marginRight: "6px",
+                        }}
+                      >
+                        {t("referrals.table.commission")}:
+                      </span>
+                      <span style={{ color: "#f3d675", fontSize: "13px" }}>
+                        —
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "#999999",
+                    padding: "16px",
+                    backgroundColor: "rgba(0, 0, 0, 0.2)",
+                    borderRadius: "6px",
+                    fontSize: "14px",
+                  }}
+                >
+                  {t("referrals.empty")}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Statistics table - Desktop version */}
+          {!isMobile && (
+            <div style={{ overflowX: "auto" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "separate",
+                  borderSpacing: 0,
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                }}
+              >
+                <thead>
                   <tr>
-                    <td
-                      colSpan={4}
+                    <th
                       style={{
-                        textAlign: "center",
-                        color: "#999999",
                         padding: "12px 16px",
-                        borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
-                        backgroundColor: "rgba(0, 0, 0, 0.2)",
+                        textAlign: "left",
+                        backgroundColor: "rgba(243, 214, 117, 0.1)",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                        color: "#f3d675",
                       }}
                     >
-                      {t("referrals.empty")}
-                    </td>
+                      {t("referrals.table.date")}
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "left",
+                        backgroundColor: "rgba(243, 214, 117, 0.1)",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                        color: "#f3d675",
+                      }}
+                    >
+                      {t("referrals.table.user")}
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "left",
+                        backgroundColor: "rgba(243, 214, 117, 0.1)",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                        color: "#f3d675",
+                      }}
+                    >
+                      {t("referrals.table.purchases")}
+                    </th>
+                    <th
+                      style={{
+                        padding: "12px 16px",
+                        textAlign: "left",
+                        backgroundColor: "rgba(243, 214, 117, 0.1)",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
+                        color: "#f3d675",
+                      }}
+                    >
+                      {t("referrals.table.commission")}
+                    </th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {partnerDetails?.referrals?.length ? (
+                    partnerDetails.referrals.map(
+                      (referral: any, index: number) => (
+                        <tr key={`${referral.id}-${index}`}>
+                          <td style={tdStyle}>
+                            {new Date(referral.createdAt).toLocaleDateString()}
+                          </td>
+                          <td style={tdStyle}>{referral.userId}</td>
+                          <td style={tdStyle}>—</td>
+                          <td style={tdStyle}>—</td>
+                        </tr>
+                      )
+                    )
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        style={{
+                          textAlign: "center",
+                          color: "#999999",
+                          padding: "12px 16px",
+                          borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
+                          backgroundColor: "rgba(0, 0, 0, 0.2)",
+                        }}
+                      >
+                        {t("referrals.empty")}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Summary */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "16px",
+              gridTemplateColumns: isMobile
+                ? "1fr"
+                : "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: isMobile ? "12px" : "16px",
               marginTop: "24px",
-              padding: "16px",
+              padding: isMobile ? "12px" : "16px",
               backgroundColor: "rgba(243, 214, 117, 0.05)",
               borderRadius: "6px",
               border: "1px solid rgba(243, 214, 117, 0.1)",
@@ -597,7 +733,7 @@ export default function PartnerPage() {
               <span
                 style={{
                   color: "#999999",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "13px" : "14px",
                   marginRight: "8px",
                 }}
               >
@@ -606,7 +742,7 @@ export default function PartnerPage() {
               <span
                 style={{
                   color: "#FFFFFF",
-                  fontSize: "16px",
+                  fontSize: isMobile ? "15px" : "16px",
                   fontWeight: "500",
                 }}
               >
@@ -617,7 +753,7 @@ export default function PartnerPage() {
               <span
                 style={{
                   color: "#999999",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "13px" : "14px",
                   marginRight: "8px",
                 }}
               >
@@ -626,7 +762,7 @@ export default function PartnerPage() {
               <span
                 style={{
                   color: "#f3d675",
-                  fontSize: "16px",
+                  fontSize: isMobile ? "15px" : "16px",
                   fontWeight: "500",
                 }}
               >
@@ -637,7 +773,7 @@ export default function PartnerPage() {
               <span
                 style={{
                   color: "#999999",
-                  fontSize: "14px",
+                  fontSize: isMobile ? "13px" : "14px",
                   marginRight: "8px",
                 }}
               >
@@ -646,7 +782,7 @@ export default function PartnerPage() {
               <span
                 style={{
                   color: "#4CAF50",
-                  fontSize: "16px",
+                  fontSize: isMobile ? "15px" : "16px",
                   fontWeight: "500",
                 }}
               >
@@ -667,15 +803,16 @@ export default function PartnerPage() {
             <button
               onClick={() => setPayoutPopupOpen(true)}
               style={{
-                padding: "12px 20px",
+                padding: isMobile ? "10px 16px" : "12px 20px",
                 backgroundColor: "#f3d675",
                 border: "none",
                 borderRadius: "6px",
                 cursor: "pointer",
                 color: "#000000",
                 fontWeight: "500",
-                fontSize: "14px",
+                fontSize: isMobile ? "13px" : "14px",
                 transition: "all 0.2s",
+                width: isMobile ? "100%" : "auto",
               }}
             >
               {t("withdrawal.submit-button")}
@@ -702,14 +839,20 @@ export default function PartnerPage() {
           <div
             style={{
               backgroundColor: "#1a1a1a",
-              padding: "30px",
+              padding: isMobile ? "20px" : "30px",
               borderRadius: "10px",
-              maxWidth: "400px",
+              maxWidth: isMobile ? "90%" : "400px",
               width: "100%",
               boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
             }}
           >
-            <h3 style={{ color: "#f3d675", marginBottom: "20px" }}>
+            <h3
+              style={{
+                color: "#f3d675",
+                marginBottom: "20px",
+                fontSize: isMobile ? "16px" : "18px",
+              }}
+            >
               {t("withdrawal.title")}
             </h3>
             <input
@@ -719,19 +862,20 @@ export default function PartnerPage() {
               placeholder={t("withdrawal.address-placeholder")}
               style={{
                 width: "100%",
-                padding: "10px",
+                padding: isMobile ? "8px 10px" : "10px",
                 marginBottom: "12px",
                 borderRadius: "6px",
                 border: "1px solid #f3d675",
                 backgroundColor: "#2a2a2a",
                 color: "#f3d675",
+                fontSize: isMobile ? "13px" : "14px",
               }}
             />
             {payoutError && (
               <div
                 style={{
                   color: "#ff4d4d",
-                  fontSize: "13px",
+                  fontSize: isMobile ? "12px" : "13px",
                   marginBottom: "10px",
                 }}
               >
@@ -743,17 +887,19 @@ export default function PartnerPage() {
                 display: "flex",
                 justifyContent: "flex-end",
                 gap: "8px",
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
               <button
                 onClick={() => setPayoutPopupOpen(false)}
                 style={{
-                  padding: "10px 14px",
+                  padding: isMobile ? "8px 12px" : "10px 14px",
                   backgroundColor: "#999999",
                   border: "none",
                   borderRadius: "6px",
                   color: "#fff",
                   cursor: "pointer",
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 {t("withdrawal.cancel")}
@@ -762,7 +908,7 @@ export default function PartnerPage() {
                 onClick={handlePayoutSubmit}
                 disabled={isPayoutLoading || wallet.trim() === ""}
                 style={{
-                  padding: "10px 14px",
+                  padding: isMobile ? "8px 12px" : "10px 14px",
                   backgroundColor: "#f3d675",
                   border: "none",
                   borderRadius: "6px",
@@ -770,6 +916,7 @@ export default function PartnerPage() {
                   fontWeight: "bold",
                   cursor: wallet.trim() ? "pointer" : "not-allowed",
                   opacity: wallet.trim() ? 1 : 0.6,
+                  width: isMobile ? "100%" : "auto",
                 }}
               >
                 {isPayoutLoading

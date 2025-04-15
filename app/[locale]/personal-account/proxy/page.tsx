@@ -261,7 +261,7 @@ export default function ProxyPage() {
 
   // Responsive styles based on screen width
   const containerPadding = isMobile ? "0px" : "0px";
-  const containerWidth = isMobile ? "100%" : "75%";
+  const containerWidth = isMobile ? "100%" : "100%";
   const titleFontSize = isMobile ? "20px" : "32px";
   const buttonPadding = isMobile ? "8px 10px" : "10px 20px";
   const buttonFontSize = isMobile ? "12px" : "14px";
@@ -290,6 +290,7 @@ export default function ProxyPage() {
       <div
         style={{
           display: "flex",
+          width: "100%",
           flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
           alignItems: isMobile ? "flex-start" : "center",

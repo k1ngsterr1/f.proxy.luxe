@@ -39,7 +39,7 @@ export default function PersonalAccount() {
           style={{
             display: "flex",
             flexDirection: "row",
-            width: isMobile ? "100%" : "75%",
+            width: isMobile ? "100%" : "85%",
           }}
         >
           <div

@@ -10,14 +10,13 @@ export default function ResponsibilityBlock() {
     <div
       style={{
         padding: "20px",
-
         maxWidth: "1200px",
         margin: "0 auto",
         backgroundColor: "#000000",
         color: "#FFFFFF",
       }}
     >
-      <div style={{ marginBottom: "32px", padding: 65 }}>
+      <div style={{ marginBottom: "32px" }}>
         <h1
           style={{
             textAlign: "center",
@@ -41,12 +40,8 @@ export default function ResponsibilityBlock() {
         }}
       >
         <div style={{ marginBottom: "24px" }}>
-          <p style={{ marginBottom: "16px" }}>
-            {i18n("disclaimer1")}
-          </p>
-          <p>
-            {i18n("disclaimer2")}
-          </p>
+          <p style={{ marginBottom: "16px" }}>{i18n("disclaimer1")}</p>
+          <p>{i18n("disclaimer2")}</p>
         </div>
 
         {/* WebMoney Logo */}
