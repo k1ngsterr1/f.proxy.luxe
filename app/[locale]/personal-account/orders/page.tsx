@@ -7,6 +7,8 @@ import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
+import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
+import { useIsTablet } from "@/shared/utils/use-is-tablet";
 
 export default function OrdersPage() {
   const navigate = useRouter();
@@ -14,6 +16,8 @@ export default function OrdersPage() {
   const i18n = useTranslations();
   const { data: ordersData, isLoading, isError, error } = useProxyOrders();
   const [isMobile, setIsMobile] = useState(false);
+  const isSmallerTablet = useIsSmallerTablet(); // <=500
+  const isTablet = useIsTablet();
 
   // Check if the device is mobile
   useEffect(() => {
@@ -33,12 +37,18 @@ export default function OrdersPage() {
     };
   }, []);
 
+  const containerStyle = isSmallerTablet
+    ? "400px"
+    : isTablet
+    ? "600px"
+    : "900px";
+
   return (
     <div
       style={{
         width: "100%",
         padding: "20px",
-        maxWidth: "920px",
+        maxWidth: containerStyle,
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
@@ -111,9 +121,9 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       {!isLoading &&
-        !isError &&
-        ordersData?.data &&
-        ordersData.data.length > 0 ? (
+      !isError &&
+      ordersData?.data &&
+      ordersData.data.length > 0 ? (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -200,21 +210,21 @@ export default function OrdersPage() {
                             order.status === "ACTIVE"
                               ? "rgba(76, 175, 80, 0.1)"
                               : order.status === "PENDING"
-                                ? "rgba(255, 193, 7, 0.1)"
-                                : "rgba(255, 82, 82, 0.1)",
+                              ? "rgba(255, 193, 7, 0.1)"
+                              : "rgba(255, 82, 82, 0.1)",
                           color:
                             order.status === "ACTIVE"
                               ? "#4CAF50"
                               : order.status === "PENDING"
-                                ? "#FFC107"
-                                : "#FF5252",
+                              ? "#FFC107"
+                              : "#FF5252",
                         }}
                       >
                         {order.status === "ACTIVE"
                           ? `${i18n("personal-orders.status.active")}`
                           : order.status === "PENDING"
-                            ? `${i18n("personal-orders.status.pending")}`
-                            : `${i18n("personal-orders.status.expired")}`}
+                          ? `${i18n("personal-orders.status.pending")}`
+                          : `${i18n("personal-orders.status.expired")}`}
                       </span>
                     </td>
                     <td style={{ padding: "12px 16px", marginRight: "16px" }}>

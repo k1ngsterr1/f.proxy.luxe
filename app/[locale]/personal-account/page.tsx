@@ -30,7 +30,6 @@ export default function PersonalAccount() {
   const i18n = useTranslations("personal-account");
   const t = useTranslations();
 
-
   return (
     <>
       {isFetching ? (

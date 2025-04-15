@@ -10,6 +10,8 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { useSendResetEmail } from "@/entities/auth/hooks/mutations/use-reset-email.mutations";
 import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-password.mutation";
 import { useTranslations } from "next-intl";
+import { useIsTablet } from "@/shared/utils/use-is-tablet";
+import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 
 export default function ProfilePage() {
   const { data } = useGetUser();
@@ -22,9 +24,16 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const isMobile = useIsMobile();
-
+  const isTablet = useIsTablet();
+  const isSmallerTablet = useIsSmallerTablet();
   const i18n = useTranslations();
   const t = useTranslations("personal-profile");
+
+  const containerStyle = isSmallerTablet
+    ? "400px"
+    : isTablet
+    ? "600px"
+    : "800px";
 
   const {
     mutate: sendResetEmail,
@@ -114,7 +123,7 @@ export default function ProfilePage() {
       style={{
         width: "100%",
         padding: "20px",
-        maxWidth: "920px",
+        maxWidth: containerStyle as any,
         margin: "0 auto",
         backgroundColor: "#000000",
       }}

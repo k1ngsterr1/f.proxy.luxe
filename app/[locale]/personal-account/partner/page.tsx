@@ -12,6 +12,8 @@ import {
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/config/apiClient";
+import { useIsTablet } from "@/shared/utils/use-is-tablet";
+import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 
 const useGetPartnerDetails = () => {
   return useQuery({
@@ -38,6 +40,9 @@ export default function PartnerPage() {
   const [payoutError, setPayoutError] = useState("");
   const [isPayoutLoading, setPayoutLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const isTablet = useIsTablet();
+  const isSmallerTablet = useIsSmallerTablet();
 
   // Check if the device is mobile
   useEffect(() => {
@@ -92,25 +97,6 @@ export default function PartnerPage() {
   const id = user?.id;
   const referralLink = `${window.location.origin}/register?ref=${id}`;
 
-  const stats = [
-    {
-      value: "743 551",
-      label: t("stats.clients"),
-    },
-    {
-      value: "32 277 133",
-      label: t("stats.proxies-sold"),
-    },
-    {
-      value: "477 489",
-      label: t("stats.proxies-active"),
-    },
-    {
-      value: "9 206 727",
-      label: t("stats.orders-processed"),
-    },
-  ];
-
   // Referral data
   const referralLinks = [
     {
@@ -118,6 +104,12 @@ export default function PartnerPage() {
       value: referralLink,
     },
   ];
+
+  const containerStyle = isSmallerTablet
+    ? "400px"
+    : isTablet
+    ? "600px"
+    : "800px";
 
   return (
     <div
@@ -130,7 +122,7 @@ export default function PartnerPage() {
       <div
         style={{
           padding: isMobile ? "20px 16px" : "40px 20px",
-          maxWidth: "900px",
+          maxWidth: containerStyle as any,
           margin: "0 auto",
         }}
       >

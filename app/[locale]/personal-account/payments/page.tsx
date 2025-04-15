@@ -16,6 +16,9 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useIsTablet } from "@/shared/utils/use-is-tablet";
+import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 
 // Define the payment interface based on the provided data structure
 interface Payment {
@@ -59,6 +62,15 @@ export default function PaymentsPage() {
   const [combinedTransactions, setCombinedTransactions] = useState<
     TransactionItem[]
   >([]);
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isSmallerTablet = useIsSmallerTablet();
+
+  const containerStyle = isSmallerTablet
+    ? "400px"
+    : isTablet
+    ? "600px"
+    : "800px";
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -272,7 +284,7 @@ export default function PaymentsPage() {
       style={{
         width: "100%",
         padding: "20px",
-        maxWidth: "920px",
+        maxWidth: containerStyle,
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
@@ -443,8 +455,8 @@ export default function PaymentsPage() {
 
       {/* Transactions Table */}
       {!isPaymentsLoading &&
-        !paymentsError &&
-        combinedTransactions.length > 0 ? (
+      !paymentsError &&
+      combinedTransactions.length > 0 ? (
         <div
           style={{
             backgroundColor: "rgba(243, 214, 117, 0.05)",
@@ -487,11 +499,13 @@ export default function PaymentsPage() {
                   // Determine price display
                   const priceDisplay =
                     transaction.type === "replenishment"
-                      ? `+${transaction.price || (transaction as any).totalPrice
-                      }`
-                      : `-${(transaction as any).totalPrice ||
-                      (transaction as any).price
-                      }`;
+                      ? `+${
+                          transaction.price || (transaction as any).totalPrice
+                        }`
+                      : `-${
+                          (transaction as any).totalPrice ||
+                          (transaction as any).price
+                        }`;
 
                   // Determine price color
                   const priceColor =
