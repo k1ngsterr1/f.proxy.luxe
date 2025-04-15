@@ -26,7 +26,7 @@ const useGetPartnerDetails = () => {
 };
 
 export default function PartnerPage() {
-  const t = useTranslations('personal-partner');
+  const t = useTranslations("personal-partner");
   const { data: partnerDetails, isLoading } = useGetPartnerDetails();
   const { data: user } = useGetUser();
   const [couponCreated, setCouponCreated] = useState(false);
@@ -38,7 +38,7 @@ export default function PartnerPage() {
   const [payoutError, setPayoutError] = useState("");
   const [isPayoutLoading, setPayoutLoading] = useState(false);
 
-  console.log(partnerDetails)
+  console.log(partnerDetails);
 
   const handlePayoutSubmit = async () => {
     setPayoutError("");
@@ -48,7 +48,7 @@ export default function PartnerPage() {
       setPayoutPopupOpen(false);
       setWallet("");
     } catch (err: any) {
-      setPayoutError(t('withdrawal.error'));
+      setPayoutError(t("withdrawal.error"));
       console.error(err);
     } finally {
       setPayoutLoading(false);
@@ -71,32 +71,32 @@ export default function PartnerPage() {
     setCouponCreated(true);
   };
 
-  const id = user?.id
+  const id = user?.id;
   const referralLink = `${window.location.origin}/register?ref=${id}`;
 
   const stats = [
     {
       value: "743 551",
-      label: t('stats.clients'),
+      label: t("stats.clients"),
     },
     {
       value: "32 277 133",
-      label: t('stats.proxies-sold'),
+      label: t("stats.proxies-sold"),
     },
     {
       value: "477 489",
-      label: t('stats.proxies-active'),
+      label: t("stats.proxies-active"),
     },
     {
       value: "9 206 727",
-      label: t('stats.orders-processed'),
+      label: t("stats.orders-processed"),
     },
   ];
 
   // Referral data
   const referralLinks = [
     {
-      label: t('referral.title'),
+      label: t("referral.title"),
       value: referralLink,
     },
   ];
@@ -138,7 +138,7 @@ export default function PartnerPage() {
             />
             <div>
               <p style={{ color: "#FFC107", fontSize: "14px", margin: 0 }}>
-                {t('verification.message')}
+                {t("verification.message")}
               </p>
             </div>
           </div>
@@ -155,54 +155,16 @@ export default function PartnerPage() {
               textTransform: "uppercase",
             }}
           >
-            {t('title')}
+            {t("title")}
           </h1>
           <p
             style={{ color: "#f3d675", fontSize: "16px", marginBottom: "12px" }}
           >
-            {t('description')} <strong>30%</strong> {t('description-2')}
+            {t("description")} <strong>30%</strong> {t("description-2")}
           </p>
           <p style={{ color: "#FFFFFF", fontSize: "15px" }}>
-            {t('requirements')}
+            {t("requirements")}
           </p>
-        </div>
-
-        {/* Statistics section */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: "20px",
-            marginBottom: "40px",
-            backgroundColor: "rgba(0, 0, 0, 0.3)",
-            padding: "20px",
-            borderRadius: "8px",
-            border: "1px solid rgba(243, 214, 117, 0.1)",
-          }}
-        >
-          {stats.map((stat, index) => (
-            <div key={index} style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  fontSize: "26px",
-                  color: "#f3d675",
-                  fontWeight: "bold",
-                  marginBottom: "8px",
-                }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#999999",
-                  textTransform: "uppercase",
-                }}
-              >
-                {stat.label}
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* Participation Methods */}
@@ -223,7 +185,7 @@ export default function PartnerPage() {
               fontWeight: "bold",
             }}
           >
-            {t('participation.title')}
+            {t("participation.title")}
           </h2>
           <ul
             style={{
@@ -235,16 +197,16 @@ export default function PartnerPage() {
           >
             <li style={{ marginBottom: "16px" }}>
               <span style={{ color: "#f3d675", fontWeight: "500" }}>
-                {t('participation.method1.title')}
+                {t("participation.method1.title")}
               </span>{" "}
-              {t('participation.method1.description')}
+              {t("participation.method1.description")}
               {t(`percent`)}
             </li>
             <li>
               <span style={{ color: "#f3d675", fontWeight: "500" }}>
-                {t('participation.method2.title')}
+                {t("participation.method2.title")}
               </span>{" "}
-              {t('participation.method2.description')}
+              {t("participation.method2.description")}
             </li>
           </ul>
         </div>
@@ -271,7 +233,7 @@ export default function PartnerPage() {
               size={18}
               style={{ marginRight: "8px", verticalAlign: "text-bottom" }}
             />
-            {t('referral-links.title')}
+            {t("referral-links.title")}
           </h2>
 
           {referralLinks.map((link, index) => (
@@ -344,7 +306,7 @@ export default function PartnerPage() {
                     }}
                   >
                     <CheckCircle size={14} />
-                    {t('copy-notification')}
+                    {t("copy-notification")}
                   </div>
                 )}
               </div>
@@ -365,12 +327,14 @@ export default function PartnerPage() {
                 size={18}
                 style={{ marginRight: "8px", verticalAlign: "text-bottom" }}
               />
-              {t('partner-coupon.title')}
+              {t("partner-coupon.title")}
             </h2>
             <div style={{ display: "flex", gap: "8px", position: "relative" }}>
               <input
                 type="text"
-                value={couponCreated ? "PARTNER5" : t('partner-coupon.not-created')}
+                value={
+                  couponCreated ? "PARTNER5" : t("partner-coupon.not-created")
+                }
                 readOnly
                 style={{
                   flex: 1,
@@ -427,7 +391,7 @@ export default function PartnerPage() {
                     e.currentTarget.style.backgroundColor = "#f3d675";
                   }}
                 >
-                  {t('partner-coupon.create')}
+                  {t("partner-coupon.create")}
                 </button>
               )}
               {showCopyNotification === "coupon" && (
@@ -448,7 +412,7 @@ export default function PartnerPage() {
                   }}
                 >
                   <CheckCircle size={14} />
-                  {t('copy-notification')}
+                  {t("copy-notification")}
                 </div>
               )}
             </div>
@@ -473,12 +437,12 @@ export default function PartnerPage() {
               fontWeight: "bold",
             }}
           >
-            {t('important-info.title')}
+            {t("important-info.title")}
           </h2>
           <p
             style={{ color: "#4CAF50", fontSize: "15px", marginBottom: "16px" }}
           >
-            {t('important-info.daily-rewards')}
+            {t("important-info.daily-rewards")}
           </p>
           <p
             style={{
@@ -488,10 +452,17 @@ export default function PartnerPage() {
               lineHeight: "1.5",
             }}
           >
-            {t('important-info.withdrawal-info')} <a href="mailto:admin@proxy.luxe" style={{ color: "#f3d675", textDecoration: "none" }}>admin@proxy.luxe</a> {t('important-info.withdrawal-info-2')}
+            {t("important-info.withdrawal-info")}{" "}
+            <a
+              href="mailto:admin@proxy.luxe"
+              style={{ color: "#f3d675", textDecoration: "none" }}
+            >
+              admin@proxy.luxe
+            </a>{" "}
+            {t("important-info.withdrawal-info-2")}
           </p>
           <p style={{ color: "#FF5252", fontSize: "15px", margin: 0 }}>
-            {t('important-info.warning')}
+            {t("important-info.warning")}
           </p>
         </div>
 
@@ -513,7 +484,7 @@ export default function PartnerPage() {
               textTransform: "uppercase",
             }}
           >
-            {t('stats.title')}
+            {t("stats.title")}
           </h2>
 
           {/* Statistics table */}
@@ -538,7 +509,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    {t('referrals.table.date')}
+                    {t("referrals.table.date")}
                   </th>
                   <th
                     style={{
@@ -549,7 +520,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    {t('referrals.table.user')}
+                    {t("referrals.table.user")}
                   </th>
                   <th
                     style={{
@@ -560,7 +531,7 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    {t('referrals.table.purchases')}
+                    {t("referrals.table.purchases")}
                   </th>
                   <th
                     style={{
@@ -571,32 +542,37 @@ export default function PartnerPage() {
                       color: "#f3d675",
                     }}
                   >
-                    {t('referrals.table.commission')}
+                    {t("referrals.table.commission")}
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {partnerDetails?.referrals?.length ? (
-                  partnerDetails.referrals.map((referral: any, index: number) => (
-                    <tr key={`${referral.id}-${index}`}>
-                      <td style={tdStyle}>
-                        {new Date(referral.createdAt).toLocaleDateString()}
-                      </td>
-                      <td style={tdStyle}>{referral.userId}</td>
-                      <td style={tdStyle}>—</td>
-                      <td style={tdStyle}>—</td>
-                    </tr>
-                  ))
+                  partnerDetails.referrals.map(
+                    (referral: any, index: number) => (
+                      <tr key={`${referral.id}-${index}`}>
+                        <td style={tdStyle}>
+                          {new Date(referral.createdAt).toLocaleDateString()}
+                        </td>
+                        <td style={tdStyle}>{referral.userId}</td>
+                        <td style={tdStyle}>—</td>
+                        <td style={tdStyle}>—</td>
+                      </tr>
+                    )
+                  )
                 ) : (
                   <tr>
-                    <td colSpan={4} style={{
-                      textAlign: "center",
-                      color: "#999999",
-                      padding: "12px 16px",
-                      borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
-                      backgroundColor: "rgba(0, 0, 0, 0.2)",
-                    }}>
-                      {t('referrals.empty')}
+                    <td
+                      colSpan={4}
+                      style={{
+                        textAlign: "center",
+                        color: "#999999",
+                        padding: "12px 16px",
+                        borderBottom: "1px solid rgba(243, 214, 117, 0.05)",
+                        backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      }}
+                    >
+                      {t("referrals.empty")}
                     </td>
                   </tr>
                 )}
@@ -625,7 +601,7 @@ export default function PartnerPage() {
                   marginRight: "8px",
                 }}
               >
-                {t('stats.referrals')}:
+                {t("stats.referrals")}:
               </span>
               <span
                 style={{
@@ -645,7 +621,7 @@ export default function PartnerPage() {
                   marginRight: "8px",
                 }}
               >
-                {t('stats.earnings')}:
+                {t("stats.earnings")}:
               </span>
               <span
                 style={{
@@ -665,7 +641,7 @@ export default function PartnerPage() {
                   marginRight: "8px",
                 }}
               >
-                {t('stats.available')}:
+                {t("stats.available")}:
               </span>
               <span
                 style={{
@@ -702,7 +678,7 @@ export default function PartnerPage() {
                 transition: "all 0.2s",
               }}
             >
-              {t('withdrawal.submit-button')}
+              {t("withdrawal.submit-button")}
             </button>
           </div>
         )}
@@ -733,12 +709,14 @@ export default function PartnerPage() {
               boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
             }}
           >
-            <h3 style={{ color: "#f3d675", marginBottom: "20px" }}>{t('withdrawal.title')}</h3>
+            <h3 style={{ color: "#f3d675", marginBottom: "20px" }}>
+              {t("withdrawal.title")}
+            </h3>
             <input
               type="text"
               value={wallet}
               onChange={(e) => setWallet(e.target.value)}
-              placeholder={t('withdrawal.address-placeholder')}
+              placeholder={t("withdrawal.address-placeholder")}
               style={{
                 width: "100%",
                 padding: "10px",
@@ -750,11 +728,23 @@ export default function PartnerPage() {
               }}
             />
             {payoutError && (
-              <div style={{ color: "#ff4d4d", fontSize: "13px", marginBottom: "10px" }}>
+              <div
+                style={{
+                  color: "#ff4d4d",
+                  fontSize: "13px",
+                  marginBottom: "10px",
+                }}
+              >
                 {payoutError}
               </div>
             )}
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "8px",
+              }}
+            >
               <button
                 onClick={() => setPayoutPopupOpen(false)}
                 style={{
@@ -766,7 +756,7 @@ export default function PartnerPage() {
                   cursor: "pointer",
                 }}
               >
-                {t('withdrawal.cancel')}
+                {t("withdrawal.cancel")}
               </button>
               <button
                 onClick={handlePayoutSubmit}
@@ -782,7 +772,9 @@ export default function PartnerPage() {
                   opacity: wallet.trim() ? 1 : 0.6,
                 }}
               >
-                {isPayoutLoading ? t('withdrawal.sending') : t('withdrawal.submit-button')}
+                {isPayoutLoading
+                  ? t("withdrawal.sending")
+                  : t("withdrawal.submit-button")}
               </button>
             </div>
           </div>

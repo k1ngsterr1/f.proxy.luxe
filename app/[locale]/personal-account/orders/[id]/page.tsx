@@ -581,7 +581,7 @@ export default function OrderDetailPage() {
                       borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
                     }}
                   >
-                    {t("table.purchase")}
+                    {order.type}
                   </td>
                 </tr>
                 <tr>
