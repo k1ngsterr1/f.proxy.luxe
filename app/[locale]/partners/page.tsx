@@ -61,7 +61,7 @@ export default function Partners() {
             }}
           >
             <span style={{ color: "#f3d675" }}>{i18n("partners.header")}</span>
-            <div
+            <span
               style={{
                 position: "absolute",
                 bottom: "-10px",
@@ -72,7 +72,7 @@ export default function Partners() {
                 background:
                   "linear-gradient(90deg, rgba(243, 214, 117, 0) 0%, rgba(243, 214, 117, 1) 50%, rgba(243, 214, 117, 0) 100%)",
               }}
-            ></div>
+            ></span>
           </h1>
 
           <div

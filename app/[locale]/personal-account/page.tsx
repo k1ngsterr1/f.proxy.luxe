@@ -42,8 +42,6 @@ export default function PersonalAccount() {
             width: isMobile ? "100%" : "75%",
           }}
         >
-          <title>Proxy Luxe | Профиль</title>
-
           <div
             style={{
               display: "flex",

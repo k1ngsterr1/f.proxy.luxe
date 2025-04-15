@@ -19,7 +19,7 @@ export const IPV6BuyCard = () => {
 
   const [validationError, setValidationError] = useState<string | null>(null);
   const [countryId, setCountryId] = useState<string>("");
-  const [goal, setGoal] = useState<string>("Surfing");
+  const [goal, setGoal] = useState<string>("surfing");
   const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
   const [period, setPeriod] = useState<string>("1m");
 
@@ -182,8 +182,9 @@ export const IPV6BuyCard = () => {
                 ? "1px solid #ff4d4f"
                 : "1px solid #3E3E3E",
             }}
-            required
           >
+            {/* Added placeholder option with empty value */}
+            <option value="">{i18n("goals.select")}</option>
             <option value="surfing">{i18n("goals.surfing")}</option>
             <option value="socialMedia">{i18n("goals.socialMedia")}</option>
             <option value="seo">{i18n("goals.seo")}</option>

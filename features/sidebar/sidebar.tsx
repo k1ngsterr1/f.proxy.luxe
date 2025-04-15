@@ -21,16 +21,16 @@ const useGetRuble = () => {
   return useQuery({
     queryKey: ["ruble"],
     queryFn: async () => {
-      const response = await apiClient.get("/api/v1/user/currency")
+      const response = await apiClient.get("/api/v1/user/currency");
       return response.data;
     },
     staleTime: 1000 * 60 * 5,
-    retry: 2
-  })
-}
+    retry: 2,
+  });
+};
 
 export const Sidebar = () => {
-  const { data: ruble } = useGetRuble()
+  const { data: ruble } = useGetRuble();
   const queryClient = useQueryClient();
   const i18n = useTranslations("sidebar");
   const pathname = usePathname();
@@ -132,13 +132,13 @@ export const Sidebar = () => {
   const navStyle = {
     flex: 1,
     padding: "0",
+    position: "relative" as const,
   };
 
   const ulStyle = {
     listStyle: "none",
     padding: 0,
     margin: 0,
-    position: "relative" as const,
   };
 
   const verticalLineStyle = {
@@ -624,9 +624,10 @@ export const Sidebar = () => {
       </div>
 
       <div style={navStyle}>
-        <ul style={ulStyle}>
-          <div style={verticalLineStyle}></div>
+        {/* Vertical line moved outside of ul */}
+        <div style={verticalLineStyle}></div>
 
+        <ul style={ulStyle}>
           <li
             style={getItemStyle("/personal-account/proxy")}
             onMouseEnter={() => setHoveredItem("/personal-account/proxy")}
