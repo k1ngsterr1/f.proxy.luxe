@@ -106,7 +106,7 @@ export default function ContactsPage() {
   return (
     <main
       style={{
-        paddingTop: isMobile ? 356 : 256,
+        paddingTop: isMobile ? 112 : 256,
         backgroundColor: "#000000",
         color: "#FFFFFF",
         minHeight: "100vh",
@@ -244,11 +244,11 @@ export default function ContactsPage() {
                             {item.value}
                             {(item.id === "website" ||
                               item.id === "telegram") && (
-                                <ExternalLink
-                                  size={14}
-                                  style={{ opacity: 0.6 }}
-                                />
-                              )}
+                              <ExternalLink
+                                size={14}
+                                style={{ opacity: 0.6 }}
+                              />
+                            )}
                           </a>
                         ) : (
                           <span

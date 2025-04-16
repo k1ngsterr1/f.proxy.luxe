@@ -147,7 +147,7 @@ export default function ChangePasswordPage() {
     <div
       style={{
         minHeight: "70vh",
-        marginTop: 256,
+        marginTop: isMobile ? 64 : 256,
         backgroundColor: "#000000",
         color: "#FFFFFF",
         display: "flex",
@@ -255,8 +255,9 @@ export default function ChangePasswordPage() {
                       paddingTop: "10px",
                       paddingBottom: "10px",
                       backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      border: `1px solid ${emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
-                        }`,
+                      border: `1px solid ${
+                        emailError ? "#ff4d4f" : "rgba(243, 214, 117, 0.2)"
+                      }`,
                       borderRadius: "6px",
                       color: "#f3d675",
                       fontSize: "14px",

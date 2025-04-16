@@ -181,7 +181,7 @@ export default function PartnerPage() {
               marginBottom: "12px",
             }}
           >
-            {t("description")} <strong>30%</strong> {t("description-2")}
+            {t("description")} <strong>15%</strong> {t("description-2")}
           </p>
           <p style={{ color: "#FFFFFF", fontSize: isMobile ? "14px" : "15px" }}>
             {t("requirements")}

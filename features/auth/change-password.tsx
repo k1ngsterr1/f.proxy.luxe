@@ -131,7 +131,6 @@ export const ChangePasswordForm = ({
 
   return (
     <form onSubmit={handleSubmit} style={formStyle} autoComplete="off">
-
       <div style={fieldGroupStyle}>
         <label style={labelStyle}>
           {i18n("verificationCode")} <span style={{ color: "#f3d675" }}>*</span>
@@ -176,7 +175,12 @@ export const ChangePasswordForm = ({
             )}
           </button>
         </div>
-        <p style={{ ...helperTextStyle, color: passwordError ? "#ff4d4f" : "#9CA3AF" }}>
+        <p
+          style={{
+            ...helperTextStyle,
+            color: passwordError ? "#ff4d4f" : "#9CA3AF",
+          }}
+        >
           {passwordError || i18n("errors.password-length")}
         </p>
       </div>
@@ -207,7 +211,9 @@ export const ChangePasswordForm = ({
           </button>
         </div>
         {confirmPasswordError && (
-          <p style={{ ...helperTextStyle, color: "#ff4d4f" }}>{confirmPasswordError}</p>
+          <p style={{ ...helperTextStyle, color: "#ff4d4f" }}>
+            {confirmPasswordError}
+          </p>
         )}
       </div>
 
