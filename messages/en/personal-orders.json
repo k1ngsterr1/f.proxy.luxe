@@ -21,7 +21,8 @@
       "type": "Type",
       "status": "Status",
       "price": "Price",
-      "actions": "Actions"
+      "actions": "Actions",
+      "thirty-days": "30 days"
     }
   }
 }

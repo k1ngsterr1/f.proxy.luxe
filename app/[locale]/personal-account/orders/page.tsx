@@ -155,7 +155,9 @@ export default function OrdersPage() {
                   <td style={{ padding: "12px 16px" }}>{order.country}</td>
                   <td style={{ padding: "12px 16px" }}>{order.quantity}</td>
                   <td style={{ padding: "12px 16px" }}>
-                    {order.periodDays} {i18n("personal-orders.table.days")}
+                    {order.periodDays === "1m"
+                      ? i18n("personal-orders.table.thirty-days")
+                      : order.periodDays}
                   </td>
                   <td style={{ padding: "12px 16px" }}>{order.proxyType}</td>
                   <td style={{ padding: "12px 16px" }}>
