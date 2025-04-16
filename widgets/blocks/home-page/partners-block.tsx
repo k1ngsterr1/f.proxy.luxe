@@ -65,6 +65,42 @@ export const PartnersBlock = () => {
             onClick={() => navigate.push("/faq")}
           />
         </div>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: 'center',
+            marginTop: 50,
+            gap: 20
+          }}
+        >
+          <a
+            href="https://dolphin-anty.net/?utm_source=media&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=banner1"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block",
+              transition: "transform 0.2s ease-in-out",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = "scale(1.02)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            <img
+              src="/306_54.gif"
+              alt="Dolphin Anty Banner"
+              style={{
+                borderRadius: "4px",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
+              }}
+            />
+          </a>
+        </div>
       </div>
     </section>
   );

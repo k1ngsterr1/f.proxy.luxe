@@ -164,11 +164,6 @@ img {
   padding-top: 210px;
 }
 
-@media screen and (max-width: 1100px) {
-  .inner-page {
-    padding-top: 325px;
-  }
-}
 .btn {
   font-family: "CeraPro", sans-serif;
   font-size: 14px;
@@ -855,7 +850,7 @@ img {
     text-align: center;
   }
   .partners-item img {
-    max-width: 85%;
+    max-width: 75%;
   }
   .partners-num {
     font-size: 220px;

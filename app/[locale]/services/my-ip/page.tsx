@@ -36,6 +36,7 @@ export interface IpData {
 }
 
 export default function MyIpClient() {
+  const t = useTranslations();
   const i18n = useTranslations("myIp");
   const [ipData, setIpData] = useState<IpData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -144,7 +145,7 @@ export default function MyIpClient() {
           padding: isMobile ? "20px 16px" : "40px 20px",
         }}
       >
-        <title>Proxy Luxe | Мой IP</title>
+        <title>{t("myIp.title")}</title>
 
         <div
           style={{
@@ -207,6 +208,7 @@ export default function MyIpClient() {
           padding: isMobile ? "20px 16px" : "40px 20px",
         }}
       >
+        <title>{t("myIp.title")}</title>
         <div
           style={{
             maxWidth: "1200px",
@@ -255,6 +257,7 @@ export default function MyIpClient() {
         minHeight: "100vh",
       }}
     >
+      <title>{t("myIps.title")}</title>
       <section style={{ padding: isMobile ? "20px 16px" : "40px 20px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           {/* Hero Section */}

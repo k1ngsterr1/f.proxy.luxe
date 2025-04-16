@@ -72,6 +72,23 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         : prev
     );
   });
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile devices
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
 
   // Update isRotating and selectedInterval when rotationType or rotationInterval changes
   useEffect(() => {
@@ -147,21 +164,31 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         backgroundColor: "#000000",
         borderRadius: "8px",
         border: "1px solid rgba(243, 214, 117, 0.2)",
-        padding: "24px",
+        padding: isMobile ? "16px" : "24px",
         color: "#FFFFFF",
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
-      {/* Header */}
+      {/* Header - Restructured for mobile */}
       <div
         style={{
           display: "flex",
-          alignItems: "center",
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: isMobile ? "flex-start" : "center",
           justifyContent: "space-between",
+          gap: isMobile ? "16px" : "8px",
           marginBottom: "16px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        {/* Rotation Type Controls */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            width: isMobile ? "100%" : "auto",
+          }}
+        >
           <button
             style={{
               ...buttonBase,
@@ -199,18 +226,30 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
             {i18n("rotationTypes.rotating")}
           </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+
+        {/* Interval Selection */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            width: isMobile ? "100%" : "auto",
+            justifyContent: isMobile ? "space-between" : "flex-start",
+          }}
+        >
           <select
             style={{
               backgroundColor: "rgba(243, 214, 117, 0.1)",
               border: "1px solid rgba(243, 214, 117, 0.2)",
               borderRadius: "4px",
-              padding: "4px 8px",
+              padding: "8px 12px",
               fontSize: "14px",
               color: "#f3d675",
               opacity: isRotating ? 1 : 0.5,
               pointerEvents: isRotating ? "auto" : "none",
               appearance: "auto", // Ensure native dropdown styling
+              width: isMobile ? "60%" : "auto",
+              height: isMobile ? "40px" : "auto",
             }}
             value={selectedInterval}
             onChange={handleIntervalChange}
@@ -236,6 +275,8 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               ...primaryButton,
               opacity: isRotating ? 1 : 0.5,
               cursor: isRotating ? "pointer" : "not-allowed",
+              width: isMobile ? "38%" : "auto",
+              height: isMobile ? "40px" : "auto",
             }}
             onClick={handleApplyRotation}
             disabled={!isRotating || isUpdatingRotation}
@@ -243,7 +284,17 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
             {isUpdatingRotation ? i18n("updateButton") : i18n("changeButton")}
           </button>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+
+        {/* Auto Renewal Toggle */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            width: isMobile ? "100%" : "auto",
+            justifyContent: isMobile ? "space-between" : "flex-start",
+          }}
+        >
           <span style={{ fontSize: "14px", color: "#f3d675" }}>
             {i18n("autoRenewal")}
           </span>
@@ -283,7 +334,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
       <div style={{ marginBottom: "16px" }}>
         <h4
           style={{
-            fontSize: "16px",
+            fontSize: isMobile ? "15px" : "16px",
             fontWeight: "600",
             marginBottom: "8px",
             color: "#f3d675",
@@ -318,7 +369,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
           style={{
             display: "flex",
             justifyContent: "space-between",
-            fontSize: "12px",
+            fontSize: isMobile ? "10px" : "12px",
             color: "#999999",
             marginTop: "4px",
           }}
@@ -331,79 +382,94 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         </div>
       </div>
 
-      {/* Usage Details */}
+      {/* Usage Details - Restructured for mobile */}
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "14px",
-          color: "#CCCCCC",
-          marginBottom: "8px",
-        }}
-      >
-        <div>
-          {i18n("totalUsed")}
-          <p style={{ color: "#4CAF50" }}>{usedBandwidthMB} MB</p>
-        </div>
-        <div>
-          {i18n("remains")}
-          <p style={{ color: "#4CAF50" }}>
-            {remainingBandwidthGB.toFixed(1)} GB
-          </p>
-        </div>
-      </div>
-
-      {/* Reserve Details */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "14px",
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+          gap: isMobile ? "12px" : "8px",
+          fontSize: isMobile ? "13px" : "14px",
           color: "#CCCCCC",
           marginBottom: "16px",
         }}
       >
         <div>
+          {i18n("totalUsed")}
+          <p style={{ color: "#4CAF50", margin: "4px 0 0 0" }}>
+            {usedBandwidthMB} MB
+          </p>
+        </div>
+        <div>
+          {i18n("remains")}
+          <p style={{ color: "#4CAF50", margin: "4px 0 0 0" }}>
+            {remainingBandwidthGB.toFixed(1)} GB
+          </p>
+        </div>
+        <div>
           {i18n("reserveUsed")}
-          <p style={{ color: "#FFC107" }}>{reserveUsedMB} B</p>
+          <p style={{ color: "#FFC107", margin: "4px 0 0 0" }}>
+            {reserveUsedMB} B
+          </p>
         </div>
         <div>
           {i18n("remainingReserve")}
-          <p style={{ color: "#4CAF50" }}>{reserveBandwidthGB} GB</p>
+          <p style={{ color: "#4CAF50", margin: "4px 0 0 0" }}>
+            {reserveBandwidthGB} GB
+          </p>
         </div>
       </div>
 
-      {/* Package Info and Expiry Date */}
+      {/* Package Info and Expiry Date - Restructured for mobile */}
       <div
         style={{
           display: "flex",
+          flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: isMobile ? "flex-start" : "center",
+          gap: isMobile ? "16px" : "8px",
         }}
       >
         <div>
-          <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
+          <div
+            style={{ fontSize: isMobile ? "13px" : "14px", color: "#CCCCCC" }}
+          >
             {i18n("bandwidthInPackage")}
           </div>
           <div
-            style={{ color: "#4CAF50", fontWeight: "600", fontSize: "16px" }}
+            style={{
+              color: "#4CAF50",
+              fontWeight: "600",
+              fontSize: isMobile ? "15px" : "16px",
+              marginTop: "4px",
+            }}
           >
             {totalBandwidthGB} GB
           </div>
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "14px", color: "#CCCCCC" }}>
+        <div
+          style={{
+            textAlign: isMobile ? "left" : "right",
+            width: isMobile ? "100%" : "auto",
+          }}
+        >
+          <div
+            style={{ fontSize: isMobile ? "13px" : "14px", color: "#CCCCCC" }}
+          >
             {i18n("activeUntil", { date: "" })}
           </div>
           <div
             style={{
               color: "#f3d675",
               fontWeight: "600",
-              fontSize: "16px",
+              fontSize: isMobile ? "15px" : "16px",
               background: "rgba(243, 214, 117, 0.1)",
               padding: "4px 12px",
               borderRadius: "4px",
               display: "inline-block",
+              marginTop: "4px",
+              width: isMobile ? "100%" : "auto",
+              textAlign: "center",
+              boxSizing: "border-box",
             }}
           >
             {expiryDate}

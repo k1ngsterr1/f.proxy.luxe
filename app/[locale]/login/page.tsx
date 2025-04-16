@@ -2,14 +2,16 @@
 
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { LoginAuthForm } from "@/features/auth/login";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
   const isMobile = useIsMobile();
+  const t = useTranslations()
 
 
   return (
     <main className="inner-page">
-      <title>Proxy Luxe | Авторизация</title>
+      <title>{t("auths.title")}</title>
       <div
         style={{
           maxWidth: isMobile ? "100%" : "40%",

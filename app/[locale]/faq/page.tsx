@@ -230,7 +230,7 @@ export default function Faq() {
       className="inner-page"
       style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
     >
-      <title>Proxy Luxe | FAQ</title>
+      <title>{i18n("faqs.title")}</title>
 
       <section className="faq" style={{ padding: "60px 0" }}>
         <div
@@ -508,7 +508,7 @@ export default function Faq() {
                         scrollToContent();
                         toggleQuestion(
                           (index + Math.ceil(allQuestions.length / 2)) %
-                            faqContent.length
+                          faqContent.length
                         );
                       }}
                       style={{

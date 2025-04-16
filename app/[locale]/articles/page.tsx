@@ -101,7 +101,7 @@ export default function Articles() {
 
   return (
     <>
-      <title>Proxy Luxe | {t("articles.title")}</title>
+      <title>{t("articless.title")}</title>
       <main
         className="inner-page"
         style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
@@ -171,8 +171,7 @@ export default function Articles() {
                   {t("articles.error.title")}
                 </h3>
                 <p style={{ color: "#999999" }}>
-                  {error?.message ||
-                    t("articles.error.message")}
+                  {error?.message || t("articles.error.message")}
                 </p>
               </div>
             )}

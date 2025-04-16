@@ -28,6 +28,7 @@ export default function PersonalAccount() {
     }
   }, [token, navigate]);
   const i18n = useTranslations("personal-account");
+  const t = useTranslations();
 
   return (
     <>
@@ -42,8 +43,7 @@ export default function PersonalAccount() {
             width: isMobile ? "100%" : "75%",
           }}
         >
-          <title>Proxy Luxe | Профиль</title>
-
+          <title>{t("personal-accounts.title")}</title>
           <div
             style={{
               display: "flex",

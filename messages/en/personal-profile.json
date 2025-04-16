@@ -1,5 +1,6 @@
 {
   "personal-profile": {
+    "sending": "Sending...",
     "title": "PROFILE",
     "email": "E-mail:",
     "email-required": "*",

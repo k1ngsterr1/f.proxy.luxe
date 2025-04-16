@@ -16,6 +16,9 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { useIsTablet } from "@/shared/utils/use-is-tablet";
+import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 
 // Define the payment interface based on the provided data structure
 interface Payment {
@@ -43,6 +46,7 @@ type TransactionItem = (Payment | Order) & {
 };
 
 export default function PaymentsPage() {
+  const i18n = useTranslations();
   const { data, isLoading: isUserLoading } = useGetUser();
   const {
     data: paymentsData,
@@ -58,6 +62,15 @@ export default function PaymentsPage() {
   const [combinedTransactions, setCombinedTransactions] = useState<
     TransactionItem[]
   >([]);
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isSmallerTablet = useIsSmallerTablet();
+
+  const containerStyle = isSmallerTablet
+    ? "400px"
+    : isTablet
+    ? "600px"
+    : "800px";
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -271,11 +284,12 @@ export default function PaymentsPage() {
       style={{
         width: "100%",
         padding: "20px",
-        maxWidth: "920px",
+        maxWidth: containerStyle,
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("personalPayment.title")}</title>
       {data?.isVerified === false && (
         <AlertMessage type="warning" isEmail message={t("verify-email")} />
       )}

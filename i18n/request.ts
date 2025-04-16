@@ -13,11 +13,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages: {
+      ...(await import(`../messages/${locale}/page-metadata.json`)),
       ...(await import(`../messages/${locale}/contacts.json`)),
       ...(await import(`../messages/${locale}/header.json`)),
       ...(await import(
         `../messages/${locale}/residental-proxy-constructor.json`
       )),
+      ...(await import(`../messages/${locale}/prices.json`)),
       ...(await import(`../messages/${locale}/public-offer.json`)),
       ...(await import(`../messages/${locale}/traffic-bar.json`)),
       ...(await import(`../messages/${locale}/sidebar.json`)),
@@ -34,7 +36,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ...(await import(`../messages/${locale}/faq.json`)),
       ...(await import(`../messages/${locale}/forgot-password.json`)),
       ...(await import(`../messages/${locale}/partners.json`)),
-      ...(await import(`../messages/${locale}/prices.json`)),
       ...(await import(`../messages/${locale}/privacy-policy.json`)),
       ...(await import(`../messages/${locale}/myIp.json`)),
       ...(await import(`../messages/${locale}/about-block.json`)),
@@ -69,6 +70,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
       ...(await import(`../messages/${locale}/order-detail.json`)),
       ...(await import(`../messages/${locale}/verification-code.json`)),
       ...(await import(`../messages/${locale}/articles.json`)),
+      ...(await import(`../messages/${locale}/proxy-list.json`)),
     },
   };
 });

@@ -249,33 +249,7 @@ export default function ArticlePage() {
                     {extractDateFromContent(article?.content) || "01.01.2023"}
                   </span>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    color: "#999999",
-                  }}
-                >
-                  <User size={16} style={{ color: "#f3d675" }} />
-                  <span style={{ fontSize: "14px" }}>{t("article.author")}</span>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    color: "#999999",
-                  }}
-                >
-                  <Clock size={16} style={{ color: "#f3d675" }} />
-                  <span style={{ fontSize: "14px" }}>
-                    {t("article.reading_time", { count: readingTime })}
-                  </span>
-                </div>
               </div>
-
-              {/* Featured Image */}
               <div
                 style={{
                   position: "relative",
@@ -370,9 +344,7 @@ export default function ArticlePage() {
                             e.currentTarget.style.transform = "translateY(0)";
                           }}
                         >
-                          {tag.name === "Общее"
-                            ? t("tags.general")
-                            : tag.name}
+                          {tag.name === "Общее" ? t("tags.general") : tag.name}
                           {index <
                           extractTagsFromContent(article?.content).length - 1
                             ? ","
@@ -381,165 +353,6 @@ export default function ArticlePage() {
                       )
                     )}
                   </div>
-
-                  <Link
-                    href="/articles"
-                    className="article-more"
-                    style={{
-                      color: "#f3d675",
-                      textDecoration: "none",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#ffffff";
-                      e.currentTarget.style.transform = "translateX(4px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "#f3d675";
-                      e.currentTarget.style.transform = "translateX(0)";
-                    }}
-                  >
-                    {t("article.all_articles")}
-                  </Link>
-                </div>
-              </div>
-
-              {/* Share Section */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "16px",
-                  marginTop: "40px",
-                  flexWrap: "wrap",
-                }}
-              >
-                <span style={{ color: "#999999", fontSize: "14px" }}>
-                  {t("article.share")}
-                </span>
-                <div style={{ display: "flex", gap: "12px" }}>
-                  <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "36px",
-                      height: "36px",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderRadius: "50%",
-                      color: "#f3d675",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.2)";
-                      e.currentTarget.style.transform = "translateY(-3px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.1)";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                  >
-                    <Facebook size={16} />
-                  </a>
-                  <a
-                    href={`https://twitter.com/intent/tweet?url=${shareUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "36px",
-                      height: "36px",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderRadius: "50%",
-                      color: "#f3d675",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.2)";
-                      e.currentTarget.style.transform = "translateY(-3px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.1)";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                  >
-                    <Twitter size={16} />
-                  </a>
-                  <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "36px",
-                      height: "36px",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderRadius: "50%",
-                      color: "#f3d675",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.2)";
-                      e.currentTarget.style.transform = "translateY(-3px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgba(243, 214, 117, 0.1)";
-                      e.currentTarget.style.transform = "translateY(0)";
-                    }}
-                  >
-                    <Linkedin size={16} />
-                  </a>
-                  <button
-                    onClick={copyToClipboard}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "36px",
-                      height: "36px",
-                      backgroundColor: "rgba(243, 214, 117, 0.1)",
-                      borderRadius: "50%",
-                      color: "#f3d675",
-                      border: "none",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor =
-                          "rgba(243, 214, 117, 0.2)";
-                        e.currentTarget.style.transform = "translateY(-3px)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!copied) {
-                        e.currentTarget.style.backgroundColor =
-                          "rgba(243, 214, 117, 0.1)";
-                        e.currentTarget.style.transform = "translateY(0)";
-                      }
-                    }}
-                  >
-                    {copied ? <Check size={16} /> : <Copy size={16} />}
-                  </button>
                 </div>
               </div>
             </>

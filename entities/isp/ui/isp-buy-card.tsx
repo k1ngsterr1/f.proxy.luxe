@@ -140,9 +140,9 @@ export const ISPBuyCard = () => {
               ...selectStyle,
               borderColor: validationError ? "#ff4d4f" : "#3E3E3E",
             }}
-            required
           >
-            <option value="" disabled hidden>
+            {/* Changed the first option to have an empty value and not be disabled/hidden */}
+            <option value="">
               {i18n("goals.placeholder") || "Select a goal"}
             </option>
             <option value="surfing">

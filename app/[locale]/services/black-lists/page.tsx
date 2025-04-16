@@ -16,6 +16,7 @@ interface BlacklistResult {
 }
 
 export default function BlackListPage() {
+  const i18n = useTranslations();
   const t = useTranslations("blacklist");
   const [ip, setIP] = useState<string>("");
   const [result, setResult] = useState<BlacklistResult | null>(null);
@@ -72,7 +73,7 @@ export default function BlackListPage() {
 
   return (
     <main className="inner-page">
-      <title>Proxy Luxe | Черный список</title>
+      <title>{i18n("blacklists.title")}</title>
       <section className="blist">
         <div className="scontainer">
           <h1 className="section-header">
@@ -259,9 +260,9 @@ export default function BlackListPage() {
                   >
                     {result.isListed
                       ? t("result.summary.listed", {
-                          ip: result.ip,
-                          count: result.blacklistCount,
-                        })
+                        ip: result.ip,
+                        count: result.blacklistCount,
+                      })
                       : t("result.summary.notListed", { ip: result.ip })}
                   </span>
                 </div>

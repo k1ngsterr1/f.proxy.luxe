@@ -13,18 +13,23 @@ import { useTranslations } from "next-intl";
 import { TrafficBar } from "@/features/traffic-bar/traffic-bar";
 import { ResidentProxyConstructor } from "@/features/residental-proxy-constructor/residental-proxy-constructor";
 import { useUpdateProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-update-list-resident.mutation";
+import { useIsTablet } from "@/shared/utils/use-is-tablet";
+import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 
 export default function ProxyPage() {
+  const i18n = useTranslations();
   const t = useTranslations("personal-proxy");
   const [proxy, setProxy] = useState<string | null>(null);
   const [package_key, setPackage_key] = useState<string | null>(null);
   const isMobile = useIsMobile();
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0
-  );
+  const isTablet = useIsTablet();
+  const isSmallerTablet = useIsSmallerTablet();
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   const [allProxies, setAllProxies] = useState<any[]>([]);
   const [selectedProxies, setSelectedProxies] = useState<string[]>([]);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -259,9 +264,14 @@ export default function ProxyPage() {
     setSelectedProxies([]);
   };
 
-  // Responsive styles based on screen width
+  const containerStyle = isSmallerTablet
+    ? "400px"
+    : isTablet
+    ? "600px"
+    : "800px";
+
   const containerPadding = isMobile ? "0px" : "0px";
-  const containerWidth = isMobile ? "100%" : "75%";
+  const containerWidth = isMobile ? "100%" : "100%";
   const titleFontSize = isMobile ? "20px" : "32px";
   const buttonPadding = isMobile ? "8px 10px" : "10px 20px";
   const buttonFontSize = isMobile ? "12px" : "14px";
@@ -277,11 +287,12 @@ export default function ProxyPage() {
         width: containerWidth,
         padding: containerPadding,
         marginTop: marginTop,
-        maxWidth: "1200px",
+        maxWidth: containerStyle as any,
         margin: "0 auto",
         backgroundColor: "#000000",
       }}
     >
+      <title>{i18n("personalProxy.title")}</title>
       {data?.isVerified === false && (
         <div style={{ marginBottom: alertMarginBottom }}>
           <AlertMessage type="warning" isEmail message={t("verify-email")} />
@@ -290,6 +301,7 @@ export default function ProxyPage() {
       <div
         style={{
           display: "flex",
+          width: "100%",
           flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
           alignItems: isMobile ? "flex-start" : "center",
@@ -368,79 +380,6 @@ export default function ProxyPage() {
             expiryDate={trafficData.expiryDate}
             package_key={package_key}
           />
-        </div>
-      )}
-
-      {/* Bulk Actions Bar */}
-      {selectedOrderIds.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: "rgba(243, 214, 117, 0.1)",
-            padding: isMobile ? "10px" : "16px",
-            borderRadius: "4px",
-            marginBottom: isMobile ? "16px" : "24px",
-            border: "1px solid rgba(243, 214, 117, 0.2)",
-            flexDirection: isMobile ? "column" : "row",
-            gap: isMobile ? "10px" : "0",
-          }}
-        >
-          <div
-            style={{
-              color: "#f3d675",
-              fontSize: buttonFontSize,
-              fontWeight: "500",
-              textAlign: isMobile ? "center" : "left",
-              width: isMobile ? "100%" : "auto",
-            }}
-          >
-            {t("selected")}: {selectedProxies.length} {t("proxies")}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              width: isMobile ? "100%" : "auto",
-            }}
-          >
-            <button
-              onClick={handleBulkProlong}
-              style={{
-                padding: buttonPadding,
-                backgroundColor: "#f3d675",
-                borderRadius: "4px",
-                color: "#000000",
-                fontSize: buttonFontSize,
-                fontWeight: "bold",
-                cursor: "pointer",
-                border: "none",
-                flex: isMobile ? "1" : "0 0 auto",
-              }}
-            >
-              {t("prolong-selected")}
-            </button>
-            <button
-              onClick={() => {
-                setSelectedOrderIds([]);
-                setSelectedProxies([]);
-              }}
-              style={{
-                padding: buttonPadding,
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-                borderRadius: "4px",
-                color: "#ffffff",
-                fontSize: buttonFontSize,
-                fontWeight: "bold",
-                cursor: "pointer",
-                border: "none",
-                flex: isMobile ? "1" : "0 0 auto",
-              }}
-            >
-              {t("clear-selection")}
-            </button>
-          </div>
         </div>
       )}
 

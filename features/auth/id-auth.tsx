@@ -4,8 +4,10 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { useIpAuth } from "@/entities/auth/hooks/mutations/use-ip-auth.mutation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
+import { useTranslations } from "next-intl";
 
 export default function IpAuthorizationForm() {
+  const t = useTranslations('proxyList.ipAuth');
   const [orderNumber, setOrderNumber] = useState("");
   const [ip, setIp] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,12 +36,12 @@ export default function IpAuthorizationForm() {
     setError(null);
 
     if (!orderNumber.trim() || !ip.trim()) {
-      setError("Все поля обязательны для заполнения");
+      setError(t('requiredFields'));
       return;
     }
 
     if (!isValidIp(ip)) {
-      setError("Введите корректный IP-адрес, например: 192.168.0.1");
+      setError(t('invalidIp'));
       return;
     }
 
@@ -50,11 +52,11 @@ export default function IpAuthorizationForm() {
       },
       {
         onSuccess: () => {
-          setSuccess("Авторизация успешна");
+          setSuccess(t('authSuccess'));
           setIp("");
         },
         onError: (err) => {
-          setError(err.message || "Ошибка авторизации");
+          setError(err.message || t('authError'));
         },
       }
     );
@@ -113,7 +115,7 @@ export default function IpAuthorizationForm() {
                   color: "#FFFFFF",
                 }}
               >
-                IP адрес <span style={{ color: "#f3d675" }}>*</span>
+                {t('ipAddressLabel')} <span style={{ color: "#f3d675" }}>*</span>
               </label>
               <input
                 type="text"
@@ -122,7 +124,7 @@ export default function IpAuthorizationForm() {
                   setIp(e.target.value);
                   setError(null); // Сбрасываем ошибку при изменении
                 }}
-                placeholder="IP"
+                placeholder={t('ipAddressPlaceholder')}
                 style={{
                   width: "100%",
                   padding: "10px 16px",
@@ -180,7 +182,7 @@ export default function IpAuthorizationForm() {
                 transition: "all 0.2s ease",
               }}
             >
-              {isPending ? "Авторизация..." : "АВТОРИЗАЦИЯ"}
+              {isPending ? t('authInProgress') : t('authButton')}
             </button>
           </form>
         </div>

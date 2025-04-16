@@ -208,7 +208,6 @@ export const ResidentalProxyBuyCard = () => {
             <ChevronDown style={chevronStyle} size={16} />
           </div>
         )}
-
         <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
           {i18n("usage")} <span style={{ color: "#f3d675" }}>*</span>
         </h4>
@@ -225,8 +224,9 @@ export const ResidentalProxyBuyCard = () => {
                 ? "1px solid #ff4d4f"
                 : "1px solid #3E3E3E",
             }}
-            required
           >
+            {/* Added placeholder option with empty value */}
+            <option value="">{i18n("goals.select") || "Select a goal"}</option>
             <option value="surfing">{i18n("goals.surfing")}</option>
             <option value="socialMedia">{i18n("goals.socialMedia")}</option>
             <option value="seo">{i18n("goals.seo")}</option>
@@ -246,7 +246,7 @@ export const ResidentalProxyBuyCard = () => {
           {i18n("price")}
           <span>
             {selectedTariff
-              ? `$${getTariffPrice(selectedTariff.name)} / ${i18n("month")}`
+              ? `${getTariffPrice(selectedTariff.name)} / ${i18n("month")}`
               : "Выберите тариф"}
           </span>
         </div>

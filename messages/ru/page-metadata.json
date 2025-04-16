@@ -1,0 +1,92 @@
+{
+  "home": {
+    "title": "Proxy Luxe | Главная"
+  },
+  "personal-accounts": {
+    "title": "Proxy Luxe | Личный кабинет"
+  },
+  "orderss": {
+    "title": "Proxy Luxe | Мои заказы"
+  },
+  "orderDetail": {
+    "title": "Proxy Luxe | Детали заказа"
+  },
+  "personalProxy": {
+    "title": "Proxy Luxe | Мои прокси"
+  },
+  "personalPayment": {
+    "title": "Proxy Luxe | История платежей"
+  },
+  "personalProfile": {
+    "title": "Proxy Luxe | Профиль"
+  },
+  "partnerProgramm": {
+    "title": "Proxy Luxe | Партнёрская программа"
+  },
+  "announcements": {
+    "title": "Proxy Luxe | Объявления"
+  },
+  "faqs": {
+    "title": "Proxy Luxe | Вопросы и ответы"
+  },
+  "buyProxy": {
+    "title": "Proxy Luxe | Купить прокси"
+  },
+  "price": {
+    "title": "Proxy Luxe | Цены"
+  },
+  "partnerss": {
+    "title": "Proxy Luxe | Партнёры"
+  },
+  "privacy-policys": {
+    "title": "Proxy Luxe | Политика конфиденциальности"
+  },
+  "public-offers": {
+    "title": "Proxy Luxe | Публичная оферта"
+  },
+  "contactss": {
+    "title": "Proxy Luxe | Контакты"
+  },
+  "myIps": {
+    "title": "Proxy Luxe | Мой IP"
+  },
+  "proxy-checkers": {
+    "title": "Proxy Luxe | Проверка прокси"
+  },
+  "anonymityCheckers": {
+    "title": "Proxy Luxe | Проверка анонимности"
+  },
+  "port-checkers": {
+    "title": "Proxy Luxe | Проверка портов"
+  },
+  "whois": {
+    "title": "Proxy Luxe | WHOIS"
+  },
+  "blacklists": {
+    "title": "Proxy Luxe | Черные списки IP"
+  },
+  "ipv6s": {
+    "title": "Proxy Luxe | Проверка IPv6"
+  },
+  "articless": {
+    "title": "Proxy Luxe | Статьи"
+  },
+  "verification-codes": {
+    "title": "Proxy Luxe | Верификация"
+  },
+  "forgot-passwords": {
+    "title": "Proxy Luxe | Сброс пароля"
+  },
+  "login": {
+    "title": "Proxy Luxe | Вход"
+  },
+  "registers": {
+    "title": "Proxy Luxe | Регистрация"
+  },
+  "auths": {
+    "title": "Proxy Luxe | Авторизация"
+  },
+  "responsibility-principless": {
+    "title": "Proxy Luxe | Основные обязанности"
+  }
+}

@@ -4,6 +4,7 @@ import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
 import { X, Save, ChevronDown, ChevronUp } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -42,6 +43,7 @@ export const EditProxyPopup = ({
   onSave,
   availableCountries = [],
 }: EditProxyPopupProps) => {
+  const t = useTranslations('proxyList.editProxy');
   const [formData, setFormData] = useState<Proxy | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [rotationType, setRotationType] = useState<string>("general");
@@ -148,14 +150,14 @@ export const EditProxyPopup = ({
 
     // Only validate title field
     if (!formData.title) {
-      newErrors.title = "Название обязательно";
+      newErrors.title = t('nameRequired');
     }
 
     // Validate custom rotation value if rotating type is selected
     if (rotationType === "rotating") {
       const rotationValue = Number.parseInt(customRotationValue, 10);
       if (isNaN(rotationValue) || rotationValue < 1 || rotationValue > 3600) {
-        newErrors.rotation = "Значение должно быть от 1 до 3600 секунд";
+        newErrors.rotation = t('rotationPeriodError');
       }
     }
 
@@ -188,22 +190,22 @@ export const EditProxyPopup = ({
 
   // Rotation options
   const rotationOptions = [
-    { label: "General", value: "general" },
-    { label: "Sticky", value: "sticky" },
-    { label: "Rotating", value: "rotating" },
+    { label: t('rotationTypes.general'), value: "general" },
+    { label: t('rotationTypes.sticky'), value: "sticky" },
+    { label: t('rotationTypes.rotating'), value: "rotating" },
   ];
 
   // Predefined rotation periods
   const predefinedPeriods = [
-    { label: "5 seconds", value: "5" },
-    { label: "30 seconds", value: "30" },
-    { label: "1 minute", value: "60" },
-    { label: "5 minutes", value: "300" },
-    { label: "10 minutes", value: "600" },
-    { label: "15 minutes", value: "900" },
-    { label: "30 minutes", value: "1800" },
-    { label: "60 minutes", value: "3600" },
-    { label: "Custom", value: "custom" },
+    { label: t('rotationPeriods.5s'), value: "5" },
+    { label: t('rotationPeriods.30s'), value: "30" },
+    { label: t('rotationPeriods.1m'), value: "60" },
+    { label: t('rotationPeriods.5m'), value: "300" },
+    { label: t('rotationPeriods.10m'), value: "600" },
+    { label: t('rotationPeriods.15m'), value: "900" },
+    { label: t('rotationPeriods.30m'), value: "1800" },
+    { label: t('rotationPeriods.60m'), value: "3600" },
+    { label: t('rotationPeriods.custom'), value: "custom" },
   ];
 
   // Styles
@@ -385,7 +387,7 @@ export const EditProxyPopup = ({
     <div style={overlayStyle}>
       <div style={popupStyle}>
         <div style={headerStyle}>
-          <h2 style={titleStyle}>Редактирование прокси</h2>
+          <h2 style={titleStyle}>{t('title')}</h2>
           <button style={closeButtonStyle} onClick={onClose} aria-label="Close">
             <X size={20} />
           </button>
@@ -395,7 +397,7 @@ export const EditProxyPopup = ({
           {/* Title */}
           <div style={formGroupStyle}>
             <label htmlFor="title" style={labelStyle}>
-              Название *
+              {t('nameLabel')}
             </label>
             <input
               type="text"
@@ -411,7 +413,7 @@ export const EditProxyPopup = ({
 
           {/* Rotation Type */}
           <div style={formGroupStyle}>
-            <label style={labelStyle}>Rotation Type</label>
+            <label style={labelStyle}>{t('rotationTypeLabel')}</label>
             <div
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
@@ -446,7 +448,7 @@ export const EditProxyPopup = ({
           {/* Rotation Period - Only visible when Rotating is selected */}
           {rotationType === "rotating" && (
             <div style={formGroupStyle}>
-              <label style={labelStyle}>Rotation Period (seconds)</label>
+              <label style={labelStyle}>{t('rotationPeriodLabel')}</label>
               <div style={{ position: "relative" }} ref={rotationOptionsRef}>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <input
@@ -460,7 +462,7 @@ export const EditProxyPopup = ({
                       flex: 1,
                       ...(errors.rotation ? { borderColor: "#ff3b30" } : {}),
                     }}
-                    placeholder="Enter seconds (1-3600)"
+                    placeholder={t('rotationPeriodPlaceholder')}
                   />
                   <button
                     type="button"
@@ -518,18 +520,18 @@ export const EditProxyPopup = ({
               <p
                 style={{ fontSize: "12px", color: "#999999", marginTop: "4px" }}
               >
-                Enter a value between 1 and 3600 seconds (60 minutes)
+                {t('rotationPeriodHelp')}
               </p>
             </div>
           )}
 
           <div style={buttonContainerStyle}>
             <button type="button" style={cancelButtonStyle} onClick={onClose}>
-              Отмена
+              {t('cancel')}
             </button>
             <button type="submit" style={saveButtonStyle}>
               <Save size={16} />
-              Сохранить
+              {t('save')}
             </button>
           </div>
         </form>

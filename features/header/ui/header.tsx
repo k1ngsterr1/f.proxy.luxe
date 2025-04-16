@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 
@@ -22,6 +22,23 @@ export const Header: FC = () => {
   const pathname = usePathname();
   const locale = useLocale();
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 1100);
+    };
+
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+
+    // Clean up
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   const getPathForLocale = (targetLocale: string) => {
     const segments = pathname.split("/").filter(Boolean);
@@ -48,7 +65,12 @@ export const Header: FC = () => {
         <div className="container">
           <div className="header-inner">
             <Link href="/" className="header-logo">
-              <Image src={Logo} alt="Proxy Luxe" />
+              <Image
+                src={Logo}
+                alt="Proxy Luxe"
+                width={isMobile ? 180 : 350}
+                height={isMobile ? 50 : 75}
+              />
             </Link>
             <div id="menu" className="header-mobmenu">
               <nav className="header-menu">
@@ -113,8 +135,27 @@ export const Header: FC = () => {
               )}
             </div>
 
-            <div className="header-burger">
-              <BurgerMenu />
+            <div className="header-right-section" style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }}>
+              <div className="header-lang" style={{
+                display: isMobile ? 'flex' : 'none',
+                marginRight: '15px'
+              }}>
+                <span
+                  onClick={() => changeLanguage("ru")}
+                  className={`lang-item ${locale === "ru" ? "active" : ""}`}
+                >
+                  <Image src={RusFlag} alt="Русский" width={40} height={26} />
+                </span>
+                <span
+                  onClick={() => changeLanguage("en")}
+                  className={`lang-item ${locale === "en" ? "active" : ""}`}
+                >
+                  <Image src={EngFlag} alt="English" width={40} height={26} />
+                </span>
+              </div>
+              <div className="header-burger">
+                <BurgerMenu />
+              </div>
             </div>
           </div>
         </div>
