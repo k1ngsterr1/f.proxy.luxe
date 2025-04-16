@@ -132,38 +132,40 @@ export const Header: FC = () => {
                 </div>
               )}
             </div>
-            <div
-              className="header-right-section"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "row-reverse",
-              }}
-            >
+            {isMobile && (
               <div
-                className="header-lang"
+                className="header-right-section"
                 style={{
-                  display: isMobile ? "flex" : "none",
-                  marginRight: "15px",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row-reverse",
                 }}
               >
-                <span
-                  onClick={() => changeLanguage("ru")}
-                  className={`lang-item ${locale === "ru" ? "active" : ""}`}
+                <div
+                  className="header-lang"
+                  style={{
+                    display: "flex",
+                    marginRight: "15px",
+                  }}
                 >
-                  <Image src={RusFlag} alt="Русский" width={40} height={26} />
-                </span>
-                <span
-                  onClick={() => changeLanguage("en")}
-                  className={`lang-item ${locale === "en" ? "active" : ""}`}
-                >
-                  <Image src={EngFlag} alt="English" width={40} height={26} />
-                </span>
+                  <span
+                    onClick={() => changeLanguage("ru")}
+                    className={`lang-item ${locale === "ru" ? "active" : ""}`}
+                  >
+                    <Image src={RusFlag} alt="Русский" width={40} height={26} />
+                  </span>
+                  <span
+                    onClick={() => changeLanguage("en")}
+                    className={`lang-item ${locale === "en" ? "active" : ""}`}
+                  >
+                    <Image src={EngFlag} alt="English" width={40} height={26} />
+                  </span>
+                </div>
+                <div className="header-burger">
+                  <BurgerMenu />
+                </div>
               </div>
-              <div className="header-burger">
-                <BurgerMenu />
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </header>

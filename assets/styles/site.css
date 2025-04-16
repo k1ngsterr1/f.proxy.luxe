@@ -161,9 +161,14 @@ img {
 }
 
 .inner-page {
-  padding-top: 110px;
+  padding-top: 300px;
 }
 
+@media (max-width: 768px) {
+  .inner-page {
+    padding-top: 100px;
+  }
+}
 .btn {
   font-family: "CeraPro", sans-serif;
   font-size: 14px;
