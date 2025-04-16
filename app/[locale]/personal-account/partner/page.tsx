@@ -814,7 +814,6 @@ export default function PartnerPage() {
           </div>
         )}
       </div>
-
       {isPayoutPopupOpen && (
         <div
           style={{

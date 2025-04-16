@@ -29,15 +29,14 @@ export const Header: FC = () => {
       setIsMobile(window.innerWidth <= 1100);
     };
 
-
     // Initial check
     checkIfMobile();
 
     // Add event listener for window resize
-    window.addEventListener('resize', checkIfMobile);
+    window.addEventListener("resize", checkIfMobile);
 
     // Clean up
-    return () => window.removeEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
   const getPathForLocale = (targetLocale: string) => {
@@ -68,8 +67,8 @@ export const Header: FC = () => {
               <Image
                 src={Logo}
                 alt="Proxy Luxe"
-                width={isMobile ? 180 : 350}
-                height={isMobile ? 50 : 75}
+                width={isMobile ? 140 : 400}
+                height={isMobile ? 40 : 66}
               />
             </Link>
             <div id="menu" className="header-mobmenu">
@@ -104,7 +103,6 @@ export const Header: FC = () => {
                   <Image src={EngFlag} alt="English" width={40} height={26} />
                 </span>
               </div>
-
               {token ? (
                 <div
                   style={{
@@ -134,12 +132,21 @@ export const Header: FC = () => {
                 </div>
               )}
             </div>
-
-            <div className="header-right-section" style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }}>
-              <div className="header-lang" style={{
-                display: isMobile ? 'flex' : 'none',
-                marginRight: '15px'
-              }}>
+            <div
+              className="header-right-section"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row-reverse",
+              }}
+            >
+              <div
+                className="header-lang"
+                style={{
+                  display: isMobile ? "flex" : "none",
+                  marginRight: "15px",
+                }}
+              >
                 <span
                   onClick={() => changeLanguage("ru")}
                   className={`lang-item ${locale === "ru" ? "active" : ""}`}
@@ -160,39 +167,40 @@ export const Header: FC = () => {
           </div>
         </div>
       </header>
-
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <nav className="submenu">
-          <Link href="/services/my-ip" className="submenu-item">
-            {i18n("nav-bar.my-ip")}
-          </Link>
-          <Link href="/services/proxy-checker" className="submenu-item">
-            {i18n("nav-bar.proxy-checker")}
-          </Link>
-          <Link href="/services/anonymity-checker" className="submenu-item">
-            {i18n("nav-bar.anonymity-checker")}
-          </Link>
-          <Link href="/services/port-checker" className="submenu-item">
-            {i18n("nav-bar.port-checker")}
-          </Link>
-          <Link href="/services/whois" className="submenu-item">
-            {i18n("nav-bar.whois")}
-          </Link>
-          <Link href="/services/black-lists" className="submenu-item">
-            {i18n("nav-bar.black-lists")}
-          </Link>
-          <Link href="/services/ipv6-checker" className="submenu-item">
-            {i18n("nav-bar.ipv6-checker")}
-          </Link>
-        </nav>
-      </div>
+      {!isMobile && (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <nav className="submenu">
+            <Link href="/services/my-ip" className="submenu-item">
+              {i18n("nav-bar.my-ip")}
+            </Link>
+            <Link href="/services/proxy-checker" className="submenu-item">
+              {i18n("nav-bar.proxy-checker")}
+            </Link>
+            <Link href="/services/anonymity-checker" className="submenu-item">
+              {i18n("nav-bar.anonymity-checker")}
+            </Link>
+            <Link href="/services/port-checker" className="submenu-item">
+              {i18n("nav-bar.port-checker")}
+            </Link>
+            <Link href="/services/whois" className="submenu-item">
+              {i18n("nav-bar.whois")}
+            </Link>
+            <Link href="/services/black-lists" className="submenu-item">
+              {i18n("nav-bar.black-lists")}
+            </Link>
+            <Link href="/services/ipv6-checker" className="submenu-item">
+              {i18n("nav-bar.ipv6-checker")}
+            </Link>
+          </nav>
+        </div>
+      )}
     </>
   );
 };

@@ -1,5 +1,6 @@
 {
   "myIp": {
+    "mapTitle": "Map",
     "header": "YOUR IP ADDRESS",
     "refresh": "Refresh",
     "loading": "Loading",

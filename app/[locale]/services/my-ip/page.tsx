@@ -138,7 +138,7 @@ export default function MyIpClient() {
     return (
       <main
         style={{
-          paddingTop: isMobile ? 356 : 256,
+          paddingTop: isMobile ? 116 : 116,
           backgroundColor: "#000000",
           color: "#FFFFFF",
           minHeight: "100vh",
@@ -146,7 +146,6 @@ export default function MyIpClient() {
         }}
       >
         <title>{t("myIp.title")}</title>
-
         <div
           style={{
             maxWidth: "1200px",
@@ -201,7 +200,7 @@ export default function MyIpClient() {
     return (
       <main
         style={{
-          paddingTop: isMobile ? 356 : 256,
+          paddingTop: isMobile ? 116 : 256,
           backgroundColor: "#000000",
           color: "#FFFFFF",
           minHeight: "100vh",
@@ -251,7 +250,7 @@ export default function MyIpClient() {
   return (
     <main
       style={{
-        paddingTop: isMobile ? 356 : 256,
+        paddingTop: isMobile ? 116 : 256,
         backgroundColor: "#000000",
         color: "#FFFFFF",
         minHeight: "100vh",
@@ -473,7 +472,7 @@ export default function MyIpClient() {
               borderRadius: "12px",
               border: "1px solid rgba(243, 214, 117, 0.2)",
               padding: isMobile ? "16px" : "24px",
-              marginBottom: "356px",
+              marginBottom: isMobile ? "32px" : "356px",
             }}
           >
             <div

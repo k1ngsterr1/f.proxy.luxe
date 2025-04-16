@@ -1237,7 +1237,7 @@ select {
 
 @media (max-width: 575px) {
   .header_offset {
-    padding-top: 400px;
+    padding-top: 130px;
   }
   .paymant_section .mw {
     padding: 0 4vh 80px;
@@ -1470,7 +1470,7 @@ select {
 }
 @media (min-width: 576px) and (max-width: 767px) {
   .header_offset {
-    padding-top: 400px;
+    padding-top: 100px;
   }
   .paymant_section .mw {
     padding: 0 4vh 80px;
@@ -1703,7 +1703,7 @@ select {
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .header_offset {
-    padding-top: 400px;
+    padding-top: 200px;
   }
   .paymant_section .mw {
     padding: 0 4vh 80px;
@@ -1924,7 +1924,7 @@ select {
 }
 @media (min-width: 992px) and (max-width: 1199px) {
   .header_offset {
-    padding-top: 400px;
+    padding-top: 200px;
   }
   .paymant_section .mw {
     padding: 0 4vh 80px;

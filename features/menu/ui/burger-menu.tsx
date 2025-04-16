@@ -55,8 +55,6 @@ export const BurgerMenu = () => {
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
-
-      {/* Overlay */}
       {isOpen && (
         <div
           onClick={close}
@@ -189,9 +187,8 @@ export const BurgerMenu = () => {
         >
           {token ? (
             <>
-              {" "}
               <Link
-                href="/login"
+                href="/personal-account"
                 style={{
                   display: "flex",
                   alignItems: "center",
