@@ -785,34 +785,40 @@ export default function PartnerPage() {
             </div>
           </div>
         </div>
-        {partnerDetails?.availableBalance >= 0.1 && (
-          <div
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: 20,
+          }}
+        >
+          <button
+            onClick={() => {
+              console.log("HERE", partnerDetails?.availableBalance);
+              if (partnerDetails?.availableBalance >= 0.1) {
+                setPayoutPopupOpen(true);
+              } else {
+                setPayoutError(t("error.min-payout"));
+                alert(t("error.min-payout"));
+              }
+            }}
             style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: 20,
+              padding: isMobile ? "10px 16px" : "12px 20px",
+              backgroundColor: "#f3d675",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              color: "#000000",
+              fontWeight: "500",
+              fontSize: isMobile ? "13px" : "14px",
+              transition: "all 0.2s",
+              width: isMobile ? "100%" : "auto",
             }}
           >
-            <button
-              onClick={() => setPayoutPopupOpen(true)}
-              style={{
-                padding: isMobile ? "10px 16px" : "12px 20px",
-                backgroundColor: "#f3d675",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                color: "#000000",
-                fontWeight: "500",
-                fontSize: isMobile ? "13px" : "14px",
-                transition: "all 0.2s",
-                width: isMobile ? "100%" : "auto",
-              }}
-            >
-              {t("withdrawal.submit-button")}
-            </button>
-          </div>
-        )}
+            {t("withdrawal.submit-button")}
+          </button>
+        </div>
       </div>
       {isPayoutPopupOpen && (
         <div

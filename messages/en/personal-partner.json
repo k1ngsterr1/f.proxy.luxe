@@ -8,6 +8,9 @@
     "verification": {
       "message": "You need to verify your email by clicking the link sent to your email address."
     },
+    "error": {
+      "min-payout": "Minimum payout starts from 0.1$"
+    },
     "stats": {
       "clients": "CLIENTS CHOSE US",
       "proxies-sold": "PROXIES SOLD",
