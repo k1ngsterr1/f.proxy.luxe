@@ -785,7 +785,7 @@ export default function PartnerPage() {
             </div>
           </div>
         </div>
-        {partnerDetails?.availableBalance >= 5 && (
+        {partnerDetails?.availableBalance >= 0.1 && (
           <div
             style={{
               width: "100%",
