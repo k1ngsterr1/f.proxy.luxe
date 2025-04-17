@@ -8,9 +8,10 @@ import {
   CheckCircle,
   Clipboard,
   Gift,
+  Trash2,
 } from "lucide-react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/shared/config/apiClient";
 import { useIsTablet } from "@/shared/utils/use-is-tablet";
 import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
@@ -30,16 +31,25 @@ export default function PartnerPage() {
   const i18n = useTranslations();
   const t = useTranslations("personal-partner");
   const { data: partnerDetails, isLoading } = useGetPartnerDetails();
-  const { data: user } = useGetUser();
+  const { data: user, refetch: refetchUser } = useGetUser();
+  const queryClient = useQueryClient();
   const [couponCreated, setCouponCreated] = useState(false);
   const [showCopyNotification, setShowCopyNotification] = useState<
     string | null
   >(null);
   const [isPayoutPopupOpen, setPayoutPopupOpen] = useState(false);
+  const [isPromocodePopupOpen, setPromocodePopupOpen] = useState(false);
+  const [isDeleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [wallet, setWallet] = useState("");
+  const [promocode, setPromocode] = useState("");
   const [payoutError, setPayoutError] = useState("");
+  const [promocodeError, setPromocodeError] = useState("");
   const [isPayoutLoading, setPayoutLoading] = useState(false);
+  const [isPromocodeLoading, setPromocodeLoading] = useState(false);
+  const [isDeleteLoading, setDeleteLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const isTablet = useIsTablet();
   const isSmallerTablet = useIsSmallerTablet();
@@ -62,6 +72,26 @@ export default function PartnerPage() {
     };
   }, []);
 
+  // Check if user has a coupon
+  useEffect(() => {
+    if (user && user.coupon_code) {
+      setCouponCreated(true);
+    } else {
+      setCouponCreated(false);
+    }
+  }, [user]);
+
+  // Reset success messages after 3 seconds
+  useEffect(() => {
+    if (submitSuccess || deleteSuccess) {
+      const timer = setTimeout(() => {
+        setSubmitSuccess(false);
+        setDeleteSuccess(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitSuccess, deleteSuccess]);
+
   const handlePayoutSubmit = async () => {
     setPayoutError("");
     setPayoutLoading(true);
@@ -74,6 +104,55 @@ export default function PartnerPage() {
       console.error(err);
     } finally {
       setPayoutLoading(false);
+    }
+  };
+
+  const handlePromocodeSubmit = async () => {
+    if (!promocode.trim()) {
+      setPromocodeError(t("promocode.empty"));
+      return;
+    }
+
+    setPromocodeError("");
+    setPromocodeLoading(true);
+    try {
+      await apiClient.post("/api/v1/user/promocode", {
+        promocode: promocode.trim(),
+      });
+      setPromocodePopupOpen(false);
+      setPromocode("");
+      setSubmitSuccess(true);
+      // Refetch user data to get the updated coupon_code
+      await refetchUser();
+      // Invalidate any other queries that might depend on user data
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    } catch (err: any) {
+      setPromocodeError(t("promocode.error"));
+      console.error(err);
+    } finally {
+      setPromocodeLoading(false);
+    }
+  };
+
+  const handleDeleteCoupon = async () => {
+    if (!user?.coupon_code) return;
+
+    setDeleteLoading(true);
+    try {
+      await apiClient.delete(
+        `/api/v1/user/promocode/delete/${user.coupon_code}`
+      );
+      setDeleteConfirmOpen(false);
+      setDeleteSuccess(true);
+      // Refetch user data to update the UI
+      await refetchUser();
+      // Invalidate any other queries that might depend on user data
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    } catch (err: any) {
+      console.error("Failed to delete coupon:", err);
+      alert(t("promocode.delete-error") || "Failed to delete promocode");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -91,7 +170,12 @@ export default function PartnerPage() {
   };
 
   const createCoupon = () => {
-    setCouponCreated(true);
+    // If user doesn't have a coupon, show promocode popup
+    if (!couponCreated) {
+      setPromocodePopupOpen(true);
+    } else {
+      setCouponCreated(true);
+    }
   };
 
   const id = user?.id;
@@ -127,6 +211,72 @@ export default function PartnerPage() {
         }}
       >
         <title>{i18n("partnerProgramm.title")}</title>
+
+        {/* Success notifications */}
+        {submitSuccess && (
+          <div
+            style={{
+              backgroundColor: "rgba(76, 175, 80, 0.1)",
+              border: "1px solid rgba(76, 175, 80, 0.3)",
+              borderRadius: "8px",
+              padding: isMobile ? "12px" : "16px",
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "12px",
+            }}
+          >
+            <CheckCircle
+              size={isMobile ? 18 : 20}
+              color="#4CAF50"
+              style={{ marginTop: "2px", flexShrink: 0 }}
+            />
+            <div>
+              <p
+                style={{
+                  color: "#4CAF50",
+                  fontSize: isMobile ? "13px" : "14px",
+                  margin: 0,
+                }}
+              >
+                {t("promocode.success") || "Promocode applied successfully!"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {deleteSuccess && (
+          <div
+            style={{
+              backgroundColor: "rgba(76, 175, 80, 0.1)",
+              border: "1px solid rgba(76, 175, 80, 0.3)",
+              borderRadius: "8px",
+              padding: isMobile ? "12px" : "16px",
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "12px",
+            }}
+          >
+            <CheckCircle
+              size={isMobile ? 18 : 20}
+              color="#4CAF50"
+              style={{ marginTop: "2px", flexShrink: 0 }}
+            />
+            <div>
+              <p
+                style={{
+                  color: "#4CAF50",
+                  fontSize: isMobile ? "13px" : "14px",
+                  margin: 0,
+                }}
+              >
+                {t("promocode.delete-success") ||
+                  "Promocode deleted successfully!"}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Email verification warning */}
         {user?.isVerified === false && (
@@ -358,7 +508,9 @@ export default function PartnerPage() {
               <input
                 type="text"
                 value={
-                  couponCreated ? "PARTNER5" : t("partner-coupon.not-created")
+                  user?.coupon_code
+                    ? user.coupon_code
+                    : t("partner-coupon.not-created")
                 }
                 readOnly
                 style={{
@@ -367,35 +519,62 @@ export default function PartnerPage() {
                   backgroundColor: "rgba(243, 214, 117, 0.05)",
                   border: "1px solid rgba(243, 214, 117, 0.2)",
                   borderRadius: "6px",
-                  color: couponCreated ? "#f3d675" : "#666666",
+                  color: user?.coupon_code ? "#f3d675" : "#666666",
                   fontSize: isMobile ? "12px" : "14px",
                   fontFamily: "monospace",
                 }}
               />
-              {couponCreated ? (
-                <button
-                  onClick={() => copyToClipboard("PARTNER5", "coupon")}
-                  style={{
-                    padding: isMobile ? "10px" : "12px",
-                    backgroundColor: "rgba(243, 214, 117, 0.1)",
-                    border: "1px solid rgba(243, 214, 117, 0.2)",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    color: "#f3d675",
-                    transition: "all 0.2s",
-                    flexShrink: 0,
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(243, 214, 117, 0.15)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(243, 214, 117, 0.1)";
-                  }}
-                >
-                  <Copy size={isMobile ? 16 : 18} />
-                </button>
+              {user?.coupon_code ? (
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button
+                    onClick={() =>
+                      copyToClipboard(user.coupon_code as string, "coupon")
+                    }
+                    style={{
+                      padding: isMobile ? "10px" : "12px",
+                      backgroundColor: "rgba(243, 214, 117, 0.1)",
+                      border: "1px solid rgba(243, 214, 117, 0.2)",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      color: "#f3d675",
+                      transition: "all 0.2s",
+                      flexShrink: 0,
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(243, 214, 117, 0.15)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(243, 214, 117, 0.1)";
+                    }}
+                  >
+                    <Copy size={isMobile ? 16 : 18} />
+                  </button>
+                  <button
+                    onClick={() => setDeleteConfirmOpen(true)}
+                    style={{
+                      padding: isMobile ? "10px" : "12px",
+                      backgroundColor: "rgba(255, 82, 82, 0.1)",
+                      border: "1px solid rgba(255, 82, 82, 0.2)",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      color: "#FF5252",
+                      transition: "all 0.2s",
+                      flexShrink: 0,
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255, 82, 82, 0.15)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255, 82, 82, 0.1)";
+                    }}
+                  >
+                    <Trash2 size={isMobile ? 16 : 18} />
+                  </button>
+                </div>
               ) : (
                 <button
                   onClick={createCoupon}
@@ -820,6 +999,8 @@ export default function PartnerPage() {
           </button>
         </div>
       </div>
+
+      {/* Payout Popup */}
       {isPayoutPopupOpen && (
         <div
           style={{
@@ -843,6 +1024,7 @@ export default function PartnerPage() {
               maxWidth: isMobile ? "90%" : "400px",
               width: "100%",
               boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+              textAlign: "center",
             }}
           >
             <h3
@@ -850,6 +1032,7 @@ export default function PartnerPage() {
                 color: "#f3d675",
                 marginBottom: "20px",
                 fontSize: isMobile ? "16px" : "18px",
+                textAlign: "center",
               }}
             >
               {t("withdrawal.title")}
@@ -868,6 +1051,7 @@ export default function PartnerPage() {
                 backgroundColor: "#2a2a2a",
                 color: "#f3d675",
                 fontSize: isMobile ? "13px" : "14px",
+                textAlign: "center",
               }}
             />
             {payoutError && (
@@ -876,6 +1060,7 @@ export default function PartnerPage() {
                   color: "#ff4d4d",
                   fontSize: isMobile ? "12px" : "13px",
                   marginBottom: "10px",
+                  textAlign: "center",
                 }}
               >
                 {payoutError}
@@ -884,7 +1069,7 @@ export default function PartnerPage() {
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: "center",
                 gap: "8px",
                 flexDirection: isMobile ? "column" : "row",
               }}
@@ -921,6 +1106,212 @@ export default function PartnerPage() {
                 {isPayoutLoading
                   ? t("withdrawal.sending")
                   : t("withdrawal.submit-button")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Promocode Popup */}
+      {isPromocodePopupOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              padding: isMobile ? "20px" : "30px",
+              borderRadius: "10px",
+              maxWidth: isMobile ? "90%" : "400px",
+              width: "100%",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+              textAlign: "center",
+            }}
+          >
+            <h3
+              style={{
+                color: "#f3d675",
+                marginBottom: "20px",
+                fontSize: isMobile ? "16px" : "18px",
+                textAlign: "center",
+              }}
+            >
+              {t("promocode.title") || "Enter Promocode"}
+            </h3>
+            <input
+              type="text"
+              value={promocode}
+              onChange={(e) => setPromocode(e.target.value)}
+              placeholder={t("promocode.placeholder") || "Enter your promocode"}
+              style={{
+                width: "100%",
+                padding: isMobile ? "8px 10px" : "10px",
+                marginBottom: "12px",
+                borderRadius: "6px",
+                border: "1px solid #f3d675",
+                backgroundColor: "#2a2a2a",
+                color: "#f3d675",
+                fontSize: isMobile ? "13px" : "14px",
+                textAlign: "center",
+              }}
+            />
+            {promocodeError && (
+              <div
+                style={{
+                  color: "#ff4d4d",
+                  fontSize: isMobile ? "12px" : "13px",
+                  marginBottom: "10px",
+                  textAlign: "center",
+                }}
+              >
+                {promocodeError}
+              </div>
+            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "8px",
+                flexDirection: isMobile ? "column" : "row",
+              }}
+            >
+              <button
+                onClick={() => setPromocodePopupOpen(false)}
+                style={{
+                  padding: isMobile ? "8px 12px" : "10px 14px",
+                  backgroundColor: "#999999",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  cursor: "pointer",
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
+                {t("promocode.cancel") || "Cancel"}
+              </button>
+              <button
+                onClick={handlePromocodeSubmit}
+                disabled={isPromocodeLoading || promocode.trim() === ""}
+                style={{
+                  padding: isMobile ? "8px 12px" : "10px 14px",
+                  backgroundColor: "#f3d675",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#000",
+                  fontWeight: "bold",
+                  cursor: promocode.trim() ? "pointer" : "not-allowed",
+                  opacity: promocode.trim() ? 1 : 0.6,
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
+                {isPromocodeLoading
+                  ? t("promocode.submitting") || "Submitting..."
+                  : t("promocode.submit") || "Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Popup */}
+      {isDeleteConfirmOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              padding: isMobile ? "20px" : "30px",
+              borderRadius: "10px",
+              maxWidth: isMobile ? "90%" : "400px",
+              width: "100%",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+              textAlign: "center",
+            }}
+          >
+            <h3
+              style={{
+                color: "#f3d675",
+                marginBottom: "20px",
+                fontSize: isMobile ? "16px" : "18px",
+                textAlign: "center",
+              }}
+            >
+              {t("promocode.delete-title") || "Delete Promocode"}
+            </h3>
+            <p
+              style={{
+                color: "#FFFFFF",
+                fontSize: isMobile ? "14px" : "15px",
+                marginBottom: "20px",
+                textAlign: "center",
+              }}
+            >
+              {t("promocode.delete-confirm") ||
+                "Are you sure you want to delete your promocode?"}
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "8px",
+                flexDirection: isMobile ? "column" : "row",
+              }}
+            >
+              <button
+                onClick={() => setDeleteConfirmOpen(false)}
+                style={{
+                  padding: isMobile ? "8px 12px" : "10px 14px",
+                  backgroundColor: "#999999",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  cursor: "pointer",
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
+                {t("promocode.cancel") || "Cancel"}
+              </button>
+              <button
+                onClick={handleDeleteCoupon}
+                disabled={isDeleteLoading}
+                style={{
+                  padding: isMobile ? "8px 12px" : "10px 14px",
+                  backgroundColor: "#FF5252",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  cursor: isDeleteLoading ? "not-allowed" : "pointer",
+                  opacity: isDeleteLoading ? 0.6 : 1,
+                  width: isMobile ? "100%" : "auto",
+                }}
+              >
+                {isDeleteLoading
+                  ? t("promocode.deleting") || "Deleting..."
+                  : t("promocode.delete") || "Delete"}
               </button>
             </div>
           </div>

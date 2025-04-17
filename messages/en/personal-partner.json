@@ -11,6 +11,20 @@
     "error": {
       "min-payout": "Minimum payout starts from 0.1$"
     },
+    "promocode": {
+      "success": "Successfully added promocode",
+      "delete-success": "Successfully deleted promocode",
+      "title": "Create your own unique promocode",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "placeholder": "Enter your promocode",
+      "delete-title": "Do you want to delete promocode?",
+      "delete-confirm": "You can always create a new promocode",
+      "delete": "Delete",
+      "submitting": "Submitting...",
+      "deleting": "Deleting...",
+      "error": "Such promocode already exist"
+    },
     "stats": {
       "clients": "CLIENTS CHOSE US",
       "proxies-sold": "PROXIES SOLD",
