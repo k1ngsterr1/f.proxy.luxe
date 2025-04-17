@@ -32,49 +32,45 @@ export default function PersonalAccount() {
 
   return (
     <>
-      {isFetching ? (
-        <Loader fullScreen />
-      ) : (
+      <div
+        className="personal_account"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: isMobile ? "100%" : "75%",
+        }}
+      >
+        <title>{t("personal-accounts.title")}</title>
         <div
-          className="personal_account"
           style={{
             display: "flex",
-            flexDirection: "row",
-            width: isMobile ? "100%" : "75%",
+            flexDirection: "column",
           }}
         >
-          <title>{t("personal-accounts.title")}</title>
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
+              marginLeft: isMobile ? 0 : 64,
+              marginBottom: 32,
             }}
           >
-            <div
-              style={{
-                marginLeft: isMobile ? 0 : 64,
-                marginBottom: 32,
-              }}
-            >
-              {data?.isVerified === false && (
-                <AlertMessage
-                  type="warning"
-                  isEmail={true}
-                  message={i18n("verify-alert")}
-                />
-              )}
-            </div>
-            <div
-              className="main_cont"
-              style={{
-                width: "100%",
-              }}
-            >
-              <PayForm userId={data?.id as string} />
-            </div>
+            {data?.isVerified === false && (
+              <AlertMessage
+                type="warning"
+                isEmail={true}
+                message={i18n("verify-alert")}
+              />
+            )}
+          </div>
+          <div
+            className="main_cont"
+            style={{
+              width: "100%",
+            }}
+          >
+            <PayForm userId={data?.id as string} />
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
