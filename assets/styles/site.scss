@@ -73,7 +73,8 @@ body {
 }
 
 @media screen and (max-width: 1480px) {
-  body {}
+  body {
+  }
 }
 
 img {
@@ -173,7 +174,7 @@ $font: "CeraPro", sans-serif;
     font-size: 17px;
     line-height: 22px;
 
-    >div {
+    > div {
       margin: 0 3px;
     }
 
@@ -188,7 +189,7 @@ $font: "CeraPro", sans-serif;
 }
 
 .inner-page {
-  padding-top: 210px;
+  padding-top: 110px;
 }
 
 @media screen and (max-width: 1100px) {
@@ -417,7 +418,7 @@ $font: "CeraPro", sans-serif;
   &-table {
     display: flex;
 
-    >div {
+    > div {
       width: 260px;
 
       &:first-child {
@@ -430,7 +431,7 @@ $font: "CeraPro", sans-serif;
         padding-left: 40px;
       }
 
-      >div {
+      > div {
         &:first-child {
           margin-bottom: 50px;
         }
@@ -493,7 +494,7 @@ $font: "CeraPro", sans-serif;
 @media screen and (max-width: 480px) {
   .imain {
     &-table {
-      >div {
+      > div {
         width: 50%;
         padding: 0 !important;
       }
@@ -690,7 +691,7 @@ $font: "CeraPro", sans-serif;
     font-size: 17px;
     line-height: 22px;
 
-    >div {
+    > div {
       margin: 0 3px;
     }
 
@@ -1304,7 +1305,8 @@ $font: "CeraPro", sans-serif;
   padding-left: 20px;
 }
 
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+.select2-container--default
+  .select2-results__option--highlighted.select2-results__option--selectable {
   background: darken($clr_gold, 25%);
   color: #fff;
 }
@@ -1491,7 +1493,7 @@ $font: "CeraPro", sans-serif;
     font-size: 17px;
     line-height: 22px;
 
-    >div {
+    > div {
       margin: 0 3px;
     }
 
@@ -2006,7 +2008,8 @@ $font: "CeraPro", sans-serif;
 @media screen and (max-width: 480px) {
   .prcheck {
     .anon {
-      &-inner {}
+      &-inner {
+      }
 
       &-item {
         .atitle {
@@ -2069,7 +2072,7 @@ $font: "CeraPro", sans-serif;
     visibility: hidden;
 
     &:checked {
-      &+.checkbox-box {
+      & + .checkbox-box {
         background: $clr_gold url("../img/check.png");
         background-repeat: no-repeat;
         background-position: center;
@@ -2117,7 +2120,8 @@ $font: "CeraPro", sans-serif;
     }
   }
 
-  .table-wrap {}
+  .table-wrap {
+  }
 
   &-table {
     &__row {

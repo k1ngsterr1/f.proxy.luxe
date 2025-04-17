@@ -3,10 +3,12 @@
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { Users, Award, Gift, TrendingUp, CheckCircle } from "lucide-react";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 export default function Partners() {
   const i18n = useTranslations();
   const [isVisible, setIsVisible] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setIsVisible(true);
@@ -25,7 +27,7 @@ export default function Partners() {
         overflowX: "hidden",
         backgroundColor: "#000000",
         color: "#FFFFFF",
-        marginTop: 256,
+        marginTop: isMobile ? 112 : 256,
         minHeight: "100vh",
         paddingTop: "40px",
         paddingBottom: "60px",

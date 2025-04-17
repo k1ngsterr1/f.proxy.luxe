@@ -161,7 +161,13 @@ img {
 }
 
 .inner-page {
-  padding-top: 210px;
+  padding-top: 300px;
+}
+
+@media (max-width: 768px) {
+  .inner-page {
+    padding-top: 100px;
+  }
 }
 
 .btn {
@@ -882,7 +888,7 @@ img {
     text-align: center;
   }
   .partners-item img {
-    max-width:75%;
+    max-width: 75%;
   }
   .partners-num {
     font-size: 220px;
@@ -2070,7 +2076,7 @@ img {
   padding-bottom: 0;
 }
 .articles-inner {
-  padding-top: 80px;
+  padding-top: 40px;
 }
 
 .article {

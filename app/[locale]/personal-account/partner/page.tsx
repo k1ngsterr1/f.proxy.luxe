@@ -181,7 +181,7 @@ export default function PartnerPage() {
               marginBottom: "12px",
             }}
           >
-            {t("description")} <strong>30%</strong> {t("description-2")}
+            {t("description")} <strong>15%</strong> {t("description-2")}
           </p>
           <p style={{ color: "#FFFFFF", fontSize: isMobile ? "14px" : "15px" }}>
             {t("requirements")}
@@ -221,7 +221,7 @@ export default function PartnerPage() {
                 {t("participation.method1.title")}
               </span>{" "}
               {t("participation.method1.description")}
-              {t(`percent`)}
+              15%
             </li>
             <li>
               <span style={{ color: "#f3d675", fontWeight: "500" }}>
@@ -814,7 +814,6 @@ export default function PartnerPage() {
           </div>
         )}
       </div>
-
       {isPayoutPopupOpen && (
         <div
           style={{

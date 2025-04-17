@@ -154,7 +154,7 @@ export default function AnonymityChecker() {
         pc.createDataChannel("");
         pc.createOffer()
           .then((offer) => pc.setLocalDescription(offer))
-          .catch(() => { });
+          .catch(() => {});
 
         pc.onicecandidate = (ice) => {
           if (!ice.candidate) {
@@ -337,7 +337,7 @@ export default function AnonymityChecker() {
       style={{
         backgroundColor: "#000000",
         color: "#FFFFFF",
-        paddingTop: isMobile ? 356 : 256,
+        paddingTop: isMobile ? 112 : 256,
       }}
     >
       <title>{i18n("anonymityCheckers.title")}</title>
@@ -1059,8 +1059,9 @@ export default function AnonymityChecker() {
                         <CheckCircle size={12} />
                       )}
                       {blacklistData.isBlacklisted
-                        ? `${t("anonymityStatus.detected")} (${blacklistData.reports
-                        } ${t("anonymityStatus.blacklistReports")})`
+                        ? `${t("anonymityStatus.detected")} (${
+                            blacklistData.reports
+                          } ${t("anonymityStatus.blacklistReports")})`
                         : t("anonymityStatus.notDetected")}
                     </div>
                   </div>

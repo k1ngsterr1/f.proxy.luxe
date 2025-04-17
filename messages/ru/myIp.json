@@ -1,5 +1,6 @@
 {
   "myIp": {
+    "mapTitle": "Карта",
     "header": "ВАШ IP-АДРЕС",
     "refresh": "Обновить",
     "loading": "Загрузка",
