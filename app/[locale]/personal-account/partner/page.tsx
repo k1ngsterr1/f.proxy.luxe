@@ -100,7 +100,9 @@ export default function PartnerPage() {
       setPayoutPopupOpen(false);
       setWallet("");
     } catch (err: any) {
-      setPayoutError(t("withdrawal.error"));
+      if (err.response.data.message) {
+        setPayoutError(t("error.pending-request"));
+      } else setPayoutError(t("withdrawal.error"));
       console.error(err);
     } finally {
       setPayoutLoading(false);

@@ -219,10 +219,28 @@ export const ResidentProxyConstructor = ({
     setWhitelist(updatedWhitelist);
   };
 
-  // Update the handleSubmit function to use the custom rotation value
+  // Add a validation function before the handleSubmit function
+  const validateForm = () => {
+    // If country is selected but region, city or ISP is missing, show alert
+    if (country && (!region || !city || !isp)) {
+      setErrorMessage(i18n("errors.incompleteGeoSelection"));
+      return false;
+    }
+
+    // Clear any previous error messages
+    setErrorMessage(null);
+    return true;
+  };
+
+  // Modify the handleSubmit function to use the validation
   const handleSubmit = () => {
     setSuccessMessage(null);
     setErrorMessage(null);
+
+    // Validate the form before proceeding
+    if (!validateForm()) {
+      return;
+    }
 
     // Calculate rotation period in seconds
     let rotationPeriodSeconds = 0;
@@ -262,7 +280,7 @@ export const ResidentProxyConstructor = ({
         setSuccessMessage(i18n("messages.success"));
       },
       onError: (error: any) => {
-        setErrorMessage(error?.message || "An unexpected error occurred.");
+        setErrorMessage(i18n("errors.general"));
       },
     });
   };

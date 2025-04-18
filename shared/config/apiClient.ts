@@ -6,10 +6,10 @@ import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 // const BASE_URL = "https://aproxyluxe-production.up.railway.app";
 
 // PROD SERVER
-const BASE_URL = "https://api.proxy.luxe";
+// const BASE_URL = "https://api.proxy.luxe";
 
 // LOCAL SERVER
-// const BASE_URL = "http://localhost:6001";
+const BASE_URL = "http://localhost:6001";
 
 interface JwtPayload {
   exp: number;

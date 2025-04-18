@@ -61,7 +61,9 @@
     },
     "errors": {
       "geoDataError": "Error loading geo data",
-      "customRotationPeriod": "Custom rotation period must be between 1 and 3600 seconds"
+      "customRotationPeriod": "Custom rotation period must be between 1 and 3600 seconds",
+      "incompleteGeoSelection": "Complete selection of country, city, region and provider",
+      "general": "Failed to create a new list"
     },
     "messages": {
       "success": "Proxy settings updated successfully!"
