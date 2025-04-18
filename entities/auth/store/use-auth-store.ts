@@ -9,9 +9,11 @@ interface AuthState {
   removeAccessToken: () => void;
   saveRefreshToken: (token: string) => void;
   removeRefreshToken: () => void;
-  loadToken: () => Promise<string | null>;
+  loadToken: () => string | null;
   saveRole: (role: string) => void;
   removeRole: () => void;
+  logout: () => void;
+  isAuthenticated: () => boolean;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -24,21 +26,23 @@ export const useAuthStore = create<AuthState>()(
 
       removeAccessToken: () => {
         set({ token: null });
-        localStorage.removeItem("auth-storage"); // ✅ Ensure full removal
-        reactQueryClient.resetQueries();
-        reactQueryClient.clear();
       },
 
-      saveRefreshToken: (token: string) => set({ token }),
+      saveRefreshToken: (token: string) => {
+        // Store refresh token in localStorage separately
+        // This avoids overwriting the access token
+        if (typeof window !== "undefined") {
+          localStorage.setItem("refresh-token", token);
+        }
+      },
 
       removeRefreshToken: () => {
-        set({ token: null });
-        localStorage.removeItem("auth-storage"); // ✅ Ensure full removal
-        reactQueryClient.resetQueries();
-        reactQueryClient.clear();
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("refresh-token");
+        }
       },
 
-      loadToken: async () => {
+      loadToken: () => {
         return get().token;
       },
 
@@ -48,17 +52,24 @@ export const useAuthStore = create<AuthState>()(
 
       removeRole: () => {
         set({ role: null });
+      },
 
-        setTimeout(() => {
-          localStorage.removeItem("role");
-          localStorage.setItem(
-            "auth-storage",
-            JSON.stringify({ state: get(), version: 0 })
-          );
-        }, 0);
+      logout: () => {
+        // Clear all auth state
+        set({ token: null, role: null });
 
+        // Clear refresh token
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("refresh-token");
+        }
+
+        // Clear React Query cache
         reactQueryClient.resetQueries();
         reactQueryClient.clear();
+      },
+
+      isAuthenticated: () => {
+        return !!get().token;
       },
     }),
     {
