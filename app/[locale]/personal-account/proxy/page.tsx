@@ -85,8 +85,6 @@ export default function ProxyPage() {
           usedBandwidthMB:
             //@ts-ignore
             Number(proxies.data.items[0].package_info?.traffic_usage) / 1048576, // Convert bytes to MB
-          reserveBandwidthGB: 1.0, // Assuming a fixed value for reserve bandwidth
-          reserveUsedMB: 0, // Assuming a fixed value for reserve used
           // Determine rotation type based on package_info.rotation
           rotationType:
             proxies.data.items[0].package_info?.rotation === -1
@@ -372,8 +370,6 @@ export default function ProxyPage() {
           <TrafficBar
             totalBandwidthGB={trafficData.totalBandwidthGB}
             usedBandwidthMB={trafficData.usedBandwidthMB}
-            reserveBandwidthGB={trafficData.reserveBandwidthGB}
-            reserveUsedMB={trafficData.reserveUsedMB}
             rotationType={trafficData.rotationType as "sticky" | "rotating"}
             rotationInterval={trafficData.rotationInterval}
             autoRenewal={trafficData.autoRenewal}

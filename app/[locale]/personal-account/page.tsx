@@ -22,7 +22,7 @@ export default function PersonalAccount() {
     if (!token) {
       const timeout = setTimeout(() => {
         navigate.replace("/");
-      }, 1000); // Задержка в миллисекундах (можно изменить)
+      }, 3000); // Задержка в миллисекундах (можно изменить)
 
       return () => clearTimeout(timeout); // Очистка таймера при размонтировании/обновлении
     }

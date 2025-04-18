@@ -8,8 +8,6 @@ import { useUpdateRotation } from "@/entities/proxy/hooks/mutation/use-update-ro
 interface TrafficBarProps {
   totalBandwidthGB: number;
   usedBandwidthMB: number;
-  reserveBandwidthGB: number;
-  reserveUsedMB: number;
   rotationType: "sticky" | "rotating";
   rotationInterval: number;
   autoRenewal: boolean;
@@ -46,8 +44,6 @@ const ROTATION_INTERVALS = [5, 10, 15, 20, 60];
 export const TrafficBar: React.FC<TrafficBarProps> = ({
   totalBandwidthGB,
   usedBandwidthMB,
-  reserveBandwidthGB,
-  reserveUsedMB,
   rotationType,
   rotationInterval,
   autoRenewal,
@@ -386,7 +382,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr",
+          gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr 1fr",
           gap: isMobile ? "12px" : "8px",
           fontSize: isMobile ? "13px" : "14px",
           color: "#CCCCCC",
@@ -403,18 +399,6 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
           {i18n("remains")}
           <p style={{ color: "#4CAF50", margin: "4px 0 0 0" }}>
             {remainingBandwidthGB.toFixed(1)} GB
-          </p>
-        </div>
-        <div>
-          {i18n("reserveUsed")}
-          <p style={{ color: "#FFC107", margin: "4px 0 0 0" }}>
-            {reserveUsedMB} B
-          </p>
-        </div>
-        <div>
-          {i18n("remainingReserve")}
-          <p style={{ color: "#4CAF50", margin: "4px 0 0 0" }}>
-            {reserveBandwidthGB} GB
           </p>
         </div>
       </div>
