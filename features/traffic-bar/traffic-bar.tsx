@@ -103,7 +103,9 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
 
   const usedBandwidthPercentage =
     (usedBandwidthMB / (totalBandwidthGB * 1024)) * 100;
-  const remainingBandwidthGB = totalBandwidthGB - usedBandwidthMB / 1024;
+  const remainingBandwidthGB = Math.floor(
+    totalBandwidthGB - usedBandwidthMB / 1024
+  );
 
   // Handle rotation type change
   const handleRotationTypeChange = (rotating: boolean) => {
@@ -398,7 +400,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         <div>
           {i18n("remains")}
           <p style={{ color: "#4CAF50", margin: "4px 0 0 0" }}>
-            {remainingBandwidthGB.toFixed(1)} GB
+            {remainingBandwidthGB} GB
           </p>
         </div>
       </div>
