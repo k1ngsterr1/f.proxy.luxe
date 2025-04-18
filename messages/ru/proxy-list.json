@@ -1,98 +1,100 @@
 {
-    "proxyList": {
-        "title": "Список прокси",
-        "description": "Управление прокси-серверами",
-        "loading": "Загрузка доступных прокси-серверов...",
-        "emptyTitle": "Прокси не найдены",
-        "emptyDescription": "В данный момент нет доступных прокси-серверов.",
-        "deleteConfirm": "Удалить?",
-        "deleteYes": "Да",
-        "deleteNo": "Нет",
-        "deleteSuccess": "Прокси был успешно удалён. Чтобы увидеть изменения, обновите страницу.",
-        "deleteError": "Ошибка при удалении прокси: {{error}}",
-        "deleteMissingKey": "Ошибка при удалении прокси: не найден ключ пакета",
-        "editSuccess": "Прокси был успешно отредактирован. Чтобы увидеть изменения, обновите страницу.",
-        "prolongError": "Ошибка: Не найден ID заказа для продления",
-        "prolongSuccess": "Прокси успешно продлен",
-        "prolongFailed": "Не получилось продлить, попробуйте позже",
-        "prolongTitle": "Продление прокси",
-        "prolongBatchTitle": "Продление {{count}} прокси",
-        "prolongSelect": "Выберите период продления:",
-        "prolongCancel": "Отмена",
-        "prolongConfirm": "Продлить",
-        "prolongProcessing": "Обработка...",
-        "prolongBatchError": "Выберите хотя бы один прокси для продления",
-        "prolongBatchResult": "Продление завершено: {{success}} успешно, {{fail}} с ошибками",
-        "export": "Экспорт",
-        "exportHttp": "Сохранить HTTP(s)",
-        "exportSocks": "Сохранить SOCKS",
-        "editProxy": {
-            "title": "Редактирование прокси",
-            "nameLabel": "Название *",
-            "nameRequired": "Название обязательно",
-            "rotationTypeLabel": "Тип ротации",
-            "rotationPeriodLabel": "Период ротации (секунды)",
-            "rotationPeriodPlaceholder": "Введите секунды (1-3600)",
-            "rotationPeriodHelp": "Введите значение от 1 до 3600 секунд (60 минут)",
-            "rotationPeriodError": "Значение должно быть от 1 до 3600 секунд",
-            "rotationTypes": {
-                "general": "Общий",
-                "sticky": "Статичный",
-                "rotating": "Ротируемый"
-            },
-            "rotationPeriods": {
-                "5s": "5 секунд",
-                "30s": "30 секунд",
-                "1m": "1 минута",
-                "5m": "5 минут",
-                "10m": "10 минут",
-                "15m": "15 минут",
-                "30m": "30 минут",
-                "60m": "60 минут",
-                "custom": "Другое"
-            },
-            "cancel": "Отмена",
-            "save": "Сохранить"
-        },
-        "notification": {
-            "refreshCountdown": "Обновите страницу через {{seconds}} сек.",
-            "pleaseRefresh": "Пожалуйста, обновите страницу",
-            "refreshNow": "Обновить сейчас"
-        },
-        "table": {
-            "headers": {
-                "ipAddress": "IP-адрес",
-                "protocol": "Протокол",
-                "httpPort": "Порт HTTP",
-                "socksPort": "Порт SOCKS",
-                "name": "Название",
-                "login": "Логин",
-                "password": "Пароль",
-                "country": "Страна",
-                "expiryDate": "Срок действия",
-                "actions": "Действия",
-                "ports": "Порты"
-            },
-            "buttons": {
-                "edit": "Редактировать",
-                "delete": "Удалить",
-                "auth": "Авторизация",
-                "prolong": "Продлить"
-            },
-            "period": {
-                "1month": "1 месяц"
-            }
-        },
-        "ipAuth": {
-            "title": "Авторизация по IP",
-            "ipAddressLabel": "IP адрес",
-            "ipAddressPlaceholder": "IP",
-            "requiredFields": "Все поля обязательны для заполнения",
-            "invalidIp": "Введите корректный IP-адрес, например: 192.168.0.1",
-            "authSuccess": "Авторизация успешна",
-            "authError": "Ошибка авторизации",
-            "authInProgress": "Авторизация...",
-            "authButton": "АВТОРИЗАЦИЯ"
-        }
+  "proxyList": {
+    "title": "Список прокси",
+    "description": "Управление прокси-серверами",
+    "loading": "Загрузка доступных прокси-серверов...",
+    "emptyTitle": "Прокси не найдены",
+    "emptyDescription": "В данный момент нет доступных прокси-серверов.",
+    "deleteConfirm": "Вы действительно хотите удалить этот прокси ?",
+    "deleteYes": "Да",
+    "deleteNo": "Нет",
+    "deleteSuccess": "Прокси был успешно удалён. Чтобы увидеть изменения, обновите страницу.",
+    "deleteError": "Ошибка при удалении прокси: {{error}}",
+    "deleteMissingKey": "Ошибка при удалении прокси: не найден ключ пакета",
+    "editSuccess": "Прокси был успешно отредактирован. Изменения вступят в силу в течении 5-ти минут.",
+    "prolongError": "Ошибка: Не найден ID заказа для продления",
+    "prolongSuccess": "Прокси успешно продлен",
+    "prolongFailed": "Не получилось продлить, попробуйте позже",
+    "prolongTitle": "Продление прокси",
+    "prolongBatchTitle": "Продлить",
+    "prolongSelect": "Выберите период продления:",
+    "prolongCancel": "Отмена",
+    "prolongConfirm": "Продлить",
+    "prolongProcessing": "Обработка...",
+    "prolongBatchError": "Выберите хотя бы один прокси для продления",
+    "prolongBatchResult": "Продление завершено успешно",
+    "export": "Экспорт",
+    "exportHttp": "Сохранить HTTP(s)",
+    "exportSocks": "Сохранить SOCKS",
+    "editProxy": {
+      "title": "Редактирование прокси",
+      "nameLabel": "Название *",
+      "nameRequired": "Название обязательно",
+      "rotationTypeLabel": "Тип ротации",
+      "rotationPeriodLabel": "Период ротации (секунды)",
+      "rotationPeriodPlaceholder": "Введите секунды (1-3600)",
+      "rotationPeriodHelp": "Введите значение от 1 до 3600 секунд (60 минут)",
+      "rotationPeriodError": "Значение должно быть от 1 до 3600 секунд",
+      "rotationTypes": {
+        "general": "Общий",
+        "sticky": "Статичный",
+        "rotating": "Ротируемый"
+      },
+      "rotationPeriods": {
+        "5s": "5 секунд",
+        "30s": "30 секунд",
+        "1m": "1 минута",
+        "5m": "5 минут",
+        "10m": "10 минут",
+        "15m": "15 минут",
+        "30m": "30 минут",
+        "60m": "60 минут",
+        "custom": "Другое"
+      },
+      "cancel": "Отмена",
+      "save": "Сохранить"
+    },
+    "notification": {
+      "refreshCountdown": "Обновите страницу через {{seconds}} сек.",
+      "pleaseRefresh": "Пожалуйста, обновите страницу",
+      "refreshNow": "Обновить сейчас",
+      "cancel": "Закрыть",
+      "delete-confirm": "Удалить"
+    },
+    "table": {
+      "headers": {
+        "ipAddress": "IP-адрес",
+        "protocol": "Протокол",
+        "httpPort": "Порт HTTP",
+        "socksPort": "Порт SOCKS",
+        "name": "Название",
+        "login": "Логин",
+        "password": "Пароль",
+        "country": "Страна",
+        "expiryDate": "Срок действия",
+        "actions": "Действия",
+        "ports": "Порты"
+      },
+      "buttons": {
+        "edit": "Редактировать",
+        "delete": "Удалить",
+        "auth": "Авторизация",
+        "prolong": "Продлить"
+      },
+      "period": {
+        "1month": "1 месяц"
+      }
+    },
+    "ipAuth": {
+      "title": "Авторизация по IP",
+      "ipAddressLabel": "IP адрес",
+      "ipAddressPlaceholder": "IP",
+      "requiredFields": "Все поля обязательны для заполнения",
+      "invalidIp": "Введите корректный IP-адрес, например: 192.168.0.1",
+      "authSuccess": "Авторизация успешна",
+      "authError": "Ошибка авторизации",
+      "authInProgress": "Авторизация...",
+      "authButton": "АВТОРИЗАЦИЯ"
     }
+  }
 }

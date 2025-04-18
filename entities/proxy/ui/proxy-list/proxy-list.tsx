@@ -72,6 +72,8 @@ const ProxyList: React.FC<Props> = ({
     message: string;
     type: "success" | "error" | "info";
     showRefresh: boolean;
+    isDeleteConfirmation?: boolean;
+    proxyToDelete?: Proxy;
   } | null>(null);
 
   // Add a new state for the prolong popup
@@ -141,6 +143,11 @@ const ProxyList: React.FC<Props> = ({
 
     if (!proxy) {
       console.error("Proxy not found with ID:", proxyId);
+      return;
+    }
+
+    // Skip if it's a residential proxy
+    if (proxy.type === "resident") {
       return;
     }
 
@@ -214,6 +221,11 @@ const ProxyList: React.FC<Props> = ({
 
   // Function to handle select all
   const handleSelectAll = () => {
+    // Skip if we're showing residential proxies
+    if (type === "resident") {
+      return;
+    }
+
     if (onSelectProxy && externalSelectedProxies) {
       // If we're using external selection, we need to call onSelectProxy for each proxy
       if (selectAllChecked) {
@@ -623,7 +635,23 @@ const ProxyList: React.FC<Props> = ({
 
   // Handle delete confirmation
   const handleDeleteClick = (proxyId: string) => {
-    setDeleteConfirmId(proxyId);
+    // Find the proxy with this ID
+    const proxy = uniqueProxies.find((p) => p.id === proxyId);
+
+    // If it's a residential proxy, show a popup confirmation
+    if (proxy && proxy.type === "resident") {
+      setNotification({
+        show: true,
+        message: t("deleteConfirm"),
+        type: "info",
+        showRefresh: false,
+        isDeleteConfirmation: true,
+        proxyToDelete: proxy,
+      });
+    } else {
+      // For non-residential proxies, use the inline confirmation
+      setDeleteConfirmId(proxyId);
+    }
   };
 
   // Update the confirmDelete function to use the deleteProxy function directly
@@ -901,6 +929,15 @@ const ProxyList: React.FC<Props> = ({
   const cancelProlong = () => {
     setProlongProxy(null);
     setIsSubmittingBatchProlong(false);
+  };
+
+  // Add a function to handle delete confirmation from the popup:
+  const handleDeleteConfirm = () => {
+    if (notification?.proxyToDelete) {
+      const proxy = notification.proxyToDelete;
+      confirmDelete(proxy.id, proxy.package_key);
+      setNotification(null);
+    }
   };
 
   // Checkbox styles
@@ -1398,7 +1435,8 @@ const ProxyList: React.FC<Props> = ({
           <p style={cardDescriptionStyle}>{t("description")}</p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
-          {selectedProxies.length > 0 && (
+          {/* Only show batch prolong button for non-resident proxies */}
+          {type !== "resident" && selectedProxies.length > 0 && (
             <button
               style={batchActionButtonStyle}
               onClick={handleBatchProlong}
@@ -1455,18 +1493,21 @@ const ProxyList: React.FC<Props> = ({
           <table style={tableStyle}>
             <thead style={tableHeadBaseStyle}>
               <tr>
-                <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
-                  <div
-                    style={
-                      selectAllChecked
-                        ? checkboxCheckedStyle
-                        : checkboxContainerStyle
-                    }
-                    onClick={handleSelectAll}
-                  >
-                    {selectAllChecked && <Check size={14} color="#f3d675" />}
-                  </div>
-                </th>
+                {/* Only show checkbox column for non-resident proxies */}
+                {type !== "resident" && (
+                  <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
+                    <div
+                      style={
+                        selectAllChecked
+                          ? checkboxCheckedStyle
+                          : checkboxContainerStyle
+                      }
+                      onClick={handleSelectAll}
+                    >
+                      {selectAllChecked && <Check size={14} color="#f3d675" />}
+                    </div>
+                  </th>
+                )}
                 {type === "resident" && (
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.name")}
@@ -1544,18 +1585,21 @@ const ProxyList: React.FC<Props> = ({
                       }
                     }}
                   >
-                    <td style={tableCellStyle}>
-                      <div
-                        style={
-                          isSelected
-                            ? checkboxCheckedStyle
-                            : checkboxContainerStyle
-                        }
-                        onClick={() => handleCheckboxChange(proxy.id)}
-                      >
-                        {isSelected && <Check size={14} color="#f3d675" />}
-                      </div>
-                    </td>
+                    {/* Only show checkbox for non-resident proxies */}
+                    {type !== "resident" && (
+                      <td style={tableCellStyle}>
+                        <div
+                          style={
+                            isSelected
+                              ? checkboxCheckedStyle
+                              : checkboxContainerStyle
+                          }
+                          onClick={() => handleCheckboxChange(proxy.id)}
+                        >
+                          {isSelected && <Check size={14} color="#f3d675" />}
+                        </div>
+                      </td>
+                    )}
                     {type === "resident" && (
                       <td style={tableCellEmphasisStyle}>
                         {proxy.title?.slice(0, 6).trim() + "..."}
@@ -1623,6 +1667,7 @@ const ProxyList: React.FC<Props> = ({
                           >
                             <Trash2 size={14} />
                           </button>
+                          {/* Only show auth and prolong buttons for non-resident proxies */}
                           {type !== "resident" && (
                             <>
                               <button
@@ -1707,8 +1752,12 @@ const ProxyList: React.FC<Props> = ({
           message={notification.message}
           type={notification.type}
           onClose={closeNotification}
-          showRefreshButton={notification.showRefresh}
+          showRefreshButton={
+            notification.showRefresh && !notification.isDeleteConfirmation
+          }
           countdown={5}
+          showDeleteConfirmation={notification.isDeleteConfirmation}
+          onDeleteConfirm={handleDeleteConfirm}
         />
       )}
     </div>

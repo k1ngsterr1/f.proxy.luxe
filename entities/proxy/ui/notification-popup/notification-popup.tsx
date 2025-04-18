@@ -11,6 +11,8 @@ interface NotificationPopupProps {
   onClose: () => void;
   showRefreshButton?: boolean;
   countdown?: number;
+  showDeleteConfirmation?: boolean;
+  onDeleteConfirm?: () => void;
 }
 
 const NotificationPopup: React.FC<NotificationPopupProps> = ({
@@ -20,37 +22,25 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
   onClose,
   showRefreshButton = false,
   countdown = 5,
+  showDeleteConfirmation = false,
+  onDeleteConfirm,
 }) => {
-  const t = useTranslations('proxyList.notification');
-  const [timeLeft, setTimeLeft] = useState(countdown);
+  const t = useTranslations("proxyList.notification");
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Auto-close after duration
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      setTimeout(onClose, 300); // Allow time for fade-out animation
-    }, duration);
+    // Auto-close after duration (only if not a delete confirmation)
+    if (!showDeleteConfirmation) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        setTimeout(onClose, 300); // Allow time for fade-out animation
+      }, duration);
 
-    // Countdown timer without auto-refresh
-    let countdownInterval: NodeJS.Timeout | null = null;
-    if (showRefreshButton && countdown > 0) {
-      countdownInterval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            // Don't auto-refresh, just show "0" seconds
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      };
     }
-
-    return () => {
-      clearTimeout(timer);
-      if (countdownInterval) clearInterval(countdownInterval);
-    };
-  }, [duration, onClose, showRefreshButton, countdown]);
+  }, [duration, onClose, showDeleteConfirmation]);
 
   // Get text color based on type
   const getTextColor = () => {
@@ -67,6 +57,19 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
 
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  const handleCancel = () => {
+    setIsVisible(false);
+    setTimeout(onClose, 300); // Allow time for fade-out animation
+  };
+
+  const handleConfirmDelete = () => {
+    if (onDeleteConfirm) {
+      onDeleteConfirm();
+    }
+    setIsVisible(false);
+    setTimeout(onClose, 300);
   };
 
   // Create overlay backdrop
@@ -101,6 +104,23 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
     gap: "16px",
   };
 
+  // Button styles
+  const buttonStyle: React.CSSProperties = {
+    border: "none",
+    borderRadius: "4px",
+    padding: "8px 16px",
+    fontSize: "14px",
+    cursor: "pointer",
+    fontWeight: "500",
+  };
+
+  const deleteButtonStyle: React.CSSProperties = {
+    ...buttonStyle,
+    backgroundColor: "rgba(255, 59, 48, 0.1)",
+    color: "#FF3B30",
+    border: "1px solid rgba(255, 59, 48, 0.3)",
+  };
+
   return (
     <div style={overlayStyle}>
       <div style={popupStyle}>
@@ -114,36 +134,65 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
           {message}
         </div>
 
-        {showRefreshButton && (
+        {showDeleteConfirmation ? (
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-end",
               alignItems: "center",
               marginTop: "8px",
+              gap: "12px",
             }}
           >
-            <span style={{ fontSize: "14px", color: "#999999" }}>
-              {timeLeft > 0
-                ? t('refreshCountdown', { seconds: timeLeft })
-                : t('pleaseRefresh')}
-            </span>
             <button
-              onClick={handleRefresh}
+              onClick={handleCancel}
               style={{
-                backgroundColor: "#f3d675",
-                color: "#000000",
-                border: "none",
-                borderRadius: "4px",
-                padding: "8px 16px",
-                fontSize: "14px",
-                cursor: "pointer",
-                fontWeight: "500",
+                ...buttonStyle,
+                backgroundColor: "transparent",
+                color: "#999999",
+                border: "1px solid #333333",
               }}
             >
-              {t('refreshNow')}
+              {t("cancel") || "Cancel"}
+            </button>
+            <button onClick={handleConfirmDelete} style={deleteButtonStyle}>
+              {t("delete-confirm") || "Delete"}
             </button>
           </div>
+        ) : (
+          showRefreshButton && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                marginTop: "8px",
+                gap: "12px",
+              }}
+            >
+              <button
+                onClick={handleCancel}
+                style={{
+                  ...buttonStyle,
+                  backgroundColor: "transparent",
+                  color: "#999999",
+                  border: "1px solid #333333",
+                }}
+              >
+                {t("cancel") || "Cancel"}
+              </button>
+              <button
+                onClick={handleRefresh}
+                style={{
+                  ...buttonStyle,
+                  backgroundColor: "#f3d675",
+                  color: "#000000",
+                }}
+              >
+                {t("refreshNow")}
+              </button>
+            </div>
+          )
         )}
       </div>
     </div>
