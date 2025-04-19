@@ -105,10 +105,10 @@ export default function ArticlePage() {
 
   <h2>🚀 Начинаем фармить:</h2>
   <ol>
-    <li>Перейдите на сайт и пройдите простую регистрацию.</li>
+    <li>Перейдите на <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">сайт</a> и пройдите простую регистрацию.</li>
     <li>Создайте кошелёк Solana:
       <ol>
-        <li>Откройте расширение в антидетект-браузере и установите его.</li>
+        <li>Откройте <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">расширение кошелька Solana</a> в <a href="https://dolphin-anty.com/a/1329911/">антидетект-браузере</a> и установите его.</li>
         <li>Запустите расширение, нажмите "Создать новый кошелёк".</li>
         <li>Скопируйте и сохраните сид-фразу (12 слов) — без неё восстановление невозможно.</li>
         <li>Нажмите "Я сохранил(а) свою фразу", вставьте фразу и нажмите "Продолжить".</li>
@@ -128,7 +128,7 @@ export default function ArticlePage() {
   <h2>✅ Фармим:</h2>
   <ul>
     <li><strong>🖥 Приложение на ПК:</strong> даёт в 2 раза больше поинтов. Потребляет 5 МБ ОЗУ. [ссылка на приложение]</li>
-    <li><strong>🌐 Расширение в браузере:</strong> работает, пока браузер открыт.</li>
+    <li><strong>🌐 <a href="https://chromewebstore.google.com/detail/grass-lite-node/ilehaonighjijnmpnagapkhpcdbhclfg?hl=tr&utm_source=ext_sidebar">Расширение в браузере</a>:</strong> работает, пока браузер открыт.</li>
   </ul>
 
   <h3>⚠️ Важно!</h3>
@@ -155,10 +155,10 @@ export default function ArticlePage() {
 
   <h2>🚀 Let’s Start Farming:</h2>
   <ol>
-    <li>Go to the GRASS website and register.</li>
+    <li>Go to the GRASS <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">website</a> and register.</li>
     <li>Create a Solana wallet:
       <ol>
-        <li>Open the extension in an anti-detect browser and install it.</li>
+        <li>Open the <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">extension for Solana</a> in an <a href="https://dolphin-anty.com/a/1329911/">anti-detect browser</a> and install it.</li>
         <li>Launch the extension, click "Create new wallet".</li>
         <li>Copy and save the seed phrase (12 words) — you can't restore without it.</li>
         <li>Click "I saved my phrase", paste it, and continue.</li>
@@ -178,7 +178,7 @@ export default function ArticlePage() {
   <h2>✅ Start Farming:</h2>
   <ul>
     <li><strong>🖥 Desktop App:</strong> earns 2x more points. Uses just 5 MB RAM. [app link]</li>
-    <li><strong>🌐 Browser Extension:</strong> works while the browser is open.</li>
+    <li><strong>🌐 <a href="https://chromewebstore.google.com/detail/grass-lite-node/ilehaonighjijnmpnagapkhpcdbhclfg?hl=tr&utm_source=ext_sidebar">Browser Extension</a>:</strong> works while the browser is open.</li>
   </ul>
 
   <h3>⚠️ Important!</h3>
