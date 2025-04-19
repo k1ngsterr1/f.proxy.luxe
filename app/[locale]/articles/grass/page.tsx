@@ -98,7 +98,6 @@ export default function ArticlePage() {
 
   <p>Расширение потребляет мало ресурсов и не мешает основной работе ПК, независимо от того, работаете вы на нём сами или используете ботов для заработка.</p>
 
-  <img src="https://media-hosting.imagekit.io/30e9861d6a1b489a/grass_3.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=TwDIHGuU8Bb5VIhl6WqKbach4Z22b6l1eeLYyXySDH2ynMlhRCX9Bw6kPihm~kIAMrFTntHDJL2wRCx~5chRp7m7zeZ3Xxwba71fBiVqtP59WtNCmpTzL8xbj6DCthMBRx9USeAHciKuP4KsNe0ZN7DbFkQNV9T4GZVziMwT73sdqA7ZavVE9NLh4v5hO~jGidoaLZgzCJK-XkvmDUD1LXUufYxlXJhAkV~4eeLW5I9fsKgque5l03ikZgkOPBFsYbZ6iHq61jzODihFqcLRUVUwDVhgKNRSPg051B1WLPPVnSUDoKY4kjCUI4l3xOAIHu6SjKwObyg9gyz6y83lLg__" alt="Создание кошелька Solana" style="width:50%; border-radius:8px; margin: 20px 0;" />
 
   <h2>Ещё не поздно ли присоединиться к GRASS?</h2>
   <p><strong>Нет!</strong> Завершилась только первая эпоха, сейчас идёт вторая, поэтому ещё вполне можно успеть накопить токены GRASS.</p>
@@ -148,7 +147,6 @@ export default function ArticlePage() {
 
   <p>The extension uses few resources and doesn’t interfere with the PC, whether you’re working on it or running bots.</p>
 
-  <img src="https://media-hosting.imagekit.io/30e9861d6a1b489a/grass_3.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=TwDIHGuU8Bb5VIhl6WqKbach4Z22b6l1eeLYyXySDH2ynMlhRCX9Bw6kPihm~kIAMrFTntHDJL2wRCx~5chRp7m7zeZ3Xxwba71fBiVqtP59WtNCmpTzL8xbj6DCthMBRx9USeAHciKuP4KsNe0ZN7DbFkQNV9T4GZVziMwT73sdqA7ZavVE9NLh4v5hO~jGidoaLZgzCJK-XkvmDUD1LXUufYxlXJhAkV~4eeLW5I9fsKgque5l03ikZgkOPBFsYbZ6iHq61jzODihFqcLRUVUwDVhgKNRSPg051B1WLPPVnSUDoKY4kjCUI4l3xOAIHu6SjKwObyg9gyz6y83lLg__" alt="Solana Wallet Setup" style="width:50%; border-radius:8px; margin: 20px 0;" />
 
   <h2>Is it too late to join GRASS?</h2>
   <p><strong>No!</strong> The first epoch has ended, the second is ongoing. You still have time to earn GRASS tokens.</p>
