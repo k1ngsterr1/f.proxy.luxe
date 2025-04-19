@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { Calendar, Tag, ChevronUp, Loader } from "lucide-react";
 import { useGetArticleById } from "@/entities/articles/hooks/queries/use-get-article-by-id.queries";
 import { useTranslations, useLocale } from "next-intl";
+import image from "../../../../assets/images/grass_cover.jpg";
 
 function extractDateFromContent(content?: string): string | null {
   if (!content) return null;
@@ -91,13 +92,13 @@ export default function ArticlePage() {
   const fallbackContentRu = `
   <h1><strong>GRASS - как заработать, используя прокси и анти-детект браузер</strong></h1>
 
-  <img src="/images/grass/intro.jpg" alt="GRASS проект" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://media-hosting.imagekit.io/b4c89f872c9142d8/grass_cover.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OfJcFusGra38mI4d16hte5K4XllRFhEGhp04P4aV-1b3k8cz5AVoYTPU1N~QcO0bnsPierT8QbJ7lXQLWuOTWphdTUhH7Tgf5uWf41wWw425cTQ4qRbqEustAnYq268D6KkVXUfzfEmSX3DP1-qBz3Fw4hywBgcnm7zTqT3wApjxLDBQR9gMLBEp694yxkNHEvQox4-d1WlEw7BHWXb-Fcx8k1EMpQ3qDCm~4DPT1DEBma3pUuGVKYdYHdGp8VpkX0t54hDMwif7xIrPmbnrgog99d9bWocqpSD9MmJ4jFEnw5kg6QIoeFeWErRfks2GQhlKhBQWk3bnDmJ6wQC3Vw__" alt="GRASS проект" style="width:100%; border-radius:8px; margin: 20px 0;" />
 
   <p><strong>GRASS</strong> — легендарный и надежный проект среди DePIN-проектов. После листинга GRASS приятно удивил многих, поскольку пользователи смогли легко заработать 100–200 долларов США на каждом аккаунте. Для этого было достаточно установить расширение на свой компьютер, ноутбук или сервер.</p>
 
   <p>Расширение потребляет мало ресурсов и не мешает основной работе ПК, независимо от того, работаете вы на нём сами или используете ботов для заработка.</p>
 
-  <img src="/images/grass/setup-wallet.jpg" alt="Создание кошелька Solana" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://media-hosting.imagekit.io/30e9861d6a1b489a/grass_3.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=TwDIHGuU8Bb5VIhl6WqKbach4Z22b6l1eeLYyXySDH2ynMlhRCX9Bw6kPihm~kIAMrFTntHDJL2wRCx~5chRp7m7zeZ3Xxwba71fBiVqtP59WtNCmpTzL8xbj6DCthMBRx9USeAHciKuP4KsNe0ZN7DbFkQNV9T4GZVziMwT73sdqA7ZavVE9NLh4v5hO~jGidoaLZgzCJK-XkvmDUD1LXUufYxlXJhAkV~4eeLW5I9fsKgque5l03ikZgkOPBFsYbZ6iHq61jzODihFqcLRUVUwDVhgKNRSPg051B1WLPPVnSUDoKY4kjCUI4l3xOAIHu6SjKwObyg9gyz6y83lLg__" alt="Создание кошелька Solana" style="width:50%; border-radius:8px; margin: 20px 0;" />
 
   <h2>Ещё не поздно ли присоединиться к GRASS?</h2>
   <p><strong>Нет!</strong> Завершилась только первая эпоха, сейчас идёт вторая, поэтому ещё вполне можно успеть накопить токены GRASS.</p>
@@ -122,7 +123,7 @@ export default function ArticlePage() {
   <h3>💸 Где взять SOL?</h3>
   <p>Можно использовать обменники (минимум $0.15) или написать мне — перевести 20₽ на Payeer, и я отправлю вам 0.001 SOL.</p>
 
-  <img src="/images/grass/farming-methods.jpg" alt="Способы фарма GRASS" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://media-hosting.imagekit.io/78c04c11869c4ee4/grass_2.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Wq5uIS9kiwlznqYsCwxctCz3NlFn5HXyCGkOQUmGA06ySZer1XCBV1NUA~tx22GsRm25V45CMzRuqG6l1I6SCc6u18vM7gQvihtVmgSMoc9Z~htAPx38-I3sc6l5pNh97mSMzRmNCUmrEdJEk~N4cHK0JNJLFFjySagiMUFgHHEwvfDoz1BWqXel7mY6h~irfKr~eL3vDmT~1Lk4Vd2Kuw0HpYWz9mICyFX9YbpRUFvM66-c-P7m4~F1M8NMF4Zl41ja-pSSZ-YjpmX4MBO8cWNVuvMXmN7yRVzATsoairWTsvgiZvz8z5IuYxiG4Vo6-TQDhlI2JcY1jeVcetErHw__" alt="Способы фарма GRASS" style="width:50%;  border-radius:8px; margin: 20px 0;" />
 
   <h2>✅ Фармим:</h2>
   <ul>
@@ -141,13 +142,13 @@ export default function ArticlePage() {
   const fallbackContentEn = `
   <h1><strong>GRASS – How to Earn Using Proxies and Anti-Detect Browser</strong></h1>
 
-  <img src="/images/grass/intro.jpg" alt="GRASS project overview" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://media-hosting.imagekit.io/b4c89f872c9142d8/grass_cover.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OfJcFusGra38mI4d16hte5K4XllRFhEGhp04P4aV-1b3k8cz5AVoYTPU1N~QcO0bnsPierT8QbJ7lXQLWuOTWphdTUhH7Tgf5uWf41wWw425cTQ4qRbqEustAnYq268D6KkVXUfzfEmSX3DP1-qBz3Fw4hywBgcnm7zTqT3wApjxLDBQR9gMLBEp694yxkNHEvQox4-d1WlEw7BHWXb-Fcx8k1EMpQ3qDCm~4DPT1DEBma3pUuGVKYdYHdGp8VpkX0t54hDMwif7xIrPmbnrgog99d9bWocqpSD9MmJ4jFEnw5kg6QIoeFeWErRfks2GQhlKhBQWk3bnDmJ6wQC3Vw__" alt="GRASS project overview" style="width:100%; border-radius:8px; margin: 20px 0;" />
 
   <p><strong>GRASS</strong> is a legendary and reliable project among DePIN protocols. After listing, GRASS surprised many — users easily earned $100–$200 per account by simply installing a browser extension on a computer, laptop, or server.</p>
 
   <p>The extension uses few resources and doesn’t interfere with the PC, whether you’re working on it or running bots.</p>
 
-  <img src="/images/grass/setup-wallet.jpg" alt="Solana Wallet Setup" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://media-hosting.imagekit.io/30e9861d6a1b489a/grass_3.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=TwDIHGuU8Bb5VIhl6WqKbach4Z22b6l1eeLYyXySDH2ynMlhRCX9Bw6kPihm~kIAMrFTntHDJL2wRCx~5chRp7m7zeZ3Xxwba71fBiVqtP59WtNCmpTzL8xbj6DCthMBRx9USeAHciKuP4KsNe0ZN7DbFkQNV9T4GZVziMwT73sdqA7ZavVE9NLh4v5hO~jGidoaLZgzCJK-XkvmDUD1LXUufYxlXJhAkV~4eeLW5I9fsKgque5l03ikZgkOPBFsYbZ6iHq61jzODihFqcLRUVUwDVhgKNRSPg051B1WLPPVnSUDoKY4kjCUI4l3xOAIHu6SjKwObyg9gyz6y83lLg__" alt="Solana Wallet Setup" style="width:50%; border-radius:8px; margin: 20px 0;" />
 
   <h2>Is it too late to join GRASS?</h2>
   <p><strong>No!</strong> The first epoch has ended, the second is ongoing. You still have time to earn GRASS tokens.</p>
@@ -172,7 +173,7 @@ export default function ArticlePage() {
   <h3>💸 Where to Get SOL?</h3>
   <p>You can use exchanges (minimum $0.15) or message me — send 20 RUB via Payeer, and I’ll send 0.001 SOL to your wallet.</p>
 
-  <img src="/images/grass/farming-methods.jpg" alt="Farming methods" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://media-hosting.imagekit.io/78c04c11869c4ee4/grass_2.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Wq5uIS9kiwlznqYsCwxctCz3NlFn5HXyCGkOQUmGA06ySZer1XCBV1NUA~tx22GsRm25V45CMzRuqG6l1I6SCc6u18vM7gQvihtVmgSMoc9Z~htAPx38-I3sc6l5pNh97mSMzRmNCUmrEdJEk~N4cHK0JNJLFFjySagiMUFgHHEwvfDoz1BWqXel7mY6h~irfKr~eL3vDmT~1Lk4Vd2Kuw0HpYWz9mICyFX9YbpRUFvM66-c-P7m4~F1M8NMF4Zl41ja-pSSZ-YjpmX4MBO8cWNVuvMXmN7yRVzATsoairWTsvgiZvz8z5IuYxiG4Vo6-TQDhlI2JcY1jeVcetErHw__" alt="Farming methods" style="width:50%; border-radius:8px; margin: 20px 0;" />
 
   <h2>✅ Start Farming:</h2>
   <ul>
