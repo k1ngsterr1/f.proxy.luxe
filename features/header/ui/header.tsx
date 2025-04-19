@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
 
@@ -65,7 +65,7 @@ export const Header: FC = () => {
           <div className="header-inner">
             <Link href="/" className="header-logo">
               <Image
-                src={Logo}
+                src={Logo || "/placeholder.svg"}
                 alt="Proxy Luxe"
                 width={isMobile ? 140 : 400}
                 height={isMobile ? 40 : 66}
@@ -94,13 +94,23 @@ export const Header: FC = () => {
                   onClick={() => changeLanguage("ru")}
                   className={`lang-item ${locale === "ru" ? "active" : ""}`}
                 >
-                  <Image src={RusFlag} alt="Русский" width={40} height={26} />
+                  <Image
+                    src={RusFlag || "/placeholder.svg"}
+                    alt="Русский"
+                    width={40}
+                    height={26}
+                  />
                 </span>
                 <span
                   onClick={() => changeLanguage("en")}
                   className={`lang-item ${locale === "en" ? "active" : ""}`}
                 >
-                  <Image src={EngFlag} alt="English" width={40} height={26} />
+                  <Image
+                    src={EngFlag || "/placeholder.svg"}
+                    alt="English"
+                    width={40}
+                    height={26}
+                  />
                 </span>
               </div>
               {token ? (
@@ -108,7 +118,7 @@ export const Header: FC = () => {
                   style={{
                     cursor: "pointer",
                   }}
-                  onClick={() => router.push("/personal-account")}
+                  onClick={() => router.push(`/${locale}/personal-account`)}
                 >
                   <a className="another-btn">
                     <span>{i18n("header.account")}</span>
@@ -120,7 +130,12 @@ export const Header: FC = () => {
                     onClick={() => openPopup("auth-enter")}
                     className="btn-enter"
                   >
-                    <Image src={Enter} alt="" width={27} height={27} />
+                    <Image
+                      src={Enter || "/placeholder.svg"}
+                      alt=""
+                      width={27}
+                      height={27}
+                    />
                     <span>{i18n("header.login")}</span>
                   </span>
                   <span
@@ -152,13 +167,23 @@ export const Header: FC = () => {
                     onClick={() => changeLanguage("ru")}
                     className={`lang-item ${locale === "ru" ? "active" : ""}`}
                   >
-                    <Image src={RusFlag} alt="Русский" width={40} height={26} />
+                    <Image
+                      src={RusFlag || "/placeholder.svg"}
+                      alt="Русский"
+                      width={40}
+                      height={26}
+                    />
                   </span>
                   <span
                     onClick={() => changeLanguage("en")}
                     className={`lang-item ${locale === "en" ? "active" : ""}`}
                   >
-                    <Image src={EngFlag} alt="English" width={40} height={26} />
+                    <Image
+                      src={EngFlag || "/placeholder.svg"}
+                      alt="English"
+                      width={40}
+                      height={26}
+                    />
                   </span>
                 </div>
                 <div className="header-burger">
