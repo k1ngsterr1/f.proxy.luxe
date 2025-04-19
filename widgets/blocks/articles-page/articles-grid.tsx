@@ -47,7 +47,7 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({
           date={article.date}
           summary={article.summary}
           tags={article.tags}
-          url="/grass"
+          url="/articles/grass"
         />
       ))}
     </div>
