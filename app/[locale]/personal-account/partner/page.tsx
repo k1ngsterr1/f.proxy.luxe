@@ -977,7 +977,7 @@ export default function PartnerPage() {
           <button
             onClick={() => {
               console.log("HERE", partnerDetails?.availableBalance);
-              if (partnerDetails?.availableBalance >= 0.1) {
+              if (partnerDetails?.availableBalance >= 5) {
                 setPayoutPopupOpen(true);
               } else {
                 setPayoutError(t("error.min-payout"));

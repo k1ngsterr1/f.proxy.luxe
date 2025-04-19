@@ -9,7 +9,7 @@
       "message": "You need to verify your email by clicking the link sent to your email address."
     },
     "error": {
-      "min-payout": "Minimum payout starts from 0.1$",
+      "min-payout": "Minimum payout starts from 5$",
       "pending-request": "You already have a pending payout request, wait for its approval"
     },
     "promocode": {
