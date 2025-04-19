@@ -2,6 +2,7 @@
 
 import { ArticleCard, ArticleTag } from "@/entities/articles/ui/article-card";
 import type React from "react";
+import "../../../assets/images/grass_cover.jpg";
 
 export interface Article {
   id: string | number;
@@ -37,11 +38,7 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({
       {articles.map((article) => (
         <ArticleCard
           key={article.id}
-          imageUrl={
-            article?.images && article.images.length > 0
-              ? article.images[0]
-              : "/placeholder.svg"
-          }
+          imageUrl=""
           imageAlt={article?.imageAlt}
           title={article.title}
           date={article.date}

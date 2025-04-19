@@ -18,7 +18,8 @@ import {
   Loader,
 } from "lucide-react";
 import { useGetArticleById } from "@/entities/articles/hooks/queries/use-get-article-by-id.queries";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 // Helper function to extract date from content (simplified example)
 function extractDateFromContent(content?: string): string | null {
@@ -76,6 +77,14 @@ export default function ArticlePage() {
   const t = useTranslations("article-slug");
   const params = useParams();
   const articleId = params.slug as string;
+
+  const locale = useLocale();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Триггер на смену локали (если нужно вручную рефетчить данные или перерендерить)
+    router.refresh(); // Или window.location.reload(); если нужно полный reload
+  }, [locale]);
 
   const {
     data: article,
