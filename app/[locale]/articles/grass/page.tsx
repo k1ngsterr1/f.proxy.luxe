@@ -107,7 +107,7 @@ export default function ArticlePage() {
     <li>Перейдите на <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">сайт</a> и пройдите простую регистрацию.</li>
     <li>Создайте кошелёк Solana:
       <ol>
-        <li>Откройте <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">расширение кошелька Solana</a> в <a href="https://dolphin-anty.com/a/1329911/">антидетект-браузере</a> и установите его.</li>
+        <li>Откройте <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">расширение кошелька Solana</a> в <a href="https://dolphin-anty.net/?ref=1329911&utm_source=madia&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=article">антидетект-браузере</a> и установите его.</li>
         <li>Запустите расширение, нажмите "Создать новый кошелёк".</li>
         <li>Скопируйте и сохраните сид-фразу (12 слов) — без неё восстановление невозможно.</li>
         <li>Нажмите "Я сохранил(а) свою фразу", вставьте фразу и нажмите "Продолжить".</li>
@@ -156,7 +156,7 @@ export default function ArticlePage() {
     <li>Go to the GRASS <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">website</a> and register.</li>
     <li>Create a Solana wallet:
       <ol>
-        <li>Open the <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">extension for Solana</a> in an <a href="https://dolphin-anty.com/a/1329911/">anti-detect browser</a> and install it.</li>
+        <li>Open the <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">extension for Solana</a> in an <a href="https://dolphin-anty.net/?ref=1329911&utm_source=madia&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=article">anti-detect browser</a> and install it.</li>
         <li>Launch the extension, click "Create new wallet".</li>
         <li>Copy and save the seed phrase (12 words) — you can't restore without it.</li>
         <li>Click "I saved my phrase", paste it, and continue.</li>
