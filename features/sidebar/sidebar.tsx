@@ -16,6 +16,7 @@ import { useExchangeRates } from "@/entities/exchange-rates/api/hooks/use-get-cr
 import { useQueryClient } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/shared/config/apiClient";
+import { useIsMobile } from "@/shared/utils/use-is-mobile";
 
 const useGetRuble = () => {
   return useQuery({
@@ -35,6 +36,7 @@ export const Sidebar = () => {
   const i18n = useTranslations("sidebar");
   const pathname = usePathname();
   const { data: userData } = useGetUser();
+  const isMobile = useIsMobile();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 0
@@ -62,7 +64,6 @@ export const Sidebar = () => {
   }, []);
 
   // Determine if mobile based on window width
-  const isMobile = windowWidth < 768;
 
   // Responsive styles
   const sidebarWidth = isMobile ? "100%" : "280px";
