@@ -65,7 +65,7 @@ export const Sidebar = () => {
   const isMobile = windowWidth < 768;
 
   // Responsive styles
-  const sidebarWidth = isMobile ? "240px" : "280px";
+  const sidebarWidth = isMobile ? "100%" : "280px";
   const fontSize = isMobile ? "13px" : "14px";
   const headerFontSize = isMobile ? "14px" : "16px";
   const iconSize = isMobile ? "18px" : "20px";
@@ -293,7 +293,6 @@ export const Sidebar = () => {
     }).format(value);
   };
 
-  // SVG icons as components
   const UserIcon = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -458,7 +457,6 @@ export const Sidebar = () => {
     </svg>
   );
 
-  // Currency icons for exchange rates
   const UsdIcon = () => (
     <svg
       width={isMobile ? "14" : "16"}
@@ -529,7 +527,6 @@ export const Sidebar = () => {
     </svg>
   );
 
-  // Exchange rates rendering
   const renderExchangeRates = () => {
     if (ratesLoading) {
       return (

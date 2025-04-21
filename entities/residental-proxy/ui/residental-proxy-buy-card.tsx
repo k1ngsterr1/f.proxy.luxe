@@ -246,7 +246,7 @@ export const ResidentalProxyBuyCard = () => {
           {i18n("price")}
           <span>
             {selectedTariff
-              ? `${getTariffPrice(selectedTariff.name)} / ${i18n("month")}`
+              ? `$${getTariffPrice(selectedTariff.name)} / ${i18n("month")}`
               : "Выберите тариф"}
           </span>
         </div>
