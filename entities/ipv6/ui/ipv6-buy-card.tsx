@@ -183,7 +183,6 @@ export const IPV6BuyCard = () => {
                 : "1px solid #3E3E3E",
             }}
           >
-            {/* Added placeholder option with empty value */}
             <option value="">{i18n("goals.placeholder")}</option>
             <option value="surfing">{i18n("goals.surfing")}</option>
             <option value="socialMedia">{i18n("goals.socialMedia")}</option>
