@@ -232,7 +232,7 @@ export const BurgerMenu = () => {
                 {i18n("header.login")}
               </Link>
               <Link
-                href="/registration"
+                href="/register"
                 onClick={() => close()}
                 style={{
                   display: "flex",

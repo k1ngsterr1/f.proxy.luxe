@@ -82,7 +82,6 @@ export default function ArticlePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Триггер на смену локали (если нужно вручную рефетчить данные или перерендерить)
     router.refresh(); // Или window.location.reload(); если нужно полный reload
   }, [locale]);
 
