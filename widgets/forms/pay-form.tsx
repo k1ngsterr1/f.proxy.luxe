@@ -69,6 +69,8 @@ export const PayForm = ({ userId }: { userId?: string }) => {
             values.paymentMethod
           );
         } else if (values.paymentMethod === "payeer") {
+          alert("Извините, оплата пока не доступна");
+          return;
           await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "visa") {
           setShowVisaPopup(true);
@@ -79,6 +81,8 @@ export const PayForm = ({ userId }: { userId?: string }) => {
             values.paymentMethod
           );
         } else if (values.paymentMethod === "bitcoin") {
+          alert("Извините, оплата пока не доступна");
+          return;
           await processPayeerPayment(values.paymentAmount);
         } else {
           await processDigisellerPayment(
