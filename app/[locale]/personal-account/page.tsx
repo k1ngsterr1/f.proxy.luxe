@@ -1,476 +1,144 @@
 "use client";
-import { useFormik } from "formik";
-import Visa from "@/assets/images/visa.png";
-import WebMoney from "@/assets/images/webmoney.png";
-import BitCoin from "@/assets/images/bitcoin.png";
-import LitCoin from "@/assets/images/litecoin.png";
-import Digiseller from "@/assets/images/digiseller.png";
-import Payer from "@/assets/images/payeer.png";
-import Image from "next/image";
-import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmoney-payment";
+
+import "@/assets/styles/style.css";
+import { useAuthStore } from "@/entities/auth/store/use-auth-store";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { AlertMessage } from "@/shared/ui/alert";
+import { Loader } from "@/shared/ui/loader";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
-import { useState } from "react";
-import { Button } from "@/shared/ui/button";
-import { useLocale, useTranslations } from "next-intl";
-import { usePayeerPayment } from "@/entities/payments/hooks/general/use-payeer-payment";
-import { useDigisellerPayment } from "@/entities/payments/hooks/general/use-digiseller-payment";
+import { PayForm } from "@/widgets/forms/pay-form";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-// const PayFormValidation = () => {
-//   const i18n = useTranslations("forms.payment.errors");
-
-//   return Yup.object({
-//     paymentMethod: Yup.string().required(i18n("selectPaymentMethod")),
-//     paymentAmount: Yup.number()
-//       .typeError(i18n("invalidAmount"))
-//       .min(1, i18n("minAmount"))
-//       .max(1500, i18n("maxAmount"))
-//       .required(i18n("enterAmount")),
-//     agreed: Yup.boolean().oneOf([true], i18n("agreeToTerms")),
-//   });
-// };
-
-// const validationSchema = PayFormValidation();
-
-export const PayForm = ({ userId }: { userId?: string }) => {
+export default function PersonalAccount() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+  const { data, isLoading, isError } = useGetUser();
   const isMobile = useIsMobile();
-  const { processWebMoneyPayment } = useWebMoneyPayment();
-  const { processPayeerPayment } = usePayeerPayment();
-  const { processDigisellerPayment } = useDigisellerPayment();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showDigisellerPopup, setShowDigisellerPopup] = useState(false);
-  const [showVisaPopup, setShowVisaPopup] = useState(false);
-  const i18n = useTranslations("forms.payment");
-  const errorI18n = useTranslations("forms.payment.errors");
-  const popupI18n = useTranslations("forms.payment.popup");
-  const locale = useLocale();
+  const i18n = useTranslations("personal-account");
+  const t = useTranslations();
+  const [isClient, setIsClient] = useState(false);
 
-  const formik = useFormik({
-    initialValues: {
-      paymentMethod: "",
-      paymentAmount: "",
-      agreed: false,
-    },
-    // validationSchema,
-    validateOnMount: false,
-    validateOnChange: true,
-    validateOnBlur: true,
-    onSubmit: async (values) => {
-      try {
-        setIsSubmitting(true);
+  // This ensures we only run client-side code after hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-        if (values.paymentMethod === "digiseller") {
-          setShowDigisellerPopup(true);
-          return; // Stop here and wait for popup interaction
-        }
+  // Handle authentication check
+  useEffect(() => {
+    // Only run this effect on the client side after hydration
+    if (!isClient) return;
 
-        if (values.paymentMethod === "webmoney") {
-          await processWebMoneyPayment(
-            values.paymentAmount,
-            values.paymentMethod
-          );
-        } else if (values.paymentMethod === "payeer") {
-          alert("Извините, оплата пока не доступна");
-          return;
-          await processPayeerPayment(values.paymentAmount);
-        } else if (values.paymentMethod === "visa") {
-          setShowVisaPopup(true);
-          return;
-        } else if (values.paymentMethod === "litecoin") {
-          await processWebMoneyPayment(
-            values.paymentAmount,
-            values.paymentMethod
-          );
-        } else if (values.paymentMethod === "bitcoin") {
-          alert("Извините, оплата пока не доступна");
-          return;
-          await processPayeerPayment(values.paymentAmount);
-        } else {
-          await processDigisellerPayment(
-            Math.floor(Number.parseFloat(values.paymentAmount)),
-            locale
-          );
-        }
-      } catch (error) {
-        console.error("Payment processing error:", error);
-        alert(
-          error instanceof Error ? error.message : errorI18n("generalError")
-        );
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-  });
-
-  const handleDigisellerContinue = async () => {
-    setShowDigisellerPopup(false);
-    try {
-      await processDigisellerPayment(
-        Math.floor(Number.parseFloat(formik.values.paymentAmount)),
-        locale
-      );
-    } catch (error) {
-      console.error("Digiseller payment processing error:", error);
-      alert(error instanceof Error ? error.message : errorI18n("generalError"));
-    } finally {
-      setIsSubmitting(false);
+    // If not authenticated, redirect immediately
+    if (!isAuthenticated()) {
+      router.replace("/");
     }
-  };
+  }, [isAuthenticated, router, isClient]);
 
-  const handleDigisellerCancel = () => {
-    setShowDigisellerPopup(false);
-    setIsSubmitting(false);
-  };
+  // If we're not on the client yet, show nothing to prevent flash of content
+  if (!isClient) {
+    return null;
+  }
 
-  const handleVisaCancel = () => {
-    setShowVisaPopup(false);
-    setIsSubmitting(false);
-  };
+  // If not authenticated, show loading while redirecting
+  if (!isAuthenticated()) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Loader />
+      </div>
+    );
+  }
 
-  const handleVisaContinue = async () => {
-    setShowVisaPopup(false);
-    try {
-      await processDigisellerPayment(
-        Math.floor(Number.parseFloat(formik.values.paymentAmount)),
-        locale
-      );
-    } catch (error) {
-      console.error("Digiseller payment processing error:", error);
-      alert(error instanceof Error ? error.message : errorI18n("generalError"));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Show loading state while fetching user data
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Loader />
+      </div>
+    );
+  }
 
-  // Handle form submission with native alert for validation errors
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  // Handle error state
+  if (isError) {
+    return (
+      <div style={{ padding: "20px", maxWidth: "500px", margin: "0 auto" }}>
+        <AlertMessage
+          type="error"
+          message={i18n("error-loading") || "Error loading user data"}
+        />
+      </div>
+    );
+  }
 
-    // Check for payment method
-    if (!formik.values.paymentMethod) {
-      alert(errorI18n("selectPaymentMethod"));
-      return;
-    }
-
-    // Check for agreement
-    if (!formik.values.agreed) {
-      alert(errorI18n("agreeToTerms"));
-      return;
-    }
-
-    // Check for payment amount
-    if (!formik.values.paymentAmount) {
-      alert(errorI18n("enterAmount"));
-      return;
-    }
-
-    // If we have a payment amount, validate it
-    const amount = Number(formik.values.paymentAmount);
-    if (isNaN(amount)) {
-      alert(errorI18n("invalidAmount"));
-      return;
-    }
-
-    if (amount < 1) {
-      alert(errorI18n("minAmount"));
-      return;
-    }
-
-    if (amount > 1500) {
-      alert(errorI18n("maxAmount"));
-      return;
-    }
-
-    // Submit the form
-    formik.handleSubmit(e);
-  };
+  // If no data is available, show an error
+  if (!data) {
+    return (
+      <div style={{ padding: "20px", maxWidth: "500px", margin: "0 auto" }}>
+        <AlertMessage
+          type="error"
+          message={i18n("no-user-data") || "No user data available"}
+        />
+      </div>
+    );
+  }
 
   return (
     <>
-      <form
-        autoComplete="off"
-        onSubmit={handleSubmit}
+      <div
+        className="personal_account"
         style={{
-          marginLeft: isMobile ? 0 : 64,
-          marginTop: isMobile ? 32 : 0,
+          display: "flex",
+          flexDirection: "row",
+          width: isMobile ? "100%" : "75%",
         }}
-        noValidate // Add this to disable browser validation
       >
-        <div className="m_title">
-          <h1 className="h1">
-            <span>{i18n("title")}</span>
-          </h1>
-        </div>
-
-        <div className="payment_method">
-          <div className="h5">
-            {i18n("paymentMethod")} <span style={{ color: "#f3d675" }}>*</span>
-          </div>
-
-          <div className="methods">
-            {[
-              { id: "visa", img: Visa, text: "VISA/MASTERCARD/MIR" },
-              { id: "webmoney", img: WebMoney, text: "WEBMONEY (WMT)" },
-              { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
-              { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
-              { id: "digiseller", img: Digiseller, text: "DIGISELLER" },
-              { id: "payeer", img: Payer, text: "PAYEER" },
-            ].map((method) => (
-              <label key={method.id} className="method">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value={method.id}
-                  checked={formik.values.paymentMethod === method.id}
-                  onChange={formik.handleChange}
-                  // Remove required attribute
-                />
-                <span className="method_cont">
-                  <span className="img">
-                    <Image
-                      src={method.img || "/placeholder.svg"}
-                      alt={method.text}
-                      width={80}
-                      height={80}
-                    />
-                  </span>
-                  <span className="txt">{method.text}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="sum_line">
-          <div className="h5">
-            {i18n("paymentAmount")} <span style={{ color: "#f3d675" }}>*</span>
-          </div>
-
-          <div className="form">
-            <input
-              name="paymentAmount"
-              type="number"
-              min={1}
-              max={1500}
-              placeholder="1500$"
-              value={formik.values.paymentAmount}
-              onChange={formik.handleChange}
-              // Keep required for this input as it's a standard input
-            />
-            <Button
-              type="submit"
-              className="btn_next"
-              style={{
-                opacity: isSubmitting ? 0.7 : 1,
-                cursor: isSubmitting ? "not-allowed" : "pointer",
-              }}
-              name={isSubmitting ? i18n("processing") : i18n("continue")}
-            />
-          </div>
-        </div>
-
-        {/* Checkbox for agreement - positioned at the bottom */}
-        <div
-          className="agree_faq"
-          style={{
-            marginLeft: 0,
-            marginTop: "16px",
-          }}
-        >
-          <label className="checkbox">
-            <input
-              className="checkbox-inp"
-              name="agreed"
-              type="checkbox"
-              checked={formik.values.agreed}
-              onChange={formik.handleChange}
-              // Remove required attribute
-            />
-            <span className="checkbox-box"></span>
-            <span className="checkbox-text">{i18n("agreement")}</span>
-          </label>
-        </div>
-      </form>
-
-      {showDigisellerPopup && (
+        <title>{t("personal-accounts.title")}</title>
         <div
           style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
+            flexDirection: "column",
+            width: "100%",
           }}
         >
           <div
             style={{
-              backgroundColor: "#1a1a1a",
-              borderRadius: "8px",
-              padding: "24px",
-              maxWidth: "400px",
-              width: "90%",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-              border: "1px solid #f3d675",
+              marginLeft: isMobile ? 0 : 64,
+              marginBottom: 32,
             }}
           >
-            <h3
-              style={{
-                color: "#f3d675",
-                marginTop: 0,
-                marginBottom: "16px",
-                fontSize: "18px",
-              }}
-            >
-              Digiseller
-            </h3>
-            <p
-              style={{
-                color: "#ffffff",
-                marginBottom: "24px",
-                fontSize: "16px",
-                lineHeight: 1.5,
-              }}
-            >
-              {popupI18n("copyUserIdText")}
-              <br />{" "}
-              <strong style={{ color: "#f3d675" }}>
-                {userId || "Loading..."}
-              </strong>
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "12px",
-              }}
-            >
-              <button
-                onClick={handleDigisellerCancel}
-                style={{
-                  backgroundColor: "transparent",
-                  color: "#f3d675",
-                  border: "1px solid #f3d675",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                }}
-              >
-                {popupI18n("cancel")}
-              </button>
-              <button
-                onClick={handleDigisellerContinue}
-                style={{
-                  backgroundColor: "#f3d675",
-                  color: "#000000",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                {popupI18n("continue")}
-              </button>
-            </div>
+            {data.isVerified === false && (
+              <AlertMessage
+                type="warning"
+                isEmail={true}
+                message={i18n("verify-alert")}
+              />
+            )}
           </div>
-        </div>
-      )}
-      {showVisaPopup && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
           <div
+            className="main_cont"
             style={{
-              backgroundColor: "#1a1a1a",
-              borderRadius: "8px",
-              padding: "24px",
-              maxWidth: "400px",
-              width: "90%",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
-              border: "1px solid #f3d675",
+              width: "100%",
             }}
           >
-            <h3
-              style={{
-                color: "#f3d675",
-                marginTop: 0,
-                marginBottom: "16px",
-                fontSize: "18px",
-              }}
-            >
-              VISA
-            </h3>
-            <p
-              style={{
-                color: "#ffffff",
-                marginBottom: "24px",
-                fontSize: "16px",
-                lineHeight: 1.5,
-              }}
-            >
-              {popupI18n("copyUserIdText")}
-              <br />{" "}
-              <strong style={{ color: "#f3d675" }}>
-                {userId || "Loading..."}
-              </strong>
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "12px",
-              }}
-            >
-              <button
-                onClick={handleVisaCancel}
-                style={{
-                  backgroundColor: "transparent",
-                  color: "#f3d675",
-                  border: "1px solid #f3d675",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                }}
-              >
-                {popupI18n("cancel")}
-              </button>
-              <button
-                onClick={handleVisaContinue}
-                style={{
-                  backgroundColor: "#f3d675",
-                  color: "#000000",
-                  border: "none",
-                  padding: "8px 16px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                {popupI18n("continue")}
-              </button>
-            </div>
+            {data.id && <PayForm userId={data.id as string} />}
           </div>
         </div>
-      )}
+      </div>
     </>
   );
-};
+}
