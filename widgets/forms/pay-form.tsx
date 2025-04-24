@@ -69,7 +69,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
             values.paymentMethod
           );
         } else if (values.paymentMethod === "payeer") {
-          await processPayeerPayment(values.paymentAmount);
+          // await processPayeerPayment(values.paymentAmount);
           return;
           await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "visa") {
@@ -81,7 +81,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
             values.paymentMethod
           );
         } else if (values.paymentMethod === "bitcoin") {
-          await processPayeerPayment(values.paymentAmount);
+          // await processPayeerPayment(values.paymentAmount);
           return;
           await processPayeerPayment(values.paymentAmount);
         } else {
