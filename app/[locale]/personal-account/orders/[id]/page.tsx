@@ -85,7 +85,9 @@ export default function OrderDetailPage() {
           // Store the discount
           setAppliedDiscount(data.coupon.discount);
           // Show success message
-          setSuccessMessage(`Coupon applied: ${data.coupon.discount}% discount`);
+          setSuccessMessage(
+            `Coupon applied: ${data.coupon.discount}% discount`
+          );
         } else {
           // Reset discount if coupon is invalid
           setAppliedDiscount(null);
@@ -101,6 +103,9 @@ export default function OrderDetailPage() {
   };
 
   const handleContinue = () => {
+    if (isFinishing) {
+      return;
+    }
     const payload = {
       orderId: orderId,
       promocode: couponCode,
