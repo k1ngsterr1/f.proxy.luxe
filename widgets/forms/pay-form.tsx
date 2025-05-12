@@ -205,7 +205,7 @@ export const PayForm = ({ userId }: { userId?: string }) => {
           <div className="methods">
             {[
               { id: "visa", img: Visa, text: "VISA/MASTERCARD/MIR" },
-              { id: "webmoney", img: WebMoney, text: "WEBMONEY (USD)" },
+              { id: "webmoney", img: WebMoney, text: "WEBMONEY (USDT)" },
               { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
               { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
               { id: "digiseller", img: Digiseller, text: "DIGISELLER" },
