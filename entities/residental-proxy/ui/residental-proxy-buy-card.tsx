@@ -244,7 +244,12 @@ export const ResidentalProxyBuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         {validationError && <div style={errorStyle}>{validationError}</div>}
-        <div className="buy-item__price">
+        <div
+          className="buy-item__price"
+          style={{
+            marginTop: 45,
+          }}
+        >
           {i18n("price")}
           <span>
             {selectedTariff
