@@ -247,7 +247,7 @@ export const ResidentalProxyBuyCard = () => {
         <div
           className="buy-item__price"
           style={{
-            marginTop: 45,
+            marginTop: 42,
           }}
         >
           {i18n("price")}
