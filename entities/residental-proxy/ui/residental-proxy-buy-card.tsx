@@ -151,7 +151,11 @@ export const ResidentalProxyBuyCard = () => {
         </h4>
         <div style={selectWrapperStyle}>
           <select className="buy-item__select" style={selectStyle}>
-            <option value="∞">
+            <option value="∞">{i18n("option")}</option>
+            <option
+              value="Выбор страны доступен после покупки тарифа в личном кабинете.
+"
+            >
               Выбор страны доступен после покупки тарифа в личном кабинете.
             </option>
           </select>
@@ -167,7 +171,8 @@ export const ResidentalProxyBuyCard = () => {
         </h4>
         <div style={selectWrapperStyle}>
           <select className="buy-item__select" style={selectStyle}>
-            <option value="∞">
+            <option value="∞">∞</option>
+            <option value="Создавайте любое кол-во прокси после оплаты тарифа в личном кабинете.">
               Создавайте любое кол-во прокси после оплаты тарифа в личном
               кабинете.
             </option>
