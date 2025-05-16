@@ -152,8 +152,7 @@ export const ResidentalProxyBuyCard = () => {
         <div style={selectWrapperStyle}>
           <select className="buy-item__select" style={selectStyle}>
             <option value="∞">
-              Создавайте любое кол-во прокси после оплаты тарифа в личном
-              кабинете.
+              Выбор страны доступен после покупки тарифа в личном кабинете.
             </option>
           </select>
           <ChevronDown style={chevronStyle} size={16} />
