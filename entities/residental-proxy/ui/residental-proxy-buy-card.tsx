@@ -156,7 +156,7 @@ export const ResidentalProxyBuyCard = () => {
               value="Выбор страны доступен после покупки тарифа в личном кабинете.
 "
             >
-              Выбор страны доступен после покупки тарифа в личном кабинете.
+              {i18n("country_text")}{" "}
             </option>
           </select>
           <ChevronDown style={chevronStyle} size={16} />
