@@ -173,8 +173,7 @@ export const ResidentalProxyBuyCard = () => {
           <select className="buy-item__select" style={selectStyle}>
             <option value="∞">∞</option>
             <option value="Создавайте любое кол-во прокси после оплаты тарифа в личном кабинете.">
-              Создавайте любое кол-во прокси после оплаты тарифа в личном
-              кабинете.
+              {i18n("create_text")}
             </option>
           </select>
           <ChevronDown style={chevronStyle} size={16} />
