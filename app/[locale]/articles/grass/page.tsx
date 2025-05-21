@@ -103,7 +103,7 @@ export default function ArticlePage() {
   <p><strong>Нет!</strong> Завершилась только первая эпоха, сейчас идёт вторая, поэтому ещё вполне можно успеть накопить токены GRASS.</p>
 
   <h2>🚀 Начинаем фармить:</h2>
-  <ol>
+  <ul>
     <li>Перейдите на <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">сайт</a> и пройдите простую регистрацию.</li>
     <li>Создайте кошелёк Solana:
       <ul>
@@ -117,7 +117,7 @@ export default function ArticlePage() {
     </li>
     <li>Пополните кошелёк минимум на 0.001 SOL. GRASS проверит баланс, но не спишет средства.</li>
     <li>Привяжите кошелёк на странице GRASS в разделе "Rewards" и подтвердите email.</li>
-  </ol>
+  </ul>
 
   <h3>💸 Где взять SOL?</h3>
   <p>Можно использовать обменники (минимум $0.15) или написать мне — перевести 20₽ на Payeer, и я отправлю вам 0.001 SOL.</p>
@@ -152,7 +152,7 @@ export default function ArticlePage() {
   <p><strong>No!</strong> The first epoch has ended, the second is ongoing. You still have time to earn GRASS tokens.</p>
 
   <h2>🚀 Let’s Start Farming:</h2>
-  <ol>
+  <ul>
     <li>Go to the GRASS <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">website</a> and register.</li>
     <li>Create a Solana wallet:
       <ul>
@@ -166,7 +166,7 @@ export default function ArticlePage() {
     </li>
     <li>Top up your wallet with at least 0.001 SOL. GRASS will check for balance but won’t withdraw.</li>
     <li>Link the wallet in the "Rewards" section and confirm your email.</li>
-  </ol>
+  </ul>
 
   <h3>💸 Where to Get SOL?</h3>
   <p>You can use exchanges (minimum $0.15) or message me — send 20 RUB via Payeer, and I’ll send 0.001 SOL to your wallet.</p>
