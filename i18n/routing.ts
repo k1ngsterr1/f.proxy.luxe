@@ -6,7 +6,11 @@ export const routing = defineRouting({
   defaultLocale: "ru",
   pathnames: {
     "/": "/",
+    "/buy-proxy": "/buy-proxy",
     "/auth": "/auth",
+    "/prices": "/prices",
+    "/partners": "/partners",
+    "/articles": "/articles",
     "/auth/login": "/auth/login",
     "/auth/register": "/auth/register",
     "/auth/forgot-password": "/auth/forgot-password",
