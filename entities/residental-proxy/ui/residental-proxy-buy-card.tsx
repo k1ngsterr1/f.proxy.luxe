@@ -152,6 +152,12 @@ export const ResidentalProxyBuyCard = () => {
         <div style={selectWrapperStyle}>
           <select className="buy-item__select" style={selectStyle}>
             <option value="∞">{i18n("option")}</option>
+            <option
+              value="Выбор страны доступен после покупки тарифа в личном кабинете.
+"
+            >
+              {i18n("country_text")}{" "}
+            </option>
           </select>
           <ChevronDown style={chevronStyle} size={16} />
         </div>
@@ -166,6 +172,9 @@ export const ResidentalProxyBuyCard = () => {
         <div style={selectWrapperStyle}>
           <select className="buy-item__select" style={selectStyle}>
             <option value="∞">∞</option>
+            <option value="Создавайте любое кол-во прокси после оплаты тарифа в личном кабинете.">
+              {i18n("create_text")}
+            </option>
           </select>
           <ChevronDown style={chevronStyle} size={16} />
         </div>
@@ -244,7 +253,12 @@ export const ResidentalProxyBuyCard = () => {
           <ChevronDown style={chevronStyle} size={16} />
         </div>
         {validationError && <div style={errorStyle}>{validationError}</div>}
-        <div className="buy-item__price">
+        <div
+          className="buy-item__price"
+          style={{
+            marginTop: 42,
+          }}
+        >
           {i18n("price")}
           <span>
             {selectedTariff

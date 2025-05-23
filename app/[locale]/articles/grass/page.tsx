@@ -92,7 +92,7 @@ export default function ArticlePage() {
   const fallbackContentRu = `
   <h1><strong>GRASS - как заработать, используя прокси и анти-детект браузер</strong></h1>
 
-  <img src="https://media-hosting.imagekit.io/b4c89f872c9142d8/grass_cover.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OfJcFusGra38mI4d16hte5K4XllRFhEGhp04P4aV-1b3k8cz5AVoYTPU1N~QcO0bnsPierT8QbJ7lXQLWuOTWphdTUhH7Tgf5uWf41wWw425cTQ4qRbqEustAnYq268D6KkVXUfzfEmSX3DP1-qBz3Fw4hywBgcnm7zTqT3wApjxLDBQR9gMLBEp694yxkNHEvQox4-d1WlEw7BHWXb-Fcx8k1EMpQ3qDCm~4DPT1DEBma3pUuGVKYdYHdGp8VpkX0t54hDMwif7xIrPmbnrgog99d9bWocqpSD9MmJ4jFEnw5kg6QIoeFeWErRfks2GQhlKhBQWk3bnDmJ6wQC3Vw__" alt="GRASS проект" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://i.ibb.co/vx5Vys9t/grass-cover.jpg" alt="GRASS проект" style="width:100%; border-radius:8px; margin: 20px 0;" />
 
   <p><strong>GRASS</strong> — легендарный и надежный проект среди DePIN-проектов. После листинга GRASS приятно удивил многих, поскольку пользователи смогли легко заработать 100–200 долларов США на каждом аккаунте. Для этого было достаточно установить расширение на свой компьютер, ноутбук или сервер.</p>
 
@@ -103,26 +103,26 @@ export default function ArticlePage() {
   <p><strong>Нет!</strong> Завершилась только первая эпоха, сейчас идёт вторая, поэтому ещё вполне можно успеть накопить токены GRASS.</p>
 
   <h2>🚀 Начинаем фармить:</h2>
-  <ol>
+  <ul>
     <li>Перейдите на <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">сайт</a> и пройдите простую регистрацию.</li>
     <li>Создайте кошелёк Solana:
-      <ol>
+      <ul>
         <li>Откройте <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">расширение кошелька Solana</a> в <a href="https://dolphin-anty.net/?ref=1329911&utm_source=madia&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=article">антидетект-браузере</a> и установите его.</li>
         <li>Запустите расширение, нажмите "Создать новый кошелёк".</li>
         <li>Скопируйте и сохраните сид-фразу (12 слов) — без неё восстановление невозможно.</li>
         <li>Нажмите "Я сохранил(а) свою фразу", вставьте фразу и нажмите "Продолжить".</li>
         <li>Придумайте и введите пароль, нажмите "Продолжить".</li>
         <li>Выберите "Быстрая настройка" → "Укажите Solana".</li>
-      </ol>
+      </ul>
     </li>
     <li>Пополните кошелёк минимум на 0.001 SOL. GRASS проверит баланс, но не спишет средства.</li>
     <li>Привяжите кошелёк на странице GRASS в разделе "Rewards" и подтвердите email.</li>
-  </ol>
+  </ul>
 
   <h3>💸 Где взять SOL?</h3>
   <p>Можно использовать обменники (минимум $0.15) или написать мне — перевести 20₽ на Payeer, и я отправлю вам 0.001 SOL.</p>
 
-  <img src="https://media-hosting.imagekit.io/78c04c11869c4ee4/grass_2.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Wq5uIS9kiwlznqYsCwxctCz3NlFn5HXyCGkOQUmGA06ySZer1XCBV1NUA~tx22GsRm25V45CMzRuqG6l1I6SCc6u18vM7gQvihtVmgSMoc9Z~htAPx38-I3sc6l5pNh97mSMzRmNCUmrEdJEk~N4cHK0JNJLFFjySagiMUFgHHEwvfDoz1BWqXel7mY6h~irfKr~eL3vDmT~1Lk4Vd2Kuw0HpYWz9mICyFX9YbpRUFvM66-c-P7m4~F1M8NMF4Zl41ja-pSSZ-YjpmX4MBO8cWNVuvMXmN7yRVzATsoairWTsvgiZvz8z5IuYxiG4Vo6-TQDhlI2JcY1jeVcetErHw__" alt="Способы фарма GRASS" style="width:50%;  border-radius:8px; margin: 20px 0;" />
+  <img src="https://i.ibb.co/Xkdq2NKv/grass-2.jpg" alt="Способы фарма GRASS" style="width:50%;  border-radius:8px; margin: 20px 0;" />
 
   <h2>✅ Фармим:</h2>
   <ul>
@@ -141,7 +141,7 @@ export default function ArticlePage() {
   const fallbackContentEn = `
   <h1><strong>GRASS – How to Earn Using Proxies and Anti-Detect Browser</strong></h1>
 
-  <img src="https://media-hosting.imagekit.io/b4c89f872c9142d8/grass_cover.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OfJcFusGra38mI4d16hte5K4XllRFhEGhp04P4aV-1b3k8cz5AVoYTPU1N~QcO0bnsPierT8QbJ7lXQLWuOTWphdTUhH7Tgf5uWf41wWw425cTQ4qRbqEustAnYq268D6KkVXUfzfEmSX3DP1-qBz3Fw4hywBgcnm7zTqT3wApjxLDBQR9gMLBEp694yxkNHEvQox4-d1WlEw7BHWXb-Fcx8k1EMpQ3qDCm~4DPT1DEBma3pUuGVKYdYHdGp8VpkX0t54hDMwif7xIrPmbnrgog99d9bWocqpSD9MmJ4jFEnw5kg6QIoeFeWErRfks2GQhlKhBQWk3bnDmJ6wQC3Vw__" alt="GRASS project overview" style="width:100%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://i.ibb.co/vx5Vys9t/grass-cover.jpg" alt="GRASS project overview" style="width:100%; border-radius:8px; margin: 20px 0;" />
 
   <p><strong>GRASS</strong> is a legendary and reliable project among DePIN protocols. After listing, GRASS surprised many — users easily earned $100–$200 per account by simply installing a browser extension on a computer, laptop, or server.</p>
 
@@ -152,26 +152,26 @@ export default function ArticlePage() {
   <p><strong>No!</strong> The first epoch has ended, the second is ongoing. You still have time to earn GRASS tokens.</p>
 
   <h2>🚀 Let’s Start Farming:</h2>
-  <ol>
+  <ul>
     <li>Go to the GRASS <a href="https://app.getgrass.io/register?referralCode=yQboSnUusc078-M">website</a> and register.</li>
     <li>Create a Solana wallet:
-      <ol>
+      <ul>
         <li>Open the <a href="https://chromewebstore.google.com/detail/solflare-wallet/bhhhlbepdkbapadjdnnojkbgioiodbic?hl=ru&utm_source=ext_sidebar">extension for Solana</a> in an <a href="https://dolphin-anty.net/?ref=1329911&utm_source=madia&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=article">anti-detect browser</a> and install it.</li>
         <li>Launch the extension, click "Create new wallet".</li>
         <li>Copy and save the seed phrase (12 words) — you can't restore without it.</li>
         <li>Click "I saved my phrase", paste it, and continue.</li>
         <li>Create a password, save it, and click continue.</li>
         <li>Choose "Quick setup" → "Select Solana".</li>
-      </ol>
+      </ul>
     </li>
     <li>Top up your wallet with at least 0.001 SOL. GRASS will check for balance but won’t withdraw.</li>
     <li>Link the wallet in the "Rewards" section and confirm your email.</li>
-  </ol>
+  </ul>
 
   <h3>💸 Where to Get SOL?</h3>
   <p>You can use exchanges (minimum $0.15) or message me — send 20 RUB via Payeer, and I’ll send 0.001 SOL to your wallet.</p>
 
-  <img src="https://media-hosting.imagekit.io/78c04c11869c4ee4/grass_2.jpg?Expires=1839674543&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Wq5uIS9kiwlznqYsCwxctCz3NlFn5HXyCGkOQUmGA06ySZer1XCBV1NUA~tx22GsRm25V45CMzRuqG6l1I6SCc6u18vM7gQvihtVmgSMoc9Z~htAPx38-I3sc6l5pNh97mSMzRmNCUmrEdJEk~N4cHK0JNJLFFjySagiMUFgHHEwvfDoz1BWqXel7mY6h~irfKr~eL3vDmT~1Lk4Vd2Kuw0HpYWz9mICyFX9YbpRUFvM66-c-P7m4~F1M8NMF4Zl41ja-pSSZ-YjpmX4MBO8cWNVuvMXmN7yRVzATsoairWTsvgiZvz8z5IuYxiG4Vo6-TQDhlI2JcY1jeVcetErHw__" alt="Farming methods" style="width:50%; border-radius:8px; margin: 20px 0;" />
+  <img src="https://i.ibb.co/Xkdq2NKv/grass-2.jpg" alt="Farming methods" style="width:50%; border-radius:8px; margin: 20px 0;" />
 
   <h2>✅ Start Farming:</h2>
   <ul>
