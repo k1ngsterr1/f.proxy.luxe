@@ -438,14 +438,7 @@ export default function ProxyPage() {
                   "ProxyList onSelectProxy called with proxyId:",
                   proxyId
                 );
-                // Find the proxy with this ID and use the handleSelectProxy function
-                const proxy = allProxies.find((p) => p.id === proxyId);
-                console.log("Found proxy:", proxy);
-                if (proxy) {
-                  handleSelectProxy(proxy);
-                } else {
-                  console.error("Proxy not found for ID:", proxyId);
-                }
+                handleSelectProxy(proxyId);
               }}
             />
           </div>

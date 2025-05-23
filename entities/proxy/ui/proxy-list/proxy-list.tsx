@@ -134,6 +134,9 @@ const ProxyList: React.FC<Props> = ({
     prolongError,
   } = useProlongProxy();
 
+  // Update the handleCheckboxChange function to ensure we're only selecting unique proxies by order_id
+  // Replace the existing handleCheckboxChange function with this updated version:
+
   // Function to handle checkbox selection
   const handleCheckboxChange = (proxyId: string) => {
     console.log("handleCheckboxChange called with proxyId:", proxyId);
@@ -155,9 +158,9 @@ const ProxyList: React.FC<Props> = ({
     const orderId = proxy.order_id || proxy.orderId;
     console.log("Order ID:", orderId);
 
+    // If no order_id, handle as individual selection
     if (!orderId) {
       console.log("No order_id found, using single selection");
-      // Fall back to single selection if no order_id is available
       if (onSelectProxy) {
         onSelectProxy(proxyId);
       } else {
@@ -174,45 +177,48 @@ const ProxyList: React.FC<Props> = ({
       return;
     }
 
-    // Find all proxies with the same order_id
-    const relatedProxies = uniqueProxies.filter(
-      (p) => (p.order_id || p.orderId) === orderId
-    );
-    console.log("Related proxies with same order_id:", relatedProxies);
-
-    // Check if the clicked proxy is currently selected
-    const isSelected = onSelectProxy
-      ? externalSelectedProxies?.includes(proxyId)
-      : internalSelectedProxies.has(proxyId);
+    // Check if any proxy with this order_id is currently selected
+    const isOrderSelected = onSelectProxy
+      ? externalSelectedProxies?.some((id) => {
+          const p = uniqueProxies.find((proxy) => proxy.id === id);
+          return p && (p.order_id || p.orderId) === orderId;
+        })
+      : Array.from(internalSelectedProxies).some((id) => {
+          const p = uniqueProxies.find((proxy) => proxy.id === id);
+          return p && (p.order_id || p.orderId) === orderId;
+        });
 
     // If using external selection handler
     if (onSelectProxy) {
       console.log("Using external onSelectProxy handler");
-      // For external selection, we need to call the handler for each related proxy
-      relatedProxies.forEach((relatedProxy) => {
-        const relatedIsSelected = externalSelectedProxies?.includes(
-          relatedProxy.id
-        );
-        // Only toggle if the selection state doesn't match the target state
-        if (relatedIsSelected !== !isSelected) {
-          onSelectProxy(relatedProxy.id);
-        }
-      });
+      // Just pass the current proxy ID - the parent component will handle uniqueness
+      onSelectProxy(proxyId);
     } else {
       // Using internal selection
       console.log("Using internal selection");
       setInternalSelectedProxies((prev) => {
         const newSelected = new Set(prev);
 
-        // If the clicked proxy is selected, remove all related proxies
-        // Otherwise, add all related proxies
-        relatedProxies.forEach((relatedProxy) => {
-          if (isSelected) {
-            newSelected.delete(relatedProxy.id);
-          } else {
-            newSelected.add(relatedProxy.id);
-          }
-        });
+        if (isOrderSelected) {
+          // Remove all proxies with this order_id
+          Array.from(newSelected).forEach((id) => {
+            const p = uniqueProxies.find((proxy) => proxy.id === id);
+            if (p && (p.order_id || p.orderId) === orderId) {
+              newSelected.delete(id);
+            }
+          });
+        } else {
+          // Add only this proxy from this order_id
+          // First remove any existing proxies with this order_id (shouldn't be any, but just in case)
+          Array.from(newSelected).forEach((id) => {
+            const p = uniqueProxies.find((proxy) => proxy.id === id);
+            if (p && (p.order_id || p.orderId) === orderId) {
+              newSelected.delete(id);
+            }
+          });
+          // Then add this proxy
+          newSelected.add(proxyId);
+        }
 
         return newSelected;
       });
