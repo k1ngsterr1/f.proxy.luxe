@@ -207,8 +207,31 @@ const ProxyList: React.FC<Props> = ({
 
     console.log(
       "Starting batch prolong for proxies:",
-      selectedProxiesArray.map((p) => ({ id: p.id, order_id: p.order_id }))
+      selectedProxiesArray.map((p) => ({
+        id: p.id,
+        order_id: p.order_id,
+        orderId: p.orderId,
+      }))
     );
+
+    // For IPv6 proxies, get unique order IDs only
+    let uniqueOrderIds: string[] = [];
+    if (type === "ipv6") {
+      const orderIdSet = new Set<string>();
+      selectedProxiesArray.forEach((proxy) => {
+        const orderId = proxy.orderId || proxy.order_id;
+        if (orderId) {
+          orderIdSet.add(orderId);
+        }
+      });
+      uniqueOrderIds = Array.from(orderIdSet);
+      console.log("IPv6 unique order IDs:", uniqueOrderIds);
+    } else {
+      // For other proxy types, use all selected proxies
+      uniqueOrderIds = selectedProxiesArray
+        .map((proxy) => proxy.orderId || proxy.order_id)
+        .filter((orderId): orderId is string => Boolean(orderId));
+    }
 
     // Track progress
     let successCount = 0;
@@ -218,14 +241,16 @@ const ProxyList: React.FC<Props> = ({
       failed: [],
     };
 
-    // Process all proxies in parallel for better performance
-    const prolongPromises = selectedProxiesArray.map(async (proxy) => {
-      // For ISP/IPv6 proxies, use orderId; for resident proxies, use order_id
-      const orderId = proxy.orderId || proxy.order_id;
+    // Process requests based on unique order IDs
+    const prolongPromises = uniqueOrderIds.map(async (orderId, index) => {
+      // For IPv6, use the first proxy with this order ID as representative
+      const representativeProxy = selectedProxiesArray.find(
+        (proxy) => (proxy.orderId || proxy.order_id) === orderId
+      );
 
-      if (!orderId) {
-        console.warn(`Proxy ${proxy.id} has no orderId/order_id, skipping`);
-        results.failed.push(proxy.id);
+      if (!representativeProxy) {
+        console.warn(`No representative proxy found for order ID: ${orderId}`);
+        results.failed.push(orderId);
         return Promise.resolve();
       }
 
@@ -233,19 +258,19 @@ const ProxyList: React.FC<Props> = ({
         prolongProxyHook(
           {
             orderId: orderId as any,
-            type: proxy.type,
-            id: proxy.id,
+            type: representativeProxy.type,
+            id: representativeProxy.id,
             periodId: prolongPeriod,
           },
           {
             onSuccess: () => {
-              console.log(`Successfully prolonged proxy ${proxy.id}`);
-              results.success.push(proxy.id);
+              console.log(`Successfully prolonged order ${orderId}`);
+              results.success.push(orderId);
               resolve();
             },
             onError: (error) => {
-              console.error(`Failed to prolong proxy ${proxy.id}:`, error);
-              results.failed.push(proxy.id);
+              console.error(`Failed to prolong order ${orderId}:`, error);
+              results.failed.push(orderId);
               resolve();
             },
           }
@@ -265,6 +290,7 @@ const ProxyList: React.FC<Props> = ({
         results,
       });
 
+      // Show notification
       setNotification({
         show: true,
         message: t("prolongBatchResult", {
@@ -293,6 +319,7 @@ const ProxyList: React.FC<Props> = ({
         showRefresh: false,
       });
     } finally {
+      // Always close the popup and reset state
       setProlongProxy(null);
       setIsSubmittingBatchProlong(false);
     }

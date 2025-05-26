@@ -123,8 +123,8 @@ export default function ProxyPage() {
       const flatProxies: any[] = [];
 
       proxies.data.items.forEach((item: ApiProxy) => {
-        //@ts-ignore
-        const orderId = item.order_id || "unknown";
+        // For IPv6 and ISP proxies, use orderId; for resident proxies, use order_id
+        const orderId = item.orderId || item.order_id || "unknown";
 
         if (proxyType === "resident" && item.package_list) {
           item.package_list.forEach((pkg) => {
@@ -150,6 +150,7 @@ export default function ProxyPage() {
               package_key: item.package_info.package_key,
               rotation: pkg.rotation,
               order_id: orderId,
+              orderId: item.orderId, // Keep both for compatibility
               order_number: item.order_number || "",
               //@ts-ignore
               can_prolong: item.can_prolong || false,
@@ -164,6 +165,7 @@ export default function ProxyPage() {
             login: item.login || "",
             password: item.password || "",
             order_id: orderId,
+            orderId: item.orderId, // Keep both for compatibility
             order_number: item.order_number || "",
             //@ts-ignore
             can_prolong: item.can_prolong || false,

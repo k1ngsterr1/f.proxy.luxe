@@ -32,8 +32,7 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
     // Auto-close after duration (only if not a delete confirmation)
     if (!showDeleteConfirmation) {
       const timer = setTimeout(() => {
-        setIsVisible(false);
-        setTimeout(onClose, 300); // Allow time for fade-out animation
+        handleClose();
       }, duration);
 
       return () => {
@@ -41,6 +40,27 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
       };
     }
   }, [duration, onClose, showDeleteConfirmation]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    // Immediate close without animation delay for better UX
+    setTimeout(onClose, 100);
+  };
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
+  const handleCancel = () => {
+    handleClose();
+  };
+
+  const handleConfirmDelete = () => {
+    if (onDeleteConfirm) {
+      onDeleteConfirm();
+    }
+    handleClose();
+  };
 
   // Get text color based on type
   const getTextColor = () => {
@@ -53,23 +73,6 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
       default:
         return "#f3d675";
     }
-  };
-
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
-  const handleCancel = () => {
-    setIsVisible(false);
-    setTimeout(onClose, 300); // Allow time for fade-out animation
-  };
-
-  const handleConfirmDelete = () => {
-    if (onDeleteConfirm) {
-      onDeleteConfirm();
-    }
-    setIsVisible(false);
-    setTimeout(onClose, 300);
   };
 
   // Create overlay backdrop

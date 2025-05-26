@@ -21,6 +21,8 @@ export interface Proxy {
   package_info?: any;
   package_list?: any[];
   order_number: string;
+  order_id: string | number;
+  orderId: string | number;
 }
 
 export interface ProxyListResponse {
