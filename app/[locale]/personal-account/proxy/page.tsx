@@ -262,6 +262,34 @@ export default function ProxyPage() {
     setSelectedProxies([]);
   };
 
+  // Handle select all functionality - simplified to work directly with proxy IDs
+  const handleSelectAll = useCallback(() => {
+    console.log("handleSelectAll called");
+    console.log("Current selected proxies:", selectedProxies);
+    console.log("All proxies count:", allProxies.length);
+
+    // Check if all proxies are currently selected
+    const allSelected =
+      allProxies.length > 0 && selectedProxies.length === allProxies.length;
+
+    if (allSelected) {
+      console.log("All proxies are selected, deselecting all");
+      // Deselect all
+      setSelectedProxies([]);
+      setSelectedOrderIds([]);
+    } else {
+      console.log("Not all proxies are selected, selecting all");
+      // Select all
+      const allProxyIds = allProxies.map((p) => p.id);
+      const allOrderIds = [
+        ...new Set(allProxies.map((p) => p.order_id).filter(Boolean)),
+      ];
+
+      setSelectedProxies(allProxyIds);
+      setSelectedOrderIds(allOrderIds);
+    }
+  }, [allProxies, selectedProxies]);
+
   const containerStyle = isSmallerTablet
     ? "400px"
     : isTablet
@@ -438,8 +466,16 @@ export default function ProxyPage() {
                   "ProxyList onSelectProxy called with proxyId:",
                   proxyId
                 );
-                handleSelectProxy(proxyId);
+
+                // Find the proxy object from the ID
+                const proxy = allProxies.find((p) => p.id === proxyId);
+                if (proxy) {
+                  handleSelectProxy(proxy);
+                } else {
+                  console.error("Proxy not found with ID:", proxyId);
+                }
               }}
+              onSelectAll={handleSelectAll}
             />
           </div>
         </div>

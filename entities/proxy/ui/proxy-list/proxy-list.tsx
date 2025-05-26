@@ -24,6 +24,7 @@ interface ProxyListItem {
   login: string;
   password: string;
 }
+
 interface Proxy {
   id: string;
   ip: string;
@@ -52,6 +53,7 @@ export interface Props {
   availableCountries?: { code: string; name: string }[];
   selectedProxies?: string[];
   onSelectProxy?: (proxyId: string) => void;
+  onSelectAll?: () => void;
 }
 
 const ProxyList: React.FC<Props> = ({
@@ -62,6 +64,7 @@ const ProxyList: React.FC<Props> = ({
   availableCountries = [],
   selectedProxies: externalSelectedProxies,
   onSelectProxy,
+  onSelectAll,
 }) => {
   const t = useTranslations("proxyList");
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
@@ -76,16 +79,13 @@ const ProxyList: React.FC<Props> = ({
     proxyToDelete?: Proxy;
   } | null>(null);
 
-  // Add a new state for the prolong popup
   const [prolongProxy, setProlongProxy] = useState<Proxy | null>(null);
   const [prolongPeriod, setProlongPeriod] = useState<string>("1m");
 
-  // Add states for checkbox selection
+  // Simplified selection state - just track selected proxy IDs
   const [internalSelectedProxies, setInternalSelectedProxies] = useState<
     Set<string>
   >(new Set());
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [batchActionMenuOpen, setBatchActionMenuOpen] = useState(false);
   const [isSubmittingBatchProlong, setIsSubmittingBatchProlong] =
     useState(false);
 
@@ -109,19 +109,10 @@ const ProxyList: React.FC<Props> = ({
     }
   }, [proxies]);
 
-  // Update selectAllChecked when all proxies are selected
-  useEffect(() => {
-    if (
-      uniqueProxies.length > 0 &&
-      (externalSelectedProxies
-        ? externalSelectedProxies.length === uniqueProxies.length
-        : internalSelectedProxies.size === uniqueProxies.length)
-    ) {
-      setSelectAllChecked(true);
-    } else {
-      setSelectAllChecked(false);
-    }
-  }, [externalSelectedProxies, internalSelectedProxies, uniqueProxies]);
+  // Calculate if all proxies are selected
+  const allSelected =
+    uniqueProxies.length > 0 && selectedProxies.length === uniqueProxies.length;
+  const someSelected = selectedProxies.length > 0;
 
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
@@ -134,127 +125,53 @@ const ProxyList: React.FC<Props> = ({
     prolongError,
   } = useProlongProxy();
 
-  // Update the handleCheckboxChange function to ensure we're only selecting unique proxies by order_id
-  // Replace the existing handleCheckboxChange function with this updated version:
-
-  // Function to handle checkbox selection
+  // Simplified checkbox change handler
   const handleCheckboxChange = (proxyId: string) => {
     console.log("handleCheckboxChange called with proxyId:", proxyId);
 
-    // Find the proxy with this ID
-    const proxy = uniqueProxies.find((p) => p.id === proxyId);
-
-    if (!proxy) {
-      console.error("Proxy not found with ID:", proxyId);
-      return;
-    }
-
-    // Skip if it's a residential proxy
-    if (proxy.type === "resident") {
-      return;
-    }
-
-    console.log("Found proxy:", proxy);
-    const orderId = proxy.order_id || proxy.orderId;
-    console.log("Order ID:", orderId);
-
-    // If no order_id, handle as individual selection
-    if (!orderId) {
-      console.log("No order_id found, using single selection");
-      if (onSelectProxy) {
-        onSelectProxy(proxyId);
-      } else {
-        setInternalSelectedProxies((prev) => {
-          const newSelected = new Set(prev);
-          if (newSelected.has(proxyId)) {
-            newSelected.delete(proxyId);
-          } else {
-            newSelected.add(proxyId);
-          }
-          return newSelected;
-        });
-      }
-      return;
-    }
-
-    // Check if any proxy with this order_id is currently selected
-    const isOrderSelected = onSelectProxy
-      ? externalSelectedProxies?.some((id) => {
-          const p = uniqueProxies.find((proxy) => proxy.id === id);
-          return p && (p.order_id || p.orderId) === orderId;
-        })
-      : Array.from(internalSelectedProxies).some((id) => {
-          const p = uniqueProxies.find((proxy) => proxy.id === id);
-          return p && (p.order_id || p.orderId) === orderId;
-        });
-
-    // If using external selection handler
     if (onSelectProxy) {
-      console.log("Using external onSelectProxy handler");
-      // Just pass the current proxy ID - the parent component will handle uniqueness
+      // Use external handler - just call it directly
       onSelectProxy(proxyId);
     } else {
-      // Using internal selection
-      console.log("Using internal selection");
+      // Use internal selection - update the Set properly
       setInternalSelectedProxies((prev) => {
         const newSelected = new Set(prev);
-
-        if (isOrderSelected) {
-          // Remove all proxies with this order_id
-          Array.from(newSelected).forEach((id) => {
-            const p = uniqueProxies.find((proxy) => proxy.id === id);
-            if (p && (p.order_id || p.orderId) === orderId) {
-              newSelected.delete(id);
-            }
-          });
+        if (newSelected.has(proxyId)) {
+          newSelected.delete(proxyId);
+          console.log("Deselected proxy:", proxyId);
         } else {
-          // Add only this proxy from this order_id
-          // First remove any existing proxies with this order_id (shouldn't be any, but just in case)
-          Array.from(newSelected).forEach((id) => {
-            const p = uniqueProxies.find((proxy) => proxy.id === id);
-            if (p && (p.order_id || p.orderId) === orderId) {
-              newSelected.delete(id);
-            }
-          });
-          // Then add this proxy
           newSelected.add(proxyId);
+          console.log("Selected proxy:", proxyId);
         }
-
+        console.log("New internal selection:", Array.from(newSelected));
         return newSelected;
       });
     }
   };
 
-  // Function to handle select all
+  // Simplified select all handler
   const handleSelectAll = () => {
+    console.log("ProxyList handleSelectAll called");
+
     // Skip if we're showing residential proxies
     if (type === "resident") {
       return;
     }
 
-    if (onSelectProxy && externalSelectedProxies) {
-      // If we're using external selection, we need to call onSelectProxy for each proxy
-      if (selectAllChecked) {
-        // Deselect all - we'll just select the first one to trigger the parent's logic
-        if (uniqueProxies.length > 0) {
-          onSelectProxy(uniqueProxies[0].id);
-        }
-      } else {
-        // Select all - we'll just select the first one to trigger the parent's logic
-        if (uniqueProxies.length > 0) {
-          onSelectProxy(uniqueProxies[0].id);
-        }
-      }
+    if (onSelectAll) {
+      // Use external handler if provided
+      onSelectAll();
     } else {
       // Using internal selection
-      if (selectAllChecked) {
+      if (allSelected) {
+        console.log("Deselecting all proxies internally");
         setInternalSelectedProxies(new Set());
       } else {
+        console.log("Selecting all proxies internally");
         const allIds = uniqueProxies.map((proxy) => proxy.id);
         setInternalSelectedProxies(new Set(allIds));
       }
     }
-    setSelectAllChecked(!selectAllChecked);
   };
 
   // Function to handle batch prolong
@@ -269,21 +186,16 @@ const ProxyList: React.FC<Props> = ({
       return;
     }
 
-    // Open prolong popup with the first selected proxy
-    const firstSelectedId = selectedProxies[0];
-    const firstSelectedProxy = uniqueProxies.find(
-      (p) => p.id === firstSelectedId
-    );
-    if (firstSelectedProxy) {
-      setProlongProxy({
-        ...firstSelectedProxy,
-        isBatchOperation: true,
-      } as Proxy & { isBatchOperation: boolean });
-    }
+    // Open prolong popup for batch operation
+    setProlongProxy({
+      id: "batch",
+      type: type,
+      isBatchOperation: true,
+    } as Proxy & { isBatchOperation: boolean });
   };
 
   // Function to confirm batch prolong
-  const confirmBatchProlong = () => {
+  const confirmBatchProlong = async () => {
     if (!prolongProxy) return;
 
     setIsSubmittingBatchProlong(true);
@@ -293,61 +205,158 @@ const ProxyList: React.FC<Props> = ({
       selectedProxies.includes(proxy.id)
     );
 
+    console.log(
+      "Starting batch prolong for proxies:",
+      selectedProxiesArray.map((p) => ({ id: p.id, order_id: p.order_id }))
+    );
+
     // Track progress
     let successCount = 0;
     let failCount = 0;
-    const totalCount = selectedProxiesArray.length;
-
-    // Process each proxy sequentially
-    const processProxy = (index: number) => {
-      if (index >= selectedProxiesArray.length) {
-        // All proxies processed
-        setNotification({
-          show: true,
-          message: t("prolongBatchResult", {
-            success: successCount,
-            fail: failCount,
-          }),
-          type: successCount > 0 ? "success" : "error",
-          showRefresh: true,
-        });
-        setProlongProxy(null);
-        setIsSubmittingBatchProlong(false);
-        setInternalSelectedProxies(new Set());
-        return;
-      }
-
-      const proxy = selectedProxiesArray[index];
-
-      if (!proxy.order_id) {
-        // Skip this proxy and move to the next
-        failCount++;
-        processProxy(index + 1);
-        return;
-      }
-
-      prolongProxyHook(
-        {
-          orderId: proxy.orderId as any,
-          type: proxy.type,
-          id: proxy.id,
-          periodId: prolongPeriod,
-        },
-        {
-          onSuccess: () => {
-            successCount++;
-            processProxy(index + 1);
-          },
-          onError: () => {
-            failCount++;
-            processProxy(index + 1);
-          },
-        }
-      );
+    const results: { success: string[]; failed: string[] } = {
+      success: [],
+      failed: [],
     };
 
-    // Start processing
-    processProxy(0);
+    // Process all proxies in parallel for better performance
+    const prolongPromises = selectedProxiesArray.map(async (proxy) => {
+      // For ISP/IPv6 proxies, use orderId; for resident proxies, use order_id
+      const orderId = proxy.orderId || proxy.order_id;
+
+      if (!orderId) {
+        console.warn(`Proxy ${proxy.id} has no orderId/order_id, skipping`);
+        results.failed.push(proxy.id);
+        return Promise.resolve();
+      }
+
+      return new Promise<void>((resolve) => {
+        prolongProxyHook(
+          {
+            orderId: orderId as any,
+            type: proxy.type,
+            id: proxy.id,
+            periodId: prolongPeriod,
+          },
+          {
+            onSuccess: () => {
+              console.log(`Successfully prolonged proxy ${proxy.id}`);
+              results.success.push(proxy.id);
+              resolve();
+            },
+            onError: (error) => {
+              console.error(`Failed to prolong proxy ${proxy.id}:`, error);
+              results.failed.push(proxy.id);
+              resolve();
+            },
+          }
+        );
+      });
+    });
+
+    try {
+      await Promise.all(prolongPromises);
+
+      successCount = results.success.length;
+      failCount = results.failed.length;
+
+      console.log("Batch prolong completed:", {
+        successCount,
+        failCount,
+        results,
+      });
+
+      setNotification({
+        show: true,
+        message: t("prolongBatchResult", {
+          success: successCount,
+          fail: failCount,
+        }),
+        type: successCount > 0 ? "success" : "error",
+        showRefresh: true,
+      });
+
+      // Clear selection after successful batch operation
+      if (successCount > 0) {
+        if (onSelectAll) {
+          // If we have external select all handler, call it to clear selection
+          onSelectAll();
+        } else {
+          setInternalSelectedProxies(new Set());
+        }
+      }
+    } catch (error) {
+      console.error("Error during batch prolong:", error);
+      setNotification({
+        show: true,
+        message: "An error occurred during batch prolonging",
+        type: "error",
+        showRefresh: false,
+      });
+    } finally {
+      setProlongProxy(null);
+      setIsSubmittingBatchProlong(false);
+    }
+  };
+
+  // Function to confirm single prolong
+  const confirmProlong = () => {
+    if (!prolongProxy) return;
+
+    // Check if this is a batch operation
+    if ((prolongProxy as any).isBatchOperation) {
+      confirmBatchProlong();
+      return;
+    }
+
+    // Check if we have the required data for single prolong
+    // For ISP/IPv6 proxies, use orderId; for resident proxies, use order_id
+    const orderId = prolongProxy.orderId || prolongProxy.order_id;
+
+    if (!orderId) {
+      setNotification({
+        show: true,
+        message: t("prolongError"),
+        type: "error",
+        showRefresh: false,
+      });
+      setProlongProxy(null);
+      return;
+    }
+
+    prolongProxyHook(
+      {
+        orderId: orderId as any,
+        type: prolongProxy.type,
+        id: prolongProxy.id,
+        periodId: prolongPeriod,
+      },
+      {
+        onSuccess: () => {
+          setNotification({
+            show: true,
+            message: t("prolongSuccess"),
+            type: "success",
+            showRefresh: true,
+          });
+          setProlongProxy(null);
+        },
+        onError: (error: any) => {
+          setNotification({
+            show: true,
+            message: t("prolongFailed"),
+            type: "error",
+            showRefresh: false,
+          });
+          setProlongProxy(null);
+        },
+      }
+    );
+  };
+
+  // Function to cancel the prolong action
+  const cancelProlong = () => {
+    setProlongProxy(null);
+    setIsSubmittingBatchProlong(false);
   };
 
   // Function to get protocol badge styles
@@ -394,257 +403,10 @@ const ProxyList: React.FC<Props> = ({
     }
   };
 
-  // Optional: ISO 3166-1 alpha-2 codes
-  const validCountryCodes = [
-    "AF",
-    "AL",
-    "DZ",
-    "AS",
-    "AD",
-    "AO",
-    "AI",
-    "AQ",
-    "AG",
-    "AR",
-    "AM",
-    "AW",
-    "AU",
-    "AT",
-    "AZ",
-    "BS",
-    "BH",
-    "BD",
-    "BB",
-    "BY",
-    "BE",
-    "BZ",
-    "BJ",
-    "BM",
-    "BT",
-    "BO",
-    "BA",
-    "BW",
-    "BR",
-    "BN",
-    "BG",
-    "BF",
-    "BI",
-    "KH",
-    "CM",
-    "CA",
-    "CV",
-    "KY",
-    "CF",
-    "TD",
-    "CL",
-    "CN",
-    "CO",
-    "KM",
-    "CG",
-    "CD",
-    "CR",
-    "HR",
-    "CU",
-    "CY",
-    "CZ",
-    "DK",
-    "DJ",
-    "DM",
-    "DO",
-    "EC",
-    "EG",
-    "SV",
-    "GQ",
-    "ER",
-    "EE",
-    "SZ",
-    "ET",
-    "FJ",
-    "FI",
-    "FR",
-    "GA",
-    "GM",
-    "GE",
-    "DE",
-    "GH",
-    "GR",
-    "GD",
-    "GT",
-    "GN",
-    "GW",
-    "GY",
-    "HT",
-    "HN",
-    "HU",
-    "IS",
-    "IN",
-    "ID",
-    "IR",
-    "IQ",
-    "IE",
-    "IL",
-    "IT",
-    "CI",
-    "JM",
-    "JP",
-    "JO",
-    "KZ",
-    "KE",
-    "KI",
-    "KP",
-    "KR",
-    "KW",
-    "KG",
-    "LA",
-    "LV",
-    "LB",
-    "LS",
-    "LR",
-    "LY",
-    "LI",
-    "LT",
-    "LU",
-    "MG",
-    "MW",
-    "MY",
-    "MV",
-    "ML",
-    "MT",
-    "MH",
-    "MR",
-    "MU",
-    "MX",
-    "FM",
-    "MD",
-    "MC",
-    "MN",
-    "ME",
-    "MA",
-    "MZ",
-    "MM",
-    "NA",
-    "NR",
-    "NP",
-    "NL",
-    "NZ",
-    "NI",
-    "NE",
-    "NG",
-    "MK",
-    "NO",
-    "OM",
-    "PK",
-    "PW",
-    "PA",
-    "PG",
-    "PY",
-    "PE",
-    "PH",
-    "PL",
-    "PT",
-    "QA",
-    "RO",
-    "RU",
-    "RW",
-    "KN",
-    "LC",
-    "VC",
-    "WS",
-    "SM",
-    "ST",
-    "SA",
-    "SN",
-    "RS",
-    "SC",
-    "SL",
-    "SG",
-    "SK",
-    "SI",
-    "SB",
-    "SO",
-    "ZA",
-    "SS",
-    "ES",
-    "LK",
-    "SD",
-    "SR",
-    "SE",
-    "CH",
-    "SY",
-    "TW",
-    "TJ",
-    "TZ",
-    "TH",
-    "TL",
-    "TG",
-    "TO",
-    "TT",
-    "TN",
-    "TR",
-    "TM",
-    "TV",
-    "UG",
-    "UA",
-    "AE",
-    "GB",
-    "US",
-    "UY",
-    "UZ",
-    "VU",
-    "VA",
-    "VE",
-    "VN",
-    "YE",
-    "ZM",
-    "ZW",
-  ];
-
-  // Optional overrides
-  const countryFlags: Record<string, string> = {
-    UK: "🇬🇧", // United Kingdom (ISO code is GB)
-    SU: "🇷🇺", // Soviet Union fallback
-    AN: "🇳🇱", // Netherlands Antilles → Netherlands
-  };
-
-  const getCountryFlag = (countryCode: string): string => {
-    if (!countryCode || typeof countryCode !== "string") return "🌐";
-
-    const code = countryCode.toUpperCase().substring(0, 2);
-    const normalizedCode = countryFlags[code] ? code : code;
-
-    // Use override if available
-    if (countryFlags[normalizedCode]) {
-      return countryFlags[normalizedCode];
-    }
-
-    // Validate the code if you want to restrict to known ISO codes
-    if (!validCountryCodes.includes(normalizedCode)) return "🌐";
-
-    try {
-      const regionalIndicatorA = 0x1f1e6;
-      const asciiA = "A".charCodeAt(0);
-
-      if (/^[A-Z]{2}$/.test(normalizedCode)) {
-        const firstChar =
-          normalizedCode.charCodeAt(0) - asciiA + regionalIndicatorA;
-        const secondChar =
-          normalizedCode.charCodeAt(1) - asciiA + regionalIndicatorA;
-
-        return String.fromCodePoint(firstChar, secondChar);
-      }
-    } catch (e) {
-      console.warn(`Couldn't generate flag for ${countryCode}:`, e);
-    }
-
-    return "🌐";
-  };
-
   // Handle delete confirmation
   const handleDeleteClick = (proxyId: string) => {
-    // Find the proxy with this ID
     const proxy = uniqueProxies.find((p) => p.id === proxyId);
 
-    // If it's a residential proxy, show a popup confirmation
     if (proxy && proxy.type === "resident") {
       setNotification({
         show: true,
@@ -655,20 +417,16 @@ const ProxyList: React.FC<Props> = ({
         proxyToDelete: proxy,
       });
     } else {
-      // For non-residential proxies, use the inline confirmation
       setDeleteConfirmId(proxyId);
     }
   };
 
-  // Update the confirmDelete function to use the deleteProxy function directly
   const confirmDelete = (proxyId: string, packageKey?: string) => {
     if (packageKey) {
-      // If we have both the ID and package key, send the delete request
       deleteProxy(
         { listId: proxyId, packageKey },
         {
           onSuccess: () => {
-            // Show success notification
             setNotification({
               show: true,
               message: t("deleteSuccess"),
@@ -677,11 +435,10 @@ const ProxyList: React.FC<Props> = ({
             });
           },
           onError: (error: any) => {
-            // Show error notification
             setNotification({
               show: true,
               message: t("deleteError", {
-                error: error?.message || "Неизвестная ошибка",
+                error: error?.message || "Unknown error",
               }),
               type: "error",
               showRefresh: false,
@@ -690,7 +447,6 @@ const ProxyList: React.FC<Props> = ({
         }
       );
     } else {
-      // Find the package key for this proxy if not provided
       const proxy = uniqueProxies.find((p) => p.id === proxyId);
       if (proxy?.package_list?.[0]?.export?.ext) {
         deleteProxy(
@@ -700,21 +456,19 @@ const ProxyList: React.FC<Props> = ({
           },
           {
             onSuccess: () => {
-              // Show success notification
               setNotification({
                 show: true,
                 message:
-                  "Прокси был успешно удалён. Чтобы увидеть изменения, обновите страницу.",
+                  "Proxy was successfully deleted. Refresh the page to see changes.",
                 type: "success",
                 showRefresh: true,
               });
             },
             onError: (error: any) => {
-              // Show error notification
               setNotification({
                 show: true,
-                message: `Ошибка при удалении прокси: ${
-                  error?.message || "Неизвестная ошибка"
+                message: `Error deleting proxy: ${
+                  error?.message || "Unknown error"
                 }`,
                 type: "error",
                 showRefresh: false,
@@ -733,7 +487,6 @@ const ProxyList: React.FC<Props> = ({
       }
     }
 
-    // Still call the onDelete prop if provided (for compatibility)
     if (onDelete) {
       onDelete(proxyId, packageKey);
     }
@@ -752,8 +505,6 @@ const ProxyList: React.FC<Props> = ({
   const handleSaveEdit = (updatedProxy: Proxy) => {
     if (onEdit) {
       onEdit(updatedProxy);
-
-      // Show success notification
       setNotification({
         show: true,
         message: t("editSuccess"),
@@ -849,7 +600,9 @@ const ProxyList: React.FC<Props> = ({
           proxy.ip + (proxy.type === "isp" ? `:${proxy.port_socks}` : "");
 
         contentSocksFirstFormat += `${full_ip}:${login}:${password}\n`;
-        contentSocksSecondFormat += `socks5://${login}:${password}@${full_ip}\n`;
+        const ip = proxy.ip;
+        const port = proxy.port_socks;
+        contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
       }
     });
 
@@ -876,68 +629,10 @@ const ProxyList: React.FC<Props> = ({
     setExportMenuOpen(false);
   };
 
-  // Add a function to handle the prolong button click
   const handleProlongClick = (proxy: Proxy) => {
     setProlongProxy(proxy);
   };
 
-  // Add a function to handle the prolong action
-  const confirmProlong = () => {
-    // Check if we have the required data
-    if (!prolongProxy?.order_id) {
-      setNotification({
-        show: true,
-        message: t("prolongError"),
-        type: "error",
-        showRefresh: false,
-      });
-      setProlongProxy(null);
-      return;
-    }
-
-    // Check if this is a batch operation
-    if ((prolongProxy as any).isBatchOperation) {
-      confirmBatchProlong();
-      return;
-    }
-
-    prolongProxyHook(
-      {
-        orderId: prolongProxy.order_id,
-        type: prolongProxy.type,
-        id: prolongProxy.id,
-        periodId: prolongPeriod,
-      },
-      {
-        onSuccess: () => {
-          setNotification({
-            show: true,
-            message: t("prolongSuccess"),
-            type: "success",
-            showRefresh: true,
-          });
-          setProlongProxy(null);
-        },
-        onError: (error: any) => {
-          setNotification({
-            show: true,
-            message: t("prolongFailed"),
-            type: "error",
-            showRefresh: false,
-          });
-          setProlongProxy(null);
-        },
-      }
-    );
-  };
-
-  // Add a function to cancel the prolong action
-  const cancelProlong = () => {
-    setProlongProxy(null);
-    setIsSubmittingBatchProlong(false);
-  };
-
-  // Add a function to handle delete confirmation from the popup:
   const handleDeleteConfirm = () => {
     if (notification?.proxyToDelete) {
       const proxy = notification.proxyToDelete;
@@ -966,6 +661,12 @@ const ProxyList: React.FC<Props> = ({
     borderColor: "rgba(243, 214, 117, 0.5)",
   };
 
+  const checkboxIndeterminateStyle: React.CSSProperties = {
+    ...checkboxContainerStyle,
+    backgroundColor: "rgba(243, 214, 117, 0.1)",
+    borderColor: "rgba(243, 214, 117, 0.4)",
+  };
+
   // Batch action button styles
   const batchActionButtonStyle: React.CSSProperties = {
     backgroundColor: "rgba(243, 214, 117, 0.1)",
@@ -981,7 +682,7 @@ const ProxyList: React.FC<Props> = ({
     opacity: selectedProxies.length > 0 ? 1 : 0.5,
   };
 
-  // Add styles for the popup
+  // Popup styles
   const popupOverlayStyle: React.CSSProperties = {
     position: "fixed",
     top: 0,
@@ -1092,13 +793,12 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const cardContentStyle: React.CSSProperties = {
-    padding: "0", // Remove padding to allow table to fill the space
+    padding: "0",
   };
 
   const tableContainerStyle: React.CSSProperties = {
-    maxHeight: "400px", // Fixed height for scrolling
+    maxHeight: "400px",
     overflow: "auto",
-    // Custom scrollbar for Firefox
     scrollbarWidth: "thin",
     scrollbarColor: "rgba(243, 214, 117, 0.3) rgba(0, 0, 0, 0.1)",
   };
@@ -1110,11 +810,11 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const tableHeadBaseStyle: React.CSSProperties = {
-    backgroundColor: "rgba(0, 0, 0, 0.95)", // Slightly transparent to show content underneath
+    backgroundColor: "rgba(0, 0, 0, 0.95)",
     position: "sticky",
     top: 0,
-    zIndex: 10, // Ensure header stays above table content
-    backdropFilter: "blur(4px)", // Add blur effect for modern browsers
+    zIndex: 10,
+    backdropFilter: "blur(4px)",
   };
 
   const tableHeaderCellStyle: React.CSSProperties = {
@@ -1157,11 +857,6 @@ const ProxyList: React.FC<Props> = ({
     alignItems: "center",
   };
 
-  const flagStyle: React.CSSProperties = {
-    marginRight: "8px",
-  };
-
-  // Export button styles
   const exportButtonStyle: React.CSSProperties = {
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     border: "1px solid rgba(243, 214, 117, 0.2)",
@@ -1227,7 +922,6 @@ const ProxyList: React.FC<Props> = ({
     transition: "background-color 0.2s",
   };
 
-  // Delete confirmation styles
   const deleteConfirmContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
@@ -1259,7 +953,6 @@ const ProxyList: React.FC<Props> = ({
     cursor: "pointer",
   };
 
-  // Loading skeleton styles
   const skeletonStyle: React.CSSProperties = {
     height: "16px",
     backgroundColor: "rgba(243, 214, 117, 0.1)",
@@ -1267,7 +960,6 @@ const ProxyList: React.FC<Props> = ({
     animation: "pulse 1.5s ease-in-out infinite",
   };
 
-  // Empty state styles
   const emptyStateContainerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -1297,9 +989,7 @@ const ProxyList: React.FC<Props> = ({
     marginTop: "4px",
   };
 
-  // Custom scrollbar styles
   const scrollbarStyles = `
-    /* Webkit browsers like Chrome/Safari/Edge */
     .proxy-table-container::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -1432,6 +1122,47 @@ const ProxyList: React.FC<Props> = ({
     );
   }
 
+  // Render the select all checkbox with proper state
+  const renderSelectAllCheckbox = () => {
+    if (type === "resident") return null;
+
+    // Recalculate states to ensure they're current
+    const currentAllSelected =
+      uniqueProxies.length > 0 &&
+      selectedProxies.length === uniqueProxies.length;
+    const currentSomeSelected =
+      selectedProxies.length > 0 &&
+      selectedProxies.length < uniqueProxies.length;
+
+    let checkboxStyle = checkboxContainerStyle;
+    let icon = null;
+
+    if (currentAllSelected) {
+      checkboxStyle = checkboxCheckedStyle;
+      icon = <Check size={14} color="#f3d675" />;
+    } else if (currentSomeSelected) {
+      checkboxStyle = checkboxIndeterminateStyle;
+      icon = (
+        <div
+          style={{
+            width: "8px",
+            height: "2px",
+            backgroundColor: "#f3d675",
+            borderRadius: "1px",
+          }}
+        />
+      );
+    }
+
+    return (
+      <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
+        <div style={checkboxStyle} onClick={handleSelectAll}>
+          {icon}
+        </div>
+      </th>
+    );
+  };
+
   return (
     <div style={cardStyle}>
       <style>{scrollbarStyles}</style>
@@ -1499,21 +1230,7 @@ const ProxyList: React.FC<Props> = ({
           <table style={tableStyle}>
             <thead style={tableHeadBaseStyle}>
               <tr>
-                {/* Only show checkbox column for non-resident proxies */}
-                {type !== "resident" && (
-                  <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
-                    <div
-                      style={
-                        selectAllChecked
-                          ? checkboxCheckedStyle
-                          : checkboxContainerStyle
-                      }
-                      onClick={handleSelectAll}
-                    >
-                      {selectAllChecked && <Check size={14} color="#f3d675" />}
-                    </div>
-                  </th>
-                )}
+                {renderSelectAllCheckbox()}
                 {type === "resident" && (
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.name")}
@@ -1557,12 +1274,6 @@ const ProxyList: React.FC<Props> = ({
             </thead>
             <tbody style={tableBodyStyle}>
               {uniqueProxies.map((proxy, index) => {
-                // Get title from package_list if available
-                const title =
-                  proxy.package_list && proxy.package_list[0]
-                    ? proxy.package_list[0].export.ext
-                    : "—";
-
                 const isSelected = selectedProxies.includes(proxy.id);
 
                 return (
@@ -1591,7 +1302,6 @@ const ProxyList: React.FC<Props> = ({
                       }
                     }}
                   >
-                    {/* Only show checkbox for non-resident proxies */}
                     {type !== "resident" && (
                       <td style={tableCellStyle}>
                         <div
@@ -1753,6 +1463,8 @@ const ProxyList: React.FC<Props> = ({
           availableCountries={availableCountries}
         />
       )}
+
+      {/* Notification Popup */}
       {notification && notification.show && (
         <NotificationPopup
           message={notification.message}
