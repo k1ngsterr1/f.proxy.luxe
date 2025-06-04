@@ -872,6 +872,7 @@ export default function OrderDetailPage() {
           >
             <Button
               onClick={handleContinue}
+              disabled={isFinishing}
               name={isFinishing ? t("buttons.loading") : t("buttons.pay")}
               variant="medium"
               style={{ width: isMobile ? "100%" : "auto" }}
