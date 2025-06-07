@@ -197,6 +197,7 @@ const ProxyList: React.FC<Props> = ({
   // Function to confirm batch prolong
   const confirmBatchProlong = async () => {
     if (!prolongProxy) return;
+    if (isProlonging) return;
 
     setIsSubmittingBatchProlong(true);
 
@@ -328,6 +329,7 @@ const ProxyList: React.FC<Props> = ({
   // Function to confirm single prolong
   const confirmProlong = () => {
     if (!prolongProxy) return;
+    if (isProlonging) return;
 
     // Check if this is a batch operation
     if ((prolongProxy as any).isBatchOperation) {
