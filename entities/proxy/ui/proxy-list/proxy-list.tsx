@@ -228,15 +228,9 @@ const ProxyList: React.FC<Props> = ({
       uniqueOrderIds = Array.from(orderIdSet);
       console.log("IPv6 unique order IDs:", uniqueOrderIds);
     } else {
-      const orderIdSet = new Set<string>();
-      selectedProxiesArray.forEach((proxy) => {
-        const orderId = proxy.orderId || proxy.order_id;
-        if (orderId) {
-          orderIdSet.add(orderId);
-        }
-      });
-      uniqueOrderIds = Array.from(orderIdSet);
-      console.log("IPv6 unique order IDs:", uniqueOrderIds);
+      uniqueOrderIds = selectedProxiesArray
+        .map((proxy) => proxy.orderId || proxy.order_id)
+        .filter((orderId): orderId is string => Boolean(orderId));
     }
 
     // Track progress
