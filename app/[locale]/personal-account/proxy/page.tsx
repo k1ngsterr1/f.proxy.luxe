@@ -182,76 +182,46 @@ export default function ProxyPage() {
   // Handle selecting a single proxy - will select all with same order_id
   const handleSelectProxy = useCallback(
     (proxy: any) => {
-      console.log("handleSelectProxy called with proxy:", proxy);
-      console.log("Current device type:", isMobile ? "Mobile" : "Desktop");
-
-      const orderId = proxy.order_id;
-      console.log("Order ID:", orderId);
-
-      const proxiesInThisOrder = allProxies.filter(
-        (p) => p.order_id === orderId
-      );
-      console.log("Proxies in this order:", proxiesInThisOrder.length);
-
-      const proxyIdsInThisOrder = proxiesInThisOrder.map((p) => p.id);
-      console.log("Proxy IDs in this order:", proxyIdsInThisOrder);
-
-      console.log("Current selected proxies:", selectedProxies);
-      console.log("Current selected order IDs:", selectedOrderIds);
-
-      // Check if this proxy is already selected
-      if (selectedProxies.includes(proxy.id)) {
-        console.log("Proxy is already selected, deselecting all in this order");
-        // Deselect all proxies with this order_id
-        const newSelectedProxies = selectedProxies.filter(
-          (id) => !proxyIdsInThisOrder.includes(id)
+      // If it’s an ISP proxy — just toggle the single ID
+      if (proxyType === "isp") {
+        setSelectedProxies((prev) =>
+          prev.includes(proxy.id)
+            ? prev.filter((id) => id !== proxy.id)
+            : [...prev, proxy.id]
         );
-        console.log(
-          "New selected proxies after deselection:",
-          newSelectedProxies
-        );
-
-        setSelectedProxies(newSelectedProxies);
-
-        const newSelectedOrderIds = selectedOrderIds.filter(
-          (id) => id !== orderId
-        );
-        console.log(
-          "New selected order IDs after deselection:",
-          newSelectedOrderIds
-        );
-
-        setSelectedOrderIds(newSelectedOrderIds);
-      } else {
-        console.log("Proxy is not selected, selecting all in this order");
-        // Select all proxies with this order_id
-        const newSelectedProxies = [...selectedProxies];
-
-        // Add all proxy IDs from this order that aren't already selected
-        proxyIdsInThisOrder.forEach((id) => {
-          if (!newSelectedProxies.includes(id)) {
-            newSelectedProxies.push(id);
-          }
-        });
-
-        console.log(
-          "New selected proxies after selection:",
-          newSelectedProxies
-        );
-        setSelectedProxies(newSelectedProxies);
-
-        // Add the order ID if not already selected
-        if (!selectedOrderIds.includes(orderId)) {
-          const newSelectedOrderIds = [...selectedOrderIds, orderId];
-          console.log(
-            "New selected order IDs after selection:",
-            newSelectedOrderIds
-          );
-          setSelectedOrderIds(newSelectedOrderIds);
-        }
+        // We don’t care about orderIds here
+        return;
       }
+
+      // If it’s IPv6 — group by order_id as before
+      if (proxyType === "ipv6") {
+        const orderId = proxy.order_id;
+        const idsInGroup = allProxies
+          .filter((p) => p.order_id === orderId)
+          .map((p) => p.id);
+
+        if (selectedProxies.includes(proxy.id)) {
+          // Deselect whole group
+          setSelectedProxies((prev) =>
+            prev.filter((id) => !idsInGroup.includes(id))
+          );
+          setSelectedOrderIds((prev) => prev.filter((oid) => oid !== orderId));
+        } else {
+          // Select whole group
+          setSelectedProxies((prev) => [
+            ...prev,
+            ...idsInGroup.filter((id) => !prev.includes(id)),
+          ]);
+          setSelectedOrderIds((prev) =>
+            prev.includes(orderId) ? prev : [...prev, orderId]
+          );
+        }
+        return;
+      }
+
+      // (You can add resident or other types here if needed)
     },
-    [allProxies, selectedProxies, selectedOrderIds, isMobile]
+    [proxyType, allProxies, selectedProxies, selectedOrderIds]
   );
 
   // Handle bulk prolonging of selected proxies
