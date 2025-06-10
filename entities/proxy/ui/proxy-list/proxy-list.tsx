@@ -47,7 +47,7 @@ interface Proxy {
 
 export interface Props {
   proxies: Proxy[] | undefined;
-  type: string;
+  type: string; // "isp", "ipv6", "resident", etc.
   onDelete?: (proxyId: string, packageKey?: string) => void;
   onEdit?: (proxy: Proxy) => void;
   availableCountries?: { code: string; name: string }[];
@@ -82,21 +82,17 @@ const ProxyList: React.FC<Props> = ({
   const [prolongProxy, setProlongProxy] = useState<Proxy | null>(null);
   const [prolongPeriod, setProlongPeriod] = useState<string>("1m");
 
-  // Simplified selection state - just track selected proxy IDs
   const [internalSelectedProxies, setInternalSelectedProxies] = useState<
     Set<string>
   >(new Set());
   const [isSubmittingBatchProlong, setIsSubmittingBatchProlong] =
     useState(false);
 
-  // Store unique proxies by ID to avoid duplicates
   const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
 
-  // Use either external or internal selected proxies
   const selectedProxies =
     externalSelectedProxies || Array.from(internalSelectedProxies);
 
-  // Process proxies to ensure uniqueness by ID
   useEffect(() => {
     if (proxies) {
       const uniqueProxiesMap = new Map<string, Proxy>();
@@ -109,72 +105,53 @@ const ProxyList: React.FC<Props> = ({
     }
   }, [proxies]);
 
-  // Calculate if all proxies are selected
   const allSelected =
     uniqueProxies.length > 0 && selectedProxies.length === uniqueProxies.length;
-  const someSelected = selectedProxies.length > 0;
 
   const { openPopup } = usePopupStore() as {
     openPopup: (name: string, params?: Record<string, any>) => void;
   };
 
-  const { deleteProxy, isDeleting, deleteError } = useDeleteProxy();
+  const { deleteProxy } = useDeleteProxy(); // Removed unused isDeleting, deleteError
   const {
     prolongProxy: prolongProxyHook,
     isProlonging,
-    prolongError,
+    // prolongError, // Removed unused prolongError
   } = useProlongProxy();
 
-  // Simplified checkbox change handler
   const handleCheckboxChange = (proxyId: string) => {
-    console.log("handleCheckboxChange called with proxyId:", proxyId);
-
     if (onSelectProxy) {
-      // Use external handler - just call it directly
       onSelectProxy(proxyId);
     } else {
-      // Use internal selection - update the Set properly
       setInternalSelectedProxies((prev) => {
         const newSelected = new Set(prev);
         if (newSelected.has(proxyId)) {
           newSelected.delete(proxyId);
-          console.log("Deselected proxy:", proxyId);
         } else {
           newSelected.add(proxyId);
-          console.log("Selected proxy:", proxyId);
         }
-        console.log("New internal selection:", Array.from(newSelected));
         return newSelected;
       });
     }
   };
 
-  // Simplified select all handler
   const handleSelectAll = () => {
-    console.log("ProxyList handleSelectAll called");
-
-    // Skip if we're showing residential proxies
     if (type === "resident") {
       return;
     }
 
     if (onSelectAll) {
-      // Use external handler if provided
       onSelectAll();
     } else {
-      // Using internal selection
       if (allSelected) {
-        console.log("Deselecting all proxies internally");
         setInternalSelectedProxies(new Set());
       } else {
-        console.log("Selecting all proxies internally");
         const allIds = uniqueProxies.map((proxy) => proxy.id);
         setInternalSelectedProxies(new Set(allIds));
       }
     }
   };
 
-  // Function to handle batch prolong
   const handleBatchProlong = () => {
     if (selectedProxies.length < 1) {
       setNotification({
@@ -185,16 +162,13 @@ const ProxyList: React.FC<Props> = ({
       });
       return;
     }
-
-    // Open prolong popup for batch operation
     setProlongProxy({
       id: "batch",
-      type: type,
+      type: type, // Pass the main component type
       isBatchOperation: true,
     } as Proxy & { isBatchOperation: boolean });
   };
 
-  // Function to confirm batch prolong
   const confirmBatchProlong = async () => {
     if (!prolongProxy) return;
     if (isProlonging) return;
@@ -222,34 +196,49 @@ const ProxyList: React.FC<Props> = ({
 
     // Use the `type` prop passed to the ProxyList component to determine strategy
     if (type === "isp") {
+      // For ISP, each selected proxy is treated individually for prolonging.
+      // The 'identifier' will be the proxy's own ID.
       itemsToProlong = selectedProxiesArray.map((proxy) => ({
-        identifier: proxy.id,
-        representativeProxy: proxy,
+        identifier: proxy.id, // The actual ID of the ISP proxy
+        representativeProxy: proxy, // The proxy itself
       }));
       console.log(
-        "ISP items to prolong (identifier is proxy.id):",
+        "ISP items to prolong (identifier is proxy.id, one per selected proxy):",
         itemsToProlong.map((item) => item.identifier)
       );
     } else if (type === "ipv6") {
-      const orderIdSet = new Set<string>();
+      // For IPv6, group by orderId and prolong all proxies within that order.
+      // The 'identifier' will be the orderId.
+      const orderIdMap = new Map<string, Proxy[]>();
       selectedProxiesArray.forEach((proxy) => {
         const orderIdValue = proxy.orderId || proxy.order_id;
         if (orderIdValue) {
-          orderIdSet.add(orderIdValue);
+          if (!orderIdMap.has(orderIdValue)) {
+            orderIdMap.set(orderIdValue, []);
+          }
+          // We only need one representative proxy for the API call per orderId,
+          // but the logic here is to identify unique orderIds to process.
+          // The actual API call will use the representativeProxy.
         }
       });
-      const uniqueOrderIds = Array.from(orderIdSet);
+
+      const uniqueOrderIds = Array.from(orderIdMap.keys());
       itemsToProlong = uniqueOrderIds.map((orderIdValue) => {
+        // Find the first selected proxy that belongs to this orderId to act as representative
         const repProxy = selectedProxiesArray.find(
           (p) => (p.orderId || p.order_id) === orderIdValue
         )!;
         return { identifier: orderIdValue, representativeProxy: repProxy };
       });
       console.log(
-        "IPv6 unique order IDs to prolong:",
+        "IPv6 unique order IDs to prolong (all proxies in order group):",
         itemsToProlong.map((item) => item.identifier)
       );
     } else {
+      // Handle other types or return if not applicable
+      console.warn("Batch prolong not configured for type:", type);
+      setIsSubmittingBatchProlong(false); // Reset submission state
+      setProlongProxy(null); // Close popup
       return;
     }
 
@@ -397,13 +386,11 @@ const ProxyList: React.FC<Props> = ({
     );
   };
 
-  // Function to cancel the prolong action
   const cancelProlong = () => {
     setProlongProxy(null);
     setIsSubmittingBatchProlong(false);
   };
 
-  // Function to get protocol badge styles
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
     const baseStyle: React.CSSProperties = {
       display: "inline-flex",
@@ -414,7 +401,6 @@ const ProxyList: React.FC<Props> = ({
       fontWeight: 500,
       border: "1px solid",
     };
-
     switch (protocol?.toLowerCase()) {
       case "http":
         return {
@@ -447,10 +433,8 @@ const ProxyList: React.FC<Props> = ({
     }
   };
 
-  // Handle delete confirmation
   const handleDeleteClick = (proxyId: string) => {
     const proxy = uniqueProxies.find((p) => p.id === proxyId);
-
     if (proxy && proxy.type === "resident") {
       setNotification({
         show: true,
@@ -466,85 +450,52 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const confirmDelete = (proxyId: string, packageKey?: string) => {
-    if (packageKey) {
-      deleteProxy(
-        { listId: proxyId, packageKey },
-        {
-          onSuccess: () => {
-            setNotification({
-              show: true,
-              message: t("deleteSuccess"),
-              type: "success",
-              showRefresh: true,
-            });
-          },
-          onError: (error: any) => {
-            setNotification({
-              show: true,
-              message: t("deleteError", {
-                error: error?.message || "Unknown error",
-              }),
-              type: "error",
-              showRefresh: false,
-            });
-          },
-        }
-      );
-    } else {
-      const proxy = uniqueProxies.find((p) => p.id === proxyId);
-      if (proxy?.package_list?.[0]?.export?.ext) {
-        deleteProxy(
-          {
-            listId: proxyId,
-            packageKey: proxy.package_list[0].export.ext,
-          },
-          {
-            onSuccess: () => {
-              setNotification({
-                show: true,
-                message:
-                  "Proxy was successfully deleted. Refresh the page to see changes.",
-                type: "success",
-                showRefresh: true,
-              });
-            },
-            onError: (error: any) => {
-              setNotification({
-                show: true,
-                message: `Error deleting proxy: ${
-                  error?.message || "Unknown error"
-                }`,
-                type: "error",
-                showRefresh: false,
-              });
-            },
-          }
-        );
-      } else {
-        console.error("Could not find package key for proxy", proxyId);
+    const action = packageKey
+      ? { listId: proxyId, packageKey }
+      : {
+          listId: proxyId,
+          packageKey: uniqueProxies.find((p) => p.id === proxyId)
+            ?.package_list?.[0]?.export?.ext,
+        };
+
+    if (!action.packageKey && type === "resident") {
+      // Ensure resident proxies have a packageKey
+      console.error("Could not find package key for resident proxy", proxyId);
+      setNotification({
+        show: true,
+        message: t("deleteMissingKey"),
+        type: "error",
+        showRefresh: false,
+      });
+      setDeleteConfirmId(null);
+      return;
+    }
+
+    deleteProxy(action as any, {
+      onSuccess: () =>
         setNotification({
           show: true,
-          message: t("deleteMissingKey"),
+          message: t("deleteSuccess"),
+          type: "success",
+          showRefresh: true,
+        }),
+      onError: (error: any) =>
+        setNotification({
+          show: true,
+          message: t("deleteError", {
+            error: error?.message || "Unknown error",
+          }),
           type: "error",
           showRefresh: false,
-        });
-      }
-    }
+        }),
+    });
 
-    if (onDelete) {
-      onDelete(proxyId, packageKey);
-    }
-
+    if (onDelete) onDelete(proxyId, packageKey);
     setDeleteConfirmId(null);
   };
 
-  const cancelDelete = () => {
-    setDeleteConfirmId(null);
-  };
-
-  const handleEditClick = (proxy: Proxy) => {
-    setEditingProxy(proxy);
-  };
+  const cancelDelete = () => setDeleteConfirmId(null);
+  const handleEditClick = (proxy: Proxy) => setEditingProxy(proxy);
 
   const handleSaveEdit = (updatedProxy: Proxy) => {
     if (onEdit) {
@@ -559,23 +510,16 @@ const ProxyList: React.FC<Props> = ({
     setEditingProxy(null);
   };
 
-  const handleCloseEdit = () => {
-    setEditingProxy(null);
-  };
-
-  const closeNotification = () => {
-    setNotification(null);
-  };
+  const handleCloseEdit = () => setEditingProxy(null);
+  const closeNotification = () => setNotification(null);
 
   const exportToTxt = () => {
     if (!uniqueProxies || uniqueProxies.length === 0) return;
-
     let contentHttpFirstFormat = "";
     let contentHttpSecondFormat = "";
-
     uniqueProxies.forEach((proxy, index) => {
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
-        if (index > 0) return;
+        if (index > 0 && type === "resident") return; // For resident, export only first package list
         proxy.package_list.forEach((item) => {
           const ip = "185.162.130.86";
           const login = item.login;
@@ -589,15 +533,12 @@ const ProxyList: React.FC<Props> = ({
         const login = proxy.login || "user";
         const password = proxy.password || "pass";
         const full_ip =
-          proxy.ip + (proxy.type === "isp" ? `:${proxy.port_http}` : "");
-
+          proxy.ip + (proxy.port_http ? `:${proxy.port_http}` : "");
         contentHttpFirstFormat += `${full_ip}:${login}:${password}\n`;
         contentHttpSecondFormat += `${login}:${password}@${full_ip}\n`;
       }
     });
-
     const fullContent = `${contentHttpFirstFormat}\n${contentHttpSecondFormat}`;
-
     const createAndDownloadFile = (content: string, fileName: string) => {
       const blob = new Blob([content], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
@@ -609,25 +550,19 @@ const ProxyList: React.FC<Props> = ({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     };
-
     const dateStr = new Date().toISOString().split("T")[0];
-
-    if (fullContent.trim()) {
+    if (fullContent.trim())
       createAndDownloadFile(fullContent, `proxy-http-${dateStr}.txt`);
-    }
-
     setExportMenuOpen(false);
   };
 
   const exportSocksToTxt = () => {
     if (!uniqueProxies || uniqueProxies.length === 0) return;
-
     let contentSocksFirstFormat = "";
     let contentSocksSecondFormat = "";
-
     uniqueProxies.forEach((proxy, index) => {
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
-        if (index > 0) return;
+        if (index > 0 && type === "resident") return;
         proxy.package_list.forEach((item) => {
           const ip = "185.162.130.86";
           const login = item.login;
@@ -641,17 +576,14 @@ const ProxyList: React.FC<Props> = ({
         const login = proxy.login || "user";
         const password = proxy.password || "pass";
         const full_ip =
-          proxy.ip + (proxy.type === "isp" ? `:${proxy.port_socks}` : "");
-
+          proxy.ip + (proxy.port_socks ? `:${proxy.port_socks}` : "");
         contentSocksFirstFormat += `${full_ip}:${login}:${password}\n`;
         const ip = proxy.ip;
         const port = proxy.port_socks;
         contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
       }
     });
-
     const fullContent = `${contentSocksFirstFormat}\n${contentSocksSecondFormat}`;
-
     const createAndDownloadFile = (content: string, fileName: string) => {
       const blob = new Blob([content], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
@@ -663,20 +595,13 @@ const ProxyList: React.FC<Props> = ({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     };
-
     const dateStr = new Date().toISOString().split("T")[0];
-
-    if (fullContent.trim()) {
+    if (fullContent.trim())
       createAndDownloadFile(fullContent, `proxy-socks-${dateStr}.txt`);
-    }
-
     setExportMenuOpen(false);
   };
 
-  const handleProlongClick = (proxy: Proxy) => {
-    setProlongProxy(proxy);
-  };
-
+  const handleProlongClick = (proxy: Proxy) => setProlongProxy(proxy);
   const handleDeleteConfirm = () => {
     if (notification?.proxyToDelete) {
       const proxy = notification.proxyToDelete;
@@ -685,7 +610,6 @@ const ProxyList: React.FC<Props> = ({
     }
   };
 
-  // Checkbox styles
   const checkboxContainerStyle: React.CSSProperties = {
     display: "inline-flex",
     alignItems: "center",
@@ -698,20 +622,16 @@ const ProxyList: React.FC<Props> = ({
     cursor: "pointer",
     transition: "all 0.2s ease",
   };
-
   const checkboxCheckedStyle: React.CSSProperties = {
     ...checkboxContainerStyle,
     backgroundColor: "rgba(243, 214, 117, 0.2)",
     borderColor: "rgba(243, 214, 117, 0.5)",
   };
-
   const checkboxIndeterminateStyle: React.CSSProperties = {
     ...checkboxContainerStyle,
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     borderColor: "rgba(243, 214, 117, 0.4)",
   };
-
-  // Batch action button styles
   const batchActionButtonStyle: React.CSSProperties = {
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     border: "1px solid rgba(243, 214, 117, 0.2)",
@@ -725,8 +645,6 @@ const ProxyList: React.FC<Props> = ({
     fontSize: "14px",
     opacity: selectedProxies.length > 0 ? 1 : 0.5,
   };
-
-  // Popup styles
   const popupOverlayStyle: React.CSSProperties = {
     position: "fixed",
     top: 0,
@@ -739,7 +657,6 @@ const ProxyList: React.FC<Props> = ({
     alignItems: "center",
     zIndex: 1000,
   };
-
   const popupContentStyle: React.CSSProperties = {
     backgroundColor: "#111111",
     borderRadius: "8px",
@@ -748,7 +665,6 @@ const ProxyList: React.FC<Props> = ({
     width: "400px",
     maxWidth: "90%",
   };
-
   const popupTitleStyle: React.CSSProperties = {
     fontSize: "18px",
     fontWeight: 600,
@@ -756,18 +672,13 @@ const ProxyList: React.FC<Props> = ({
     marginTop: 0,
     marginBottom: "16px",
   };
-
-  const popupFormGroupStyle: React.CSSProperties = {
-    marginBottom: "20px",
-  };
-
+  const popupFormGroupStyle: React.CSSProperties = { marginBottom: "20px" };
   const popupLabelStyle: React.CSSProperties = {
     display: "block",
     fontSize: "14px",
     color: "#f3d675",
     marginBottom: "8px",
   };
-
   const popupSelectStyle: React.CSSProperties = {
     width: "100%",
     padding: "10px 12px",
@@ -777,14 +688,12 @@ const ProxyList: React.FC<Props> = ({
     color: "#FFFFFF",
     fontSize: "14px",
   };
-
   const popupButtonsContainerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "flex-end",
     gap: "12px",
     marginTop: "24px",
   };
-
   const popupButtonStyle: React.CSSProperties = {
     padding: "8px 16px",
     borderRadius: "4px",
@@ -792,7 +701,6 @@ const ProxyList: React.FC<Props> = ({
     cursor: "pointer",
     border: "1px solid rgba(243, 214, 117, 0.2)",
   };
-
   const popupConfirmButtonStyle: React.CSSProperties = {
     ...popupButtonStyle,
     backgroundColor: "rgba(243, 214, 117, 0.1)",
@@ -800,20 +708,17 @@ const ProxyList: React.FC<Props> = ({
     opacity: isSubmittingBatchProlong ? 0.5 : 1,
     cursor: isSubmittingBatchProlong ? "not-allowed" : "pointer",
   };
-
   const popupCancelButtonStyle: React.CSSProperties = {
     ...popupButtonStyle,
     backgroundColor: "transparent",
     color: "#FFFFFF",
   };
-
   const cardStyle: React.CSSProperties = {
     backgroundColor: "#000000",
     borderRadius: "8px",
     border: "1px solid rgba(243, 214, 117, 0.2)",
     overflow: "hidden",
   };
-
   const cardHeaderStyle: React.CSSProperties = {
     padding: "16px 24px",
     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
@@ -821,38 +726,30 @@ const ProxyList: React.FC<Props> = ({
     justifyContent: "space-between",
     alignItems: "center",
   };
-
   const cardTitleStyle: React.CSSProperties = {
     fontSize: "18px",
     fontWeight: 600,
     color: "#FFFFFF",
     margin: 0,
   };
-
   const cardDescriptionStyle: React.CSSProperties = {
     fontSize: "14px",
     color: "#f3d675",
     marginTop: "4px",
     marginBottom: 0,
   };
-
-  const cardContentStyle: React.CSSProperties = {
-    padding: "0",
-  };
-
+  const cardContentStyle: React.CSSProperties = { padding: "0" };
   const tableContainerStyle: React.CSSProperties = {
     maxHeight: "400px",
     overflow: "auto",
     scrollbarWidth: "thin",
     scrollbarColor: "rgba(243, 214, 117, 0.3) rgba(0, 0, 0, 0.1)",
   };
-
   const tableStyle: React.CSSProperties = {
     width: "100%",
     borderCollapse: "separate",
     borderSpacing: 0,
   };
-
   const tableHeadBaseStyle: React.CSSProperties = {
     backgroundColor: "rgba(0, 0, 0, 0.95)",
     position: "sticky",
@@ -860,7 +757,6 @@ const ProxyList: React.FC<Props> = ({
     zIndex: 10,
     backdropFilter: "blur(4px)",
   };
-
   const tableHeaderCellStyle: React.CSSProperties = {
     padding: "12px 16px",
     textAlign: "left",
@@ -871,36 +767,28 @@ const ProxyList: React.FC<Props> = ({
     letterSpacing: "0.05em",
     borderBottom: "1px solid rgba(243, 214, 117, 0.2)",
   };
-
-  const tableBodyStyle: React.CSSProperties = {};
-
   const tableRowStyle: React.CSSProperties = {
     borderBottom: "1px solid rgba(243, 214, 117, 0.1)",
     transition: "background-color 0.2s",
   };
-
   const tableCellStyle: React.CSSProperties = {
     padding: "12px 16px",
     fontSize: "14px",
     color: "#FFFFFF",
   };
-
   const tableCellEmphasisStyle: React.CSSProperties = {
     ...tableCellStyle,
     fontWeight: 500,
     color: "#f3d675",
   };
-
   const tableCellMonoStyle: React.CSSProperties = {
     ...tableCellStyle,
     fontFamily: "monospace",
   };
-
   const countryContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
   };
-
   const exportButtonStyle: React.CSSProperties = {
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     border: "1px solid rgba(243, 214, 117, 0.2)",
@@ -914,7 +802,6 @@ const ProxyList: React.FC<Props> = ({
     fontSize: "14px",
     position: "relative",
   };
-
   const actionButtonStyle: React.CSSProperties = {
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     border: "1px solid rgba(243, 214, 117, 0.2)",
@@ -928,19 +815,16 @@ const ProxyList: React.FC<Props> = ({
     fontSize: "12px",
     marginRight: "6px",
   };
-
   const actionButtonDangerStyle: React.CSSProperties = {
     ...actionButtonStyle,
     backgroundColor: "rgba(255, 59, 48, 0.1)",
     borderColor: "rgba(255, 59, 48, 0.2)",
     color: "#ff3b30",
   };
-
   const actionButtonsContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
   };
-
   const exportMenuStyle: React.CSSProperties = {
     position: "absolute",
     top: "100%",
@@ -954,7 +838,6 @@ const ProxyList: React.FC<Props> = ({
     minWidth: "150px",
     display: exportMenuOpen ? "block" : "none",
   };
-
   const exportMenuItemStyle: React.CSSProperties = {
     padding: "8px 16px",
     color: "#FFFFFF",
@@ -965,18 +848,15 @@ const ProxyList: React.FC<Props> = ({
     cursor: "pointer",
     transition: "background-color 0.2s",
   };
-
   const deleteConfirmContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
   };
-
   const deleteConfirmTextStyle: React.CSSProperties = {
     fontSize: "12px",
     color: "#ff3b30",
   };
-
   const deleteConfirmButtonStyle: React.CSSProperties = {
     backgroundColor: "rgba(255, 59, 48, 0.1)",
     border: "1px solid rgba(255, 59, 48, 0.2)",
@@ -986,7 +866,6 @@ const ProxyList: React.FC<Props> = ({
     fontSize: "12px",
     cursor: "pointer",
   };
-
   const deleteCancelButtonStyle: React.CSSProperties = {
     backgroundColor: "transparent",
     border: "1px solid rgba(243, 214, 117, 0.2)",
@@ -996,14 +875,12 @@ const ProxyList: React.FC<Props> = ({
     fontSize: "12px",
     cursor: "pointer",
   };
-
   const skeletonStyle: React.CSSProperties = {
     height: "16px",
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     borderRadius: "4px",
     animation: "pulse 1.5s ease-in-out infinite",
   };
-
   const emptyStateContainerStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -1012,21 +889,18 @@ const ProxyList: React.FC<Props> = ({
     padding: "48px 16px",
     textAlign: "center",
   };
-
   const emptyStateIconStyle: React.CSSProperties = {
     width: "48px",
     height: "48px",
     color: "#f3d675",
     marginBottom: "16px",
   };
-
   const emptyStateTitleStyle: React.CSSProperties = {
     fontSize: "16px",
     fontWeight: 500,
     color: "#FFFFFF",
     margin: 0,
   };
-
   const emptyStateDescriptionStyle: React.CSSProperties = {
     fontSize: "14px",
     color: "#999999",
@@ -1034,153 +908,135 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const scrollbarStyles = `
-    .proxy-table-container::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    
-    .proxy-table-container::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-    }
-    
-    .proxy-table-container::-webkit-scrollbar-thumb {
-      background: rgba(243, 214, 117, 0.3);
-      border-radius: 4px;
-    }
-    
-    .proxy-table-container::-webkit-scrollbar-thumb:hover {
-      background: rgba(243, 214, 117, 0.5);
-    }
+  .proxy-table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+  .proxy-table-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 4px; }
+  .proxy-table-container::-webkit-scrollbar-thumb { background: rgba(243, 214, 117, 0.3); border-radius: 4px; }
+  .proxy-table-container::-webkit-scrollbar-thumb:hover { background: rgba(243, 214, 117, 0.5); }
+  @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 0.3; } 100% { opacity: 0.6; } }
+`;
 
-    @keyframes pulse {
-      0% {
-        opacity: 0.6;
-      }
-      50% {
-        opacity: 0.3;
-      }
-      100% {
-        opacity: 0.6;
-      }
-    }
-  `;
-
-  // Loading state
   if (uniqueProxies === undefined) {
     return (
       <div style={cardStyle}>
-        <style>{scrollbarStyles}</style>
+        {" "}
+        <style>{scrollbarStyles}</style>{" "}
         <div style={cardHeaderStyle}>
+          {" "}
           <div>
-            <h3 style={cardTitleStyle}>{t("title")}</h3>
-            <p style={cardDescriptionStyle}>{t("loading")}</p>
-          </div>
-        </div>
+            {" "}
+            <h3 style={cardTitleStyle}>{t("title")}</h3>{" "}
+            <p style={cardDescriptionStyle}>{t("loading")}</p>{" "}
+          </div>{" "}
+        </div>{" "}
         <div style={cardContentStyle}>
+          {" "}
           <div className="proxy-table-container" style={tableContainerStyle}>
+            {" "}
             <table style={tableStyle}>
+              {" "}
               <thead style={tableHeadBaseStyle}>
+                {" "}
                 <tr>
+                  {" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.ipAddress")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.protocol")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.httpPort")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.name")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.login")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.password")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.country")}
-                  </th>
+                  </th>{" "}
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.actions")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody style={tableBodyStyle}>
+                  </th>{" "}
+                </tr>{" "}
+              </thead>{" "}
+              <tbody>
+                {" "}
                 {Array(10)
                   .fill(0)
                   .map((_, index) => (
                     <tr key={index} style={tableRowStyle}>
+                      {" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "120px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "80px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "60px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "100px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "80px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "80px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "100px" }}></div>
-                      </td>
+                      </td>{" "}
                       <td style={tableCellStyle}>
                         <div style={{ ...skeletonStyle, width: "120px" }}></div>
-                      </td>
+                      </td>{" "}
                     </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  ))}{" "}
+              </tbody>{" "}
+            </table>{" "}
+          </div>{" "}
+        </div>{" "}
       </div>
     );
   }
 
-  // Empty state
   if (uniqueProxies?.length === 0) {
     return (
       <div style={cardStyle}>
+        {" "}
         <div style={cardHeaderStyle}>
+          {" "}
           <div>
-            <h3 style={cardTitleStyle}>{t("title")}</h3>
-            <p style={cardDescriptionStyle}>{t("description")}</p>
-          </div>
-        </div>
+            {" "}
+            <h3 style={cardTitleStyle}>{t("title")}</h3>{" "}
+            <p style={cardDescriptionStyle}>{t("description")}</p>{" "}
+          </div>{" "}
+        </div>{" "}
         <div style={emptyStateContainerStyle}>
-          <AlertCircle style={emptyStateIconStyle} />
-          <h3 style={emptyStateTitleStyle}>{t("emptyTitle")}</h3>
-          <p style={emptyStateDescriptionStyle}>{t("emptyDescription")}</p>
-        </div>
+          {" "}
+          <AlertCircle style={emptyStateIconStyle} />{" "}
+          <h3 style={emptyStateTitleStyle}>{t("emptyTitle")}</h3>{" "}
+          <p style={emptyStateDescriptionStyle}>{t("emptyDescription")}</p>{" "}
+        </div>{" "}
       </div>
     );
   }
 
-  // Render the select all checkbox with proper state
   const renderSelectAllCheckbox = () => {
     if (type === "resident") return null;
-
-    // Recalculate states to ensure they're current
     const currentAllSelected =
       uniqueProxies.length > 0 &&
       selectedProxies.length === uniqueProxies.length;
     const currentSomeSelected =
       selectedProxies.length > 0 &&
       selectedProxies.length < uniqueProxies.length;
-
     let checkboxStyle = checkboxContainerStyle;
     let icon = null;
-
     if (currentAllSelected) {
       checkboxStyle = checkboxCheckedStyle;
       icon = <Check size={14} color="#f3d675" />;
@@ -1197,132 +1053,144 @@ const ProxyList: React.FC<Props> = ({
         />
       );
     }
-
     return (
       <th style={{ ...tableHeaderCellStyle, width: "40px" }}>
+        {" "}
         <div style={checkboxStyle} onClick={handleSelectAll}>
-          {icon}
-        </div>
+          {" "}
+          {icon}{" "}
+        </div>{" "}
       </th>
     );
   };
 
   return (
     <div style={cardStyle}>
-      <style>{scrollbarStyles}</style>
+      {" "}
+      <style>{scrollbarStyles}</style>{" "}
       <div style={cardHeaderStyle}>
+        {" "}
         <div>
-          <h3 style={cardTitleStyle}>{t("title")}</h3>
-          <p style={cardDescriptionStyle}>{t("description")}</p>
-        </div>
+          {" "}
+          <h3 style={cardTitleStyle}>{t("title")}</h3>{" "}
+          <p style={cardDescriptionStyle}>{t("description")}</p>{" "}
+        </div>{" "}
         <div style={{ display: "flex", gap: "10px" }}>
-          {/* Only show batch prolong button for non-resident proxies */}
+          {" "}
           {type !== "resident" && selectedProxies.length > 0 && (
             <button
               style={batchActionButtonStyle}
               onClick={handleBatchProlong}
               disabled={selectedProxies.length === 0}
             >
+              {" "}
               <span>
                 {t("prolongBatchTitle", { count: selectedProxies.length })}
-              </span>
+              </span>{" "}
             </button>
-          )}
+          )}{" "}
           <div style={{ position: "relative" }}>
+            {" "}
             <button
               style={exportButtonStyle}
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
             >
-              <Download size={16} />
-              <span>{t("export")}</span>
-            </button>
+              {" "}
+              <Download size={16} /> <span>{t("export")}</span>{" "}
+            </button>{" "}
             <div style={exportMenuStyle}>
+              {" "}
               <div
                 style={exportMenuItemStyle}
                 onClick={exportToTxt}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(243, 214, 117, 0.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
-                <FileText size={16} />
-                <span>{t("exportHttp")}</span>
-              </div>
+                {" "}
+                <FileText size={16} /> <span>{t("exportHttp")}</span>{" "}
+              </div>{" "}
               <div
                 style={exportMenuItemStyle}
                 onClick={exportSocksToTxt}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(243, 214, 117, 0.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
-                <FileJson size={16} />
-                <span>{t("exportSocks")}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                {" "}
+                <FileJson size={16} /> <span>{t("exportSocks")}</span>{" "}
+              </div>{" "}
+            </div>{" "}
+          </div>{" "}
+        </div>{" "}
+      </div>{" "}
       <div style={cardContentStyle}>
+        {" "}
         <div className="proxy-table-container" style={tableContainerStyle}>
+          {" "}
           <table style={tableStyle}>
+            {" "}
             <thead style={tableHeadBaseStyle}>
+              {" "}
               <tr>
-                {renderSelectAllCheckbox()}
+                {" "}
+                {renderSelectAllCheckbox()}{" "}
                 {type === "resident" && (
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.name")}
                   </th>
-                )}
+                )}{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.ipAddress")}
-                </th>
+                </th>{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.protocol")}
-                </th>
+                </th>{" "}
                 {type === "resident" && (
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.ports")}
                   </th>
-                )}
+                )}{" "}
                 {type !== "resident" && (
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.httpPort")}
                   </th>
-                )}
+                )}{" "}
                 {type !== "resident" && (
                   <th style={tableHeaderCellStyle}>
                     {t("table.headers.socksPort")}
                   </th>
-                )}
-                <th style={tableHeaderCellStyle}>{t("table.headers.login")}</th>
+                )}{" "}
+                <th style={tableHeaderCellStyle}>{t("table.headers.login")}</th>{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.password")}
-                </th>
+                </th>{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.country")}
-                </th>
+                </th>{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.expiryDate")}
-                </th>
+                </th>{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.actions")}
-                </th>
-              </tr>
-            </thead>
-            <tbody style={tableBodyStyle}>
+                </th>{" "}
+              </tr>{" "}
+            </thead>{" "}
+            <tbody>
+              {" "}
               {uniqueProxies.map((proxy, index) => {
                 const isSelected = selectedProxies.includes(proxy.id);
-
                 return (
                   <tr
-                    key={index}
+                    key={proxy.id + "-" + index}
                     style={{
                       ...tableRowStyle,
                       backgroundColor: isSelected
@@ -1332,22 +1200,22 @@ const ProxyList: React.FC<Props> = ({
                         : "rgba(243, 214, 117, 0.03)",
                     }}
                     onMouseEnter={(e) => {
-                      if (!isSelected) {
+                      if (!isSelected)
                         e.currentTarget.style.backgroundColor =
                           "rgba(243, 214, 117, 0.05)";
-                      }
                     }}
                     onMouseLeave={(e) => {
-                      if (!isSelected) {
+                      if (!isSelected)
                         e.currentTarget.style.backgroundColor =
                           index % 2 === 0
                             ? "transparent"
                             : "rgba(243, 214, 117, 0.03)";
-                      }
                     }}
                   >
+                    {" "}
                     {type !== "resident" && (
                       <td style={tableCellStyle}>
+                        {" "}
                         <div
                           style={
                             isSelected
@@ -1356,46 +1224,51 @@ const ProxyList: React.FC<Props> = ({
                           }
                           onClick={() => handleCheckboxChange(proxy.id)}
                         >
-                          {isSelected && <Check size={14} color="#f3d675" />}
-                        </div>
+                          {" "}
+                          {isSelected && (
+                            <Check size={14} color="#f3d675" />
+                          )}{" "}
+                        </div>{" "}
                       </td>
-                    )}
+                    )}{" "}
                     {type === "resident" && (
                       <td style={tableCellEmphasisStyle}>
                         {proxy.title?.slice(0, 6).trim() + "..."}
                       </td>
-                    )}
-                    <td style={tableCellEmphasisStyle}>{proxy.ip}</td>
+                    )}{" "}
+                    <td style={tableCellEmphasisStyle}>{proxy.ip}</td>{" "}
                     <td style={tableCellStyle}>
                       <span style={getProtocolStyles(proxy.protocol)}>
                         {proxy.protocol?.toUpperCase()}
                       </span>
-                    </td>
+                    </td>{" "}
                     {type === "resident" && (
                       <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
-                    )}
+                    )}{" "}
                     {type !== "resident" && (
                       <td style={tableCellMonoStyle}>
                         {proxy.port_http || "—"}
                       </td>
-                    )}
+                    )}{" "}
                     {type !== "resident" && (
                       <td style={tableCellMonoStyle}>
                         {proxy.port_socks || "—"}
                       </td>
-                    )}
-                    <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>
-                    <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>
+                    )}{" "}
+                    <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>{" "}
+                    <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>{" "}
                     <td style={tableCellStyle}>
                       <div style={countryContainerStyle}>{proxy.country}</div>
-                    </td>
-                    <td style={tableCellStyle}>{proxy.date_end || "—"}</td>
+                    </td>{" "}
+                    <td style={tableCellStyle}>{proxy.date_end || "—"}</td>{" "}
                     <td style={tableCellStyle}>
+                      {" "}
                       {deleteConfirmId === proxy.id ? (
                         <div style={deleteConfirmContainerStyle}>
+                          {" "}
                           <span style={deleteConfirmTextStyle}>
                             {t("deleteConfirm")}
-                          </span>
+                          </span>{" "}
                           <button
                             style={deleteConfirmButtonStyle}
                             onClick={() =>
@@ -1403,33 +1276,34 @@ const ProxyList: React.FC<Props> = ({
                             }
                           >
                             {t("deleteYes")}
-                          </button>
+                          </button>{" "}
                           <button
                             style={deleteCancelButtonStyle}
                             onClick={cancelDelete}
                           >
                             {t("deleteNo")}
-                          </button>
+                          </button>{" "}
                         </div>
                       ) : (
                         <div style={actionButtonsContainerStyle}>
+                          {" "}
                           <button
                             style={actionButtonStyle}
                             onClick={() => handleEditClick(proxy)}
                             title={t("table.buttons.edit")}
                           >
                             <Edit size={14} />
-                          </button>
+                          </button>{" "}
                           <button
                             style={actionButtonDangerStyle}
                             onClick={() => handleDeleteClick(proxy.id)}
                             title={t("table.buttons.delete")}
                           >
                             <Trash2 size={14} />
-                          </button>
-                          {/* Only show auth and prolong buttons for non-resident proxies */}
+                          </button>{" "}
                           {type !== "resident" && (
                             <>
+                              {" "}
                               <button
                                 style={actionButtonStyle}
                                 onClick={() =>
@@ -1440,65 +1314,66 @@ const ProxyList: React.FC<Props> = ({
                                 title={t("table.buttons.auth")}
                               >
                                 <Key size={14} />
-                              </button>
+                              </button>{" "}
                               <button
                                 style={actionButtonStyle}
                                 onClick={() => handleProlongClick(proxy)}
                                 title={t("table.buttons.prolong")}
                               >
                                 <span>{t("prolongConfirm")}</span>
-                              </button>
+                              </button>{" "}
                             </>
-                          )}
+                          )}{" "}
                         </div>
-                      )}
-                    </td>
+                      )}{" "}
+                    </td>{" "}
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Prolong Popup */}
+              })}{" "}
+            </tbody>{" "}
+          </table>{" "}
+        </div>{" "}
+      </div>{" "}
       {prolongProxy && (
         <div style={popupOverlayStyle}>
+          {" "}
           <div style={popupContentStyle}>
+            {" "}
             <h3 style={popupTitleStyle}>
               {(prolongProxy as any).isBatchOperation
                 ? t("prolongBatchTitle", { count: selectedProxies.length })
                 : t("prolongTitle")}
-            </h3>
+            </h3>{" "}
             <div style={popupFormGroupStyle}>
-              <label style={popupLabelStyle}>{t("prolongSelect")}</label>
+              {" "}
+              <label style={popupLabelStyle}>{t("prolongSelect")}</label>{" "}
               <select
                 style={popupSelectStyle}
                 value={prolongPeriod}
                 onChange={(e) => setProlongPeriod(e.target.value)}
               >
-                <option value="1m">{t("table.period.1month")}</option>
-              </select>
-            </div>
+                {" "}
+                <option value="1m">{t("table.period.1month")}</option>{" "}
+              </select>{" "}
+            </div>{" "}
             <div style={popupButtonsContainerStyle}>
+              {" "}
               <button style={popupCancelButtonStyle} onClick={cancelProlong}>
                 {t("prolongCancel")}
-              </button>
+              </button>{" "}
               <button
                 style={popupConfirmButtonStyle}
                 onClick={confirmProlong}
-                disabled={isSubmittingBatchProlong}
+                disabled={isSubmittingBatchProlong || isProlonging}
               >
-                {isSubmittingBatchProlong
+                {isSubmittingBatchProlong || isProlonging
                   ? t("prolongProcessing")
                   : t("prolongConfirm")}
-              </button>
-            </div>
-          </div>
+              </button>{" "}
+            </div>{" "}
+          </div>{" "}
         </div>
-      )}
-
-      {/* Edit Proxy Popup */}
+      )}{" "}
       {editingProxy && (
         <EditProxyPopup
           proxy={editingProxy}
@@ -1506,9 +1381,7 @@ const ProxyList: React.FC<Props> = ({
           onSave={handleSaveEdit}
           availableCountries={availableCountries}
         />
-      )}
-
-      {/* Notification Popup */}
+      )}{" "}
       {notification && notification.show && (
         <NotificationPopup
           message={notification.message}
@@ -1521,7 +1394,7 @@ const ProxyList: React.FC<Props> = ({
           showDeleteConfirmation={notification.isDeleteConfirmation}
           onDeleteConfirm={handleDeleteConfirm}
         />
-      )}
+      )}{" "}
     </div>
   );
 };
