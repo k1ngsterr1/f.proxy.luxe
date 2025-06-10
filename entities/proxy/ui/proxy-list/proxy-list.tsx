@@ -262,7 +262,7 @@ const ProxyList: React.FC<Props> = ({
           {
             orderId: idForProlongHook as any,
             type: representativeProxy.type,
-            id: representativeProxy.id,
+            id: representativeProxy.orderId as string,
             periodId: prolongPeriod,
           },
           {
@@ -360,7 +360,7 @@ const ProxyList: React.FC<Props> = ({
       {
         orderId: idForSingleProlongHook as any,
         type: prolongProxy.type,
-        id: prolongProxy.id,
+        id: prolongProxy.orderId as string,
         periodId: prolongPeriod,
       },
       {
