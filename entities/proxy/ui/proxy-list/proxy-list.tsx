@@ -201,9 +201,8 @@ const ProxyList: React.FC<Props> = ({
 
     setIsSubmittingBatchProlong(true);
 
-    // Get all selected proxies
-    const selectedProxiesArray = uniqueProxies.filter((proxy) =>
-      selectedProxies.includes(proxy.id)
+    const selectedProxiesArray = uniqueProxies.filter((p) =>
+      selectedProxies.includes(p.id)
     );
 
     console.log(
@@ -212,28 +211,48 @@ const ProxyList: React.FC<Props> = ({
         id: p.id,
         order_id: p.order_id,
         orderId: p.orderId,
+        type: p.type,
       }))
     );
 
-    // For IPv6 proxies, get unique order IDs only
-    let uniqueOrderIds: string[] = [];
-    if (type === "ipv6") {
+    let itemsToProlong: {
+      identifier: string; // This will be orderId or proxyId depending on type
+      representativeProxy: Proxy;
+    }[] = [];
+
+    // Use the `type` prop passed to the ProxyList component to determine strategy
+    if (type === "isp") {
+      itemsToProlong = selectedProxiesArray.map((proxy) => ({
+        identifier: proxy.id,
+        representativeProxy: proxy,
+      }));
+      console.log(
+        "ISP items to prolong (identifier is proxy.id):",
+        itemsToProlong.map((item) => item.identifier)
+      );
+    } else if (type === "ipv6") {
       const orderIdSet = new Set<string>();
       selectedProxiesArray.forEach((proxy) => {
-        const orderId = proxy.orderId || proxy.order_id;
-        if (orderId) {
-          orderIdSet.add(orderId);
+        const orderIdValue = proxy.orderId || proxy.order_id;
+        if (orderIdValue) {
+          orderIdSet.add(orderIdValue);
         }
       });
-      uniqueOrderIds = Array.from(orderIdSet);
-      console.log("IPv6 unique order IDs:", uniqueOrderIds);
+      const uniqueOrderIds = Array.from(orderIdSet);
+      itemsToProlong = uniqueOrderIds.map((orderIdValue) => {
+        const repProxy = selectedProxiesArray.find(
+          (p) => (p.orderId || p.order_id) === orderIdValue
+        )!;
+        return { identifier: orderIdValue, representativeProxy: repProxy };
+      });
+      console.log(
+        "IPv6 unique order IDs to prolong:",
+        itemsToProlong.map((item) => item.identifier)
+      );
     } else {
-      uniqueOrderIds = selectedProxiesArray
-        .map((proxy) => proxy.orderId || proxy.order_id)
-        .filter((orderId): orderId is string => Boolean(orderId));
+      return;
     }
 
-    // Track progress
     let successCount = 0;
     let failCount = 0;
     const results: { success: string[]; failed: string[] } = {
@@ -241,36 +260,36 @@ const ProxyList: React.FC<Props> = ({
       failed: [],
     };
 
-    // Process requests based on unique order IDs
-    const prolongPromises = uniqueOrderIds.map(async (orderId, index) => {
-      // For IPv6, use the first proxy with this order ID as representative
-      const representativeProxy = selectedProxiesArray.find(
-        (proxy) => (proxy.orderId || proxy.order_id) === orderId
-      );
+    const prolongPromises = itemsToProlong.map(async (item) => {
+      const { identifier, representativeProxy } = item;
 
-      if (!representativeProxy) {
-        console.warn(`No representative proxy found for order ID: ${orderId}`);
-        results.failed.push(orderId);
-        return Promise.resolve();
-      }
+      // Determine the value for the `orderId` parameter of `prolongProxyHook`
+      // Use the component's `type` prop here
+      const idForProlongHook =
+        type === "isp" ? representativeProxy.id : identifier;
 
       return new Promise<void>((resolve) => {
         prolongProxyHook(
           {
-            orderId: orderId as any,
+            orderId: idForProlongHook as any,
             type: representativeProxy.type,
             id: representativeProxy.id,
             periodId: prolongPeriod,
           },
           {
             onSuccess: () => {
-              console.log(`Successfully prolonged order ${orderId}`);
-              results.success.push(orderId);
+              console.log(
+                `Successfully prolonged item ${identifier} (using ${idForProlongHook} for hook's orderId)`
+              );
+              results.success.push(identifier);
               resolve();
             },
             onError: (error) => {
-              console.error(`Failed to prolong order ${orderId}:`, error);
-              results.failed.push(orderId);
+              console.error(
+                `Failed to prolong item ${identifier} (using ${idForProlongHook} for hook's orderId):`,
+                error
+              );
+              results.failed.push(identifier);
               resolve();
             },
           }
@@ -280,7 +299,6 @@ const ProxyList: React.FC<Props> = ({
 
     try {
       await Promise.all(prolongPromises);
-
       successCount = results.success.length;
       failCount = results.failed.length;
 
@@ -290,7 +308,6 @@ const ProxyList: React.FC<Props> = ({
         results,
       });
 
-      // Show notification
       setNotification({
         show: true,
         message: t("prolongBatchResult", {
@@ -301,10 +318,8 @@ const ProxyList: React.FC<Props> = ({
         showRefresh: true,
       });
 
-      // Clear selection after successful batch operation
       if (successCount > 0) {
         if (onSelectAll) {
-          // If we have external select all handler, call it to clear selection
           onSelectAll();
         } else {
           setInternalSelectedProxies(new Set());
@@ -319,28 +334,29 @@ const ProxyList: React.FC<Props> = ({
         showRefresh: false,
       });
     } finally {
-      // Always close the popup and reset state
       setProlongProxy(null);
       setIsSubmittingBatchProlong(false);
     }
   };
 
-  // Function to confirm single prolong
   const confirmProlong = () => {
     if (!prolongProxy) return;
     if (isProlonging) return;
 
-    // Check if this is a batch operation
     if ((prolongProxy as any).isBatchOperation) {
       confirmBatchProlong();
       return;
     }
 
-    // Check if we have the required data for single prolong
-    // For ISP/IPv6 proxies, use orderId; for resident proxies, use order_id
-    const orderId = prolongProxy.orderId || prolongProxy.order_id;
+    let idForSingleProlongHook: string | undefined;
+    // Use prolongProxy.type which is set when prolongProxy state is set
+    if (prolongProxy.type === "isp") {
+      idForSingleProlongHook = prolongProxy.id;
+    } else {
+      idForSingleProlongHook = prolongProxy.orderId || prolongProxy.order_id;
+    }
 
-    if (!orderId) {
+    if (!idForSingleProlongHook) {
       setNotification({
         show: true,
         message: t("prolongError"),
@@ -353,7 +369,7 @@ const ProxyList: React.FC<Props> = ({
 
     prolongProxyHook(
       {
-        orderId: orderId as any,
+        orderId: idForSingleProlongHook as any,
         type: prolongProxy.type,
         id: prolongProxy.id,
         periodId: prolongPeriod,
