@@ -288,7 +288,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
         </div>
 
         {/* Auto Renewal Toggle */}
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -329,7 +329,7 @@ export const TrafficBar: React.FC<TrafficBarProps> = ({
               }}
             />
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* Bandwidth Statistics */}
