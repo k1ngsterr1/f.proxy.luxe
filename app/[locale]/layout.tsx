@@ -40,6 +40,7 @@ export default async function LocaleLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <title>{title}</title> */}
+        <meta name="yandex-verification" content="ff41c4cfcb5e125c" />
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
