@@ -11,28 +11,6 @@ import { FaqBlock } from "@/widgets/blocks/home-page/faq-block";
 import { AboutBlock } from "@/widgets/blocks/home-page/about-block";
 import { PaymentMethodsBlock } from "@/widgets/blocks/home-page/payments-block";
 import { useTranslations } from "next-intl";
-import { Metadata } from "next";
-
-export const generateMetadata = async (): Promise<Metadata> => ({
-  keywords: [
-    "купить прокси",
-    "ipv6 прокси",
-    "ipv4 прокси",
-    "индивидуальные прокси",
-    "персональные прокси",
-    "анонимные прокси",
-    "прокси дешево",
-    "купить proxy",
-    "proxy ru",
-    "https прокси",
-    "socks5 прокси",
-    "быстрые прокси",
-    "стабильные прокси",
-    "резидентские прокси",
-    "ISP",
-    "резидентные",
-  ],
-});
 
 export default function Home() {
   const i18n = useTranslations();
