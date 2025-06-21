@@ -157,7 +157,11 @@ export default function Faq() {
     },
     {
       question: i18n("faq.faqtext17"),
-      answer: <p style={{ whiteSpace: "pre-line" }}>{i18n("faq.answer.proxy-speed")}</p>,
+      answer: (
+        <p style={{ whiteSpace: "pre-line" }}>
+          {i18n("faq.answer.proxy-speed")}
+        </p>
+      ),
     },
     {
       question: i18n("faq.faqtext18"),
@@ -231,7 +235,14 @@ export default function Faq() {
       style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
     >
       <title>{i18n("faqs.title")}</title>
-
+      <meta
+        name="keywords"
+        content="купить прокси, ipv6 прокси, ipv4 прокси, индивидуальные прокси, персональные прокси, анонимные прокси, прокси дешево, купить proxy, proxy ru, https прокси, socks5 прокси, быстрые прокси, стабильные прокси, резидентские прокси, ISP, резидентные"
+      />
+      <meta
+        name="description"
+        content="Купить прокси дешево, индивидуальные резидентские и анонимные. IPv4, IPv6, резидентские прокси. HTTPs, Socks5 прокси. Прокси для социальных сетей."
+      />
       <section className="faq" style={{ padding: "60px 0" }}>
         <div
           className="scontainer"
@@ -508,7 +519,7 @@ export default function Faq() {
                         scrollToContent();
                         toggleQuestion(
                           (index + Math.ceil(allQuestions.length / 2)) %
-                          faqContent.length
+                            faqContent.length
                         );
                       }}
                       style={{

@@ -11,7 +11,14 @@ export default function BuyProxy() {
   return (
     <QueryClientProvider client={reactQueryClient}>
       <title>{i18n("buyProxy.title")}</title>
-
+      <meta
+        name="keywords"
+        content="купить прокси, ipv6 прокси, ipv4 прокси, индивидуальные прокси, персональные прокси, анонимные прокси, прокси дешево, купить proxy, proxy ru, https прокси, socks5 прокси, быстрые прокси, стабильные прокси, резидентские прокси, ISP, резидентные"
+      />
+      <meta
+        name="description"
+        content="Купить прокси дешево, индивидуальные резидентские и анонимные. IPv4, IPv6, резидентские прокси. HTTPs, Socks5 прокси. Прокси для социальных сетей."
+      />
       <main className="inner-page">
         <section className="ibuy">
           <div className="scontainer">

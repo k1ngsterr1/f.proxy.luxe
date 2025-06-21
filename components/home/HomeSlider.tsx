@@ -54,9 +54,9 @@ export const HomeSlider: FC = () => {
           }}
         >
           <div className="imain-slide">
-            <h2 className="imain-header">{i18n("header")}</h2>
+            <h1 className="imain-header">{i18n("header")}</h1>
             <p className="imain-text">{i18n("text")}</p>
-            <h3 className="imain-subheader">{i18n("subheader")}</h3>
+            <h2 className="imain-subheader">{i18n("subheader")}</h2>
             <div className="imain-table">
               <p
                 className="imain-count text-2xl"

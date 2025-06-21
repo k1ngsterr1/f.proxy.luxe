@@ -14,7 +14,7 @@
       "authorization": "Proxy authorization is done by login and password, or by IP.",
       "usage-limits": "Follow the limits and don't put many accounts on 1 proxy, despite the fact that proxies are sold to one person, using proxies incorrectly can result in blocking. You can check addresses here: yandex.com/internet",
       "ipv6-support-check": "To check if a site or service supports IPv6, go to the website-ipv6-support page and enter its address.",
-      "proxy-replacement": "Replacement is possible within the first day after purchase for a valid reason.",
+      "proxy-replacement": "Replacement is possible within the first 24 hours after purchase for a valid reason and no more than 3 times. Further replacements are only possible with proxy renewal.",
       "refund-policy": "We guarantee a refund within 1 day from the moment of proxy purchase. But this does not mean that we make a refund in any case! A refund is only possible if the proxy is inoperable, after our verification."
     },
     "categories": {

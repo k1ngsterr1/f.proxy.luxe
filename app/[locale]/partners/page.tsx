@@ -35,7 +35,7 @@ export default function Partners() {
       }}
     >
       <title>{i18n("partnerss.title")}</title>
-
+      <meta name="keywords" content="партнерская, программа" />
       <section
         style={{
           maxWidth: "1200px",
