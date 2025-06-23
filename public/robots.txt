@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://proxy.luxe
+
+# Sitemaps
+Sitemap: https://proxy.luxe/sitemap.xml
