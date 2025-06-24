@@ -42,6 +42,19 @@ export default async function LocaleLayout({
         {/* <title>{title}</title> */}
         <meta name="yandex-verification" content="ff41c4cfcb5e125c" />
         <link rel="icon" href="/favicon.ico" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-E6J21WMMJF"
+          strategy="afterInteractive"
+          async
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-E6J21WMMJF');
+        `}
+        </Script>
       </head>
       <body>
         <YandexMetrika />
