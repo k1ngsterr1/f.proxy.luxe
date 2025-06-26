@@ -207,16 +207,30 @@ const ProxyList: React.FC<Props> = ({
         itemsToProlong.map((item) => item.identifier)
       );
     } else if (type === "ipv6") {
-      const allIds = selectedProxiesArray.map((proxy) => proxy.id).join(", ");
+      const orderMap = new Map<string, string[]>();
+      selectedProxiesArray.forEach((proxy) => {
+        const key = proxy.order_id ?? "no-order";
+        const arr = orderMap.get(key) ?? [];
+        arr.push(proxy.id);
+        orderMap.set(key, arr);
+      });
 
-      itemsToProlong = [
-        { identifier: allIds, representativeProxy: selectedProxiesArray[0] },
-      ];
+      // Для каждого order_id делаем по одному элементу itemsToProlong
+      itemsToProlong = Array.from(orderMap.entries()).map(([orderId, ids]) => {
+        // representativeProxy — первый прокси из этой группы (если нужен)
+        const rep = selectedProxiesArray.find((p) => p.order_id === orderId)!;
+        return {
+          identifier: ids.join(", "),
+          representativeProxy: rep,
+        };
+      });
 
-      console.log("IPv6 – all proxy IDs to prolong:", allIds);
       console.log(
-        "IPv6 unique order IDs to prolong (all proxies in order group):",
-        itemsToProlong.map((item) => item.identifier)
+        "IPv6 – grouped IDs by orderId:",
+        itemsToProlong.map(
+          (item) =>
+            `order ${item.representativeProxy.order_id}: ${item.identifier}`
+        )
       );
     } else {
       // Handle other types or return if not applicable
