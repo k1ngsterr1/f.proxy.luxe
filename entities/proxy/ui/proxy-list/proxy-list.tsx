@@ -207,29 +207,13 @@ const ProxyList: React.FC<Props> = ({
         itemsToProlong.map((item) => item.identifier)
       );
     } else if (type === "ipv6") {
-      // For IPv6, group by orderId and prolong all proxies within that order.
-      // The 'identifier' will be the orderId.
-      const orderIdMap = new Map<string, Proxy[]>();
-      selectedProxiesArray.forEach((proxy) => {
-        const orderIdValue = proxy.order_id;
-        if (orderIdValue) {
-          if (!orderIdMap.has(orderIdValue)) {
-            orderIdMap.set(orderIdValue, []);
-          }
-          // We only need one representative proxy for the API call per orderId,
-          // but the logic here is to identify unique orderIds to process.
-          // The actual API call will use the representativeProxy.
-        }
-      });
+      const allIds = selectedProxiesArray.map((proxy) => proxy.id).join(", ");
 
-      const uniqueOrderIds = Array.from(orderIdMap.keys());
-      itemsToProlong = uniqueOrderIds.map((orderIdValue) => {
-        // Find the first selected proxy that belongs to this orderId to act as representative
-        const repProxy = selectedProxiesArray.find(
-          (p) => p.order_id === orderIdValue
-        )!;
-        return { identifier: orderIdValue, representativeProxy: repProxy };
-      });
+      itemsToProlong = [
+        { identifier: allIds, representativeProxy: selectedProxiesArray[0] },
+      ];
+
+      console.log("IPv6 – all proxy IDs to prolong:", allIds);
       console.log(
         "IPv6 unique order IDs to prolong (all proxies in order group):",
         itemsToProlong.map((item) => item.identifier)

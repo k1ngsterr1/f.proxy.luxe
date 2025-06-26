@@ -164,8 +164,8 @@ export default function ProxyPage() {
             type: proxyType,
             login: item.login || "",
             password: item.password || "",
-            order_id: orderId,
-            orderId: item.orderId, // Keep both for compatibility
+            order_id: item.order_id,
+            orderId: item.orderId,
             order_number: item.order_number || "",
             //@ts-ignore
             can_prolong: item.can_prolong || false,
