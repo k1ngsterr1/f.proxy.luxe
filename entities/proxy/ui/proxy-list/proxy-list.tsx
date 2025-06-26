@@ -211,7 +211,7 @@ const ProxyList: React.FC<Props> = ({
       // The 'identifier' will be the orderId.
       const orderIdMap = new Map<string, Proxy[]>();
       selectedProxiesArray.forEach((proxy) => {
-        const orderIdValue = proxy.order_id || proxy.orderId;
+        const orderIdValue = proxy.order_id;
         if (orderIdValue) {
           if (!orderIdMap.has(orderIdValue)) {
             orderIdMap.set(orderIdValue, []);
@@ -226,7 +226,7 @@ const ProxyList: React.FC<Props> = ({
       itemsToProlong = uniqueOrderIds.map((orderIdValue) => {
         // Find the first selected proxy that belongs to this orderId to act as representative
         const repProxy = selectedProxiesArray.find(
-          (p) => p.order_id || p.orderId === orderIdValue
+          (p) => p.order_id === orderIdValue
         )!;
         return { identifier: orderIdValue, representativeProxy: repProxy };
       });
