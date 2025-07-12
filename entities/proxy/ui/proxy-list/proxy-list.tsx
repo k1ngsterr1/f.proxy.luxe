@@ -196,15 +196,28 @@ const ProxyList: React.FC<Props> = ({
 
     // Use the `type` prop passed to the ProxyList component to determine strategy
     if (type === "isp") {
-      // For ISP, each selected proxy is treated individually for prolonging.
-      // The 'identifier' will be the proxy's own ID.
-      itemsToProlong = selectedProxiesArray.map((proxy) => ({
-        identifier: proxy.id, // The actual ID of the ISP proxy
-        representativeProxy: proxy, // The proxy itself
-      }));
+      const orderMap = new Map<string, string[]>();
+      selectedProxiesArray.forEach((proxy) => {
+        const key = proxy.order_id ?? "no-order";
+        const arr = orderMap.get(key) ?? [];
+        arr.push(proxy.id);
+        orderMap.set(key, arr);
+      });
+
+      itemsToProlong = Array.from(orderMap.entries()).map(([orderId, ids]) => {
+        const rep = selectedProxiesArray.find((p) => p.order_id === orderId)!;
+        return {
+          identifier: ids.join(", "), // e.g. "isp1, isp2, isp3"
+          representativeProxy: rep,
+        };
+      });
+
       console.log(
-        "ISP items to prolong (identifier is proxy.id, one per selected proxy):",
-        itemsToProlong.map((item) => item.identifier)
+        "ISP – grouped IDs by orderId:",
+        itemsToProlong.map(
+          (item) =>
+            `order ${item.representativeProxy.order_id}: ${item.identifier}`
+        )
       );
     } else if (type === "ipv6") {
       const orderMap = new Map<string, string[]>();
@@ -252,8 +265,7 @@ const ProxyList: React.FC<Props> = ({
 
       // Determine the value for the `orderId` parameter of `prolongProxyHook`
       // Use the component's `type` prop here
-      const idForProlongHook =
-        type === "isp" ? representativeProxy.id : identifier;
+      const idForProlongHook = identifier;
 
       return new Promise<void>((resolve) => {
         prolongProxyHook(
