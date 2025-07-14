@@ -23,6 +23,7 @@
     "prolongProcessing": "Processing...",
     "prolongBatchError": "Select at least one proxy to prolong",
     "prolongBatchResult": "Prolongation completed successfully",
+    "prolongCost": "Total Cost",
     "export": "Export",
     "exportHttp": "Save HTTP(s)",
     "exportSocks": "Save SOCKS",
@@ -82,7 +83,9 @@
         "prolong": "Prolong"
       },
       "period": {
-        "1month": "1 month"
+        "1month": "1 month",
+        "2months": "2 months",
+        "3months": "3 months"
       }
     },
     "ipAuth": {

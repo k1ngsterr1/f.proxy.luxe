@@ -93,6 +93,42 @@ const ProxyList: React.FC<Props> = ({
   const selectedProxies =
     externalSelectedProxies || Array.from(internalSelectedProxies);
 
+  // Function to calculate prolongation cost
+  const calculateProlongationCost = (
+    proxyType: string,
+    period: string,
+    count: number = 1
+  ): number => {
+    const prices: Record<string, number> = {
+      isp: 2.4,
+      ipv6: 0.08,
+      ipv4: 2.4, // Assuming same as ISP
+      resident: 2.4, // Default price for resident
+    };
+
+    // Use the passed type or default to component type
+    const typeToUse = proxyType?.toLowerCase() || type?.toLowerCase() || "isp";
+    const basePrice = prices[typeToUse] || 2.4;
+
+    // Period multiplier - assuming 1m = 1 month base price
+    let periodMultiplier = 1;
+    switch (period) {
+      case "1m":
+        periodMultiplier = 1;
+        break;
+      case "2m":
+        periodMultiplier = 2;
+        break;
+      case "3m":
+        periodMultiplier = 3;
+        break;
+      default:
+        periodMultiplier = 1;
+    }
+
+    return basePrice * periodMultiplier * count;
+  };
+
   useEffect(() => {
     if (proxies) {
       const uniqueProxiesMap = new Map<string, Proxy>();
@@ -1365,7 +1401,64 @@ const ProxyList: React.FC<Props> = ({
               >
                 {" "}
                 <option value="1m">{t("table.period.1month")}</option>{" "}
+                <option value="2m">{t("table.period.2months")}</option>{" "}
+                <option value="3m">{t("table.period.3months")}</option>{" "}
               </select>{" "}
+            </div>{" "}
+            {/* Cost Display */}
+            <div
+              style={{
+                ...popupFormGroupStyle,
+                backgroundColor: "rgba(243, 214, 117, 0.1)",
+                borderRadius: "8px",
+                padding: "12px",
+                marginTop: "16px",
+                border: "1px solid rgba(243, 214, 117, 0.3)",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  color: "#f3d675",
+                  marginBottom: "4px",
+                }}
+              >
+                {t("prolongCost")}
+              </div>
+              <div
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  color: "#ffffff",
+                }}
+              >
+                $
+                {(prolongProxy as any).isBatchOperation
+                  ? calculateProlongationCost(
+                      type,
+                      prolongPeriod,
+                      selectedProxies.length
+                    ).toFixed(2)
+                  : calculateProlongationCost(
+                      prolongProxy.type || type,
+                      prolongPeriod,
+                      1
+                    ).toFixed(2)}
+              </div>
+              <div
+                style={{
+                  fontSize: "12px",
+                  color: "rgba(255, 255, 255, 0.7)",
+                  marginTop: "4px",
+                }}
+              >
+                {(prolongProxy as any).isBatchOperation
+                  ? `${selectedProxies.length} ${
+                      selectedProxies.length === 1 ? "proxy" : "proxies"
+                    } × ${prolongPeriod}`
+                  : `1 proxy × ${prolongPeriod}`}
+              </div>
             </div>{" "}
             <div style={popupButtonsContainerStyle}>
               {" "}

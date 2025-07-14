@@ -23,6 +23,7 @@
     "prolongProcessing": "Обработка...",
     "prolongBatchError": "Выберите хотя бы один прокси для продления",
     "prolongBatchResult": "Продление завершено успешно",
+    "prolongCost": "Общая стоимость",
     "export": "Экспорт",
     "exportHttp": "Сохранить HTTP(s)",
     "exportSocks": "Сохранить SOCKS",
@@ -82,7 +83,9 @@
         "prolong": "Продлить"
       },
       "period": {
-        "1month": "1 месяц"
+        "1month": "1 месяц",
+        "2months": "2 месяца",
+        "3months": "3 месяца"
       }
     },
     "ipAuth": {
