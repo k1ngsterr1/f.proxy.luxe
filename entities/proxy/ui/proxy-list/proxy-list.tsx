@@ -18,6 +18,7 @@ import { useDeleteProxy } from "@/entities/residental-proxy/api/hooks/mutations/
 import NotificationPopup from "../notification-popup/notification-popup";
 import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-prolong-proxy.mutatuion";
 import { useTranslations } from "next-intl";
+import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -67,6 +68,7 @@ const ProxyList: React.FC<Props> = ({
   onSelectAll,
 }) => {
   const t = useTranslations("proxyList");
+  const { data: userData } = useGetUser(); // Получаем данные пользователя с балансом
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [editingProxy, setEditingProxy] = useState<Proxy | null>(null);
@@ -198,6 +200,28 @@ const ProxyList: React.FC<Props> = ({
       });
       return;
     }
+
+    // Проверяем баланс для группового продления
+    const cost = calculateProlongationCost(
+      type,
+      prolongPeriod,
+      selectedProxies.length
+    );
+    const userBalance = userData?.balance || 0;
+
+    if (userBalance < cost) {
+      setNotification({
+        show: true,
+        message: t("insufficientFunds", {
+          required: cost.toFixed(2),
+          balance: userBalance.toFixed(2),
+        }),
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
     setProlongProxy({
       id: "batch",
       type: type, // Pass the main component type
@@ -648,7 +672,30 @@ const ProxyList: React.FC<Props> = ({
     setExportMenuOpen(false);
   };
 
-  const handleProlongClick = (proxy: Proxy) => setProlongProxy(proxy);
+  const handleProlongClick = (proxy: Proxy) => {
+    // Проверяем баланс перед открытием модального окна продления
+    const cost = calculateProlongationCost(
+      proxy.type || type,
+      prolongPeriod,
+      1
+    );
+    const userBalance = userData?.balance || 0;
+
+    if (userBalance < cost) {
+      setNotification({
+        show: true,
+        message: t("insufficientFunds", {
+          required: cost.toFixed(2),
+          balance: userBalance.toFixed(2),
+        }),
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
+    setProlongProxy(proxy);
+  };
   const handleDeleteConfirm = () => {
     if (notification?.proxyToDelete) {
       const proxy = notification.proxyToDelete;
