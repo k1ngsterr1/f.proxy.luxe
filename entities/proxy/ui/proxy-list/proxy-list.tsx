@@ -1205,7 +1205,7 @@ const ProxyList: React.FC<Props> = ({
                   fontWeight: "500",
                 }}
               >
-                {t("balance")}: ${userData.balance.toFixed(2)}
+                {t("balance")}: ${(Number(userData.balance) || 0).toFixed(2)}
               </span>
             )}
           </p>{" "}
