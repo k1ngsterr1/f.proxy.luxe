@@ -210,11 +210,13 @@ const ProxyList: React.FC<Props> = ({
     const userBalance = userData?.balance || 0;
 
     if (userBalance < cost) {
+      const shortfall = cost - userBalance;
       setNotification({
         show: true,
         message: t("insufficientFunds", {
           required: cost.toFixed(2),
           balance: userBalance.toFixed(2),
+          shortfall: shortfall.toFixed(2),
         }),
         type: "error",
         showRefresh: false,
@@ -404,6 +406,30 @@ const ProxyList: React.FC<Props> = ({
 
     if ((prolongProxy as any).isBatchOperation) {
       confirmBatchProlong();
+      return;
+    }
+
+    // Проверяем баланс еще раз перед отправкой запроса
+    const cost = calculateProlongationCost(
+      prolongProxy.type || type,
+      prolongPeriod,
+      1
+    );
+    const userBalance = userData?.balance || 0;
+
+    if (userBalance < cost) {
+      const shortfall = cost - userBalance;
+      setNotification({
+        show: true,
+        message: t("insufficientFunds", {
+          required: cost.toFixed(2),
+          balance: userBalance.toFixed(2),
+          shortfall: shortfall.toFixed(2),
+        }),
+        type: "error",
+        showRefresh: false,
+      });
+      setProlongProxy(null);
       return;
     }
 
@@ -682,11 +708,13 @@ const ProxyList: React.FC<Props> = ({
     const userBalance = userData?.balance || 0;
 
     if (userBalance < cost) {
+      const shortfall = cost - userBalance;
       setNotification({
         show: true,
         message: t("insufficientFunds", {
           required: cost.toFixed(2),
           balance: userBalance.toFixed(2),
+          shortfall: shortfall.toFixed(2),
         }),
         type: "error",
         showRefresh: false,
@@ -1167,7 +1195,20 @@ const ProxyList: React.FC<Props> = ({
         <div>
           {" "}
           <h3 style={cardTitleStyle}>{t("title")}</h3>{" "}
-          <p style={cardDescriptionStyle}>{t("description")}</p>{" "}
+          <p style={cardDescriptionStyle}>
+            {t("description")}
+            {userData?.balance !== undefined && (
+              <span
+                style={{
+                  marginLeft: "16px",
+                  color: "#f3d675",
+                  fontWeight: "500",
+                }}
+              >
+                {t("balance")}: ${userData.balance.toFixed(2)}
+              </span>
+            )}
+          </p>{" "}
         </div>{" "}
         <div style={{ display: "flex", gap: "10px" }}>
           {" "}
@@ -1179,7 +1220,13 @@ const ProxyList: React.FC<Props> = ({
             >
               {" "}
               <span>
-                {t("prolongBatchTitle", { count: selectedProxies.length })}
+                {t("prolongBatchTitle", { count: selectedProxies.length })} ($
+                {calculateProlongationCost(
+                  type,
+                  prolongPeriod,
+                  selectedProxies.length
+                ).toFixed(2)}
+                )
               </span>{" "}
             </button>
           )}{" "}
@@ -1412,9 +1459,23 @@ const ProxyList: React.FC<Props> = ({
                               <button
                                 style={actionButtonStyle}
                                 onClick={() => handleProlongClick(proxy)}
-                                title={t("table.buttons.prolong")}
+                                title={`${t(
+                                  "table.buttons.prolong"
+                                )} - $${calculateProlongationCost(
+                                  proxy.type || type,
+                                  prolongPeriod,
+                                  1
+                                ).toFixed(2)} за ${prolongPeriod}`}
                               >
-                                <span>{t("prolongConfirm")}</span>
+                                <span>
+                                  {t("prolongConfirm")} ($
+                                  {calculateProlongationCost(
+                                    proxy.type || type,
+                                    prolongPeriod,
+                                    1
+                                  ).toFixed(2)}
+                                  )
+                                </span>
                               </button>{" "}
                             </>
                           )}{" "}

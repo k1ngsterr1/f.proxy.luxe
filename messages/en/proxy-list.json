@@ -24,6 +24,8 @@
     "prolongBatchError": "Select at least one proxy to prolong",
     "prolongBatchResult": "Prolongation completed successfully",
     "prolongCost": "Total Cost",
+    "balance": "Balance",
+    "insufficientFunds": "Insufficient funds for prolongation. Required: ${{required}}, balance: ${{balance}}, shortfall: ${{shortfall}}",
     "export": "Export",
     "exportHttp": "Save HTTP(s)",
     "exportSocks": "Save SOCKS",

@@ -24,6 +24,8 @@
     "prolongBatchError": "Выберите хотя бы один прокси для продления",
     "prolongBatchResult": "Продление завершено успешно",
     "prolongCost": "Общая стоимость",
+    "balance": "Баланс",
+    "insufficientFunds": "Недостаточно средств для продления. Нужно: ${{required}}, баланс: ${{balance}}, не хватает: ${{shortfall}}",
     "export": "Экспорт",
     "exportHttp": "Сохранить HTTP(s)",
     "exportSocks": "Сохранить SOCKS",
