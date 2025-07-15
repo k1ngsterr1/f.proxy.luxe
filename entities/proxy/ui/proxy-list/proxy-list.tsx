@@ -207,7 +207,7 @@ const ProxyList: React.FC<Props> = ({
       prolongPeriod,
       selectedProxies.length
     );
-    const userBalance = userData?.balance || 0;
+    const userBalance = Number(userData?.balance) || 0;
 
     if (userBalance < cost) {
       const shortfall = cost - userBalance;
@@ -415,7 +415,7 @@ const ProxyList: React.FC<Props> = ({
       prolongPeriod,
       1
     );
-    const userBalance = userData?.balance || 0;
+    const userBalance = Number(userData?.balance) || 0;
 
     if (userBalance < cost) {
       const shortfall = cost - userBalance;
@@ -705,7 +705,7 @@ const ProxyList: React.FC<Props> = ({
       prolongPeriod,
       1
     );
-    const userBalance = userData?.balance || 0;
+    const userBalance = Number(userData?.balance) || 0;
 
     if (userBalance < cost) {
       const shortfall = cost - userBalance;
