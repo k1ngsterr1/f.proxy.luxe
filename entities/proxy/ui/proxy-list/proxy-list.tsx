@@ -17,7 +17,7 @@ import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
 import { useDeleteProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-delete-resident-proxy.mutation";
 import NotificationPopup from "../notification-popup/notification-popup";
 import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-prolong-proxy.mutatuion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 
 interface ProxyListItem {
@@ -68,6 +68,7 @@ const ProxyList: React.FC<Props> = ({
   onSelectAll,
 }) => {
   const t = useTranslations("proxyList");
+  const locale = useLocale();
   const { data: userData } = useGetUser(); // Получаем данные пользователя с балансом
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -94,6 +95,37 @@ const ProxyList: React.FC<Props> = ({
 
   const selectedProxies =
     externalSelectedProxies || Array.from(internalSelectedProxies);
+
+  // Функция для получения сообщения о недостаточном балансе с fallback
+  const getInsufficientFundsMessage = (
+    cost: number,
+    userBalance: number,
+    shortfall: number
+  ): string => {
+    try {
+      return t("insufficientFunds", {
+        required: cost.toFixed(2),
+        balance: userBalance.toFixed(2),
+        shortfall: shortfall.toFixed(2),
+      });
+    } catch (error) {
+      // Fallback сообщения для русской и английской версий
+      const isRussian =
+        typeof window !== "undefined" &&
+        window.location.pathname.includes("/ru");
+      return isRussian
+        ? `Недостаточно средств для продления. Нужно: $${cost.toFixed(
+            2
+          )}, баланс: $${userBalance.toFixed(
+            2
+          )}, не хватает: $${shortfall.toFixed(2)}`
+        : `Insufficient funds for prolongation. Required: $${cost.toFixed(
+            2
+          )}, balance: $${userBalance.toFixed(
+            2
+          )}, shortfall: $${shortfall.toFixed(2)}`;
+    }
+  };
 
   // Function to calculate prolongation cost
   const calculateProlongationCost = (
@@ -222,13 +254,10 @@ const ProxyList: React.FC<Props> = ({
 
     if (userBalance < cost) {
       const shortfall = cost - userBalance;
+
       setNotification({
         show: true,
-        message: t("insufficientFunds", {
-          required: cost.toFixed(2),
-          balance: userBalance.toFixed(2),
-          shortfall: shortfall.toFixed(2),
-        }),
+        message: getInsufficientFundsMessage(cost, userBalance, shortfall),
         type: "error",
         showRefresh: false,
       });
@@ -442,13 +471,10 @@ const ProxyList: React.FC<Props> = ({
 
     if (userBalance < cost) {
       const shortfall = cost - userBalance;
+
       setNotification({
         show: true,
-        message: t("insufficientFunds", {
-          required: cost.toFixed(2),
-          balance: userBalance.toFixed(2),
-          shortfall: shortfall.toFixed(2),
-        }),
+        message: getInsufficientFundsMessage(cost, userBalance, shortfall),
         type: "error",
         showRefresh: false,
       });
@@ -509,11 +535,11 @@ const ProxyList: React.FC<Props> = ({
 
             setNotification({
               show: true,
-              message: t("insufficientFunds", {
-                required: cost.toFixed(2),
-                balance: userBalance.toFixed(2),
-                shortfall: shortfall.toFixed(2),
-              }),
+              message: getInsufficientFundsMessage(
+                cost,
+                userBalance,
+                shortfall
+              ),
               type: "error",
               showRefresh: false,
             });
@@ -768,13 +794,10 @@ const ProxyList: React.FC<Props> = ({
 
     if (userBalance < cost) {
       const shortfall = cost - userBalance;
+
       setNotification({
         show: true,
-        message: t("insufficientFunds", {
-          required: cost.toFixed(2),
-          balance: userBalance.toFixed(2),
-          shortfall: shortfall.toFixed(2),
-        }),
+        message: getInsufficientFundsMessage(cost, userBalance, shortfall),
         type: "error",
         showRefresh: false,
       });
