@@ -201,6 +201,17 @@ const ProxyList: React.FC<Props> = ({
       return;
     }
 
+    // Проверяем, есть ли данные о пользователе
+    if (!userData) {
+      setNotification({
+        show: true,
+        message: "Ошибка: не удалось получить данные пользователя",
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
     // Проверяем баланс для группового продления
     const cost = calculateProlongationCost(
       type,
@@ -409,6 +420,18 @@ const ProxyList: React.FC<Props> = ({
       return;
     }
 
+    // Проверяем, есть ли данные о пользователе
+    if (!userData) {
+      setNotification({
+        show: true,
+        message: "Ошибка: не удалось получить данные пользователя",
+        type: "error",
+        showRefresh: false,
+      });
+      setProlongProxy(null);
+      return;
+    }
+
     // Проверяем баланс еще раз перед отправкой запроса
     const cost = calculateProlongationCost(
       prolongProxy.type || type,
@@ -471,12 +494,37 @@ const ProxyList: React.FC<Props> = ({
           setProlongProxy(null);
         },
         onError: (error: any) => {
-          setNotification({
-            show: true,
-            message: t("prolongFailed"),
-            type: "error",
-            showRefresh: false,
-          });
+          // Проверяем, является ли ошибка связанной с недостаточным балансом
+          if (
+            error?.response?.data?.message === "Insufficient balance" ||
+            error?.message === "Insufficient balance"
+          ) {
+            const cost = calculateProlongationCost(
+              prolongProxy.type || type,
+              prolongPeriod,
+              1
+            );
+            const userBalance = Number(userData?.balance) || 0;
+            const shortfall = cost - userBalance;
+
+            setNotification({
+              show: true,
+              message: t("insufficientFunds", {
+                required: cost.toFixed(2),
+                balance: userBalance.toFixed(2),
+                shortfall: shortfall.toFixed(2),
+              }),
+              type: "error",
+              showRefresh: false,
+            });
+          } else {
+            setNotification({
+              show: true,
+              message: t("prolongFailed"),
+              type: "error",
+              showRefresh: false,
+            });
+          }
           setProlongProxy(null);
         },
       }
@@ -699,6 +747,17 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const handleProlongClick = (proxy: Proxy) => {
+    // Проверяем, есть ли данные о пользователе
+    if (!userData) {
+      setNotification({
+        show: true,
+        message: "Ошибка: не удалось получить данные пользователя",
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
     // Проверяем баланс перед открытием модального окна продления
     const cost = calculateProlongationCost(
       proxy.type || type,
@@ -722,6 +781,7 @@ const ProxyList: React.FC<Props> = ({
       return;
     }
 
+    // Только если баланс достаточен, открываем модальное окно
     setProlongProxy(proxy);
   };
   const handleDeleteConfirm = () => {
