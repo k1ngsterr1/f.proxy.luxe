@@ -62,7 +62,8 @@
       "pleaseRefresh": "Please refresh the page",
       "refreshNow": "Refresh now",
       "cancel": "Close",
-      "delete-confirm": "Delete"
+      "delete-confirm": "Delete",
+      "insufficientFunds": "Insufficient funds for prolongation. Required: ${{required}}, balance: ${{balance}}, shortfall: ${{shortfall}}"
     },
     "table": {
       "headers": {

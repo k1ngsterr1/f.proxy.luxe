@@ -382,11 +382,8 @@ const ProxyList: React.FC<Props> = ({
 
       setNotification({
         show: true,
-        message: t("prolongBatchResult", {
-          success: successCount,
-          fail: failCount,
-        }),
-        type: successCount > 0 ? "success" : "error",
+        message: t("prolongSuccess"),
+        type: "success",
         showRefresh: true,
       });
 

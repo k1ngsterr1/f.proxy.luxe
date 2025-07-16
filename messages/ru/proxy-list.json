@@ -62,7 +62,8 @@
       "pleaseRefresh": "Пожалуйста, обновите страницу",
       "refreshNow": "Обновить сейчас",
       "cancel": "Закрыть",
-      "delete-confirm": "Удалить"
+      "delete-confirm": "Удалить",
+      "insufficientFunds": "Недостаточно средств для продления. Нужно: ${{required}}, баланс: ${{balance}}, не хватает: ${{shortfall}}"
     },
     "table": {
       "headers": {
