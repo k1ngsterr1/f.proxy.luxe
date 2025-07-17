@@ -400,13 +400,24 @@ const ProxyList: React.FC<Props> = ({
         results,
       });
 
-      setNotification({
-        show: true,
-        message: t("prolongSuccess"),
-        type: "success",
-        showRefresh: true,
-      });
+      // Close the popup first, then show notification
+      console.log("Closing prolongation popup and showing notification");
+      setProlongProxy(null);
+      setIsSubmittingBatchProlong(false);
 
+      // Small delay to ensure popup is closed before showing notification
+      setTimeout(() => {
+        console.log("Showing batch prolong result notification");
+        setNotification({
+          show: true,
+          message: t("prolongBatchResult", {
+            success: successCount,
+            fail: failCount,
+          }),
+          type: successCount > 0 ? "success" : "error",
+          showRefresh: true,
+        });
+      }, 100);
       if (successCount > 0) {
         if (onSelectAll) {
           onSelectAll();
@@ -416,15 +427,21 @@ const ProxyList: React.FC<Props> = ({
       }
     } catch (error) {
       console.error("Error during batch prolong:", error);
-      setNotification({
-        show: true,
-        message: "An error occurred during batch prolonging",
-        type: "error",
-        showRefresh: false,
-      });
-    } finally {
+
+      // Close the popup first, then show error notification
+      console.log("Closing prolongation popup and showing error notification");
       setProlongProxy(null);
       setIsSubmittingBatchProlong(false);
+
+      setTimeout(() => {
+        console.log("Showing batch prolong error notification");
+        setNotification({
+          show: true,
+          message: "An error occurred during batch prolonging",
+          type: "error",
+          showRefresh: false,
+        });
+      }, 100);
     }
   };
 

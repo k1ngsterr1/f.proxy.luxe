@@ -85,7 +85,7 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
     bottom: 0,
     backgroundColor: "rgba(0, 0, 0, 0.8)",
     backdropFilter: "blur(8px)",
-    zIndex: 1000,
+    zIndex: 1100,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
