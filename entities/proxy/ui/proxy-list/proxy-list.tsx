@@ -91,6 +91,9 @@ const ProxyList: React.FC<Props> = ({
   >(new Set());
   const [isSubmittingBatchProlong, setIsSubmittingBatchProlong] =
     useState(false);
+  const [batchProlongProcessing, setBatchProlongProcessing] = useState(false);
+  const [batchProlongCompleted, setBatchProlongCompleted] = useState(false);
+  const [forceClosePopup, setForceClosePopup] = useState(false);
 
   const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
 
@@ -166,6 +169,30 @@ const ProxyList: React.FC<Props> = ({
     }
   }, [proxies]);
 
+  // Auto-close popup when batch operation completes
+  useEffect(() => {
+    if (
+      batchProlongCompleted &&
+      prolongProxy &&
+      (prolongProxy as any).isBatchOperation
+    ) {
+      console.log("Auto-closing popup due to batch completion");
+      setProlongProxy(null);
+      setBatchProlongCompleted(false);
+    }
+  }, [batchProlongCompleted, prolongProxy]);
+
+  // Force close popup immediately when forceClosePopup is true
+  useEffect(() => {
+    if (forceClosePopup) {
+      console.log("Force closing popup immediately");
+      setProlongProxy(null);
+      setForceClosePopup(false);
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
+    }
+  }, [forceClosePopup]);
+
   const allSelected =
     uniqueProxies.length > 0 && selectedProxies.length === uniqueProxies.length;
 
@@ -177,6 +204,7 @@ const ProxyList: React.FC<Props> = ({
   const {
     prolongProxy: prolongProxyHook,
     isProlonging,
+    reset: resetProlongHook,
     // prolongError, // Removed unused prolongError
   } = useProlongProxy();
 
@@ -264,9 +292,22 @@ const ProxyList: React.FC<Props> = ({
 
   const confirmBatchProlong = async () => {
     if (!prolongProxy) return;
-    if (isProlonging) return;
+    if (isSubmittingBatchProlong || batchProlongProcessing) {
+      console.log("Already submitting batch prolong, returning", {
+        isSubmittingBatchProlong,
+        batchProlongProcessing,
+      });
+      return;
+    }
 
+    console.log("Resetting prolong hook state before batch operation");
+    resetProlongHook();
+
+    console.log("Setting both batch states to true");
     setIsSubmittingBatchProlong(true);
+    setBatchProlongProcessing(true);
+    setBatchProlongCompleted(false);
+    console.log("Starting batch prolongation process");
 
     const selectedProxiesArray = uniqueProxies.filter((p) =>
       selectedProxies.includes(p.id)
@@ -341,7 +382,9 @@ const ProxyList: React.FC<Props> = ({
     } else {
       // Handle other types or return if not applicable
       console.warn("Batch prolong not configured for type:", type);
-      setIsSubmittingBatchProlong(false); // Reset submission state
+      console.log("Setting both batch states to false (unsupported type)");
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
       setProlongProxy(null); // Close popup
       return;
     }
@@ -361,6 +404,7 @@ const ProxyList: React.FC<Props> = ({
       const idForProlongHook = identifier;
 
       return new Promise<void>((resolve) => {
+        console.log(`Starting prolongation for item: ${identifier}`);
         prolongProxyHook(
           {
             orderId: representativeProxy.orderId as string,
@@ -390,7 +434,10 @@ const ProxyList: React.FC<Props> = ({
     });
 
     try {
+      console.log(`Starting Promise.all for ${prolongPromises.length} items`);
       await Promise.all(prolongPromises);
+      console.log("Promise.all completed successfully");
+
       successCount = results.success.length;
       failCount = results.failed.length;
 
@@ -402,22 +449,36 @@ const ProxyList: React.FC<Props> = ({
 
       // Close the popup first, then show notification
       console.log("Closing prolongation popup and showing notification");
-      setProlongProxy(null);
-      setIsSubmittingBatchProlong(false);
+      console.log("States before closing:", {
+        isSubmittingBatchProlong,
+        batchProlongProcessing,
+        isProlonging,
+      });
 
-      // Small delay to ensure popup is closed before showing notification
-      setTimeout(() => {
-        console.log("Showing batch prolong result notification");
-        setNotification({
-          show: true,
-          message: t("prolongBatchResult", {
-            success: successCount,
-            fail: failCount,
-          }),
-          type: successCount > 0 ? "success" : "error",
-          showRefresh: true,
-        });
-      }, 100);
+      console.log("Setting both batch states to false");
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
+      setBatchProlongCompleted(true);
+
+      // Reset the hook state to ensure UI is not stuck
+      console.log("Resetting prolong hook state after batch completion");
+      resetProlongHook();
+
+      // Force close popup immediately - this bypasses React's async state updates
+      console.log("Force closing popup immediately after batch completion");
+      setForceClosePopup(true);
+
+      // Show notification immediately
+      console.log("Showing batch prolong result notification");
+      setNotification({
+        show: true,
+        message: t("prolongBatchResult", {
+          success: successCount,
+          fail: failCount,
+        }),
+        type: successCount > 0 ? "success" : "error",
+        showRefresh: true,
+      });
       if (successCount > 0) {
         if (onSelectAll) {
           onSelectAll();
@@ -430,29 +491,57 @@ const ProxyList: React.FC<Props> = ({
 
       // Close the popup first, then show error notification
       console.log("Closing prolongation popup and showing error notification");
-      setProlongProxy(null);
+      console.log("Setting both batch states to false (error case)");
       setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
+      setBatchProlongCompleted(true);
 
-      setTimeout(() => {
-        console.log("Showing batch prolong error notification");
-        setNotification({
-          show: true,
-          message: "An error occurred during batch prolonging",
-          type: "error",
-          showRefresh: false,
-        });
-      }, 100);
+      // Reset the hook state to ensure UI is not stuck
+      console.log("Resetting prolong hook state after batch error");
+      resetProlongHook();
+
+      // Force close popup immediately on error
+      console.log("Force closing popup immediately after batch error");
+      setForceClosePopup(true);
+
+      console.log("Showing batch prolong error notification");
+      setNotification({
+        show: true,
+        message: "An error occurred during batch prolonging",
+        type: "error",
+        showRefresh: false,
+      });
     }
   };
 
   const confirmProlong = () => {
     if (!prolongProxy) return;
-    if (isProlonging) return;
 
+    console.log("confirmProlong called with:", {
+      isBatchOperation: (prolongProxy as any).isBatchOperation,
+      isSubmittingBatchProlong,
+      batchProlongProcessing,
+      isProlonging,
+    });
+
+    // For batch operations, only check isSubmittingBatchProlong
     if ((prolongProxy as any).isBatchOperation) {
+      if (isSubmittingBatchProlong || batchProlongProcessing) {
+        console.log("Batch operation already in progress, returning");
+        return;
+      }
+      console.log("Starting batch prolong");
       confirmBatchProlong();
       return;
     }
+
+    // For single operations, check isProlonging
+    if (isProlonging) {
+      console.log("Single operation already in progress, returning");
+      return;
+    }
+
+    console.log("Starting single prolong");
 
     // Проверяем, есть ли данные о пользователе
     if (!userData) {
@@ -563,8 +652,12 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const cancelProlong = () => {
+    console.log("Canceling prolong - setting both batch states to false");
     setProlongProxy(null);
     setIsSubmittingBatchProlong(false);
+    setBatchProlongProcessing(false);
+    setBatchProlongCompleted(false);
+    setForceClosePopup(false);
   };
 
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
@@ -935,8 +1028,8 @@ const ProxyList: React.FC<Props> = ({
     ...popupButtonStyle,
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     color: "#f3d675",
-    opacity: isSubmittingBatchProlong ? 0.5 : 1,
-    cursor: isSubmittingBatchProlong ? "not-allowed" : "pointer",
+    opacity: 1, // Will be controlled by disabled state
+    cursor: "pointer", // Will be controlled by disabled state
   };
   const popupCancelButtonStyle: React.CSSProperties = {
     ...popupButtonStyle,
@@ -1597,7 +1690,7 @@ const ProxyList: React.FC<Props> = ({
           </table>{" "}
         </div>{" "}
       </div>{" "}
-      {prolongProxy && (
+      {prolongProxy && !forceClosePopup && (
         <div
           style={popupOverlayStyle}
           onClick={(e) => {
@@ -1708,9 +1801,17 @@ const ProxyList: React.FC<Props> = ({
               <button
                 style={popupConfirmButtonStyle}
                 onClick={confirmProlong}
-                disabled={isSubmittingBatchProlong || isProlonging}
+                disabled={
+                  (prolongProxy as any).isBatchOperation
+                    ? isSubmittingBatchProlong
+                    : isProlonging
+                }
               >
-                {isSubmittingBatchProlong || isProlonging
+                {(prolongProxy as any).isBatchOperation
+                  ? isSubmittingBatchProlong
+                    ? t("prolongProcessing")
+                    : t("prolongConfirm")
+                  : isProlonging
                   ? t("prolongProcessing")
                   : t("prolongConfirm")}
               </button>{" "}
