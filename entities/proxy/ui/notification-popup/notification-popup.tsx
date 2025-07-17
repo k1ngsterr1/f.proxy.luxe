@@ -101,13 +101,16 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
     padding: "32px 28px",
     width: "90%",
     maxWidth: "450px",
-    boxShadow: "0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(243, 214, 117, 0.1)",
+    boxShadow:
+      "0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(243, 214, 117, 0.1)",
     animation: "fadeIn 0.3s ease-out",
     display: "flex",
     flexDirection: "column",
     gap: "20px",
     position: "relative",
-    transform: isVisible ? "translateY(0) scale(1)" : "translateY(-20px) scale(0.95)",
+    transform: isVisible
+      ? "translateY(0) scale(1)"
+      : "translateY(-20px) scale(0.95)",
     transition: "all 0.3s ease",
   };
 
@@ -180,84 +183,39 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
       <style>{popupAnimationStyles}</style>
       <div style={overlayStyle}>
         <div style={popupStyle}>
-        <button
-          style={closeButtonStyle}
-          onClick={handleClose}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(243, 214, 117, 0.2)";
-            e.currentTarget.style.borderColor = "rgba(243, 214, 117, 0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(243, 214, 117, 0.1)";
-            e.currentTarget.style.borderColor = "rgba(243, 214, 117, 0.2)";
-          }}
-        >
-          <X size={16} />
-        </button>
-        
-        {/* Message container with better styling */}
-        <div
-          style={{
-            fontSize: "16px",
-            color: getTextColor(),
-            textAlign: "center",
-            lineHeight: "1.5",
-            paddingTop: "8px",
-            fontWeight: "500",
-            letterSpacing: "0.01em",
-          }}
-        >
-          {message}
-        </div>
-
-        {showDeleteConfirmation ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: "16px",
-              gap: "16px",
-              paddingTop: "16px",
-              borderTop: "1px solid rgba(243, 214, 117, 0.15)",
+          <button
+            style={closeButtonStyle}
+            onClick={handleClose}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor =
+                "rgba(243, 214, 117, 0.2)";
+              e.currentTarget.style.borderColor = "rgba(243, 214, 117, 0.4)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor =
+                "rgba(243, 214, 117, 0.1)";
+              e.currentTarget.style.borderColor = "rgba(243, 214, 117, 0.2)";
             }}
           >
-            <button
-              onClick={handleCancel}
-              style={{
-                ...buttonStyle,
-                backgroundColor: "rgba(255, 255, 255, 0.05)",
-                color: "#cccccc",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
-                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
-              }}
-            >
-              {t("cancel") || "Cancel"}
-            </button>
-            <button 
-              onClick={handleConfirmDelete} 
-              style={deleteButtonStyle}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 59, 48, 0.25)";
-                e.currentTarget.style.borderColor = "rgba(255, 59, 48, 0.4)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 59, 48, 0.15)";
-                e.currentTarget.style.borderColor = "rgba(255, 59, 48, 0.3)";
-              }}
-            >
-              {t("delete-confirm") || "Delete"}
-            </button>
+            <X size={16} />
+          </button>
+
+          {/* Message container with better styling */}
+          <div
+            style={{
+              fontSize: "16px",
+              color: getTextColor(),
+              textAlign: "center",
+              lineHeight: "1.5",
+              paddingTop: "8px",
+              fontWeight: "500",
+              letterSpacing: "0.01em",
+            }}
+          >
+            {message}
           </div>
-        ) : (
-          showRefreshButton && (
+
+          {showDeleteConfirmation ? (
             <div
               style={{
                 display: "flex",
@@ -278,40 +236,101 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
                   border: "1px solid rgba(255, 255, 255, 0.1)",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.borderColor =
+                    "rgba(255, 255, 255, 0.2)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
-                  e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.05)";
+                  e.currentTarget.style.borderColor =
+                    "rgba(255, 255, 255, 0.1)";
                 }}
               >
                 {t("cancel") || "Cancel"}
               </button>
               <button
-                onClick={handleRefresh}
-                style={{
-                  ...buttonStyle,
-                  backgroundColor: "rgba(243, 214, 117, 0.15)",
-                  color: "#f3d675",
-                  border: "1px solid rgba(243, 214, 117, 0.3)",
-                }}
+                onClick={handleConfirmDelete}
+                style={deleteButtonStyle}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(243, 214, 117, 0.25)";
-                  e.currentTarget.style.borderColor = "rgba(243, 214, 117, 0.4)";
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(255, 59, 48, 0.25)";
+                  e.currentTarget.style.borderColor = "rgba(255, 59, 48, 0.4)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(243, 214, 117, 0.15)";
-                  e.currentTarget.style.borderColor = "rgba(243, 214, 117, 0.3)";
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(255, 59, 48, 0.15)";
+                  e.currentTarget.style.borderColor = "rgba(255, 59, 48, 0.3)";
                 }}
               >
-                {t("refreshNow")}
+                {t("delete-confirm") || "Delete"}
               </button>
             </div>
-          )
-        )}
+          ) : (
+            showRefreshButton && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  marginTop: "16px",
+                  gap: "16px",
+                  paddingTop: "16px",
+                  borderTop: "1px solid rgba(243, 214, 117, 0.15)",
+                }}
+              >
+                <button
+                  onClick={handleCancel}
+                  style={{
+                    ...buttonStyle,
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                    color: "#cccccc",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255, 255, 255, 0.1)";
+                    e.currentTarget.style.borderColor =
+                      "rgba(255, 255, 255, 0.2)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255, 255, 255, 0.05)";
+                    e.currentTarget.style.borderColor =
+                      "rgba(255, 255, 255, 0.1)";
+                  }}
+                >
+                  {t("cancel") || "Cancel"}
+                </button>
+                <button
+                  onClick={handleRefresh}
+                  style={{
+                    ...buttonStyle,
+                    backgroundColor: "rgba(243, 214, 117, 0.15)",
+                    color: "#f3d675",
+                    border: "1px solid rgba(243, 214, 117, 0.3)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(243, 214, 117, 0.25)";
+                    e.currentTarget.style.borderColor =
+                      "rgba(243, 214, 117, 0.4)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(243, 214, 117, 0.15)";
+                    e.currentTarget.style.borderColor =
+                      "rgba(243, 214, 117, 0.3)";
+                  }}
+                >
+                  {t("refreshNow")}
+                </button>
+              </div>
+            )
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };
