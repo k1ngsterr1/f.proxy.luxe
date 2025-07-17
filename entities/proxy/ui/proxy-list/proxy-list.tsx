@@ -11,6 +11,7 @@ import {
   Key,
   Trash2,
   Check,
+  X,
 } from "lucide-react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
@@ -102,29 +103,19 @@ const ProxyList: React.FC<Props> = ({
     userBalance: number,
     shortfall: number
   ): string => {
-    try {
-      return t("insufficientFunds", {
-        required: cost.toFixed(2),
-        balance: userBalance.toFixed(2),
-        shortfall: shortfall.toFixed(2),
-      });
-    } catch (error) {
-      // Fallback сообщения для русской и английской версий
-      const isRussian =
-        typeof window !== "undefined" &&
-        window.location.pathname.includes("/ru");
-      return isRussian
-        ? `Недостаточно средств для продления. Нужно: $${cost.toFixed(
-            2
-          )}, баланс: $${userBalance.toFixed(
-            2
-          )}, не хватает: $${shortfall.toFixed(2)}`
-        : `Insufficient funds for prolongation. Required: $${cost.toFixed(
-            2
-          )}, balance: $${userBalance.toFixed(
-            2
-          )}, shortfall: $${shortfall.toFixed(2)}`;
-    }
+    // Используем fallback сообщения напрямую, пока не разберемся с переводами
+    const isRussian = locale === "ru";
+    return isRussian
+      ? `Недостаточно средств для продления. Нужно: $${cost.toFixed(
+          2
+        )}, баланс: $${userBalance.toFixed(
+          2
+        )}, не хватает: $${shortfall.toFixed(2)}`
+      : `Insufficient funds for prolongation. Required: $${cost.toFixed(
+          2
+        )}, balance: $${userBalance.toFixed(
+          2
+        )}, shortfall: $${shortfall.toFixed(2)}`;
   };
 
   // Function to calculate prolongation cost
@@ -866,12 +857,32 @@ const ProxyList: React.FC<Props> = ({
     padding: "24px",
     width: "400px",
     maxWidth: "90%",
+    position: "relative",
   };
   const popupTitleStyle: React.CSSProperties = {
     fontSize: "18px",
     fontWeight: 600,
     color: "#FFFFFF",
     marginTop: 0,
+    marginBottom: "16px",
+  };
+  const popupCloseButtonStyle: React.CSSProperties = {
+    position: "absolute",
+    top: "16px",
+    right: "16px",
+    background: "transparent",
+    border: "none",
+    color: "#f3d675",
+    cursor: "pointer",
+    padding: "4px",
+    borderRadius: "4px",
+    transition: "all 0.2s ease",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+  const popupHeaderStyle: React.CSSProperties = {
+    position: "relative",
     marginBottom: "16px",
   };
   const popupFormGroupStyle: React.CSSProperties = { marginBottom: "20px" };
@@ -1570,15 +1581,39 @@ const ProxyList: React.FC<Props> = ({
         </div>{" "}
       </div>{" "}
       {prolongProxy && (
-        <div style={popupOverlayStyle}>
+        <div
+          style={popupOverlayStyle}
+          onClick={(e) => {
+            // Close popup when clicking on overlay
+            if (e.target === e.currentTarget) {
+              cancelProlong();
+            }
+          }}
+        >
           {" "}
           <div style={popupContentStyle}>
             {" "}
-            <h3 style={popupTitleStyle}>
-              {(prolongProxy as any).isBatchOperation
-                ? t("prolongBatchTitle", { count: selectedProxies.length })
-                : t("prolongTitle")}
-            </h3>{" "}
+            <div style={popupHeaderStyle}>
+              {" "}
+              <h3 style={popupTitleStyle}>
+                {(prolongProxy as any).isBatchOperation
+                  ? t("prolongBatchTitle", { count: selectedProxies.length })
+                  : t("prolongTitle")}
+              </h3>{" "}
+              <button
+                style={popupCloseButtonStyle}
+                onClick={cancelProlong}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
+              >
+                <X size={20} />
+              </button>{" "}
+            </div>{" "}
             <div style={popupFormGroupStyle}>
               {" "}
               <label style={popupLabelStyle}>{t("prolongSelect")}</label>{" "}
