@@ -20,6 +20,7 @@ import NotificationPopup from "../notification-popup/notification-popup";
 import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-prolong-proxy.mutatuion";
 import { useTranslations, useLocale } from "next-intl";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { apiClient } from "@/shared/config/apiClient";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -215,28 +216,15 @@ const ProxyList: React.FC<Props> = ({
     id: string;
     periodId: string;
   }): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      // Make direct API call instead of using hook
-      fetch("/api/v1/products/prolong", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(() => {
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+    console.log("directProlongCall called with params:", params);
+
+    try {
+      const response = await apiClient.post("/api/v1/products/prolong", params);
+      console.log("API response data:", response.data);
+    } catch (error) {
+      console.error("API error:", error);
+      throw error;
+    }
   };
 
   const handleCheckboxChange = (proxyId: string) => {
@@ -435,10 +423,16 @@ const ProxyList: React.FC<Props> = ({
       return new Promise<void>(async (resolve) => {
         try {
           console.log(`Starting prolongation for item: ${identifier}`);
+          console.log(
+            "Using orderId:",
+            representativeProxy.orderId || representativeProxy.order_id
+          );
 
           // Use direct API call instead of hook for batch operations
           await directProlongCall({
-            orderId: representativeProxy.orderId as string,
+            orderId:
+              representativeProxy.orderId ||
+              (representativeProxy.order_id as string),
             type: representativeProxy.type,
             id: idForProlongHook as any,
             periodId: prolongPeriod,
@@ -449,6 +443,12 @@ const ProxyList: React.FC<Props> = ({
           resolve();
         } catch (error) {
           console.error(`Failed to prolong item ${identifier}:`, error);
+          console.error("Error details:", {
+            identifier,
+            representativeProxy,
+            prolongPeriod,
+            error: error instanceof Error ? error.message : error,
+          });
           results.failed.push(identifier);
           resolve();
         }
