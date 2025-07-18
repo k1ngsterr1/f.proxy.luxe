@@ -35,11 +35,17 @@ export default async function LocaleLayout({
   // 2. Load translation messages for the current locale
   const messages = await getMessages();
 
+  // 3. Define page titles based on locale
+  const pageTitle =
+    locale === "ru"
+      ? "Купить прокси, резидентные прокси цена, приватные прокси недорого, резидентские индивидуальные IPv4, IPv6, ISP proxies серверы | Proxy.luxe"
+      : "Buy proxy, residential proxy price, private proxy inexpensive, residential individual IPv4, IPv6, ISP proxies servers | Proxy.luxe";
+
   return (
     <html lang={locale}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* <title>{title}</title> */}
+        <title>{pageTitle}</title>
         <meta name="yandex-verification" content="ff41c4cfcb5e125c" />
         <link rel="icon" href="/favicon.ico" />
         <Script
