@@ -862,12 +862,8 @@ const ProxyList: React.FC<Props> = ({
         } else {
           const login = proxy.login || "user";
           const password = proxy.password || "pass";
-          const full_ip =
-            proxy.ip + (proxy.port_socks ? `:${proxy.port_socks}` : "");
-          contentSocksFirstFormat += `${full_ip}:${login}:${password}\n`;
-          const ip = proxy.ip;
-          const port = proxy.port_socks;
-          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
+          contentSocksFirstFormat += `${proxy.ip}:${login}:${password}\n`;
+          contentSocksSecondFormat += `socks5://${login}:${password}@${proxy.ip}\n`;
         }
       }
     });
