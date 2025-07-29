@@ -698,12 +698,19 @@ const ProxyList: React.FC<Props> = ({
           }
         });
       } else {
-        const login = proxy.login || "user";
-        const password = proxy.password || "pass";
-        const full_ip =
-          proxy.ip + (proxy.port_http ? `:${proxy.port_http}` : "");
-        contentHttpFirstFormat += `${full_ip}:${login}:${password}\n`;
-        contentHttpSecondFormat += `${login}:${password}@${full_ip}\n`;
+        if (proxy.type === "isp") {
+          const login = proxy.login || "user";
+          const password = proxy.password || "pass";
+          const full_ip =
+            proxy.ip + (proxy.port_http ? `:${proxy.port_http}` : "");
+          contentHttpFirstFormat += `${full_ip}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${full_ip}\n`;
+        } else {
+          const login = proxy.login || "user";
+          const password = proxy.password || "pass";
+          contentHttpFirstFormat += `${proxy.ip}:${login}:${password}\n`;
+          contentHttpSecondFormat += `${login}:${password}@${proxy.ip}\n`;
+        }
       }
     });
     const fullContent = `${contentHttpFirstFormat}\n${contentHttpSecondFormat}`;
@@ -741,14 +748,25 @@ const ProxyList: React.FC<Props> = ({
           }
         });
       } else {
-        const login = proxy.login || "user";
-        const password = proxy.password || "pass";
-        const full_ip =
-          proxy.ip + (proxy.port_socks ? `:${proxy.port_socks}` : "");
-        contentSocksFirstFormat += `${full_ip}:${login}:${password}\n`;
-        const ip = proxy.ip;
-        const port = proxy.port_socks;
-        contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
+        if (proxy.type === "isp") {
+          const login = proxy.login || "user";
+          const password = proxy.password || "pass";
+          const full_ip =
+            proxy.ip + (proxy.port_socks ? `:${proxy.port_socks}` : "");
+          contentSocksFirstFormat += `${full_ip}:${login}:${password}\n`;
+          const ip = proxy.ip;
+          const port = proxy.port_socks;
+          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
+        } else {
+          const login = proxy.login || "user";
+          const password = proxy.password || "pass";
+          const full_ip =
+            proxy.ip + (proxy.port_socks ? `:${proxy.port_socks}` : "");
+          contentSocksFirstFormat += `${full_ip}:${login}:${password}\n`;
+          const ip = proxy.ip;
+          const port = proxy.port_socks;
+          contentSocksSecondFormat += `socks5://${login}:${password}@${ip}:${port}\n`;
+        }
       }
     });
     const fullContent = `${contentSocksFirstFormat}\n${contentSocksSecondFormat}`;
