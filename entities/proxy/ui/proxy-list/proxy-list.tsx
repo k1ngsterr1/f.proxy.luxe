@@ -11,6 +11,7 @@ import {
   Key,
   Trash2,
   Check,
+  X,
 } from "lucide-react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import EditProxyPopup from "../edit-proxy-popup/edit-proxy-popup";
@@ -19,6 +20,7 @@ import NotificationPopup from "../notification-popup/notification-popup";
 import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-prolong-proxy.mutatuion";
 import { useTranslations, useLocale } from "next-intl";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
+import { apiClient } from "@/shared/config/apiClient";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -90,6 +92,9 @@ const ProxyList: React.FC<Props> = ({
   >(new Set());
   const [isSubmittingBatchProlong, setIsSubmittingBatchProlong] =
     useState(false);
+  const [batchProlongProcessing, setBatchProlongProcessing] = useState(false);
+  const [batchProlongCompleted, setBatchProlongCompleted] = useState(false);
+  const [forceClosePopup, setForceClosePopup] = useState(false);
 
   const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
 
@@ -102,29 +107,19 @@ const ProxyList: React.FC<Props> = ({
     userBalance: number,
     shortfall: number
   ): string => {
-    try {
-      return t("insufficientFunds", {
-        required: cost.toFixed(2),
-        balance: userBalance.toFixed(2),
-        shortfall: shortfall.toFixed(2),
-      });
-    } catch (error) {
-      // Fallback сообщения для русской и английской версий
-      const isRussian =
-        typeof window !== "undefined" &&
-        window.location.pathname.includes("/ru");
-      return isRussian
-        ? `Недостаточно средств для продления. Нужно: $${cost.toFixed(
-            2
-          )}, баланс: $${userBalance.toFixed(
-            2
-          )}, не хватает: $${shortfall.toFixed(2)}`
-        : `Insufficient funds for prolongation. Required: $${cost.toFixed(
-            2
-          )}, balance: $${userBalance.toFixed(
-            2
-          )}, shortfall: $${shortfall.toFixed(2)}`;
-    }
+    // Используем fallback сообщения напрямую, пока не разберемся с переводами
+    const isRussian = locale === "ru";
+    return isRussian
+      ? `Недостаточно средств для продления. Нужно: $${cost.toFixed(
+          2
+        )}, баланс: $${userBalance.toFixed(
+          2
+        )}, не хватает: $${shortfall.toFixed(2)}`
+      : `Insufficient funds for prolongation. Required: $${cost.toFixed(
+          2
+        )}, balance: $${userBalance.toFixed(
+          2
+        )}, shortfall: $${shortfall.toFixed(2)}`;
   };
 
   // Function to calculate prolongation cost
@@ -175,6 +170,30 @@ const ProxyList: React.FC<Props> = ({
     }
   }, [proxies]);
 
+  // Auto-close popup when batch operation completes
+  useEffect(() => {
+    if (
+      batchProlongCompleted &&
+      prolongProxy &&
+      (prolongProxy as any).isBatchOperation
+    ) {
+      console.log("Auto-closing popup due to batch completion");
+      setProlongProxy(null);
+      setBatchProlongCompleted(false);
+    }
+  }, [batchProlongCompleted, prolongProxy]);
+
+  // Force close popup immediately when forceClosePopup is true
+  useEffect(() => {
+    if (forceClosePopup) {
+      console.log("Force closing popup immediately");
+      setProlongProxy(null);
+      setForceClosePopup(false);
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
+    }
+  }, [forceClosePopup]);
+
   const allSelected =
     uniqueProxies.length > 0 && selectedProxies.length === uniqueProxies.length;
 
@@ -186,8 +205,27 @@ const ProxyList: React.FC<Props> = ({
   const {
     prolongProxy: prolongProxyHook,
     isProlonging,
+    reset: resetProlongHook,
     // prolongError, // Removed unused prolongError
   } = useProlongProxy();
+
+  // Direct API call function for batch operations to avoid hook conflicts
+  const directProlongCall = async (params: {
+    orderId: string;
+    type: string;
+    id: string;
+    periodId: string;
+  }): Promise<void> => {
+    console.log("directProlongCall called with params:", params);
+
+    try {
+      const response = await apiClient.post("/api/v1/products/prolong", params);
+      console.log("API response data:", response.data);
+    } catch (error) {
+      console.error("API error:", error);
+      throw error;
+    }
+  };
 
   const handleCheckboxChange = (proxyId: string) => {
     if (onSelectProxy) {
@@ -273,9 +311,23 @@ const ProxyList: React.FC<Props> = ({
 
   const confirmBatchProlong = async () => {
     if (!prolongProxy) return;
-    if (isProlonging) return;
+    if (isSubmittingBatchProlong || batchProlongProcessing) {
+      console.log("Already submitting batch prolong, returning", {
+        isSubmittingBatchProlong,
+        batchProlongProcessing,
+      });
+      return;
+    }
 
+    console.log("Resetting prolong hook state before batch operation");
+    resetProlongHook();
+
+    console.log("Setting both batch states to true");
     setIsSubmittingBatchProlong(true);
+    setBatchProlongProcessing(true);
+    setBatchProlongCompleted(false);
+    setForceClosePopup(false);
+    console.log("Starting batch prolongation process");
 
     const selectedProxiesArray = uniqueProxies.filter((p) =>
       selectedProxies.includes(p.id)
@@ -350,7 +402,9 @@ const ProxyList: React.FC<Props> = ({
     } else {
       // Handle other types or return if not applicable
       console.warn("Batch prolong not configured for type:", type);
-      setIsSubmittingBatchProlong(false); // Reset submission state
+      console.log("Setting both batch states to false (unsupported type)");
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
       setProlongProxy(null); // Close popup
       return;
     }
@@ -364,42 +418,48 @@ const ProxyList: React.FC<Props> = ({
 
     const prolongPromises = itemsToProlong.map(async (item) => {
       const { identifier, representativeProxy } = item;
-
-      // Determine the value for the `orderId` parameter of `prolongProxyHook`
-      // Use the component's `type` prop here
       const idForProlongHook = identifier;
 
-      return new Promise<void>((resolve) => {
-        prolongProxyHook(
-          {
-            orderId: representativeProxy.orderId as string,
+      return new Promise<void>(async (resolve) => {
+        try {
+          console.log(`Starting prolongation for item: ${identifier}`);
+          console.log(
+            "Using orderId:",
+            representativeProxy.orderId || representativeProxy.order_id
+          );
+
+          // Use direct API call instead of hook for batch operations
+          await directProlongCall({
+            orderId:
+              representativeProxy.orderId ||
+              (representativeProxy.order_id as string),
             type: representativeProxy.type,
             id: idForProlongHook as any,
             periodId: prolongPeriod,
-          },
-          {
-            onSuccess: () => {
-              console.log(
-                `Successfully prolonged item ${identifier} (using ${idForProlongHook} for hook's orderId)`
-              );
-              results.success.push(identifier);
-              resolve();
-            },
-            onError: (error) => {
-              console.error(
-                `Failed to prolong item ${identifier} (using ${idForProlongHook} for hook's orderId):`,
-                error
-              );
-              results.failed.push(identifier);
-              resolve();
-            },
-          }
-        );
+          });
+
+          console.log(`Successfully prolonged item ${identifier}`);
+          results.success.push(identifier);
+          resolve();
+        } catch (error) {
+          console.error(`Failed to prolong item ${identifier}:`, error);
+          console.error("Error details:", {
+            identifier,
+            representativeProxy,
+            prolongPeriod,
+            error: error instanceof Error ? error.message : error,
+          });
+          results.failed.push(identifier);
+          resolve();
+        }
       });
     });
 
     try {
+      console.log(`Starting Promise.all for ${prolongPromises.length} items`);
       await Promise.all(prolongPromises);
+      console.log("Promise.all completed successfully");
+
       successCount = results.success.length;
       failCount = results.failed.length;
 
@@ -409,13 +469,23 @@ const ProxyList: React.FC<Props> = ({
         results,
       });
 
+      // Immediately close popup and reset states
+      console.log("Immediately closing popup and resetting states");
+      setProlongProxy(null);
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
+      setForceClosePopup(false);
+
+      // Show notification
       setNotification({
         show: true,
-        message: t("prolongSuccess"),
-        type: "success",
+        message: t("prolongBatchResult", {
+          success: successCount,
+          fail: failCount,
+        }),
+        type: successCount > 0 ? "success" : "error",
         showRefresh: true,
       });
-
       if (successCount > 0) {
         if (onSelectAll) {
           onSelectAll();
@@ -425,26 +495,54 @@ const ProxyList: React.FC<Props> = ({
       }
     } catch (error) {
       console.error("Error during batch prolong:", error);
+
+      // Immediately close popup and reset states
+      console.log(
+        "Immediately closing popup and resetting states (error case)"
+      );
+      setProlongProxy(null);
+      setIsSubmittingBatchProlong(false);
+      setBatchProlongProcessing(false);
+      setForceClosePopup(false);
+
+      // Show error notification
       setNotification({
         show: true,
         message: "An error occurred during batch prolonging",
         type: "error",
         showRefresh: false,
       });
-    } finally {
-      setProlongProxy(null);
-      setIsSubmittingBatchProlong(false);
     }
   };
 
   const confirmProlong = () => {
     if (!prolongProxy) return;
-    if (isProlonging) return;
 
+    console.log("confirmProlong called with:", {
+      isBatchOperation: (prolongProxy as any).isBatchOperation,
+      isSubmittingBatchProlong,
+      batchProlongProcessing,
+      isProlonging,
+    });
+
+    // For batch operations, only check isSubmittingBatchProlong
     if ((prolongProxy as any).isBatchOperation) {
+      if (isSubmittingBatchProlong || batchProlongProcessing) {
+        console.log("Batch operation already in progress, returning");
+        return;
+      }
+      console.log("Starting batch prolong");
       confirmBatchProlong();
       return;
     }
+
+    // For single operations, check isProlonging
+    if (isProlonging) {
+      console.log("Single operation already in progress, returning");
+      return;
+    }
+
+    console.log("Starting single prolong");
 
     // Проверяем, есть ли данные о пользователе
     if (!userData) {
@@ -555,8 +653,12 @@ const ProxyList: React.FC<Props> = ({
   };
 
   const cancelProlong = () => {
+    console.log("Canceling prolong - resetting all states");
     setProlongProxy(null);
     setIsSubmittingBatchProlong(false);
+    setBatchProlongProcessing(false);
+    setBatchProlongCompleted(false);
+    setForceClosePopup(false);
   };
 
   const getProtocolStyles = (protocol: string): React.CSSProperties => {
@@ -884,12 +986,32 @@ const ProxyList: React.FC<Props> = ({
     padding: "24px",
     width: "400px",
     maxWidth: "90%",
+    position: "relative",
   };
   const popupTitleStyle: React.CSSProperties = {
     fontSize: "18px",
     fontWeight: 600,
     color: "#FFFFFF",
     marginTop: 0,
+    marginBottom: "16px",
+  };
+  const popupCloseButtonStyle: React.CSSProperties = {
+    position: "absolute",
+    top: "16px",
+    right: "16px",
+    background: "transparent",
+    border: "none",
+    color: "#f3d675",
+    cursor: "pointer",
+    padding: "4px",
+    borderRadius: "4px",
+    transition: "all 0.2s ease",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+  const popupHeaderStyle: React.CSSProperties = {
+    position: "relative",
     marginBottom: "16px",
   };
   const popupFormGroupStyle: React.CSSProperties = { marginBottom: "20px" };
@@ -925,8 +1047,8 @@ const ProxyList: React.FC<Props> = ({
     ...popupButtonStyle,
     backgroundColor: "rgba(243, 214, 117, 0.1)",
     color: "#f3d675",
-    opacity: isSubmittingBatchProlong ? 0.5 : 1,
-    cursor: isSubmittingBatchProlong ? "not-allowed" : "pointer",
+    opacity: 1, // Will be controlled by disabled state
+    cursor: "pointer", // Will be controlled by disabled state
   };
   const popupCancelButtonStyle: React.CSSProperties = {
     ...popupButtonStyle,
@@ -1588,15 +1710,39 @@ const ProxyList: React.FC<Props> = ({
         </div>{" "}
       </div>{" "}
       {prolongProxy && (
-        <div style={popupOverlayStyle}>
+        <div
+          style={popupOverlayStyle}
+          onClick={(e) => {
+            // Close popup when clicking on overlay
+            if (e.target === e.currentTarget) {
+              cancelProlong();
+            }
+          }}
+        >
           {" "}
           <div style={popupContentStyle}>
             {" "}
-            <h3 style={popupTitleStyle}>
-              {(prolongProxy as any).isBatchOperation
-                ? t("prolongBatchTitle", { count: selectedProxies.length })
-                : t("prolongTitle")}
-            </h3>{" "}
+            <div style={popupHeaderStyle}>
+              {" "}
+              <h3 style={popupTitleStyle}>
+                {(prolongProxy as any).isBatchOperation
+                  ? t("prolongBatchTitle", { count: selectedProxies.length })
+                  : t("prolongTitle")}
+              </h3>{" "}
+              <button
+                style={popupCloseButtonStyle}
+                onClick={cancelProlong}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
+              >
+                <X size={20} />
+              </button>{" "}
+            </div>{" "}
             <div style={popupFormGroupStyle}>
               {" "}
               <label style={popupLabelStyle}>{t("prolongSelect")}</label>{" "}
@@ -1674,9 +1820,17 @@ const ProxyList: React.FC<Props> = ({
               <button
                 style={popupConfirmButtonStyle}
                 onClick={confirmProlong}
-                disabled={isSubmittingBatchProlong || isProlonging}
+                disabled={
+                  (prolongProxy as any).isBatchOperation
+                    ? isSubmittingBatchProlong || batchProlongProcessing
+                    : isProlonging
+                }
               >
-                {isSubmittingBatchProlong || isProlonging
+                {(prolongProxy as any).isBatchOperation
+                  ? isSubmittingBatchProlong || batchProlongProcessing
+                    ? t("prolongProcessing")
+                    : t("prolongConfirm")
+                  : isProlonging
                   ? t("prolongProcessing")
                   : t("prolongConfirm")}
               </button>{" "}
