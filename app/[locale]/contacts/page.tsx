@@ -49,14 +49,14 @@ export default function ContactsPage() {
       id: "inn",
       icon: <FileText size={20} />,
       label: i18n("inn"),
-      value: "590621469075",
+      value: "366314087867",
     },
     {
       id: "phone",
       icon: <Phone size={20} />,
       label: i18n("phone"),
-      value: "+79304140003",
-      link: "tel:+79304140003",
+      value: "+79155472727",
+      link: "tel:+79155472727",
     },
     {
       id: "email",
