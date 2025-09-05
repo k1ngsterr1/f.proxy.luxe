@@ -1541,7 +1541,7 @@ export default function PublicOfferPage() {
                     <strong style={{ color: "#f3d675" }}>
                       {i18n("section11.inn")}:
                     </strong>{" "}
-                    366314087867
+                    590621469075
                   </p>
                 </div>
                 <div

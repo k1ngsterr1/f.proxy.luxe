@@ -49,7 +49,7 @@ export default function ContactsPage() {
       id: "inn",
       icon: <FileText size={20} />,
       label: i18n("inn"),
-      value: "366314087867",
+      value: "590621469075",
     },
     {
       id: "phone",
