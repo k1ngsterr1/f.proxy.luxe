@@ -36,10 +36,28 @@ export default function Articles() {
     error,
   } = useGetArticles(lang as "ru" | "en");
 
+  // Static GRASS article (always first)
+  const grassArticle = {
+    id: "grass",
+    images: ["/assets/images/grass_cover.jpg"],
+    title: "GRASS – как заработать, используя прокси и анти-детект браузер.",
+    date: "01.01.2023",
+    summary:
+      "GRASS — легендарный и надежный проект среди DePIN-проектов. После листинга токена GRASS притом удивил многих, поскольку...",
+    tags: [
+      {
+        id: 1,
+        name: t("articles.categories.instructions"),
+        slug: "instructions",
+      },
+    ],
+    url: "/articles/grass",
+  };
+
   // Format API articles to match the ArticleGrid component requirements
-  const formattedArticles =
+  const formattedApiArticles =
     articles?.map((article: any) => ({
-      id: article.id,
+      id: article.slug || article.id,
       images: article.images || [],
       title: article.title,
       // Extract date from content or use a placeholder
@@ -52,15 +70,18 @@ export default function Articles() {
       tags: extractTagsFromContent(article.content) || [
         { id: 1, name: t("articles.categories.general"), slug: "general" },
       ],
-      url: `/articles/${article.id}`,
+      url: `/articles/${article.slug || article.id}`,
     })) || [];
+
+  // Combine GRASS article with API articles
+  const allArticles = [grassArticle, ...formattedApiArticles];
 
   // Filter articles by category if one is selected
   const filteredArticles = activeCategory
-    ? formattedArticles.filter((article: any) =>
+    ? allArticles.filter((article: any) =>
         article.tags.some((tag: any) => tag.slug === activeCategory)
       )
-    : formattedArticles;
+    : allArticles;
 
   // Helper function to extract date from content (simplified example)
   function extractDateFromContent(content: string): string | null {

@@ -38,13 +38,13 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({
       {articles.map((article) => (
         <ArticleCard
           key={article.id}
-          imageUrl=""
+          imageUrl={article.images?.[0] || ""}
           imageAlt={article?.imageAlt}
           title={article.title}
           date={article.date}
           summary={article.summary}
           tags={article.tags}
-          url="/articles/grass"
+          url={article.url}
         />
       ))}
     </div>

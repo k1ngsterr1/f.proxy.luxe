@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Calendar, Tag } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import image from "@/assets/images/grass_cover.jpg";
+const defaultImage = "/grass_cover.jpg";
 
 export interface ArticleTag {
   id: string | number;
@@ -91,7 +91,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         }}
       >
         <Image
-          src={image}
+          src={imageUrl || defaultImage}
           alt={imageAlt}
           fill
           style={{
