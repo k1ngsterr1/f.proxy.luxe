@@ -39,7 +39,7 @@ export default function Articles() {
   // Static GRASS article (always first)
   const grassArticle = {
     id: "grass",
-    images: ["/assets/images/grass_cover.jpg"],
+    images: ["/grass_cover.jpg"],
     title: "GRASS – как заработать, используя прокси и анти-детект браузер.",
     date: "01.01.2023",
     summary:
