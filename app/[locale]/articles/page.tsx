@@ -43,8 +43,6 @@ export default function Articles() {
       url: `/articles/${article.slug || article.id}`,
     })) || [];
 
-
-
   // Helper function to format article date from createdAt field
   function formatArticleDate(article: any): string {
     // Use createdAt field from the database

@@ -21,8 +21,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
-
-
 // Helper function to format article date from createdAt field
 function formatArticleDate(article: any): string {
   // Use createdAt field from the database
