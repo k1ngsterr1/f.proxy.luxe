@@ -6,15 +6,19 @@ import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
 import { useLocale, useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Articles() {
   const t = useTranslations();
   const isMobile = useIsMobile();
   const lang = useLocale();
-  // Reset component when language changes
+  const queryClient = useQueryClient();
+
+  // Force cache invalidation when language changes
   useEffect(() => {
-    // Component will re-render with new language
-  }, [lang]);
+    // Invalidate all articles queries to ensure fresh data
+    queryClient.invalidateQueries({ queryKey: ["articles"] });
+  }, [lang, queryClient]);
 
   // Fetch articles using React Query
   const {

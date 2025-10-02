@@ -19,6 +19,7 @@ import {
 import { useGetArticleById } from "@/entities/articles/hooks/queries/use-get-article-by-id.queries";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Helper function to extract date from content (simplified example)
 function extractDateFromContent(content?: string): string | null {
@@ -36,12 +37,13 @@ export default function ArticlePage() {
 
   const locale = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  // Reset component state when language changes
+  // Force cache invalidation when language changes
   useEffect(() => {
-    // This will trigger a re-fetch of the article in the new language
-    router.refresh();
-  }, [locale, router]);
+    // Invalidate article queries to ensure fresh data for new language
+    queryClient.invalidateQueries({ queryKey: ["article"] });
+  }, [locale, queryClient]);
 
   const {
     data: article,
