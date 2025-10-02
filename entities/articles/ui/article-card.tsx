@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Calendar } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-const defaultImage = "/grass_cover.jpg";
 
 export interface ArticleCardProps {
   /**
@@ -69,38 +68,40 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           : "0 0 0 0 rgba(0, 0, 0, 0)",
       }}
     >
-      {/* Article Image */}
-      <div
-        className="article-card-image"
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "200px",
-          overflow: "hidden",
-        }}
-      >
-        <Image
-          src={imageUrl || defaultImage}
-          alt={imageAlt}
-          fill
-          style={{
-            objectFit: "cover",
-            transition: "transform 0.5s ease",
-            transform: isHovered ? "scale(1.05)" : "scale(1)",
-          }}
-        />
+      {/* Article Image - only show if imageUrl exists */}
+      {imageUrl && (
         <div
+          className="article-card-image"
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "60px",
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+            position: "relative",
+            width: "100%",
+            height: "200px",
+            overflow: "hidden",
           }}
-        />
-      </div>
+        >
+          <Image
+            src={imageUrl}
+            alt={imageAlt}
+            fill
+            style={{
+              objectFit: "cover",
+              transition: "transform 0.5s ease",
+              transform: isHovered ? "scale(1.05)" : "scale(1)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: "60px",
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+        </div>
+      )}
 
       {/* Article Content */}
       <div

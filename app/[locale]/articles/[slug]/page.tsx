@@ -251,28 +251,27 @@ export default function ArticlePage() {
                   </span>
                 </div>
               </div>
-              <div
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "400px",
-                  marginBottom: "40px",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  border: "1px solid rgba(243, 214, 117, 0.2)",
-                }}
-              >
-                <Image
-                  src={
-                    article?.images && article.images.length > 0
-                      ? article.images[0]
-                      : "/placeholder.svg?height=800&width=1200"
-                  }
-                  alt={article?.title || t("article.image_alt")}
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
+              {/* Article Image - only show if exists */}
+              {article?.images && article.images.length > 0 && (
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "400px",
+                    marginBottom: "40px",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                  }}
+                >
+                  <Image
+                    src={article.images[0]}
+                    alt={article?.title || t("article.image_alt")}
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              )}
 
               {/* Article Content */}
               <div
