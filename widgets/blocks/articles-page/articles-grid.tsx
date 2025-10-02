@@ -1,6 +1,6 @@
 "use client";
 
-import { ArticleCard, ArticleTag } from "@/entities/articles/ui/article-card";
+import { ArticleCard } from "@/entities/articles/ui/article-card";
 import type React from "react";
 
 export interface Article {
@@ -10,7 +10,6 @@ export interface Article {
   title: string;
   date: string;
   summary: string;
-  tags: ArticleTag[];
   url: string;
 }
 
@@ -42,7 +41,6 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({
           title={article.title}
           date={article.date}
           summary={article.summary}
-          tags={article.tags}
           url={article.url}
         />
       ))}

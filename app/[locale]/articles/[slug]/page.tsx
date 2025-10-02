@@ -8,7 +8,6 @@ import {
   Calendar,
   Clock,
   User,
-  Tag,
   ChevronUp,
   Facebook,
   Twitter,
@@ -28,76 +27,6 @@ function extractDateFromContent(content?: string): string | null {
   const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
   const match = content.match(dateRegex);
   return match ? match[0] : null;
-}
-
-// Helper function to extract tags from content
-function extractTagsFromContent(content?: string, t?: any) {
-  if (!content)
-    return [
-      {
-        id: 1,
-        name: t?.("articles.categories.general") || "статья",
-        slug: "general",
-      },
-    ];
-
-  // Categories for tag extraction - using translation function
-  const categories = [
-    {
-      id: 1,
-      name: t?.("articles.categories.instructions") || "Инструкции",
-      slug: "instructions",
-    },
-    {
-      id: 2,
-      name: t?.("articles.categories.android") || "Android",
-      slug: "android",
-    },
-    {
-      id: 3,
-      name: t?.("articles.categories.smtp") || "SMTP - 25",
-      slug: "smtp",
-    },
-    { id: 4, name: t?.("articles.categories.proxy") || "Proxy", slug: "proxy" },
-    { id: 5, name: t?.("articles.categories.mail") || "Mail", slug: "mail" },
-    { id: 6, name: t?.("articles.categories.ssh") || "SSH - 22", slug: "ssh" },
-    {
-      id: 7,
-      name: t?.("articles.categories.imap") || "IMAP - 143",
-      slug: "imap",
-    },
-    { id: 8, name: t?.("articles.categories.apple") || "Apple", slug: "apple" },
-    { id: 9, name: t?.("articles.categories.dns") || "Dns", slug: "dns" },
-    { id: 10, name: t?.("articles.categories.vk") || "Вконтакте", slug: "vk" },
-    {
-      id: 11,
-      name: t?.("articles.categories.pop3") || "POP3 - 110",
-      slug: "pop3",
-    },
-  ];
-
-  const tags = [];
-
-  categories.forEach((category) => {
-    if (content.toLowerCase().includes(category.name.toLowerCase())) {
-      tags.push({
-        id: category.id,
-        name: category.name,
-        slug: category.slug,
-      });
-    }
-  });
-
-  // If no tags were found, add a default tag
-  if (tags.length === 0) {
-    tags.push({
-      id: 999,
-      name: t?.("articles.categories.general") || "Общее",
-      slug: "general",
-    });
-  }
-
-  return tags;
 }
 
 export default function ArticlePage() {
@@ -225,7 +154,7 @@ export default function ArticlePage() {
                 marginBottom: "40px",
               }}
             >
-              <Tag
+              <Loader
                 size={40}
                 style={{ color: "#FF5252", marginBottom: "16px" }}
               />
@@ -343,54 +272,7 @@ export default function ArticlePage() {
                     flexWrap: "wrap",
                     gap: "16px",
                   }}
-                >
-                  <div
-                    className="article-tags"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <Tag size={18} style={{ color: "#f3d675" }} />
-                    {extractTagsFromContent(article?.content, t).map(
-                      (tag, index) => (
-                        <Link
-                          key={index}
-                          href={`/tags/${tag.slug}`}
-                          className="article-tags__link"
-                          style={{
-                            color: "#f3d675",
-                            textDecoration: "none",
-                            fontSize: "14px",
-                            padding: "4px 12px",
-                            backgroundColor: "rgba(243, 214, 117, 0.1)",
-                            borderRadius: "20px",
-                            transition: "all 0.2s ease",
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "rgba(243, 214, 117, 0.2)";
-                            e.currentTarget.style.transform =
-                              "translateY(-2px)";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                              "rgba(243, 214, 117, 0.1)";
-                            e.currentTarget.style.transform = "translateY(0)";
-                          }}
-                        >
-                          {tag.name === "Общее" ? t("tags.general") : tag.name}
-                          {index <
-                          extractTagsFromContent(article?.content, t).length - 1
-                            ? ","
-                            : ""}
-                        </Link>
-                      )
-                    )}
-                  </div>
-                </div>
+                ></div>
               </div>
             </>
           )}

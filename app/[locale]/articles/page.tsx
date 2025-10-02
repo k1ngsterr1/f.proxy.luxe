@@ -7,30 +7,13 @@ import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
 import { useLocale, useTranslations } from "next-intl";
 
-// Categories for navigation
-const getCategories = (t: (key: string) => string) => [
-  { id: 1, name: t("articles.categories.instructions"), slug: "instructions" },
-  { id: 2, name: t("articles.categories.android"), slug: "android" },
-  { id: 3, name: t("articles.categories.smtp"), slug: "smtp" },
-  { id: 4, name: t("articles.categories.proxy"), slug: "proxy" },
-  { id: 5, name: t("articles.categories.mail"), slug: "mail" },
-  { id: 6, name: t("articles.categories.ssh"), slug: "ssh" },
-  { id: 7, name: t("articles.categories.imap"), slug: "imap" },
-  { id: 8, name: t("articles.categories.apple"), slug: "apple" },
-  { id: 9, name: t("articles.categories.dns"), slug: "dns" },
-  { id: 10, name: t("articles.categories.vk"), slug: "vk" },
-  { id: 11, name: t("articles.categories.pop3"), slug: "pop3" },
-];
-
 export default function Articles() {
   const t = useTranslations();
   const isMobile = useIsMobile();
   const lang = useLocale();
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
-  // Reset active category when language changes to ensure fresh filtering
+  // Reset component when language changes
   useEffect(() => {
-    setActiveCategory(null);
+    // Component will re-render with new language
   }, [lang]);
 
   // Fetch articles using React Query
@@ -53,19 +36,8 @@ export default function Articles() {
       summary:
         article.content.substring(0, 150) +
         (article.content.length > 150 ? "..." : ""),
-      // Extract tags from content or use default tags
-      tags: extractTagsFromContent(article.content) || [
-        { id: 1, name: t("articles.categories.general"), slug: "general" },
-      ],
       url: `/articles/${article.slug || article.id}`,
     })) || [];
-
-  // Filter articles by category if one is selected
-  const filteredArticles = activeCategory
-    ? formattedApiArticles.filter((article: any) =>
-        article.tags.some((tag: any) => tag.slug === activeCategory)
-      )
-    : formattedApiArticles;
 
   // Helper function to extract date from content (simplified example)
   function extractDateFromContent(content: string): string | null {
@@ -73,35 +45,6 @@ export default function Articles() {
     const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
     const match = content.match(dateRegex);
     return match ? match[0] : null;
-  }
-
-  // Helper function to extract tags from content (simplified example)
-  function extractTagsFromContent(content: string) {
-    // This is a simplified example - you might want to implement a more robust solution
-    // For now, we'll just check if content contains certain keywords and map them to categories
-    const tags = [];
-
-    const categories = getCategories(t);
-    categories.forEach((category) => {
-      if (content.toLowerCase().includes(category.name.toLowerCase())) {
-        tags.push({
-          id: category.id,
-          name: category.name,
-          slug: category.slug,
-        });
-      }
-    });
-
-    // If no tags were found, add a default tag
-    if (tags.length === 0) {
-      tags.push({
-        id: 999,
-        name: t("articles.categories.general"),
-        slug: "general",
-      });
-    }
-
-    return tags;
   }
 
   return (
@@ -182,9 +125,9 @@ export default function Articles() {
             )}
             {!isLoading && !isError && (
               <div className="articles-inner">
-                {filteredArticles.length > 0 ? (
+                {formattedApiArticles.length > 0 ? (
                   <ArticleGrid
-                    articles={filteredArticles}
+                    articles={formattedApiArticles}
                     columns={isMobile ? 1 : 3}
                   />
                 ) : (

@@ -2,16 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, Tag } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 const defaultImage = "/grass_cover.jpg";
-
-export interface ArticleTag {
-  id: string | number;
-  name: string;
-  slug: string;
-}
 
 export interface ArticleCardProps {
   /**
@@ -35,10 +29,6 @@ export interface ArticleCardProps {
    */
   summary: string;
   /**
-   * Article tags
-   */
-  tags: ArticleTag[];
-  /**
    * URL to the full article
    */
   url: string;
@@ -54,7 +44,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   title,
   date,
   summary,
-  tags,
   url,
   className = "",
 }) => {
@@ -169,52 +158,18 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           dangerouslySetInnerHTML={{ __html: summary }}
         ></p>
 
-        {/* Footer with Tags and Read More */}
+        {/* Footer with Read More */}
         <div
           className="article-card-footer"
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             alignItems: "center",
             marginTop: "auto",
             borderTop: "1px solid rgba(243, 214, 117, 0.1)",
             paddingTop: "12px",
           }}
         >
-          {/* Tags */}
-          <div
-            className="article-card-tags"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              flexWrap: "wrap",
-            }}
-          >
-            <Tag size={14} style={{ color: "#f3d675" }} />
-            {tags.map((tag, index) => (
-              <Link
-                key={tag.id}
-                href={`/tags/${tag.slug}`}
-                style={{
-                  color: "#f3d675",
-                  fontSize: "12px",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#ffffff";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "#f3d675";
-                }}
-              >
-                {tag.name}
-                {index < tags.length - 1 ? "," : ""}
-              </Link>
-            ))}
-          </div>
-
           {/* Read More Link */}
           <Link
             href={url}
