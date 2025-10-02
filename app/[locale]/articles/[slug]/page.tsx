@@ -51,7 +51,7 @@ function formatArticleDate(article: any): string {
 export default function ArticlePage() {
   const t = useTranslations();
   const params = useParams();
-  const articleId = params.slug as string;
+  const articleSlug = params.slug as string;
 
   const locale = useLocale();
   const router = useRouter();
@@ -68,7 +68,7 @@ export default function ArticlePage() {
     isLoading,
     isError,
     error,
-  } = useGetArticleById(articleId, locale as "ru" | "en");
+  } = useGetArticleById(articleSlug, locale as "ru" | "en");
 
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);

@@ -40,7 +40,7 @@ export default function Articles() {
       summary:
         article.content.substring(0, 150) +
         (article.content.length > 150 ? "..." : ""),
-      url: `/articles/${article.slug || article.id}`,
+      url: `/articles/${article.slug}`,
     })) || [];
 
   // Helper function to format article date from createdAt field
