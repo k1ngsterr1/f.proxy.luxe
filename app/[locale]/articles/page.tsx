@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tag, Loader } from "lucide-react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
 import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
@@ -27,6 +27,11 @@ export default function Articles() {
   const isMobile = useIsMobile();
   const lang = useLocale();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  // Reset active category when language changes to ensure fresh filtering
+  useEffect(() => {
+    setActiveCategory(null);
+  }, [lang]);
 
   // Fetch articles using React Query
   const {

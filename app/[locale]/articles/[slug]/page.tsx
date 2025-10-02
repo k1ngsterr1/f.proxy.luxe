@@ -31,22 +31,49 @@ function extractDateFromContent(content?: string): string | null {
 }
 
 // Helper function to extract tags from content
-function extractTagsFromContent(content?: string) {
-  if (!content) return [{ id: 1, name: "статья", slug: "article" }];
+function extractTagsFromContent(content?: string, t?: any) {
+  if (!content)
+    return [
+      {
+        id: 1,
+        name: t?.("articles.categories.general") || "статья",
+        slug: "general",
+      },
+    ];
 
-  // Categories for tag extraction
+  // Categories for tag extraction - using translation function
   const categories = [
-    { id: 1, name: "Инструкции", slug: "instructions" },
-    { id: 2, name: "Android", slug: "android" },
-    { id: 3, name: "SMTP - 25", slug: "smtp" },
-    { id: 4, name: "Proxy", slug: "proxy" },
-    { id: 5, name: "Mail", slug: "mail" },
-    { id: 6, name: "SSH - 22", slug: "ssh" },
-    { id: 7, name: "IMAP - 143", slug: "imap" },
-    { id: 8, name: "Apple", slug: "apple" },
-    { id: 9, name: "Dns", slug: "dns" },
-    { id: 10, name: "Вконтакте", slug: "vk" },
-    { id: 11, name: "POP3 - 110", slug: "pop3" },
+    {
+      id: 1,
+      name: t?.("articles.categories.instructions") || "Инструкции",
+      slug: "instructions",
+    },
+    {
+      id: 2,
+      name: t?.("articles.categories.android") || "Android",
+      slug: "android",
+    },
+    {
+      id: 3,
+      name: t?.("articles.categories.smtp") || "SMTP - 25",
+      slug: "smtp",
+    },
+    { id: 4, name: t?.("articles.categories.proxy") || "Proxy", slug: "proxy" },
+    { id: 5, name: t?.("articles.categories.mail") || "Mail", slug: "mail" },
+    { id: 6, name: t?.("articles.categories.ssh") || "SSH - 22", slug: "ssh" },
+    {
+      id: 7,
+      name: t?.("articles.categories.imap") || "IMAP - 143",
+      slug: "imap",
+    },
+    { id: 8, name: t?.("articles.categories.apple") || "Apple", slug: "apple" },
+    { id: 9, name: t?.("articles.categories.dns") || "Dns", slug: "dns" },
+    { id: 10, name: t?.("articles.categories.vk") || "Вконтакте", slug: "vk" },
+    {
+      id: 11,
+      name: t?.("articles.categories.pop3") || "POP3 - 110",
+      slug: "pop3",
+    },
   ];
 
   const tags = [];
