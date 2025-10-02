@@ -2,7 +2,6 @@
 
 import { ArticleCard, ArticleTag } from "@/entities/articles/ui/article-card";
 import type React from "react";
-import "../../../assets/images/grass_cover.jpg";
 
 export interface Article {
   id: string | number;

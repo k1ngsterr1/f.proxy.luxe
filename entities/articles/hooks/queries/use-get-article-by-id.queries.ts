@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getArticleById } from "../../api/get-articles.api";
 
-export const useGetArticleById = (id: string) => {
+export const useGetArticleById = (id: string, lang: "ru" | "en" = "ru") => {
   return useQuery({
-    queryKey: ["article", id],
-    queryFn: () => getArticleById(id),
+    queryKey: ["article", id, lang],
+    queryFn: () => getArticleById(id, lang),
     staleTime: 1000 * 60 * 10, // 10 minutes
     retry: 2,
     enabled: !!id, // Only run the query if id is provided

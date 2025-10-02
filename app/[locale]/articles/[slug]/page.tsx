@@ -92,7 +92,7 @@ function extractTagsFromContent(content?: string, t?: any) {
   if (tags.length === 0) {
     tags.push({
       id: 999,
-      name: "Общее",
+      name: t?.("articles.categories.general") || "Общее",
       slug: "general",
     });
   }
@@ -101,23 +101,25 @@ function extractTagsFromContent(content?: string, t?: any) {
 }
 
 export default function ArticlePage() {
-  const t = useTranslations("article-slug");
+  const t = useTranslations();
   const params = useParams();
   const articleId = params.slug as string;
 
   const locale = useLocale();
   const router = useRouter();
 
+  // Reset component state when language changes
   useEffect(() => {
-    router.refresh(); // Или window.location.reload(); если нужно полный reload
-  }, [locale]);
+    // This will trigger a re-fetch of the article in the new language
+    router.refresh();
+  }, [locale, router]);
 
   const {
     data: article,
     isLoading,
     isError,
     error,
-  } = useGetArticleById(articleId);
+  } = useGetArticleById(articleId, locale as "ru" | "en");
 
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -352,7 +354,7 @@ export default function ArticlePage() {
                     }}
                   >
                     <Tag size={18} style={{ color: "#f3d675" }} />
-                    {extractTagsFromContent(article?.content).map(
+                    {extractTagsFromContent(article?.content, t).map(
                       (tag, index) => (
                         <Link
                           key={index}
@@ -381,7 +383,7 @@ export default function ArticlePage() {
                         >
                           {tag.name === "Общее" ? t("tags.general") : tag.name}
                           {index <
-                          extractTagsFromContent(article?.content).length - 1
+                          extractTagsFromContent(article?.content, t).length - 1
                             ? ","
                             : ""}
                         </Link>

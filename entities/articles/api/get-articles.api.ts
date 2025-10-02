@@ -26,7 +26,12 @@ export const getArticles = async (lang: "ru" | "en"): Promise<Article[]> => {
   return response.data;
 };
 
-export const getArticleById = async (id: string): Promise<Article> => {
-  const response = await apiClient.get<Article>(`/api/v1/articles/${id}`);
+export const getArticleById = async (
+  id: string,
+  lang: "ru" | "en" = "ru"
+): Promise<Article> => {
+  const response = await apiClient.get<Article>(
+    `/api/v1/articles/${id}?lang=${lang}`
+  );
   return response.data;
 };
