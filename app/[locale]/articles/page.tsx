@@ -34,8 +34,8 @@ export default function Articles() {
       id: article.slug || article.id,
       images: article.images || [],
       title: article.title,
-      // Extract date from content or use a placeholder
-      date: extractDateFromContent(article.content) || "01.01.2023",
+      // Use API date fields or extract from content, or use current date as fallback
+      date: formatArticleDate(article),
       // Use first 150 characters of content as summary
       summary:
         article.content.substring(0, 150) +
@@ -43,17 +43,94 @@ export default function Articles() {
       url: `/articles/${article.slug || article.id}`,
     })) || [];
 
-  // Helper function to extract date from content (simplified example)
+  // Helper function to extract date from content
   function extractDateFromContent(content: string): string | null {
-    // This is a simplified example - you might want to implement a more robust solution
-    const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
+    const dateRegex = /(\d{1,2})\.(\d{1,2})\.(\d{4})/;
     const match = content.match(dateRegex);
     return match ? match[0] : null;
+  }
+
+  // Helper function to format article date from various sources
+  function formatArticleDate(article: any): string {
+    // Try to get date from API fields first
+    const apiDate =
+      article.publishedAt || article.createdAt || article.updatedAt;
+
+    if (apiDate) {
+      try {
+        const date = new Date(apiDate);
+        return date.toLocaleDateString("ru-RU", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+      } catch (e) {
+        console.warn("Invalid API date format:", apiDate);
+      }
+    }
+
+    // Try to extract date from content
+    const contentDate = extractDateFromContent(article.content || "");
+    if (contentDate) {
+      return contentDate;
+    }
+
+    // Fallback to current date
+    const now = new Date();
+    return now.toLocaleDateString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   }
 
   return (
     <>
       <title>{t("articless.title")}</title>
+      {/* Full screen loading overlay */}
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "#000000",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10000,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            }}
+          >
+            <Loader
+              size={80}
+              className="animate-spin"
+              style={{ color: "#f3d675", marginBottom: "24px" }}
+            />
+            <h3
+              style={{
+                color: "#f3d675",
+                fontSize: "20px",
+                fontWeight: "500",
+                margin: 0,
+              }}
+            >
+              {t("articles.loading")}
+            </h3>
+          </div>
+        </div>
+      )}
       <main
         className="inner-page"
         style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
@@ -85,49 +162,6 @@ export default function Articles() {
                 {t("articles.title")}
               </span>
             </h1>
-            {isLoading && (
-              <div
-                style={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  width: "100vw",
-                  height: "100vh",
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 9999,
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "rgba(243, 214, 117, 0.05)",
-                    border: "1px solid rgba(243, 214, 117, 0.2)",
-                    borderRadius: "12px",
-                    padding: "40px 60px",
-                    textAlign: "center",
-                    backdropFilter: "blur(10px)",
-                  }}
-                >
-                  <Loader
-                    size={60}
-                    className="animate-spin"
-                    style={{ color: "#f3d675", marginBottom: "20px" }}
-                  />
-                  <h3
-                    style={{
-                      color: "#f3d675",
-                      marginBottom: "8px",
-                      fontSize: "18px",
-                    }}
-                  >
-                    {t("articles.loading")}
-                  </h3>
-                </div>
-              </div>
-            )}
             {isError && (
               <div
                 style={{

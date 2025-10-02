@@ -5,6 +5,10 @@ export interface Article {
   title: string;
   content: string;
   images?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+  slug?: string;
 }
 
 export interface CreateArticleDto {

@@ -21,13 +21,46 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
-// Helper function to extract date from content (simplified example)
+// Helper function to extract date from content
 function extractDateFromContent(content?: string): string | null {
   if (!content) return null;
-  // This is a simplified example - you might want to implement a more robust solution
-  const dateRegex = /(\d{2})\.(\d{2})\.(\d{4})/;
+  const dateRegex = /(\d{1,2})\.(\d{1,2})\.(\d{4})/;
   const match = content.match(dateRegex);
   return match ? match[0] : null;
+}
+
+// Helper function to format article date from various sources
+function formatArticleDate(article: any): string {
+  // Try to get date from API fields first
+  const apiDate =
+    article?.publishedAt || article?.createdAt || article?.updatedAt;
+
+  if (apiDate) {
+    try {
+      const date = new Date(apiDate);
+      return date.toLocaleDateString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    } catch (e) {
+      console.warn("Invalid API date format:", apiDate);
+    }
+  }
+
+  // Try to extract date from content
+  const contentDate = extractDateFromContent(article?.content || "");
+  if (contentDate) {
+    return contentDate;
+  }
+
+  // Fallback to current date
+  const now = new Date();
+  return now.toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
 
 export default function ArticlePage() {
@@ -214,7 +247,7 @@ export default function ArticlePage() {
                 >
                   <Calendar size={16} style={{ color: "#f3d675" }} />
                   <span style={{ fontSize: "14px" }}>
-                    {extractDateFromContent(article?.content) || "01.01.2023"}
+                    {formatArticleDate(article)}
                   </span>
                 </div>
               </div>
