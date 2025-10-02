@@ -88,21 +88,44 @@ export default function Articles() {
             {isLoading && (
               <div
                 style={{
-                  backgroundColor: "rgba(243, 214, 117, 0.05)",
-                  border: "1px solid rgba(243, 214, 117, 0.2)",
-                  borderRadius: "8px",
-                  padding: "40px 20px",
-                  textAlign: "center",
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100vw",
+                  height: "100vh",
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 9999,
                 }}
               >
-                <Loader
-                  size={40}
-                  className="animate-spin"
-                  style={{ color: "#f3d675", marginBottom: "16px" }}
-                />
-                <h3 style={{ color: "#f3d675", marginBottom: "8px" }}>
-                  {t("articles.loading")}
-                </h3>
+                <div
+                  style={{
+                    backgroundColor: "rgba(243, 214, 117, 0.05)",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "12px",
+                    padding: "40px 60px",
+                    textAlign: "center",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <Loader
+                    size={60}
+                    className="animate-spin"
+                    style={{ color: "#f3d675", marginBottom: "20px" }}
+                  />
+                  <h3
+                    style={{
+                      color: "#f3d675",
+                      marginBottom: "8px",
+                      fontSize: "18px",
+                    }}
+                  >
+                    {t("articles.loading")}
+                  </h3>
+                </div>
               </div>
             )}
             {isError && (
