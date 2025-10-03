@@ -1,28 +1,32 @@
 "use client";
 
-import { ArticleCard } from "@/entities/articles/ui/article-card";
+import { ArticleCard, ArticleTag } from "@/entities/articles/ui/article-card";
 import type React from "react";
 
 export interface Article {
   id: string | number;
   images: string[];
+  mainImage?: string;
   imageAlt?: string;
   title: string;
   date: string;
   summary: string;
   url: string;
+  tags?: ArticleTag[];
 }
 
 interface ArticleGridProps {
   articles: Article[];
   columns?: 1 | 2 | 3 | 4;
   className?: string;
+  onTagClick?: (tag: ArticleTag) => void;
 }
 
 export const ArticleGrid: React.FC<ArticleGridProps> = ({
   articles,
   columns = 3,
   className = "",
+  onTagClick,
 }) => {
   return (
     <div
@@ -37,11 +41,15 @@ export const ArticleGrid: React.FC<ArticleGridProps> = ({
         <ArticleCard
           key={article.id}
           imageUrl={article.images?.[0] || ""}
+          mainImage={article.mainImage}
+          images={article.images}
           imageAlt={article?.imageAlt}
           title={article.title}
           date={article.date}
           summary={article.summary}
           url={article.url}
+          tags={article.tags}
+          onTagClick={onTagClick}
         />
       ))}
     </div>
