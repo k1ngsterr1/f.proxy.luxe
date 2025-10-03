@@ -21,40 +21,25 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
-// Helper function to extract date from content
-function extractDateFromContent(content?: string): string | null {
-  if (!content) return null;
-  const dateRegex = /(\d{1,2})\.(\d{1,2})\.(\d{4})/;
-  const match = content.match(dateRegex);
-  return match ? match[0] : null;
-}
-
-// Helper function to format article date from various sources
+// Helper function to format article date from createdAt field
 function formatArticleDate(article: any): string {
-  // Try to get date from API fields first
-  const apiDate =
-    article?.publishedAt || article?.createdAt || article?.updatedAt;
+  // Use createdAt field from the database
+  const createdAt = article?.createdAt;
 
-  if (apiDate) {
+  if (createdAt) {
     try {
-      const date = new Date(apiDate);
+      const date = new Date(createdAt);
       return date.toLocaleDateString("ru-RU", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
       });
     } catch (e) {
-      console.warn("Invalid API date format:", apiDate);
+      console.warn("Invalid createdAt date format:", createdAt);
     }
   }
 
-  // Try to extract date from content
-  const contentDate = extractDateFromContent(article?.content || "");
-  if (contentDate) {
-    return contentDate;
-  }
-
-  // Fallback to current date
+  // Fallback to current date if createdAt is not available
   const now = new Date();
   return now.toLocaleDateString("ru-RU", {
     day: "2-digit",
@@ -66,7 +51,7 @@ function formatArticleDate(article: any): string {
 export default function ArticlePage() {
   const t = useTranslations();
   const params = useParams();
-  const articleId = params.slug as string;
+  const articleSlug = params.slug as string;
 
   const locale = useLocale();
   const router = useRouter();
@@ -83,7 +68,7 @@ export default function ArticlePage() {
     isLoading,
     isError,
     error,
-  } = useGetArticleById(articleId, locale as "ru" | "en");
+  } = useGetArticleById(articleSlug, locale as "ru" | "en");
 
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -251,27 +236,6 @@ export default function ArticlePage() {
                   </span>
                 </div>
               </div>
-              {/* Article Image - only show if exists */}
-              {article?.images && article.images.length > 0 && (
-                <div
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "400px",
-                    marginBottom: "40px",
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    border: "1px solid rgba(243, 214, 117, 0.2)",
-                  }}
-                >
-                  <Image
-                    src={article.images[0]}
-                    alt={article?.title || t("article.image_alt")}
-                    fill
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              )}
 
               {/* Article Content */}
               <div

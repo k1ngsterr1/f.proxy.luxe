@@ -34,48 +34,34 @@ export default function Articles() {
       id: article.slug || article.id,
       images: article.images || [],
       title: article.title,
-      // Use API date fields or extract from content, or use current date as fallback
+      // Use createdAt field from the database
       date: formatArticleDate(article),
       // Use first 150 characters of content as summary
       summary:
         article.content.substring(0, 150) +
         (article.content.length > 150 ? "..." : ""),
-      url: `/articles/${article.slug || article.id}`,
+      url: `/articles/${article.slug}`,
     })) || [];
 
-  // Helper function to extract date from content
-  function extractDateFromContent(content: string): string | null {
-    const dateRegex = /(\d{1,2})\.(\d{1,2})\.(\d{4})/;
-    const match = content.match(dateRegex);
-    return match ? match[0] : null;
-  }
-
-  // Helper function to format article date from various sources
+  // Helper function to format article date from createdAt field
   function formatArticleDate(article: any): string {
-    // Try to get date from API fields first
-    const apiDate =
-      article.publishedAt || article.createdAt || article.updatedAt;
+    // Use createdAt field from the database
+    const createdAt = article.createdAt;
 
-    if (apiDate) {
+    if (createdAt) {
       try {
-        const date = new Date(apiDate);
+        const date = new Date(createdAt);
         return date.toLocaleDateString("ru-RU", {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
         });
       } catch (e) {
-        console.warn("Invalid API date format:", apiDate);
+        console.warn("Invalid createdAt date format:", createdAt);
       }
     }
 
-    // Try to extract date from content
-    const contentDate = extractDateFromContent(article.content || "");
-    if (contentDate) {
-      return contentDate;
-    }
-
-    // Fallback to current date
+    // Fallback to current date if createdAt is not available
     const now = new Date();
     return now.toLocaleDateString("ru-RU", {
       day: "2-digit",
