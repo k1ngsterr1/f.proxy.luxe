@@ -2,15 +2,31 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar } from "lucide-react";
+import { Calendar, Tag } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+
+export interface ArticleTag {
+  id: string;
+  name: string;
+  color: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface ArticleCardProps {
   /**
    * Article image URL
    */
-  imageUrl: string;
+  imageUrl?: string;
+  /**
+   * Main image URL
+   */
+  mainImage?: string;
+  /**
+   * Array of image URLs
+   */
+  images?: string[];
   /**
    * Image alt text
    */
@@ -32,6 +48,14 @@ export interface ArticleCardProps {
    */
   url: string;
   /**
+   * Article tags
+   */
+  tags?: ArticleTag[];
+  /**
+   * Callback when tag is clicked
+   */
+  onTagClick?: (tag: ArticleTag) => void;
+  /**
    * Optional className for custom styling
    */
   className?: string;
@@ -39,15 +63,35 @@ export interface ArticleCardProps {
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({
   imageUrl,
+  mainImage,
+  images = [],
   imageAlt = "Article thumbnail",
   title,
   date,
   summary,
   url,
+  tags = [],
+  onTagClick,
   className = "",
 }) => {
   const i18n = useTranslations("personal-announcements");
   const [isHovered, setIsHovered] = useState(false);
+
+  // Логика выбора главного изображения
+  const getMainImage = () => {
+    if (mainImage) return mainImage;
+    if (imageUrl) return imageUrl;
+    if (images.length > 0) return images[0];
+    return null;
+  };
+
+  const displayImage = getMainImage();
+
+  const handleTagClick = (e: React.MouseEvent, tag: ArticleTag) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onTagClick?.(tag);
+  };
 
   return (
     <article
@@ -68,8 +112,8 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           : "0 0 0 0 rgba(0, 0, 0, 0)",
       }}
     >
-      {/* Article Image - only show if imageUrl exists */}
-      {imageUrl && (
+      {/* Article Image - only show if displayImage exists */}
+      {displayImage && (
         <div
           className="article-card-image"
           style={{
@@ -80,7 +124,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           }}
         >
           <Image
-            src={imageUrl}
+            src={displayImage}
             alt={imageAlt}
             fill
             style={{
@@ -145,6 +189,64 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             <span>{date}</span>
           </div>
         </div>
+
+        {/* Tags */}
+        {tags.length > 0 && (
+          <div
+            className="article-card-tags"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "8px",
+              marginBottom: "16px",
+            }}
+          >
+            {tags.map((tag) => (
+              <button
+                key={tag.id}
+                onClick={(e) => handleTagClick(e, tag)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  padding: "6px 12px",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  background:
+                    "linear-gradient(135deg, rgba(243, 214, 117, 0.1) 0%, rgba(243, 214, 117, 0.05) 100%)",
+                  color: "#f3d675",
+                  border: "1px solid rgba(243, 214, 117, 0.3)",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  backdropFilter: "blur(10px)",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background =
+                    "linear-gradient(135deg, rgba(243, 214, 117, 0.2) 0%, rgba(243, 214, 117, 0.1) 100%)";
+                  e.currentTarget.style.borderColor =
+                    "rgba(243, 214, 117, 0.5)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow =
+                    "0 5px 15px rgba(243, 214, 117, 0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background =
+                    "linear-gradient(135deg, rgba(243, 214, 117, 0.1) 0%, rgba(243, 214, 117, 0.05) 100%)";
+                  e.currentTarget.style.borderColor =
+                    "rgba(243, 214, 117, 0.3)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                <Tag size={12} />
+                {tag.name}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Summary */}
         <p
