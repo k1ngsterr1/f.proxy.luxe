@@ -280,7 +280,9 @@ export default function Articles() {
                                 transition: "all 0.3s ease",
                               }}
                             >
-                              Очистить фильтры
+                              {t("articles.filter.clear", {
+                                defaultValue: "Очистить фильтры",
+                              })}
                             </button>
                           )}
                         </div>
@@ -292,8 +294,12 @@ export default function Articles() {
                               fontSize: "14px",
                             }}
                           >
-                            Показано: {filteredArticles.length} из{" "}
-                            {formattedApiArticles.length} статей
+                            {t("articles.filter.count", {
+                              defaultValue:
+                                "Показано: {{filtered}} из {{total}} статей",
+                              filtered: filteredArticles.length,
+                              total: formattedApiArticles.length,
+                            })}
                           </p>
                         )}
                       </div>
@@ -355,7 +361,9 @@ export default function Articles() {
                           transition: "all 0.3s ease",
                         }}
                       >
-                        Показать все статьи
+                        {t("articles.filter.show-all", {
+                          defaultValue: "Показать все статьи",
+                        })}
                       </button>
                     )}
                   </div>

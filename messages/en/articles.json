@@ -23,6 +23,18 @@
     "empty": {
       "title": "No articles found",
       "message": "There are no articles in this category yet"
+    },
+    "filter": {
+      "by-tags": "Filter by tags",
+      "clear": "Clear filters",
+      "count": "Showing: {{filtered}} of {{total}} articles",
+      "show-all": "Show all articles"
+    },
+    "filtered": {
+      "empty": {
+        "title": "No articles found with selected tags",
+        "message": "Try changing filters or clearing them"
+      }
     }
   }
 }
