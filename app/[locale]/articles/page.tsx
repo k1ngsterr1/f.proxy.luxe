@@ -38,13 +38,23 @@ export default function Articles() {
     error,
   } = useGetArticles(lang as "ru" | "en", currentPage, articlesPerPage);
 
-  // Extract articles data from response
-  const articles = articlesResponse?.data || [];
-  const totalPages = articlesResponse?.totalPages || 0;
-  const totalArticles = articlesResponse?.total || 0;
+  // Check if response is array (current API) or object with pagination (future API)
+  const isArrayResponse = Array.isArray(articlesResponse);
+  const allArticles = isArrayResponse
+    ? articlesResponse
+    : articlesResponse?.data || [];
+
+  // Client-side pagination for current API format
+  const totalArticles = allArticles.length;
+  const totalPages = Math.ceil(totalArticles / articlesPerPage);
+  const startIndex = (currentPage - 1) * articlesPerPage;
+  const endIndex = startIndex + articlesPerPage;
+  const paginatedArticles = isArrayResponse
+    ? allArticles.slice(startIndex, endIndex)
+    : allArticles;
 
   // Format API articles to match the ArticleGrid component requirements
-  const formattedApiArticles = articles.map((article: any) => ({
+  const formattedApiArticles = paginatedArticles.map((article: any) => ({
     id: article.slug || article.id,
     images: article.images || [],
     mainImage: article.mainImage,
@@ -60,9 +70,23 @@ export default function Articles() {
   }));
 
   // Filter articles by selected tags
+  // When filtering by tags, we show all matching articles without pagination
+  const allFormattedArticles = allArticles.map((article: any) => ({
+    id: article.slug || article.id,
+    images: article.images || [],
+    mainImage: article.mainImage,
+    title: article.title,
+    date: formatArticleDate(article),
+    summary:
+      article.content.substring(0, 150) +
+      (article.content.length > 150 ? "..." : ""),
+    url: `/articles/${article.slug}`,
+    tags: article.tags || [],
+  }));
+
   const filteredArticles =
     selectedTags.length > 0
-      ? formattedApiArticles.filter((article: any) =>
+      ? allFormattedArticles.filter((article: any) =>
           article.tags?.some((tag: any) => selectedTags.includes(tag.id))
         )
       : formattedApiArticles;
@@ -80,8 +104,8 @@ export default function Articles() {
     });
   };
 
-  // Get all unique tags from articles
-  const allTags = formattedApiArticles.reduce((acc: any[], article: any) => {
+  // Get all unique tags from all articles (not just current page)
+  const allTags = allFormattedArticles.reduce((acc: any[], article: any) => {
     article.tags?.forEach((tag: any) => {
       if (!acc.find((t) => t.id === tag.id)) {
         acc.push(tag);
@@ -318,7 +342,7 @@ export default function Articles() {
                               defaultValue:
                                 "Показано: {{filtered}} из {{total}} статей",
                               filtered: filteredArticles.length,
-                              total: formattedApiArticles.length,
+                              total: allFormattedArticles.length,
                             })}
                           </p>
                         )}

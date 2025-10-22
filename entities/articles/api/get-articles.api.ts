@@ -35,9 +35,10 @@ export const getArticles = async (
   lang: "ru" | "en",
   page: number = 1,
   limit: number = 9
-): Promise<ArticleResponse> => {
-  const response = await apiClient.get<ArticleResponse>(
-    `/api/v1/articles?lang=${lang}&page=${page}&limit=${limit}`
+): Promise<Article[] | ArticleResponse> => {
+  // For now, fetch all articles since API doesn't support pagination yet
+  const response = await apiClient.get<Article[] | ArticleResponse>(
+    `/api/v1/articles?lang=${lang}`
   );
   return response.data;
 };
