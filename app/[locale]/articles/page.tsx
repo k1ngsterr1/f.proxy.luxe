@@ -7,6 +7,7 @@ import { ArticleGrid } from "@/widgets/blocks/articles-page/articles-grid";
 import { useGetArticles } from "@/entities/articles/hooks/queries/use-get-articles.queries";
 import { useLocale, useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
+import { Pagination } from "@/shared/ui/pagination";
 
 export default function Articles() {
   const t = useTranslations();
@@ -14,37 +15,49 @@ export default function Articles() {
   const lang = useLocale();
   const queryClient = useQueryClient();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 9;
 
   // Force cache invalidation when language changes
   useEffect(() => {
     // Invalidate all articles queries to ensure fresh data
     queryClient.invalidateQueries({ queryKey: ["articles"] });
+    setCurrentPage(1); // Reset to first page when language changes
   }, [lang, queryClient]);
 
-  // Fetch articles using React Query
+  // Reset page when selected tags change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTags]);
+
+  // Fetch articles using React Query with pagination
   const {
-    data: articles,
+    data: articlesResponse,
     isLoading,
     isError,
     error,
-  } = useGetArticles(lang as "ru" | "en");
+  } = useGetArticles(lang as "ru" | "en", currentPage, articlesPerPage);
+
+  // Extract articles data from response
+  const articles = articlesResponse?.data || [];
+  const totalPages = articlesResponse?.totalPages || 0;
+  const totalArticles = articlesResponse?.total || 0;
 
   // Format API articles to match the ArticleGrid component requirements
-  const formattedApiArticles =
-    articles?.map((article: any) => ({
-      id: article.slug || article.id,
-      images: article.images || [],
-      mainImage: article.mainImage,
-      title: article.title,
-      // Use createdAt field from the database
-      date: formatArticleDate(article),
-      // Use first 150 characters of content as summary
-      summary:
-        article.content.substring(0, 150) +
-        (article.content.length > 150 ? "..." : ""),
-      url: `/articles/${article.slug}`,
-      tags: article.tags || [],
-    })) || [];
+  const formattedApiArticles = articles.map((article: any) => ({
+    id: article.slug || article.id,
+    images: article.images || [],
+    mainImage: article.mainImage,
+    title: article.title,
+    // Use createdAt field from the database
+    date: formatArticleDate(article),
+    // Use first 150 characters of content as summary
+    summary:
+      article.content.substring(0, 150) +
+      (article.content.length > 150 ? "..." : ""),
+    url: `/articles/${article.slug}`,
+    tags: article.tags || [],
+  }));
 
   // Filter articles by selected tags
   const filteredArticles =
@@ -76,6 +89,13 @@ export default function Articles() {
     });
     return acc;
   }, []);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Helper function to format article date from createdAt field
   function formatArticleDate(article: any): string {
@@ -309,6 +329,15 @@ export default function Articles() {
                       columns={isMobile ? 1 : 3}
                       onTagClick={handleTagClick}
                     />
+
+                    {/* Pagination - only show if no tag filters are active */}
+                    {selectedTags.length === 0 && (
+                      <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                      />
+                    )}
                   </>
                 ) : (
                   <div

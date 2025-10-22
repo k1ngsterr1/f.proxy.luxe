@@ -36,5 +36,9 @@
         "message": "Try changing filters or clearing them"
       }
     }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
   }
 }
