@@ -38,23 +38,32 @@ export default function Articles() {
     error,
   } = useGetArticles(lang as "ru" | "en", currentPage, articlesPerPage);
 
-  // Check if response is array (current API) or object with pagination (future API)
-  const isArrayResponse = Array.isArray(articlesResponse);
-  const allArticles = isArrayResponse
-    ? articlesResponse
-    : articlesResponse?.data || [];
+  // Fetch all articles for tag filtering (without pagination)
+  const { data: allArticlesResponse } = useGetArticles(
+    lang as "ru" | "en",
+    1,
+    1000
+  ); // Large limit to get all
 
-  // Client-side pagination for current API format
-  const totalArticles = allArticles.length;
-  const totalPages = Math.ceil(totalArticles / articlesPerPage);
-  const startIndex = (currentPage - 1) * articlesPerPage;
-  const endIndex = startIndex + articlesPerPage;
-  const paginatedArticles = isArrayResponse
-    ? allArticles.slice(startIndex, endIndex)
-    : allArticles;
+  // Check if response is array (old API) or object with pagination (new API)
+  const isArrayResponse = Array.isArray(articlesResponse);
+
+  let articles, totalPages, totalArticles;
+
+  if (isArrayResponse) {
+    // Old API format - array of articles (fallback)
+    articles = articlesResponse || [];
+    totalArticles = articles.length;
+    totalPages = Math.ceil(totalArticles / articlesPerPage);
+  } else {
+    // New API format - object with pagination data
+    articles = articlesResponse?.data || [];
+    totalPages = articlesResponse?.totalPages || 1;
+    totalArticles = articlesResponse?.total || 0;
+  }
 
   // Format API articles to match the ArticleGrid component requirements
-  const formattedApiArticles = paginatedArticles.map((article: any) => ({
+  const formattedApiArticles = articles.map((article: any) => ({
     id: article.slug || article.id,
     images: article.images || [],
     mainImage: article.mainImage,
@@ -68,6 +77,12 @@ export default function Articles() {
     url: `/articles/${article.slug}`,
     tags: article.tags || [],
   }));
+
+  // Get all articles for tag filtering
+  const isAllArrayResponse = Array.isArray(allArticlesResponse);
+  const allArticles = isAllArrayResponse
+    ? allArticlesResponse || []
+    : allArticlesResponse?.data || [];
 
   // Filter articles by selected tags
   // When filtering by tags, we show all matching articles without pagination
