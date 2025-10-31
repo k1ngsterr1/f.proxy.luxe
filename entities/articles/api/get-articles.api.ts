@@ -23,9 +23,22 @@ export interface UpdateArticleDto {
   images?: string[];
 }
 
-export const getArticles = async (lang: "ru" | "en"): Promise<Article[]> => {
-  const response = await apiClient.get<Article[]>(
-    `/api/v1/articles?lang=${lang}`
+export interface ArticleResponse {
+  data: Article[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export const getArticles = async (
+  lang: "ru" | "en",
+  page: number = 1,
+  limit: number = 9
+): Promise<Article[] | ArticleResponse> => {
+  // API now supports pagination with limit parameter
+  const response = await apiClient.get<Article[] | ArticleResponse>(
+    `/api/v1/articles?lang=${lang}&page=${page}&limit=${limit}`
   );
   return response.data;
 };
