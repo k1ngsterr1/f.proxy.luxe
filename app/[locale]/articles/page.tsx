@@ -38,13 +38,6 @@ export default function Articles() {
     error,
   } = useGetArticles(lang as "ru" | "en", currentPage, articlesPerPage);
 
-  // Fetch all articles for tag filtering (without pagination)
-  const { data: allArticlesResponse } = useGetArticles(
-    lang as "ru" | "en",
-    1,
-    1000
-  ); // Large limit to get all
-
   // Check if response is array (old API) or object with pagination (new API)
   const isArrayResponse = Array.isArray(articlesResponse);
 
@@ -78,35 +71,13 @@ export default function Articles() {
     tags: article.tags || [],
   }));
 
-  // Get all articles for tag filtering
-  const isAllArrayResponse = Array.isArray(allArticlesResponse);
-  const allArticles = isAllArrayResponse
-    ? allArticlesResponse || []
-    : allArticlesResponse?.data || [];
-
-  // Filter articles by selected tags
-  // When filtering by tags, we show all matching articles without pagination
-  const allFormattedArticles = allArticles.map((article: any) => ({
-    id: article.slug || article.id,
-    images: article.images || [],
-    mainImage: article.mainImage,
-    title: article.title,
-    date: formatArticleDate(article),
-    summary:
-      article.content.substring(0, 150) +
-      (article.content.length > 150 ? "..." : ""),
-    url: `/articles/${article.slug}`,
-    tags: article.tags || [],
-  }));
-
+  // Filter articles by selected tags from current page
   const filteredArticles =
     selectedTags.length > 0
-      ? allFormattedArticles.filter((article: any) =>
+      ? formattedApiArticles.filter((article: any) =>
           article.tags?.some((tag: any) => selectedTags.includes(tag.id))
         )
-      : formattedApiArticles;
-
-  // Handle tag click
+      : formattedApiArticles; // Handle tag click
   const handleTagClick = (tag: any) => {
     setSelectedTags((prev) => {
       if (prev.includes(tag.id)) {
@@ -119,8 +90,8 @@ export default function Articles() {
     });
   };
 
-  // Get all unique tags from all articles (not just current page)
-  const allTags = allFormattedArticles.reduce((acc: any[], article: any) => {
+  // Get all unique tags from current page articles
+  const allTags = formattedApiArticles.reduce((acc: any[], article: any) => {
     article.tags?.forEach((tag: any) => {
       if (!acc.find((t) => t.id === tag.id)) {
         acc.push(tag);
@@ -357,7 +328,7 @@ export default function Articles() {
                               defaultValue:
                                 "Показано: {{filtered}} из {{total}} статей",
                               filtered: filteredArticles.length,
-                              total: allFormattedArticles.length,
+                              total: totalArticles,
                             })}
                           </p>
                         )}
