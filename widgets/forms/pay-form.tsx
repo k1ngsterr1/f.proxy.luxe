@@ -5,7 +5,6 @@ import WebMoney from "@/assets/images/webmoney.png";
 import BitCoin from "@/assets/images/bitcoin.png";
 import LitCoin from "@/assets/images/litecoin.png";
 import Digiseller from "@/assets/images/digiseller.png";
-import Payer from "@/assets/images/payeer.png";
 import Image from "next/image";
 import { useWebMoneyPayment } from "@/entities/payments/hooks/general/use-webmoney-payment";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
@@ -68,8 +67,6 @@ export const PayForm = ({ userId }: { userId?: string }) => {
             values.paymentAmount,
             values.paymentMethod
           );
-        } else if (values.paymentMethod === "payeer") {
-          await processPayeerPayment(values.paymentAmount);
         } else if (values.paymentMethod === "visa") {
           setShowVisaPopup(true);
           return;
@@ -209,7 +206,6 @@ export const PayForm = ({ userId }: { userId?: string }) => {
               { id: "bitcoin", img: BitCoin, text: "BITCOIN (BTC)" },
               { id: "litecoin", img: LitCoin, text: "LITECOIN (LTC)" },
               { id: "digiseller", img: Digiseller, text: "DIGISELLER" },
-              { id: "payeer", img: Payer, text: "PAYEER" },
             ].map((method) => (
               <label key={method.id} className="method">
                 <input
