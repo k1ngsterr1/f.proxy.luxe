@@ -36,9 +36,9 @@ export const getArticles = async (
   page: number = 1,
   limit: number = 9
 ): Promise<Article[] | ArticleResponse> => {
-  // Fetch all articles without pagination for client-side pagination
+  // Fetch all articles with large limit for client-side pagination
   const response = await apiClient.get<Article[] | ArticleResponse>(
-    `/api/v1/articles?lang=${lang}`
+    `/api/v1/articles?lang=${lang}&limit=1000`
   );
   return response.data;
 };
