@@ -36,9 +36,9 @@ export const getArticles = async (
   page: number = 1,
   limit: number = 9
 ): Promise<Article[] | ArticleResponse> => {
-  // API now supports pagination with limit parameter
+  // Fetch all articles without pagination for client-side pagination
   const response = await apiClient.get<Article[] | ArticleResponse>(
-    `/api/v1/articles?lang=${lang}&page=${page}&limit=${limit}`
+    `/api/v1/articles?lang=${lang}`
   );
   return response.data;
 };
