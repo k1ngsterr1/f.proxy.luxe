@@ -30,62 +30,30 @@ export default function Articles() {
     setCurrentPage(1);
   }, [selectedTags]);
 
-  // Fetch articles using React Query with pagination
+  // Fetch all articles using React Query (client-side pagination)
   const {
     data: articlesResponse,
     isLoading,
     isError,
     error,
-  } = useGetArticles(lang as "ru" | "en", currentPage, articlesPerPage);
+  } = useGetArticles(lang as "ru" | "en", 1, 1000); // Fetch all articles
 
-  // Fetch all articles for tag filtering (without pagination)
-  const { data: allArticlesResponse } = useGetArticles(
-    lang as "ru" | "en",
-    1,
-    1000
-  ); // Large limit to get all
-
-  // Check if response is array (old API) or object with pagination (new API)
+  // Get all articles from response
   const isArrayResponse = Array.isArray(articlesResponse);
+  const allArticles = isArrayResponse
+    ? articlesResponse || []
+    : articlesResponse?.data || [];
 
-  let articles, totalPages, totalArticles;
+  // Calculate pagination values
+  const totalArticles = allArticles.length;
+  const totalPages = Math.ceil(totalArticles / articlesPerPage);
 
-  if (isArrayResponse) {
-    // Old API format - array of articles (fallback)
-    articles = articlesResponse || [];
-    totalArticles = articles.length;
-    totalPages = Math.ceil(totalArticles / articlesPerPage);
-  } else {
-    // New API format - object with pagination data
-    articles = articlesResponse?.data || [];
-    totalPages = articlesResponse?.totalPages || 1;
-    totalArticles = articlesResponse?.total || 0;
-  }
+  // Get articles for current page (client-side pagination)
+  const startIndex = (currentPage - 1) * articlesPerPage;
+  const endIndex = startIndex + articlesPerPage;
+  const paginatedArticles = allArticles.slice(startIndex, endIndex);
 
-  // Format API articles to match the ArticleGrid component requirements
-  const formattedApiArticles = articles.map((article: any) => ({
-    id: article.slug || article.id,
-    images: article.images || [],
-    mainImage: article.mainImage,
-    title: article.title,
-    // Use createdAt field from the database
-    date: formatArticleDate(article),
-    // Use first 150 characters of content as summary
-    summary:
-      article.content.substring(0, 150) +
-      (article.content.length > 150 ? "..." : ""),
-    url: `/articles/${article.slug}`,
-    tags: article.tags || [],
-  }));
-
-  // Get all articles for tag filtering
-  const isAllArrayResponse = Array.isArray(allArticlesResponse);
-  const allArticles = isAllArrayResponse
-    ? allArticlesResponse || []
-    : allArticlesResponse?.data || [];
-
-  // Filter articles by selected tags
-  // When filtering by tags, we show all matching articles without pagination
+  // Format all articles for filtering
   const allFormattedArticles = allArticles.map((article: any) => ({
     id: article.slug || article.id,
     images: article.images || [],
@@ -99,14 +67,27 @@ export default function Articles() {
     tags: article.tags || [],
   }));
 
+  // Format paginated articles
+  const formattedApiArticles = paginatedArticles.map((article: any) => ({
+    id: article.slug || article.id,
+    images: article.images || [],
+    mainImage: article.mainImage,
+    title: article.title,
+    date: formatArticleDate(article),
+    summary:
+      article.content.substring(0, 150) +
+      (article.content.length > 150 ? "..." : ""),
+    url: `/articles/${article.slug}`,
+    tags: article.tags || [],
+  }));
+
+  // Filter articles by selected tags from ALL articles
   const filteredArticles =
     selectedTags.length > 0
       ? allFormattedArticles.filter((article: any) =>
           article.tags?.some((tag: any) => selectedTags.includes(tag.id))
         )
-      : formattedApiArticles;
-
-  // Handle tag click
+      : formattedApiArticles; // Handle tag click
   const handleTagClick = (tag: any) => {
     setSelectedTags((prev) => {
       if (prev.includes(tag.id)) {
@@ -119,7 +100,7 @@ export default function Articles() {
     });
   };
 
-  // Get all unique tags from all articles (not just current page)
+  // Get all unique tags from ALL articles
   const allTags = allFormattedArticles.reduce((acc: any[], article: any) => {
     article.tags?.forEach((tag: any) => {
       if (!acc.find((t) => t.id === tag.id)) {
