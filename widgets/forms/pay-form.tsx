@@ -76,7 +76,10 @@ export const PayForm = ({ userId }: { userId?: string }) => {
             values.paymentMethod
           );
         } else if (values.paymentMethod === "bitcoin") {
-          await processPayeerPayment(values.paymentAmount);
+          await processDigisellerPayment(
+            Number.parseFloat(values.paymentAmount),
+            locale
+          );
         } else {
           await processDigisellerPayment(
             Math.floor(Number.parseFloat(values.paymentAmount)),
