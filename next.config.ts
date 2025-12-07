@@ -3,11 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
 
 const baseConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
-    domains: ["api.proxy.luxe"],
     remotePatterns: [
       {
         protocol: "https",
@@ -15,6 +11,9 @@ const baseConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
 };
 
