@@ -23,12 +23,12 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: "en" | "ru" }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
 
   // 1. Validate locale
-  if (!routing.locales.includes(locale)) {
+  if (!routing.locales.includes(locale as "en" | "ru")) {
     notFound();
   }
 
