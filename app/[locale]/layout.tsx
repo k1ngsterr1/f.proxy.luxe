@@ -20,13 +20,13 @@ import YandexMetrika from "@/components/yandex-metrika/yandex-metrika";
 
 export default async function LocaleLayout({
   children,
-  params: { locale },
-}: // title = "",
-{
+  params,
+}: {
   children: React.ReactNode;
-  params: { locale: "en" | "ru" };
-  // title?: string;
+  params: Promise<{ locale: "en" | "ru" }>;
 }) {
+  const { locale } = await params;
+
   // 1. Validate locale
   if (!routing.locales.includes(locale)) {
     notFound();
