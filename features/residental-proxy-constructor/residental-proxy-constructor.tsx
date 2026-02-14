@@ -219,15 +219,8 @@ export const ResidentProxyConstructor = ({
     setWhitelist(updatedWhitelist);
   };
 
-  // Add a validation function before the handleSubmit function
+  // Validation function - geo fields are all optional
   const validateForm = () => {
-    // If country is selected but region, city or ISP is missing, show alert
-    if (country && (!region || !city || !isp)) {
-      setErrorMessage(i18n("errors.incompleteGeoSelection"));
-      return false;
-    }
-
-    // Clear any previous error messages
     setErrorMessage(null);
     return true;
   };
@@ -272,7 +265,12 @@ export const ResidentProxyConstructor = ({
           : rotation === "sticky"
           ? -1
           : rotationPeriodSeconds,
-      geo: { country, region, city, isp },
+      geo: {
+        country: country || undefined,
+        region: region || undefined,
+        city: city || undefined,
+        isp: isp || undefined,
+      },
     };
 
     modifyProxy(payload, {

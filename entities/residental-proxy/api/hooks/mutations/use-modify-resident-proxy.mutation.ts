@@ -8,10 +8,10 @@ interface ModifyProxyPayload {
   title: string;
   rotation: number;
   geo: {
-    country: string;
-    region: string;
-    city: string;
-    isp: string;
+    country?: string;
+    region?: string;
+    city?: string;
+    isp?: string;
   };
 }
 

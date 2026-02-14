@@ -18,9 +18,9 @@
       "customPeriodPlaceholder": "Enter seconds (1-3600)",
       "filter": "Filter:",
       "country": "Country:",
-      "region": "Region:",
-      "city": "City:",
-      "isp": "ISP:",
+      "region": "Region (optional):",
+      "city": "City (optional):",
+      "isp": "ISP (optional):",
       "ports": "Ports:",
       "portsMax": "max. 1k",
       "createButton": "Create",
@@ -51,9 +51,9 @@
     },
     "selectOptions": {
       "selectCountry": "Select country",
-      "selectRegion": "Select region",
-      "selectCity": "Select city",
-      "selectIsp": "Select ISP",
+      "selectRegion": "Select region (optional)",
+      "selectCity": "Select city (optional)",
+      "selectIsp": "Select ISP (optional)",
       "noRegions": "No regions available",
       "noCities": "No cities available",
       "noIsps": "No ISPs available",
@@ -62,7 +62,7 @@
     "errors": {
       "geoDataError": "Error loading geo data",
       "customRotationPeriod": "Custom rotation period must be between 1 and 3600 seconds",
-      "incompleteGeoSelection": "Complete selection of country, city, region and provider",
+      "incompleteGeoSelection": "",
       "general": "Failed to create a new list"
     },
     "messages": {
