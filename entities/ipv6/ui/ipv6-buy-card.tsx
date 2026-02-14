@@ -20,7 +20,7 @@ export const IPV6BuyCard = () => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [countryId, setCountryId] = useState<string>("");
   const [goal, setGoal] = useState<string>("surfing");
-  const [usage, setUsage] = useState<string>("HTTPs / SOCKS5");
+  const [protocol, setProtocol] = useState<"HTTPS" | "SOCKS5">("HTTPS");
   const [period, setPeriod] = useState<string>("1m");
 
   const [value, setValue] = useState(10);
@@ -62,11 +62,11 @@ export const IPV6BuyCard = () => {
       country: selectedCountry.name,
       quantity: Number(value),
       goal: goal,
-      usage,
+      usage: protocol,
       period: selectedPeriod.name,
       periodDays: selectedPeriod.id,
       totalPrice: 0.08 * Number(value),
-      proxyType: usage.includes("SOCKS5") ? "SOCKS5" : "HTTPS",
+      proxyType: protocol,
       type: "ipv6",
     };
 
@@ -138,6 +138,21 @@ export const IPV6BuyCard = () => {
             </option>
           ))}
         </select>
+
+        <h4 className="buy-item__subheader" style={{ marginTop: 20 }}>
+          {i18n("protocol")}
+        </h4>
+        <div style={selectWrapperStyle}>
+          <select
+            value={protocol}
+            onChange={(e) => setProtocol(e.target.value as "HTTPS" | "SOCKS5")}
+            style={selectStyle}
+          >
+            <option value="HTTPS">HTTPS</option>
+            <option value="SOCKS5">SOCKS5</option>
+          </select>
+          <ChevronDown style={chevronStyle} size={16} />
+        </div>
 
         <h4
           className="buy-item__subheader"

@@ -56,7 +56,8 @@
       "message": {
         "placeholder": "Message"
       },
-      "submit": "Send"
+      "submit": "Send",
+      "captchaRequired": "Please complete the captcha verification"
     }
   }
 }

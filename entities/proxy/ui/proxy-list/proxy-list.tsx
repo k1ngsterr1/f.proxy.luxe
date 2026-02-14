@@ -4,6 +4,9 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import {
   AlertCircle,
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   Download,
   Edit,
   FileJson,
@@ -97,6 +100,7 @@ const ProxyList: React.FC<Props> = ({
   const [forceClosePopup, setForceClosePopup] = useState(false);
 
   const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(null);
 
   const selectedProxies =
     externalSelectedProxies || Array.from(internalSelectedProxies);
@@ -169,6 +173,20 @@ const ProxyList: React.FC<Props> = ({
       setUniqueProxies(Array.from(uniqueProxiesMap.values()));
     }
   }, [proxies]);
+
+  const sortedProxies = sortDirection
+    ? [...uniqueProxies].sort((a, b) => {
+        const dateA = a.date_end ? new Date(a.date_end).getTime() : 0;
+        const dateB = b.date_end ? new Date(b.date_end).getTime() : 0;
+        return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+      })
+    : uniqueProxies;
+
+  const toggleSort = () => {
+    setSortDirection((prev) =>
+      prev === null ? "asc" : prev === "asc" ? "desc" : null
+    );
+  };
 
   // Auto-close popup when batch operation completes
   useEffect(() => {
@@ -1533,8 +1551,20 @@ const ProxyList: React.FC<Props> = ({
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.country")}
                 </th>{" "}
-                <th style={tableHeaderCellStyle}>
-                  {t("table.headers.expiryDate")}
+                <th
+                  style={{ ...tableHeaderCellStyle, cursor: "pointer", userSelect: "none" }}
+                  onClick={toggleSort}
+                >
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    {t("table.headers.expiryDate")}
+                    {sortDirection === "asc" ? (
+                      <ArrowUp size={14} />
+                    ) : sortDirection === "desc" ? (
+                      <ArrowDown size={14} />
+                    ) : (
+                      <ArrowUpDown size={14} style={{ opacity: 0.5 }} />
+                    )}
+                  </span>
                 </th>{" "}
                 <th style={tableHeaderCellStyle}>
                   {t("table.headers.actions")}
@@ -1543,7 +1573,7 @@ const ProxyList: React.FC<Props> = ({
             </thead>{" "}
             <tbody>
               {" "}
-              {uniqueProxies.map((proxy, index) => {
+              {sortedProxies.map((proxy, index) => {
                 const isSelected = selectedProxies.includes(proxy.id);
                 return (
                   <tr

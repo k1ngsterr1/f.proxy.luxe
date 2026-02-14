@@ -242,7 +242,13 @@ export default function ProxyCheckerPage() {
                 <br />
                 {i18n("form.formatPrivate")}{" "}
                 <span style={{ color: "#f3d675", fontWeight: "500" }}>
-                  IP:PORT:USER:PASS
+                  USER:PASS:IP:PORT
+                </span>
+                <br />
+                <span style={{ color: "#999", fontSize: "13px" }}>
+                  IPv6: <span style={{ color: "#f3d675" }}>[IPv6]:PORT</span>{" "}
+                  {i18n("form.formatOr")}{" "}
+                  <span style={{ color: "#f3d675" }}>USER:PASS:[IPv6]:PORT</span>
                 </span>
               </p>
 

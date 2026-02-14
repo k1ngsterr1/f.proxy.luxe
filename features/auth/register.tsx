@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import {
   Formik,
   Form,
@@ -9,6 +10,7 @@ import {
   FormikProps,
 } from "formik";
 import * as Yup from "yup";
+import ReCAPTCHA from "react-google-recaptcha";
 import { register } from "@/entities/auth/api/post/register.api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
@@ -24,6 +26,8 @@ interface FormValues {
 }
 
 export const RegisterAuthForm = () => {
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const referralId = searchParams.get("ref");
@@ -52,11 +56,18 @@ export const RegisterAuthForm = () => {
     values: FormValues,
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
+    if (!captchaToken) {
+      setErrors({ general: i18n("auth.errors.captchaRequired") });
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const registerData = await register({
         email: values.email,
         password: values.password,
         referralId: referralId,
+        captchaToken: captchaToken,
       });
 
       console.log(registerData)
@@ -87,6 +98,8 @@ export const RegisterAuthForm = () => {
       }
     } finally {
       setSubmitting(false);
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     }
   };
 
@@ -178,11 +191,21 @@ export const RegisterAuthForm = () => {
               </div>
             )}
 
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                onChange={(token) => setCaptchaToken(token)}
+                onExpired={() => setCaptchaToken(null)}
+                theme="dark"
+              />
+            </div>
+
             <div className="btn-wrap">
               <Button
                 type="submit"
                 variant="big"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !captchaToken}
                 name={
                   isSubmitting
                     ? i18n("auth.register.processing")

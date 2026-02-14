@@ -15,6 +15,7 @@
       "formatTitle": "In what format to add proxies to the proxy checker?",
       "formatPublic": "If you have public proxies (without login and password), then",
       "formatPrivate": "If you have private proxies (with login and password authorization), then",
+      "formatOr": "or",
       "privateNote": "P.S.: If you bought proxies from us, they are private!",
       "checking": "Checking...",
       "checkButton": "Check proxies"

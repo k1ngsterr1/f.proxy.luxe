@@ -5,6 +5,7 @@ import { Option } from "@/shared/interfaces/option.interface";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { apiClient } from "@/shared/config/apiClient";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const getOptions = (i18n: any) => [
   { id: "1", text: i18n("support.option1") },
@@ -43,12 +44,20 @@ export const CallbackForm: FC = () => {
     };
   }, []);
 
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const onSubmitHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
+
+    if (!captchaToken) {
+      setSubmitError(i18n("captchaRequired"));
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError(null);
 
@@ -60,6 +69,7 @@ export const CallbackForm: FC = () => {
       email: formData.get("email"),
       support: selectedOption?.text || "General Support",
       message: formData.get("message"),
+      captchaToken: captchaToken,
     };
 
     try {
@@ -80,11 +90,15 @@ export const CallbackForm: FC = () => {
       // Show success message
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 5000); // Hide success message after 5 seconds
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     } catch (error) {
       console.error("Error sending email:", error);
       setSubmitError(
         error instanceof Error ? error.message : "Failed to send message"
       );
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -243,6 +257,17 @@ export const CallbackForm: FC = () => {
         placeholder={i18n("message.placeholder")}
         required
       ></textarea>
+
+      <div style={{ display: "flex", justifyContent: "center", margin: "1rem 0" }}>
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+          onChange={(token) => setCaptchaToken(token)}
+          onExpired={() => setCaptchaToken(null)}
+          theme="dark"
+        />
+      </div>
+
       <div
         style={{
           display: "flex",
@@ -253,11 +278,11 @@ export const CallbackForm: FC = () => {
         <button
           type="submit"
           className="btn btn-hover"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !captchaToken}
           style={{
             marginTop: 16,
-            opacity: isSubmitting ? 0.7 : 1,
-            cursor: isSubmitting ? "not-allowed" : "pointer",
+            opacity: isSubmitting || !captchaToken ? 0.7 : 1,
+            cursor: isSubmitting || !captchaToken ? "not-allowed" : "pointer",
           }}
         >
           {isSubmitting ? "Sending..." : i18n("submit")}

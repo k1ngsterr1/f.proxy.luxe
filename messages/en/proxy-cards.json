@@ -66,6 +66,7 @@
       "description": "Suitable for websites that support IPv6, except for payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY",
+      "protocol": "PROTOCOL",
       "quantity": "QUANTITY",
       "period": "PERIOD",
       "month": "30 days",

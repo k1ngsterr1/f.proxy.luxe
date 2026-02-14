@@ -4,6 +4,7 @@ import { defineRouting } from "next-intl/routing";
 export const routing = defineRouting({
   locales: ["en", "ru"],
   defaultLocale: "ru",
+  localeDetection: false,
   pathnames: {
     "/": "/",
     "/buy-proxy": "/buy-proxy",

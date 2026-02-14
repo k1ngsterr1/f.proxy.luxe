@@ -4,9 +4,8 @@
 
 import { type FC, useEffect, useState } from "react";
 import Image from "next/image";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter, usePathname } from "@/i18n/routing";
 
-import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
 import Logo from "@/assets/images/logo.png";
@@ -41,23 +40,8 @@ export const Header: FC = () => {
     return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
-  const getPathForLocale = (targetLocale: string) => {
-    const segments = pathname.split("/").filter(Boolean);
-    const supportedLocales = ["en", "ru"];
-
-    if (supportedLocales.includes(segments[0])) {
-      segments[0] = targetLocale;
-    } else {
-      segments.unshift(targetLocale);
-    }
-
-    return "/" + segments.join("/");
-  };
-
   const changeLanguage = (lang: string) => {
-    document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax; Secure`;
-    const newPath = getPathForLocale(lang);
-    router.push(newPath);
+    router.replace(pathname, { locale: lang });
   };
 
   return (
@@ -120,7 +104,7 @@ export const Header: FC = () => {
                   style={{
                     cursor: "pointer",
                   }}
-                  onClick={() => router.push(`/${locale}/personal-account`)}
+                  onClick={() => router.push('/personal-account')}
                 >
                   <a className="another-btn">
                     <span>{i18n("header.account")}</span>
