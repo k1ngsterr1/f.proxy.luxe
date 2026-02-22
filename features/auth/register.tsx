@@ -39,6 +39,7 @@ export const RegisterAuthForm = () => {
   const { saveAccessToken } = useAuthStore();
   const i18n = useTranslations();
   const validationI18n = useTranslations("validation");
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email(validationI18n("email.invalid"))
@@ -78,6 +79,8 @@ export const RegisterAuthForm = () => {
       navigate.push("/verification-code");
     } catch (error: any) {
       console.error("Ошибка регистрации:", error);
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
 
       if (error.response && error.response.data) {
         const { statusCode, message } = error.response.data;

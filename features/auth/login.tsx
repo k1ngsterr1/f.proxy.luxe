@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 import { Fancybox } from "@fancyapps/ui";
 import { login } from "@/entities/auth/api/post/login.api";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export const LoginAuthForm = () => {
   const navigate = useRouter();
@@ -18,6 +19,8 @@ export const LoginAuthForm = () => {
   const { saveAccessToken, saveRefreshToken } = useAuthStore();
   const i18n = useTranslations();
   const validationI18n = useTranslations("validation");
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // ✅ Validation Schema
   const validationSchema = Yup.object().shape({
@@ -35,12 +38,17 @@ export const LoginAuthForm = () => {
   ) => {
     try {
       event?.preventDefault();
-      const loginData = await login(values);
+      const loginData = await login({
+        ...values,
+        captchaToken: captchaToken || undefined,
+      });
       saveAccessToken(loginData.accessToken);
       closePopup("auth-enter");
       navigate.push("/personal-account");
     } catch {
       setErrors({ general: validationI18n("general.invalidCredentials") });
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     } finally {
       setSubmitting(false);
     }
@@ -114,6 +122,15 @@ export const LoginAuthForm = () => {
               {errors.general}
             </div>
           )}
+          <div style={{ margin: "12px 0", display: "flex", justifyContent: "center" }}>
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+              onChange={(token) => setCaptchaToken(token)}
+              onExpired={() => setCaptchaToken(null)}
+              theme="dark"
+            />
+          </div>
           <Link
             href="/forgot-password"
             style={{
@@ -131,7 +148,7 @@ export const LoginAuthForm = () => {
               style={{
                 marginTop: 16,
               }}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !captchaToken}
               name={
                 isSubmitting
                   ? i18n("auth.login.processing")
