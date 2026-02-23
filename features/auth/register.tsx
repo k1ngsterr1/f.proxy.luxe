@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef, useState } from "react";
 import {
   Formik,
   Form,
@@ -10,13 +9,26 @@ import {
   FormikProps,
 } from "formik";
 import * as Yup from "yup";
-import ReCAPTCHA from "react-google-recaptcha";
 import { register } from "@/entities/auth/api/post/register.api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
+
+declare global {
+  interface Window {
+    grecaptcha: {
+      enterprise: {
+        ready: (cb: () => void) => void;
+        execute: (
+          siteKey: string,
+          options: { action: string }
+        ) => Promise<string>;
+      };
+    };
+  }
+}
 
 interface FormValues {
   email: string;
@@ -25,10 +37,10 @@ interface FormValues {
   general?: string;
 }
 
-export const RegisterAuthForm = () => {
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+const RECAPTCHA_SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
+export const RegisterAuthForm = () => {
   const searchParams = useSearchParams();
   const referralId = searchParams.get("ref");
 
@@ -53,10 +65,33 @@ export const RegisterAuthForm = () => {
       .required(validationI18n("confirmPassword.required")),
   });
 
+  const getRecaptchaToken = async (): Promise<string | null> => {
+    try {
+      return await new Promise<string>((resolve, reject) => {
+        window.grecaptcha.enterprise.ready(async () => {
+          try {
+            const token = await window.grecaptcha.enterprise.execute(
+              RECAPTCHA_SITE_KEY,
+              { action: "REGISTER" }
+            );
+            resolve(token);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("reCAPTCHA error:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async (
     values: FormValues,
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
+    const captchaToken = await getRecaptchaToken();
+
     if (!captchaToken) {
       setErrors({ general: i18n("auth.errors.captchaRequired") });
       setSubmitting(false);
@@ -101,8 +136,6 @@ export const RegisterAuthForm = () => {
       }
     } finally {
       setSubmitting(false);
-      recaptchaRef.current?.reset();
-      setCaptchaToken(null);
     }
   };
 
@@ -194,21 +227,11 @@ export const RegisterAuthForm = () => {
               </div>
             )}
 
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                onChange={(token) => setCaptchaToken(token)}
-                onExpired={() => setCaptchaToken(null)}
-                theme="dark"
-              />
-            </div>
-
             <div className="btn-wrap">
               <Button
                 type="submit"
                 variant="big"
-                disabled={isSubmitting || !captchaToken}
+                disabled={isSubmitting}
                 name={
                   isSubmitting
                     ? i18n("auth.register.processing")

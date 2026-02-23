@@ -5,7 +5,9 @@ import { Option } from "@/shared/interfaces/option.interface";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { apiClient } from "@/shared/config/apiClient";
-import ReCAPTCHA from "react-google-recaptcha";
+
+const RECAPTCHA_SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
 const getOptions = (i18n: any) => [
   { id: "1", text: i18n("support.option1") },
@@ -44,22 +46,43 @@ export const CallbackForm: FC = () => {
     };
   }, []);
 
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const getRecaptchaToken = async (): Promise<string | null> => {
+    try {
+      return await new Promise<string>((resolve, reject) => {
+        window.grecaptcha.enterprise.ready(async () => {
+          try {
+            const token = await window.grecaptcha.enterprise.execute(
+              RECAPTCHA_SITE_KEY,
+              { action: "SEND_SUPPORT" }
+            );
+            resolve(token);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("reCAPTCHA error:", error);
+      return null;
+    }
+  };
+
   const onSubmitHandler: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const captchaToken = await getRecaptchaToken();
 
     if (!captchaToken) {
       setSubmitError(i18n("captchaRequired"));
+      setIsSubmitting(false);
       return;
     }
-
-    setIsSubmitting(true);
-    setSubmitError(null);
 
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -89,16 +112,12 @@ export const CallbackForm: FC = () => {
 
       // Show success message
       setSubmitSuccess(true);
-      setTimeout(() => setSubmitSuccess(false), 5000); // Hide success message after 5 seconds
-      recaptchaRef.current?.reset();
-      setCaptchaToken(null);
+      setTimeout(() => setSubmitSuccess(false), 5000);
     } catch (error) {
       console.error("Error sending email:", error);
       setSubmitError(
         error instanceof Error ? error.message : "Failed to send message"
       );
-      recaptchaRef.current?.reset();
-      setCaptchaToken(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -257,17 +276,6 @@ export const CallbackForm: FC = () => {
         placeholder={i18n("message.placeholder")}
         required
       ></textarea>
-
-      <div style={{ display: "flex", justifyContent: "center", margin: "1rem 0" }}>
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-          onChange={(token) => setCaptchaToken(token)}
-          onExpired={() => setCaptchaToken(null)}
-          theme="dark"
-        />
-      </div>
-
       <div
         style={{
           display: "flex",
@@ -278,11 +286,11 @@ export const CallbackForm: FC = () => {
         <button
           type="submit"
           className="btn btn-hover"
-          disabled={isSubmitting || !captchaToken}
+          disabled={isSubmitting}
           style={{
             marginTop: 16,
-            opacity: isSubmitting || !captchaToken ? 0.7 : 1,
-            cursor: isSubmitting || !captchaToken ? "not-allowed" : "pointer",
+            opacity: isSubmitting ? 0.7 : 1,
+            cursor: isSubmitting ? "not-allowed" : "pointer",
           }}
         >
           {isSubmitting ? "Sending..." : i18n("submit")}
