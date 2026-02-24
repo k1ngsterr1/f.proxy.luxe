@@ -90,20 +90,20 @@ export const RegisterAuthForm = () => {
     values: FormValues,
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
-    const captchaToken = await getRecaptchaToken();
-
-    if (!captchaToken) {
-      setErrors({ general: i18n("auth.errors.captchaRequired") });
-      setSubmitting(false);
-      return;
-    }
+    // const captchaToken = await getRecaptchaToken();
+    //
+    // if (!captchaToken) {
+    //   setErrors({ general: i18n("auth.errors.captchaRequired") });
+    //   setSubmitting(false);
+    //   return;
+    // }
 
     try {
       const registerData = await register({
         email: values.email,
         password: values.password,
         referralId: referralId,
-        captchaToken: captchaToken,
+        // captchaToken: captchaToken,
       });
 
       console.log(registerData)

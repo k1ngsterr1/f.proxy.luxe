@@ -61,19 +61,19 @@ export const LoginAuthForm = () => {
     values: { email: string; password: string },
     { setSubmitting, setErrors }: any
   ) => {
-    const captchaToken = await getRecaptchaToken();
-
-    if (!captchaToken) {
-      setErrors({ general: validationI18n("general.captchaFailed") });
-      setSubmitting(false);
-      return;
-    }
+    // const captchaToken = await getRecaptchaToken();
+    //
+    // if (!captchaToken) {
+    //   setErrors({ general: validationI18n("general.captchaFailed") });
+    //   setSubmitting(false);
+    //   return;
+    // }
 
     try {
       event?.preventDefault();
       const loginData = await login({
         ...values,
-        captchaToken,
+        // captchaToken,
       });
       saveAccessToken(loginData.accessToken);
       closePopup("auth-enter");

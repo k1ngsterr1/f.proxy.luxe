@@ -61,10 +61,10 @@ export default async function LocaleLayout({
             gtag('config', 'G-WCRHTCJHGJ');
           `}
         </Script>
-        <Script
+        {/* <Script
           src={`https://www.google.com/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
           strategy="afterInteractive"
-        />
+        /> */}
       </head>
       <body>
         <YandexMetrika />
