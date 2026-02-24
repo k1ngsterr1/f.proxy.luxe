@@ -139,21 +139,6 @@ export const IPV6BuyCard = () => {
           ))}
         </select>
 
-        <h4 className="buy-item__subheader" style={{ marginTop: 20 }}>
-          {i18n("protocol")}
-        </h4>
-        <div style={selectWrapperStyle}>
-          <select
-            value={protocol}
-            onChange={(e) => setProtocol(e.target.value as "HTTPS" | "SOCKS5")}
-            style={selectStyle}
-          >
-            <option value="HTTPS">HTTPS</option>
-            <option value="SOCKS5">SOCKS5</option>
-          </select>
-          <ChevronDown style={chevronStyle} size={16} />
-        </div>
-
         <h4
           className="buy-item__subheader"
           style={{ marginTop: 20, marginBottom: 20 }}
