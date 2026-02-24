@@ -11,7 +11,9 @@ import { useEffect, useRef, useState } from "react";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { Button } from "@/shared/ui/button";
 import { useTranslations } from "next-intl";
-import ReCAPTCHA from "react-google-recaptcha";
+
+const RECAPTCHA_SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
 export const LoginAuthForm = () => {
   const navigate = useRouter();
@@ -19,8 +21,6 @@ export const LoginAuthForm = () => {
   const { saveAccessToken, saveRefreshToken } = useAuthStore();
   const i18n = useTranslations();
   const validationI18n = useTranslations("validation");
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // ✅ Validation Schema
   const validationSchema = Yup.object().shape({
@@ -32,23 +32,50 @@ export const LoginAuthForm = () => {
       .required(validationI18n("password.required")),
   });
 
+  const getRecaptchaToken = async (): Promise<string | null> => {
+    try {
+      return await new Promise<string>((resolve, reject) => {
+        window.grecaptcha.enterprise.ready(async () => {
+          try {
+            const token = await window.grecaptcha.enterprise.execute(
+              RECAPTCHA_SITE_KEY,
+              { action: "LOGIN" }
+            );
+            resolve(token);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      });
+    } catch (error) {
+      console.error("reCAPTCHA error:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async (
     values: { email: string; password: string },
     { setSubmitting, setErrors }: any
   ) => {
+    const captchaToken = await getRecaptchaToken();
+
+    if (!captchaToken) {
+      setErrors({ general: validationI18n("general.captchaFailed") });
+      setSubmitting(false);
+      return;
+    }
+
     try {
       event?.preventDefault();
       const loginData = await login({
         ...values,
-        captchaToken: captchaToken || undefined,
+        captchaToken,
       });
       saveAccessToken(loginData.accessToken);
       closePopup("auth-enter");
       navigate.push("/personal-account");
     } catch {
       setErrors({ general: validationI18n("general.invalidCredentials") });
-      recaptchaRef.current?.reset();
-      setCaptchaToken(null);
     } finally {
       setSubmitting(false);
     }
@@ -122,15 +149,6 @@ export const LoginAuthForm = () => {
               {errors.general}
             </div>
           )}
-          <div style={{ margin: "12px 0", display: "flex", justifyContent: "center" }}>
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-              onChange={(token) => setCaptchaToken(token)}
-              onExpired={() => setCaptchaToken(null)}
-              theme="dark"
-            />
-          </div>
           <Link
             href="/forgot-password"
             style={{
@@ -148,7 +166,7 @@ export const LoginAuthForm = () => {
               style={{
                 marginTop: 16,
               }}
-              disabled={isSubmitting || !captchaToken}
+              disabled={isSubmitting}
               name={
                 isSubmitting
                   ? i18n("auth.login.processing")
