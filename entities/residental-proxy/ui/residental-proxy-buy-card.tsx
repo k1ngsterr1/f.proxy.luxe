@@ -21,6 +21,7 @@ const TARIFF_PRICES = {
 export const ResidentalProxyBuyCard = () => {
   const i18n = useTranslations("proxy-cards.residential");
   const [goal, setGoal] = useState<string>("surfing"); // Default to "surfing"
+  const [protocol, setProtocol] = useState<"HTTPS" | "SOCKS5">("HTTPS");
   const [tariffId, setTariffId] = useState<number>(0);
   const [selectedTariff, setSelectedTariff] = useState<any>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -159,6 +160,22 @@ export const ResidentalProxyBuyCard = () => {
           </select>
           <ChevronDown style={chevronStyle} size={16} />
         </div>
+
+        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+          {i18n("protocol")}
+        </h4>
+        <div style={selectWrapperStyle}>
+          <select
+            value={protocol}
+            onChange={(e) => setProtocol(e.target.value as "HTTPS" | "SOCKS5")}
+            style={selectStyle}
+          >
+            <option value="HTTPS">HTTPS</option>
+            <option value="SOCKS5">SOCKS5</option>
+          </select>
+          <ChevronDown style={chevronStyle} size={16} />
+        </div>
+
         <h4
           className="buy-item__subheader"
           style={{

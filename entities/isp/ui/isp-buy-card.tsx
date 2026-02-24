@@ -17,6 +17,7 @@ export const ISPBuyCard = () => {
   const [quantity, setQuantity] = useState<string>("1");
   const [period, setPeriod] = useState<string>("1m");
   const [goal, setGoal] = useState<string>("surfing");
+  const [protocol, setProtocol] = useState<"HTTPS" | "SOCKS5">("HTTPS");
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const { data: preferences, isLoading: isLoadingPreferences } =
@@ -101,6 +102,32 @@ export const ISPBuyCard = () => {
             </option>
           ))}
         </select>
+
+        <h4 className="buy-item__subheader" style={{ marginTop: 16 }}>
+          {i18n("protocol")}
+        </h4>
+        <div style={{ position: "relative", width: "100%" }}>
+          <select
+            value={protocol}
+            onChange={(e) => setProtocol(e.target.value as "HTTPS" | "SOCKS5")}
+            style={selectStyle}
+          >
+            <option value="HTTPS">HTTPS</option>
+            <option value="SOCKS5">SOCKS5</option>
+          </select>
+          <ChevronDown
+            size={16}
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              pointerEvents: "none",
+              color: "#f3d675",
+            }}
+          />
+        </div>
+
         <h4
           className="buy-item__subheader"
           style={{ marginTop: 16, marginBottom: 20 }}
