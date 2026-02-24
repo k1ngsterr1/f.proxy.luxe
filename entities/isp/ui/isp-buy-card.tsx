@@ -83,7 +83,7 @@ export const ISPBuyCard = () => {
   return (
     <div className="buy-col">
       <div className="buy-item" style={{ height: 850, minHeight: 800 }}>
-        <h3 className="buy-item__header">{i18n("title")}</h3>
+        <h3 className="buy-item__header" dangerouslySetInnerHTML={{ __html: i18n("title") }}></h3>
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>
         <span className="buy-item__btn">{i18n("issued")}</span>

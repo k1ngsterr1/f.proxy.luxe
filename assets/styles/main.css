@@ -678,7 +678,7 @@ img {
   margin-bottom: 25px;
 }
 .buy-item__header {
-  height: 50px;
+  min-height: 50px;
   text-transform: uppercase;
   text-align: center;
   font-size: 19px;
