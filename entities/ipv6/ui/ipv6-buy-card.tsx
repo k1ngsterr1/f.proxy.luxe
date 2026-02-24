@@ -117,7 +117,7 @@ export const IPV6BuyCard = () => {
 
   return (
     <div className="buy-col">
-      <div className="buy-item" style={{ minHeight: 800, height: 850 }}>
+      <div className="buy-item" style={{ minHeight: 900, height: 950 }}>
         <h3 className="buy-item__header" dangerouslySetInnerHTML={{ __html: i18n("title") }}></h3>
         <div className="separator"></div>
         <p className="buy-item__about">{i18n("description")}</p>

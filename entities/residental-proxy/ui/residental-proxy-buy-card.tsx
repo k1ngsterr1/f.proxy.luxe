@@ -132,8 +132,8 @@ export const ResidentalProxyBuyCard = () => {
       <div
         className="buy-item"
         style={{
-          height: 850,
-          minHeight: 800,
+          height: 950,
+          minHeight: 900,
         }}
       >
         <h3 className="buy-item__header" dangerouslySetInnerHTML={{ __html: i18n("title") }}></h3>
