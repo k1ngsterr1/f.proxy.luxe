@@ -18,6 +18,7 @@
     },
     "general": {
       "invalidCredentials": "Invalid email or password",
+      "captchaFailed": "reCAPTCHA verification failed. Please try again.",
       "serverError": "Server error occurred. Please try again later."
     }
   }

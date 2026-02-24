@@ -18,6 +18,7 @@
     },
     "general": {
       "invalidCredentials": "Неверный email или пароль",
+      "captchaFailed": "Ошибка проверки reCAPTCHA. Попробуйте ещё раз.",
       "serverError": "Произошла ошибка сервера. Пожалуйста, попробуйте позже."
     }
   }

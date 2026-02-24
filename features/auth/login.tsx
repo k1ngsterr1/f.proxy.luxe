@@ -34,6 +34,10 @@ export const LoginAuthForm = () => {
 
   const getRecaptchaToken = async (): Promise<string | null> => {
     try {
+      if (!window.grecaptcha?.enterprise) {
+        console.error("reCAPTCHA Enterprise not loaded yet");
+        return null;
+      }
       return await new Promise<string>((resolve, reject) => {
         window.grecaptcha.enterprise.ready(async () => {
           try {
