@@ -1138,7 +1138,7 @@ export const ResidentProxyConstructor = ({
                   backgroundPosition: "right 8px center",
                   backgroundSize: "16px",
                 }}
-                disabled={!country || isLoadingGeo}
+                disabled={isLoadingGeo}
                 className="dark-select"
               >
                 <option value="">{i18n("selectOptions.selectRegion")}</option>
@@ -1195,7 +1195,7 @@ export const ResidentProxyConstructor = ({
                   backgroundPosition: "right 8px center",
                   backgroundSize: "16px",
                 }}
-                disabled={!region || isLoadingGeo}
+                disabled={isLoadingGeo}
                 className="dark-select"
               >
                 <option value="">{i18n("selectOptions.selectCity")}</option>
@@ -1252,7 +1252,7 @@ export const ResidentProxyConstructor = ({
                   backgroundPosition: "right 8px center",
                   backgroundSize: "16px",
                 }}
-                disabled={!city || availableIsps.length === 0}
+                disabled={isLoadingGeo}
                 className="dark-select"
               >
                 <option value="">{i18n("selectOptions.selectIsp")}</option>
