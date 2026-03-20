@@ -130,7 +130,7 @@ export default function ProxyPage() {
           item.package_list.forEach((pkg) => {
             flatProxies.push({
               id: pkg.id.toString(),
-              ip: "185.162.130.86",
+              ip: "204.155.30.92",
               type: proxyType,
               ports:
                 pkg.export.ports >= 3

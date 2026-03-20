@@ -809,7 +809,7 @@ const ProxyList: React.FC<Props> = ({
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
         if (index > 0 && type === "resident") return; // For resident, export only first package list
         proxy.package_list.forEach((item) => {
-          const ip = "185.162.130.86";
+          const ip = "204.155.30.92";
           const login = item.login;
           const password = item.password;
           for (let port = 10000; port < 10000 + item.export.ports; port++) {
@@ -859,7 +859,7 @@ const ProxyList: React.FC<Props> = ({
       if (proxy.type === "resident" && Array.isArray(proxy.package_list)) {
         if (index > 0 && type === "resident") return;
         proxy.package_list.forEach((item) => {
-          const ip = "185.162.130.86";
+          const ip = "204.155.30.92";
           const login = item.login;
           const password = item.password;
           for (let port = 10000; port < 10000 + item.export.ports; port++) {
