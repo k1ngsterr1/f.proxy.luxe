@@ -1,7 +1,6 @@
 "use client";
 import Logo from "@/assets/images/logo.png";
 import TelegramIcon from "@/assets/images/telegram.png";
-import VkIcon from "@/assets/images/vk-icon.png";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,14 +52,6 @@ export const Footer: FC = () => {
                 admin@proxy.luxe
               </a>
               <nav className="footer-soc__links">
-                <a href="https://vk.com/proxy_luxe " target="_blank">
-                  <Image
-                    src={VkIcon}
-                    alt="Telegram"
-                    layout="response"
-                    style={{ width: 28, height: 16 }}
-                  />
-                </a>
                 <a href="https://t.me/proxy_luxe" target="_blank">
                   <Image
                     src={TelegramIcon}
