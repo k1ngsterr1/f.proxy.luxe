@@ -70,6 +70,10 @@ export default function ArticlePage() {
     error,
   } = useGetArticleById(articleSlug, locale as "ru" | "en");
 
+  const pageTitle =
+    article?.title ||
+    (isError ? t("article.error_title") : t("articless.title"));
+
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -124,6 +128,7 @@ export default function ArticlePage() {
       className="inner-page"
       style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
     >
+      <title>{pageTitle}</title>
       {/* Reading Progress Bar */}
       <div
         style={{
