@@ -17,10 +17,10 @@ export const PaymentMethodsBlock = () => {
       description: t("methods.visa-mastercard.description"),
     },
     {
-      id: "payeer",
-      name: t("methods.payeer.name"),
-      icon: "/images/payment/payeer.png",
-      description: t("methods.payeer.description"),
+      id: "digiseller",
+      name: t("methods.digiseller.name"),
+      icon: "/images/payment/digiseller.png",
+      description: t("methods.digiseller.description"),
     },
     {
       id: "bitcoin",
@@ -205,7 +205,7 @@ export const PaymentMethodsBlock = () => {
                     {method.id === "bitcoin" && (
                       <Bitcoin size={24} color="#f3d675" />
                     )}
-                    {method.id === "payeer" && (
+                    {method.id === "digiseller" && (
                       <Wallet size={24} color="#f3d675" />
                     )}
                     {method.id === "webmoney" && (

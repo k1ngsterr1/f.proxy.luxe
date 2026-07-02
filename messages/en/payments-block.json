@@ -10,9 +10,9 @@
         "name": "Visa/MasterCard/MIR",
         "description": "Credit or debit card payment"
       },
-      "payeer": {
-        "name": "PAYEER",
-        "description": "Electronic payment system"
+      "digiseller": {
+        "name": "Digiseller",
+        "description": "Payment via Digiseller"
       },
       "bitcoin": {
         "name": "Bitcoin",

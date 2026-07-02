@@ -10,9 +10,9 @@
         "name": "Visa/MasterCard/MIR",
         "description": "Оплата кредитной или дебетовой картой"
       },
-      "payeer": {
-        "name": "PAYEER",
-        "description": "Электронная платежная система"
+      "digiseller": {
+        "name": "Digiseller",
+        "description": "Оплата через Digiseller"
       },
       "bitcoin": {
         "name": "Bitcoin",
