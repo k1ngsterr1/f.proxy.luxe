@@ -10,7 +10,7 @@
     },
     "payments": {
       "instructions": "To receive partner rewards, submit a request to",
-      "paymentMethods": "indicating the wallet for payment - WebMoney (WMZ), Payeer. Payments",
+      "paymentMethods": "indicating the wallet for payment - WebMoney (WMZ). Payments",
       "restrictions": "It is forbidden to register multiple accounts in order to receive partner",
       "selfReferral": "payments, i.e., you cannot be a referral to yourself."
     }
