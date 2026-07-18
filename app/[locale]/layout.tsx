@@ -38,8 +38,8 @@ export default async function LocaleLayout({
   // 3. Define page titles based on locale
   const pageTitle =
     locale === "ru"
-      ? "Купить прокси, резидентные прокси цена, приватные прокси недорого, резидентские индивидуальные IPv4, IPv6, ISP proxies серверы | Proxy.luxe"
-      : "Buy proxy, residential proxy price, private proxy inexpensive, residential individual IPv4, IPv6, ISP proxies servers | Proxy.luxe";
+      ? "Резидентские прокси купить: домашние IP-адреса | Proxy.Luxe"
+      : "Buy Residential Proxies: Home IP Addresses | Proxy.Luxe";
 
   return (
     <html lang={locale}>
