@@ -1,7 +1,7 @@
 {
   "proxy-cards": {
     "isp": {
-      "title": "<span>ISP IPv4</span> PROXY<br>STATIC",
+      "title": "<span>ISP IPv4</span> PROXY<br>UNLIMITED",
       "description": "Suitable for all websites except payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY",
@@ -36,7 +36,7 @@
       "option": "More than 220 countries, millions of IP adresses",
       "create_text": "Create any number of proxies after purchasing a plan in your personal account",
       "country_text": "Country selection is available after purchasing a plan in your account.",
-      "title": "RESIDENTIAL <span>IPv4</span> PROXY<br>DYNAMIC",
+      "title": "RESIDENTIAL <span>IPv4</span> PROXY<br>PAY PER TRAFFIC",
       "description": "Suitable for all websites except payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY",
@@ -64,7 +64,7 @@
       "buy": "Buy"
     },
     "ipv6": {
-      "title": "<span>IPv6</span> PROXY",
+      "title": "<span>IPv6</span> PROXY<br>UNLIMITED",
       "description": "Suitable for websites that support IPv6, except for payment systems, banks, and government websites.",
       "issued": "Issued to one user",
       "country": "COUNTRY",
