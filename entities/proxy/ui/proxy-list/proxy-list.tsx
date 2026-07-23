@@ -49,6 +49,8 @@ interface Proxy {
   package_key?: string;
   orderId?: string;
   date_end?: string;
+  tariff?: string;
+  prolong_price?: number;
 }
 
 export interface Props {
@@ -130,7 +132,8 @@ const ProxyList: React.FC<Props> = ({
   const calculateProlongationCost = (
     proxyType: string,
     period: string,
-    count: number = 1
+    count: number = 1,
+    residentPrice?: number
   ): number => {
     const prices: Record<string, number> = {
       isp: 2.4,
@@ -141,6 +144,13 @@ const ProxyList: React.FC<Props> = ({
 
     // Use the passed type or default to component type
     const typeToUse = proxyType?.toLowerCase() || type?.toLowerCase() || "isp";
+    if (
+      typeToUse === "resident" &&
+      Number.isFinite(Number(residentPrice))
+    ) {
+      return Number(residentPrice) * count;
+    }
+
     const basePrice = prices[typeToUse] || 2.4;
 
     // Period multiplier - assuming 1m = 1 month base price
@@ -581,7 +591,8 @@ const ProxyList: React.FC<Props> = ({
     const cost = calculateProlongationCost(
       prolongProxy.type || type,
       prolongPeriod,
-      1
+      1,
+      prolongProxy.prolong_price
     );
     const userBalance = Number(userData?.balance) || 0;
 
@@ -602,11 +613,16 @@ const ProxyList: React.FC<Props> = ({
     // Use prolongProxy.type which is set when prolongProxy state is set
     if (prolongProxy.type === "isp") {
       idForSingleProlongHook = prolongProxy.id;
+    } else if (prolongProxy.type === "resident") {
+      idForSingleProlongHook = prolongProxy.package_key;
     } else {
       idForSingleProlongHook = prolongProxy.order_id || prolongProxy.orderId;
     }
 
-    if (!idForSingleProlongHook) {
+    const orderIdForSingleProlong =
+      prolongProxy.orderId || prolongProxy.order_id;
+
+    if (!idForSingleProlongHook || !orderIdForSingleProlong) {
       setNotification({
         show: true,
         message: t("prolongError"),
@@ -620,7 +636,7 @@ const ProxyList: React.FC<Props> = ({
 
     prolongProxyHook(
       {
-        orderId: prolongProxy.orderId as string,
+        orderId: orderIdForSingleProlong,
         type: prolongProxy.type,
         id: idForSingleProlongHook as any,
         periodId: prolongPeriod,
@@ -644,7 +660,8 @@ const ProxyList: React.FC<Props> = ({
             const cost = calculateProlongationCost(
               prolongProxy.type || type,
               prolongPeriod,
-              1
+              1,
+              prolongProxy.prolong_price
             );
             const userBalance = Number(userData?.balance) || 0;
             const shortfall = cost - userBalance;
@@ -948,7 +965,8 @@ const ProxyList: React.FC<Props> = ({
     const cost = calculateProlongationCost(
       proxy.type || type,
       prolongPeriod,
-      1
+      1,
+      proxy.prolong_price
     );
     const userBalance = Number(userData?.balance) || 0;
 
@@ -1725,42 +1743,41 @@ const ProxyList: React.FC<Props> = ({
                             <Trash2 size={14} />
                           </button>{" "}
                           {type !== "resident" && (
-                            <>
-                              {" "}
-                              <button
-                                style={actionButtonStyle}
-                                onClick={() =>
-                                  openPopup("ip-auth-enter", {
-                                    order_number: proxy.order_number || "",
-                                  })
-                                }
-                                title={t("table.buttons.auth")}
-                              >
-                                <Key size={14} />
-                              </button>{" "}
-                              <button
-                                style={actionButtonStyle}
-                                onClick={() => handleProlongClick(proxy)}
-                                title={`${t(
-                                  "table.buttons.prolong"
-                                )} - $${calculateProlongationCost(
-                                  proxy.type || type,
-                                  prolongPeriod,
-                                  1
-                                ).toFixed(2)} за ${prolongPeriod}`}
-                              >
-                                <span>
-                                  {t("prolongConfirm")} ($
-                                  {calculateProlongationCost(
-                                    proxy.type || type,
-                                    prolongPeriod,
-                                    1
-                                  ).toFixed(2)}
-                                  )
-                                </span>
-                              </button>{" "}
-                            </>
+                            <button
+                              style={actionButtonStyle}
+                              onClick={() =>
+                                openPopup("ip-auth-enter", {
+                                  order_number: proxy.order_number || "",
+                                })
+                              }
+                              title={t("table.buttons.auth")}
+                            >
+                              <Key size={14} />
+                            </button>
                           )}{" "}
+                          <button
+                            style={actionButtonStyle}
+                            onClick={() => handleProlongClick(proxy)}
+                            title={`${t(
+                              "table.buttons.prolong"
+                            )} - $${calculateProlongationCost(
+                              proxy.type || type,
+                              prolongPeriod,
+                              1,
+                              proxy.prolong_price
+                            ).toFixed(2)}`}
+                          >
+                            <span>
+                              {t("prolongConfirm")} ($
+                              {calculateProlongationCost(
+                                proxy.type || type,
+                                prolongPeriod,
+                                1,
+                                proxy.prolong_price
+                              ).toFixed(2)}
+                              )
+                            </span>
+                          </button>{" "}
                         </div>
                       )}{" "}
                     </td>{" "}
@@ -1805,20 +1822,22 @@ const ProxyList: React.FC<Props> = ({
                 <X size={20} />
               </button>{" "}
             </div>{" "}
-            <div style={popupFormGroupStyle}>
-              {" "}
-              <label style={popupLabelStyle}>{t("prolongSelect")}</label>{" "}
-              <select
-                style={popupSelectStyle}
-                value={prolongPeriod}
-                onChange={(e) => setProlongPeriod(e.target.value)}
-              >
+            {prolongProxy.type !== "resident" && (
+              <div style={popupFormGroupStyle}>
                 {" "}
-                <option value="1m">{t("table.period.1month")}</option>{" "}
-                <option value="2m">{t("table.period.2months")}</option>{" "}
-                <option value="3m">{t("table.period.3months")}</option>{" "}
-              </select>{" "}
-            </div>{" "}
+                <label style={popupLabelStyle}>{t("prolongSelect")}</label>{" "}
+                <select
+                  style={popupSelectStyle}
+                  value={prolongPeriod}
+                  onChange={(e) => setProlongPeriod(e.target.value)}
+                >
+                  {" "}
+                  <option value="1m">{t("table.period.1month")}</option>{" "}
+                  <option value="2m">{t("table.period.2months")}</option>{" "}
+                  <option value="3m">{t("table.period.3months")}</option>{" "}
+                </select>{" "}
+              </div>
+            )}{" "}
             {/* Cost Display */}
             <div
               style={{
@@ -1857,7 +1876,8 @@ const ProxyList: React.FC<Props> = ({
                   : calculateProlongationCost(
                       prolongProxy.type || type,
                       prolongPeriod,
-                      1
+                      1,
+                      prolongProxy.prolong_price
                     ).toFixed(2)}
               </div>
               <div
@@ -1871,6 +1891,10 @@ const ProxyList: React.FC<Props> = ({
                   ? `${selectedProxies.length} ${
                       selectedProxies.length === 1 ? "proxy" : "proxies"
                     } × ${prolongPeriod}`
+                  : prolongProxy.type === "resident"
+                  ? t("residentPackageCostDetails", {
+                      tariff: prolongProxy.tariff || "",
+                    })
                   : `1 proxy × ${prolongPeriod}`}
               </div>
             </div>{" "}

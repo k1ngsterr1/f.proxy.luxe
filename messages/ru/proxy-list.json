@@ -24,6 +24,7 @@
     "prolongBatchError": "Выберите хотя бы один прокси для продления",
     "prolongBatchResult": "Продление завершено успешно",
     "prolongCost": "Общая стоимость",
+    "residentPackageCostDetails": "Пакет {{tariff}} на 1 месяц",
     "balance": "Баланс",
     "insufficientFunds": "Недостаточно средств для продления. Нужно: ${{required}}, баланс: ${{balance}}, не хватает: ${{shortfall}}",
     "export": "Экспорт",

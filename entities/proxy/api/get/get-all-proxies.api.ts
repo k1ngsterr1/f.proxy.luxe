@@ -24,6 +24,8 @@ export interface Proxy {
   order_id: string | number;
   orderId: string | number;
   date_end?: string;
+  tariff?: string;
+  prolong_price?: number;
 }
 
 export interface ProxyListResponse {

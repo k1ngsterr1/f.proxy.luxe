@@ -17,6 +17,17 @@ interface ProlongProxyParams {
  * @returns Promise with the response data
  */
 const prolongProxyRequest = async (params: ProlongProxyParams) => {
+  if (params.type === "resident") {
+    const { data } = await apiClient.post(
+      "/api/v1/products/prolong/resident",
+      {
+        orderId: params.orderId,
+        packageKey: String(params.id),
+      }
+    );
+    return data;
+  }
+
   const { data } = await apiClient.post("/api/v1/products/prolong", {
     ...params,
   });

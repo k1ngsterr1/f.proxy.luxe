@@ -153,6 +153,8 @@ export default function ProxyPage() {
               order_id: orderId,
               orderId: item.orderId, // Keep both for compatibility
               order_number: item.order_number || "",
+              tariff: item.tariff,
+              prolong_price: item.prolong_price,
               //@ts-ignore
               can_prolong: item.can_prolong || false,
               //@ts-ignore
