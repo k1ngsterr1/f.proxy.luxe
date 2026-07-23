@@ -155,7 +155,8 @@ export default function ProxyPage() {
               //@ts-ignore
               can_prolong: item.can_prolong || false,
               //@ts-ignore
-              date_end: item.date_end || "",
+              date_end:
+                item.date_end || item.package_info?.expired_at?.date || "",
             });
           });
         } else {

@@ -6,7 +6,6 @@ import {
   AlertCircle,
   ArrowDown,
   ArrowUp,
-  ArrowUpDown,
   Download,
   Edit,
   FileJson,
@@ -100,7 +99,7 @@ const ProxyList: React.FC<Props> = ({
   const [forceClosePopup, setForceClosePopup] = useState(false);
 
   const [uniqueProxies, setUniqueProxies] = useState<Proxy[]>([]);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const selectedProxies =
     externalSelectedProxies || Array.from(internalSelectedProxies);
@@ -174,18 +173,21 @@ const ProxyList: React.FC<Props> = ({
     }
   }, [proxies]);
 
-  const sortedProxies = sortDirection
-    ? [...uniqueProxies].sort((a, b) => {
-        const dateA = a.date_end ? new Date(a.date_end).getTime() : 0;
-        const dateB = b.date_end ? new Date(b.date_end).getTime() : 0;
-        return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
-      })
-    : uniqueProxies;
+  const sortedProxies = [...uniqueProxies].sort((a, b) => {
+    const dateA = a.date_end ? new Date(a.date_end).getTime() : Number.NaN;
+    const dateB = b.date_end ? new Date(b.date_end).getTime() : Number.NaN;
+    const hasDateA = Number.isFinite(dateA);
+    const hasDateB = Number.isFinite(dateB);
+
+    if (!hasDateA && !hasDateB) return 0;
+    if (!hasDateA) return 1;
+    if (!hasDateB) return -1;
+
+    return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+  });
 
   const toggleSort = () => {
-    setSortDirection((prev) =>
-      prev === null ? "asc" : prev === "asc" ? "desc" : null
-    );
+    setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
   };
 
   // Auto-close popup when batch operation completes
@@ -1559,10 +1561,8 @@ const ProxyList: React.FC<Props> = ({
                     {t("table.headers.expiryDate")}
                     {sortDirection === "asc" ? (
                       <ArrowUp size={14} />
-                    ) : sortDirection === "desc" ? (
-                      <ArrowDown size={14} />
                     ) : (
-                      <ArrowUpDown size={14} style={{ opacity: 0.5 }} />
+                      <ArrowDown size={14} />
                     )}
                   </span>
                 </th>{" "}

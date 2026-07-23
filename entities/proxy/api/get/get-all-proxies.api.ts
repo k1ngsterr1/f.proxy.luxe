@@ -23,6 +23,7 @@ export interface Proxy {
   order_number: string;
   order_id: string | number;
   orderId: string | number;
+  date_end?: string;
 }
 
 export interface ProxyListResponse {
