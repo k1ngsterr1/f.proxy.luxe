@@ -4,7 +4,11 @@
     "loading": "Loading order information...",
     "error": "Error loading order: ",
     "unknown-error": "Unknown error",
-    "insufficient-funds": "Insufficient balance to pay the order",
+    "insufficient-funds": "Insufficient funds.",
+    "generic": "An error occurred while processing the payment.",
+    "notification": {
+      "close": "Close notification"
+    },
     "month": "30 days",
     "table": {
       "order-number": "Order number:",

@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Loader2, ChevronRight, ArrowLeft } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  ChevronRight,
+  Loader2,
+  X,
+} from "lucide-react";
 import { useGetOrderDetails } from "@/entities/orders/hooks/queries/use-get-order-details.query";
 import { useFinishOrder } from "@/entities/orders/hooks/mutation/use-finish-order.mutation";
 import { AlertMessage } from "@/shared/ui/alert";
@@ -106,6 +112,22 @@ export default function OrderDetailPage() {
     if (isFinishing) {
       return;
     }
+
+    setErrorMessage(null);
+
+    const orderTotal = Number(order?.totalPrice) || 0;
+    const discountMultiplier = 1 - (appliedDiscount || 0) / 100;
+    const payableTotal = orderTotal * discountMultiplier;
+    const currentBalance = Number(user?.balance) || 0;
+    const canCheckBalance =
+      user?.balance !== undefined &&
+      (!couponCode || appliedDiscount !== null);
+
+    if (canCheckBalance && currentBalance < payableTotal) {
+      setErrorMessage(t("insufficient-funds"));
+      return;
+    }
+
     const payload = {
       orderId: orderId,
       promocode: couponCode,
@@ -117,16 +139,23 @@ export default function OrderDetailPage() {
         navigate.push(`/personal-account/proxy`);
       },
       onError: (error: any) => {
-        const message =
-          error?.response?.data?.message || error?.message || alertT("generic");
+        const responseMessage = error?.response?.data?.message;
+        const messages = [
+          ...(Array.isArray(responseMessage)
+            ? responseMessage
+            : [responseMessage]),
+          error?.response?.data?.error,
+          error?.message,
+        ].filter((message): message is string => typeof message === "string");
 
-        if (message === "Insufficient balance") {
-          // Access the translation directly as a property instead of using the function call
-          // This ensures we get the exact translation we want
-          const insufficientFundsMessage = alertT.raw("insufficient-funds");
-          setErrorMessage(insufficientFundsMessage);
+        const hasInsufficientFundsError = messages.some((message) =>
+          /insufficient (balance|funds)|недостаточно средств/i.test(message)
+        );
+
+        if (hasInsufficientFundsError) {
+          setErrorMessage(t("insufficient-funds"));
         } else {
-          setErrorMessage(message);
+          setErrorMessage(messages[0] || t("generic"));
         }
       },
     });
@@ -159,13 +188,56 @@ export default function OrderDetailPage() {
       }}
     >
       <title>{i18n("orderDetail.title")}</title>
-      <div style={{ marginBottom: alertMarginBottom }}>
-        <AlertMessage
-          type="error"
-          message={errorMessage || ""}
-          show={!!errorMessage}
-        />
-      </div>
+      {errorMessage && (
+        <div
+          style={{
+            position: "fixed",
+            top: isMobile ? "16px" : "24px",
+            right: isMobile ? "16px" : "24px",
+            left: isMobile ? "16px" : "auto",
+            width: isMobile ? "auto" : "min(420px, calc(100vw - 48px))",
+            zIndex: 1200,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "12px",
+            padding: "14px 16px",
+            borderRadius: "6px",
+            border: "1px solid rgba(255, 82, 82, 0.45)",
+            backgroundColor: "#211313",
+            color: "#ff7b7b",
+            boxShadow: "0 12px 32px rgba(0, 0, 0, 0.45)",
+          }}
+          role="alert"
+          aria-live="assertive"
+        >
+          <AlertCircle
+            size={20}
+            style={{ flexShrink: 0, marginTop: "1px" }}
+          />
+          <span style={{ flex: 1, lineHeight: 1.45 }}>{errorMessage}</span>
+          <button
+            type="button"
+            onClick={() => setErrorMessage(null)}
+            title={t("notification.close")}
+            aria-label={t("notification.close")}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "24px",
+              height: "24px",
+              padding: 0,
+              border: 0,
+              background: "transparent",
+              color: "currentColor",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
 
       <div style={{ marginBottom: alertMarginBottom }}>
         <AlertMessage
@@ -529,7 +601,10 @@ export default function OrderDetailPage() {
                     <input
                       type="text"
                       value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
+                      onChange={(e) => {
+                        setCouponCode(e.target.value);
+                        setAppliedDiscount(null);
+                      }}
                       placeholder={t("coupon.placeholder")}
                       style={{
                         padding: inputPadding,
@@ -765,7 +840,10 @@ export default function OrderDetailPage() {
                       <input
                         type="text"
                         value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value);
+                          setAppliedDiscount(null);
+                        }}
                         placeholder={t("coupon.placeholder")}
                         style={{
                           padding: inputPadding,
