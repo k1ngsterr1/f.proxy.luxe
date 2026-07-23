@@ -29,6 +29,7 @@
     "export": "Export",
     "exportHttp": "Save HTTP(s)",
     "exportSocks": "Save SOCKS",
+    "residentExportError": "Unable to download the list: proxy data or ports are missing",
     "editProxy": {
       "title": "Edit Proxy",
       "nameLabel": "Name *",
@@ -82,6 +83,7 @@
       "buttons": {
         "edit": "Edit",
         "delete": "Delete",
+        "downloadList": "Download separate list",
         "auth": "Authorization",
         "prolong": "Prolong"
       },

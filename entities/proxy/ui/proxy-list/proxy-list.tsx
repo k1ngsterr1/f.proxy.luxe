@@ -34,6 +34,7 @@ interface Proxy {
   id: string;
   ip: string;
   type: string;
+  export?: { ports: number; ext?: string };
   ports?: number[] | string;
   protocol: string;
   port_http?: number | string;
@@ -803,6 +804,54 @@ const ProxyList: React.FC<Props> = ({
   const handleCloseEdit = () => setEditingProxy(null);
   const closeNotification = () => setNotification(null);
 
+  const createAndDownloadFile = (content: string, fileName: string) => {
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const exportResidentProxyToTxt = (proxy: Proxy) => {
+    const portCount = Number(proxy.export?.ports);
+
+    if (
+      !Number.isInteger(portCount) ||
+      portCount < 1 ||
+      !proxy.ip ||
+      !proxy.login ||
+      !proxy.password
+    ) {
+      setNotification({
+        show: true,
+        message: t("residentExportError"),
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
+    const lines = Array.from(
+      { length: portCount },
+      (_, index) =>
+        `${proxy.ip}:${10000 + index}:${proxy.login}:${proxy.password}`
+    );
+    const dateStr = new Date().toISOString().split("T")[0];
+    const safeTitle = (proxy.title || proxy.id)
+      .trim()
+      .replace(/[^a-zA-Z0-9а-яА-ЯёЁ_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    createAndDownloadFile(
+      `${lines.join("\n")}\n`,
+      `proxy-resident-${safeTitle || proxy.id}-${dateStr}.txt`
+    );
+  };
+
   const exportToTxt = () => {
     if (!uniqueProxies || uniqueProxies.length === 0) return;
     let contentHttpFirstFormat = "";
@@ -836,17 +885,6 @@ const ProxyList: React.FC<Props> = ({
       }
     });
     const fullContent = `${contentHttpFirstFormat}\n${contentHttpSecondFormat}`;
-    const createAndDownloadFile = (content: string, fileName: string) => {
-      const blob = new Blob([content], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    };
     const dateStr = new Date().toISOString().split("T")[0];
     if (fullContent.trim())
       createAndDownloadFile(fullContent, `proxy-http-${dateStr}.txt`);
@@ -888,17 +926,6 @@ const ProxyList: React.FC<Props> = ({
       }
     });
     const fullContent = `${contentSocksFirstFormat}\n${contentSocksSecondFormat}`;
-    const createAndDownloadFile = (content: string, fileName: string) => {
-      const blob = new Blob([content], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    };
     const dateStr = new Date().toISOString().split("T")[0];
     if (fullContent.trim())
       createAndDownloadFile(fullContent, `proxy-socks-${dateStr}.txt`);
@@ -1674,6 +1701,15 @@ const ProxyList: React.FC<Props> = ({
                       ) : (
                         <div style={actionButtonsContainerStyle}>
                           {" "}
+                          {type === "resident" && (
+                            <button
+                              style={actionButtonStyle}
+                              onClick={() => exportResidentProxyToTxt(proxy)}
+                              title={t("table.buttons.downloadList")}
+                            >
+                              <Download size={14} />
+                            </button>
+                          )}{" "}
                           <button
                             style={actionButtonStyle}
                             onClick={() => handleEditClick(proxy)}

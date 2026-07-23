@@ -142,6 +142,7 @@ export default function ProxyPage() {
               protocol: "SOCKS5/HTTP",
               port_http: pkg.port_http ?? 0,
               port_socks: pkg.port_socks ?? 0,
+              export: pkg.export,
               country: pkg.geo?.[0]?.country || "",
               login: pkg.login,
               password: pkg.password,

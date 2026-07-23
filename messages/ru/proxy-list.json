@@ -29,6 +29,7 @@
     "export": "Экспорт",
     "exportHttp": "Сохранить HTTP(s)",
     "exportSocks": "Сохранить SOCKS",
+    "residentExportError": "Не удалось скачать список: отсутствуют данные прокси или порты",
     "editProxy": {
       "title": "Редактирование прокси",
       "nameLabel": "Название *",
@@ -82,6 +83,7 @@
       "buttons": {
         "edit": "Редактировать",
         "delete": "Удалить",
+        "downloadList": "Скачать отдельный список",
         "auth": "Авторизация",
         "prolong": "Продлить"
       },
