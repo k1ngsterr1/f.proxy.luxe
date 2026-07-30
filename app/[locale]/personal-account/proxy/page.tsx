@@ -13,8 +13,6 @@ import { useTranslations } from "next-intl";
 import { TrafficBar } from "@/features/traffic-bar/traffic-bar";
 import { ResidentProxyConstructor } from "@/features/residental-proxy-constructor/residental-proxy-constructor";
 import { useUpdateProxy } from "@/entities/residental-proxy/api/hooks/mutations/use-update-list-resident.mutation";
-import { useIsTablet } from "@/shared/utils/use-is-tablet";
-import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 
 export default function ProxyPage() {
   const i18n = useTranslations();
@@ -22,27 +20,14 @@ export default function ProxyPage() {
   const [proxy, setProxy] = useState<string | null>(null);
   const [package_key, setPackage_key] = useState<string | null>(null);
   const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
-  const isSmallerTablet = useIsSmallerTablet();
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
   const [allProxies, setAllProxies] = useState<any[]>([]);
   const [selectedProxies, setSelectedProxies] = useState<string[]>([]);
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0
-  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedEmail = localStorage.getItem("proxy");
       setProxy(storedEmail);
-
-      // Track window width for responsive adjustments
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
-
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
     }
   }, []);
 
@@ -266,13 +251,8 @@ export default function ProxyPage() {
     }
   }, [allProxies, selectedProxies]);
 
-  const containerStyle = isSmallerTablet
-    ? "400px"
-    : isTablet
-    ? "600px"
-    : "800px";
-
-  const containerPadding = isMobile ? "0px" : "0px";
+  const containerStyle = "1280px";
+  const containerPadding = isMobile ? "0px" : "0 16px";
   const containerWidth = isMobile ? "100%" : "100%";
   const titleFontSize = isMobile ? "20px" : "32px";
   const buttonPadding = isMobile ? "8px 10px" : "10px 20px";
@@ -292,6 +272,7 @@ export default function ProxyPage() {
         maxWidth: containerStyle as any,
         margin: "0 auto",
         backgroundColor: "#000000",
+        boxSizing: "border-box",
       }}
     >
       <title>{i18n("personalProxy.title")}</title>
@@ -424,14 +405,7 @@ export default function ProxyPage() {
 
       {!isLoading && !isError && allProxies.length > 0 ? (
         <div style={{ marginBottom: isMobile ? "16px" : "24px" }}>
-          {/* Simple table layout */}
-          <div
-            style={{
-              border: "1px solid rgba(243, 214, 117, 0.2)",
-              borderRadius: "4px",
-              overflow: "hidden",
-            }}
-          >
+          <div>
             <ProxyList
               proxies={allProxies}
               type={proxyType}

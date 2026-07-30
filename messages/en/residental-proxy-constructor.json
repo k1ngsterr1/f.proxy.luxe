@@ -54,6 +54,8 @@
       "selectRegion": "Select region (optional)",
       "selectCity": "Select city (optional)",
       "selectIsp": "Select ISP (optional)",
+      "searchRegion": "Quick region search",
+      "searchIsp": "Quick ISP search",
       "noRegions": "No regions available",
       "noCities": "No cities available",
       "noIsps": "No ISPs available",

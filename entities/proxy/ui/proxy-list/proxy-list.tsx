@@ -1121,6 +1121,7 @@ const ProxyList: React.FC<Props> = ({
     borderRadius: "8px",
     border: "1px solid rgba(243, 214, 117, 0.2)",
     overflow: "hidden",
+    containerType: "inline-size",
   };
   const cardHeaderStyle: React.CSSProperties = {
     padding: "16px 24px",
@@ -1128,6 +1129,7 @@ const ProxyList: React.FC<Props> = ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: "16px",
   };
   const cardTitleStyle: React.CSSProperties = {
     fontSize: "18px",
@@ -1178,6 +1180,7 @@ const ProxyList: React.FC<Props> = ({
     padding: "12px 16px",
     fontSize: "14px",
     color: "#FFFFFF",
+    overflowWrap: "anywhere",
   };
   const tableCellEmphasisStyle: React.CSSProperties = {
     ...tableCellStyle,
@@ -1227,6 +1230,8 @@ const ProxyList: React.FC<Props> = ({
   const actionButtonsContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
+    flexWrap: "wrap",
+    gap: "6px",
   };
   const exportMenuStyle: React.CSSProperties = {
     position: "absolute",
@@ -1315,6 +1320,79 @@ const ProxyList: React.FC<Props> = ({
   .proxy-table-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 4px; }
   .proxy-table-container::-webkit-scrollbar-thumb { background: rgba(243, 214, 117, 0.3); border-radius: 4px; }
   .proxy-table-container::-webkit-scrollbar-thumb:hover { background: rgba(243, 214, 117, 0.5); }
+  @container (max-width: 1050px) {
+    .proxy-list-header {
+      align-items: flex-start !important;
+      flex-wrap: wrap;
+      padding: 16px !important;
+    }
+    .proxy-list-header-actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .proxy-table-container {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+    .proxy-table,
+    .proxy-table tbody {
+      display: block;
+      width: 100%;
+    }
+    .proxy-table thead {
+      display: none;
+    }
+    .proxy-table tr {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 12px;
+      border: 1px solid rgba(243, 214, 117, 0.2);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .proxy-table td {
+      display: flex;
+      min-width: 0;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 12px !important;
+      border-bottom: 1px solid rgba(243, 214, 117, 0.08);
+      word-break: break-word;
+    }
+    .proxy-table td::before {
+      content: attr(data-label);
+      flex: 0 0 auto;
+      color: #f3d675;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .proxy-table td.proxy-select-cell,
+    .proxy-table td.proxy-actions-cell {
+      grid-column: 1 / -1;
+    }
+    .proxy-table td.proxy-select-cell {
+      justify-content: flex-start;
+    }
+    .proxy-table td.proxy-select-cell::before {
+      display: none;
+    }
+    .proxy-table td.proxy-actions-cell > div {
+      width: 100%;
+    }
+  }
+  @container (max-width: 560px) {
+    .proxy-table tr {
+      grid-template-columns: minmax(0, 1fr);
+      margin: 8px;
+    }
+    .proxy-table td.proxy-select-cell,
+    .proxy-table td.proxy-actions-cell {
+      grid-column: auto;
+    }
+  }
   @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 0.3; } 100% { opacity: 0.6; } }
 `;
 
@@ -1468,10 +1546,10 @@ const ProxyList: React.FC<Props> = ({
   };
 
   return (
-    <div style={cardStyle}>
+    <div className="proxy-list-card" style={cardStyle}>
       {" "}
       <style>{scrollbarStyles}</style>{" "}
-      <div style={cardHeaderStyle}>
+      <div className="proxy-list-header" style={cardHeaderStyle}>
         {" "}
         <div>
           {" "}
@@ -1491,7 +1569,10 @@ const ProxyList: React.FC<Props> = ({
             )}
           </p>{" "}
         </div>{" "}
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div
+          className="proxy-list-header-actions"
+          style={{ display: "flex", gap: "10px" }}
+        >
           {" "}
           {type !== "resident" && selectedProxies.length > 0 && (
             <button
@@ -1558,7 +1639,7 @@ const ProxyList: React.FC<Props> = ({
         {" "}
         <div className="proxy-table-container" style={tableContainerStyle}>
           {" "}
-          <table style={tableStyle}>
+          <table className="proxy-table" style={tableStyle}>
             {" "}
             <thead style={tableHeadBaseStyle}>
               {" "}
@@ -1646,7 +1727,7 @@ const ProxyList: React.FC<Props> = ({
                   >
                     {" "}
                     {type !== "resident" && (
-                      <td style={tableCellStyle}>
+                      <td className="proxy-select-cell" style={tableCellStyle}>
                         {" "}
                         <div
                           style={
@@ -1664,36 +1745,80 @@ const ProxyList: React.FC<Props> = ({
                       </td>
                     )}{" "}
                     {type === "resident" && (
-                      <td style={tableCellEmphasisStyle}>
+                      <td
+                        data-label={t("table.headers.name")}
+                        style={tableCellEmphasisStyle}
+                      >
                         {proxy.title?.slice(0, 6).trim() + "..."}
                       </td>
                     )}{" "}
-                    <td style={tableCellEmphasisStyle}>{proxy.ip}</td>{" "}
-                    <td style={tableCellStyle}>
+                    <td
+                      data-label={t("table.headers.ipAddress")}
+                      style={tableCellEmphasisStyle}
+                    >
+                      {proxy.ip}
+                    </td>{" "}
+                    <td
+                      data-label={t("table.headers.protocol")}
+                      style={tableCellStyle}
+                    >
                       <span style={getProtocolStyles(proxy.protocol)}>
                         {proxy.protocol?.toUpperCase()}
                       </span>
                     </td>{" "}
                     {type === "resident" && (
-                      <td style={tableCellMonoStyle}>{proxy.ports || "—"}</td>
+                      <td
+                        data-label={t("table.headers.ports")}
+                        style={tableCellMonoStyle}
+                      >
+                        {proxy.ports || "—"}
+                      </td>
                     )}{" "}
                     {type !== "resident" && (
-                      <td style={tableCellMonoStyle}>
+                      <td
+                        data-label={t("table.headers.httpPort")}
+                        style={tableCellMonoStyle}
+                      >
                         {proxy.port_http || "—"}
                       </td>
                     )}{" "}
                     {type !== "resident" && (
-                      <td style={tableCellMonoStyle}>
+                      <td
+                        data-label={t("table.headers.socksPort")}
+                        style={tableCellMonoStyle}
+                      >
                         {proxy.port_socks || "—"}
                       </td>
                     )}{" "}
-                    <td style={tableCellMonoStyle}>{proxy.login || "—"}</td>{" "}
-                    <td style={tableCellMonoStyle}>{proxy.password || "—"}</td>{" "}
-                    <td style={tableCellStyle}>
+                    <td
+                      data-label={t("table.headers.login")}
+                      style={tableCellMonoStyle}
+                    >
+                      {proxy.login || "—"}
+                    </td>{" "}
+                    <td
+                      data-label={t("table.headers.password")}
+                      style={tableCellMonoStyle}
+                    >
+                      {proxy.password || "—"}
+                    </td>{" "}
+                    <td
+                      data-label={t("table.headers.country")}
+                      style={tableCellStyle}
+                    >
                       <div style={countryContainerStyle}>{proxy.country}</div>
                     </td>{" "}
-                    <td style={tableCellStyle}>{proxy.date_end || "—"}</td>{" "}
-                    <td style={tableCellStyle}>
+                    <td
+                      data-label={t("table.headers.expiryDate")}
+                      style={tableCellStyle}
+                    >
+                      {proxy.date_end || "—"}
+                    </td>{" "}
+                    <td
+                      className="proxy-actions-cell"
+                      data-label={t("table.headers.actions")}
+                      style={tableCellStyle}
+                    >
                       {" "}
                       {deleteConfirmId === proxy.id ? (
                         <div style={deleteConfirmContainerStyle}>
@@ -1742,19 +1867,30 @@ const ProxyList: React.FC<Props> = ({
                           >
                             <Trash2 size={14} />
                           </button>{" "}
-                          {type !== "resident" && (
-                            <button
-                              style={actionButtonStyle}
-                              onClick={() =>
+                          <button
+                            style={{
+                              ...actionButtonStyle,
+                              opacity: proxy.order_number ? 1 : 0.45,
+                              cursor: proxy.order_number
+                                ? "pointer"
+                                : "not-allowed",
+                            }}
+                            disabled={!proxy.order_number}
+                            onClick={() => {
+                              if (proxy.order_number) {
                                 openPopup("ip-auth-enter", {
-                                  order_number: proxy.order_number || "",
-                                })
+                                  order_number: proxy.order_number,
+                                });
                               }
-                              title={t("table.buttons.auth")}
-                            >
-                              <Key size={14} />
-                            </button>
-                          )}{" "}
+                            }}
+                            title={
+                              proxy.order_number
+                                ? t("table.buttons.auth")
+                                : t("table.buttons.authUnavailable")
+                            }
+                          >
+                            <Key size={14} />
+                          </button>{" "}
                           <button
                             style={actionButtonStyle}
                             onClick={() => handleProlongClick(proxy)}

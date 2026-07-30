@@ -86,6 +86,7 @@
         "delete": "Delete",
         "downloadList": "Download separate list",
         "auth": "Authorization",
+        "authUnavailable": "Order number is not available yet",
         "prolong": "Prolong"
       },
       "period": {
@@ -99,7 +100,7 @@
       "ipAddressLabel": "IP Address",
       "ipAddressPlaceholder": "IP",
       "requiredFields": "All fields are required",
-      "invalidIp": "Enter a valid IP address, for example: 192.168.0.1",
+      "invalidIp": "Enter a valid IPv4 or IPv6 address",
       "authSuccess": "Authorization successful",
       "authError": "Authorization error",
       "authInProgress": "Authorizing...",

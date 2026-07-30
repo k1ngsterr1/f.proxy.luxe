@@ -86,6 +86,7 @@
         "delete": "Удалить",
         "downloadList": "Скачать отдельный список",
         "auth": "Авторизация",
+        "authUnavailable": "Номер заказа пока недоступен",
         "prolong": "Продлить"
       },
       "period": {
@@ -99,7 +100,7 @@
       "ipAddressLabel": "IP адрес",
       "ipAddressPlaceholder": "IP",
       "requiredFields": "Все поля обязательны для заполнения",
-      "invalidIp": "Введите корректный IP-адрес, например: 192.168.0.1",
+      "invalidIp": "Введите корректный IPv4- или IPv6-адрес",
       "authSuccess": "Авторизация успешна",
       "authError": "Ошибка авторизации",
       "authInProgress": "Авторизация...",

@@ -26,9 +26,26 @@ export default function IpAuthorizationForm() {
   }, [params]);
 
   const isValidIp = (value: string): boolean => {
+    const normalizedValue = value.trim();
     const ipv4Pattern =
       /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/;
-    return ipv4Pattern.test(value.trim());
+    if (ipv4Pattern.test(normalizedValue)) {
+      return true;
+    }
+
+    if (
+      !normalizedValue.includes(":") ||
+      !/^[0-9a-f:.]+$/i.test(normalizedValue)
+    ) {
+      return false;
+    }
+
+    try {
+      new URL(`http://[${normalizedValue}]`);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {

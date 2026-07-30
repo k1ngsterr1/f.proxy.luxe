@@ -97,6 +97,8 @@ export const ResidentProxyConstructor = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [availableIsps, setAvailableIsps] = useState<string[]>([]);
   const [cities, setCities] = useState<any[]>([]);
+  const [regionSearch, setRegionSearch] = useState("");
+  const [ispSearch, setIspSearch] = useState("");
   const [customRotationValue, setCustomRotationValue] = useState("300");
   const [showCustomRotationInput, setShowCustomRotationInput] = useState(false);
   const { mutate: modifyProxy, isPending } = useModifyResidentProxy();
@@ -141,9 +143,11 @@ export const ResidentProxyConstructor = ({
       const selectedCity = cities.find((c: any) => c.name === city);
       setAvailableIsps(selectedCity?.isps || []);
       setIsp(""); // Reset ISP when city changes
+      setIspSearch("");
     } else {
       setAvailableIsps([]);
       setIsp("");
+      setIspSearch("");
     }
   }, [city, cities]);
 
@@ -162,6 +166,16 @@ export const ResidentProxyConstructor = ({
 
   const selectedCountry = countries.find((c: any) => c.code === country);
   const regions = selectedCountry?.regions || [];
+  const filteredRegions = regionSearch
+    ? regions.filter((regionItem: any) =>
+        regionItem.name.toLowerCase().includes(regionSearch.toLowerCase())
+      )
+    : regions;
+  const filteredIsps = ispSearch
+    ? availableIsps.filter((ispItem) =>
+        ispItem.toLowerCase().includes(ispSearch.toLowerCase())
+      )
+    : availableIsps;
 
   // Add a useEffect to update cities when region changes
   React.useEffect(() => {
@@ -177,6 +191,7 @@ export const ResidentProxyConstructor = ({
       // Reset city and ISP when region changes
       setCity("");
       setIsp("");
+      setIspSearch("");
     } else {
       setCities([]);
     }
@@ -1038,8 +1053,10 @@ export const ResidentProxyConstructor = ({
                             setCountrySearch("");
                             // Reset dependent fields
                             setRegion("");
+                            setRegionSearch("");
                             setCity("");
                             setIsp("");
+                            setIspSearch("");
                           }}
                           style={{
                             padding: isMobile ? "12px" : "10px 12px",
@@ -1117,6 +1134,38 @@ export const ResidentProxyConstructor = ({
               >
                 {i18n("export.region")}
               </label>
+              <div style={{ position: "relative", marginBottom: "6px" }}>
+                <Search
+                  size={16}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#f3d675",
+                    pointerEvents: "none",
+                  }}
+                />
+                <input
+                  type="search"
+                  value={regionSearch}
+                  onChange={(event) => setRegionSearch(event.target.value)}
+                  placeholder={i18n("selectOptions.searchRegion")}
+                  disabled={!country || isLoadingGeo}
+                  style={{
+                    width: "100%",
+                    minHeight: isMobile ? "44px" : "34px",
+                    padding: "8px 10px 8px 34px",
+                    backgroundColor: "#111111",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    opacity: !country || isLoadingGeo ? 0.5 : 1,
+                  }}
+                />
+              </div>
               <select
                 id="region"
                 value={region}
@@ -1142,7 +1191,7 @@ export const ResidentProxyConstructor = ({
                 className="dark-select"
               >
                 <option value="">{i18n("selectOptions.selectRegion")}</option>
-                {regions.map((regionItem: any) => (
+                {filteredRegions.map((regionItem: any) => (
                   <option key={regionItem.code} value={regionItem.name}>
                     {regionItem.name}
                   </option>
@@ -1231,6 +1280,38 @@ export const ResidentProxyConstructor = ({
               >
                 {i18n("export.isp")}
               </label>
+              <div style={{ position: "relative", marginBottom: "6px" }}>
+                <Search
+                  size={16}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#f3d675",
+                    pointerEvents: "none",
+                  }}
+                />
+                <input
+                  type="search"
+                  value={ispSearch}
+                  onChange={(event) => setIspSearch(event.target.value)}
+                  placeholder={i18n("selectOptions.searchIsp")}
+                  disabled={!city || isLoadingGeo}
+                  style={{
+                    width: "100%",
+                    minHeight: isMobile ? "44px" : "34px",
+                    padding: "8px 10px 8px 34px",
+                    backgroundColor: "#111111",
+                    border: "1px solid rgba(243, 214, 117, 0.2)",
+                    borderRadius: "4px",
+                    color: "#f3d675",
+                    fontSize: "14px",
+                    opacity: !city || isLoadingGeo ? 0.5 : 1,
+                  }}
+                />
+              </div>
               <select
                 id="isp"
                 value={isp}
@@ -1256,7 +1337,7 @@ export const ResidentProxyConstructor = ({
                 className="dark-select"
               >
                 <option value="">{i18n("selectOptions.selectIsp")}</option>
-                {availableIsps.map((ispItem: string, index: number) => (
+                {filteredIsps.map((ispItem: string, index: number) => (
                   <option key={index} value={ispItem}>
                     {ispItem}
                   </option>
