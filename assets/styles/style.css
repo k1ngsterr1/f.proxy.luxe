@@ -334,6 +334,23 @@ select {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
+.personal_account .personal-account-shell-width {
+  max-width: 1560px;
+}
+.paymant_section .mw .cont.personal-account-layout {
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 24px;
+}
+.personal-account-sidebar {
+  flex: 0 0 280px;
+}
+.personal-account-content {
+  flex: 1 1 0;
+  width: calc(100% - 304px);
+  min-width: 0;
+}
 .paymant_section .mw .cont .sidebar {
   width: 25%;
 }
@@ -1247,6 +1264,17 @@ select {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
   }
+  .paymant_section .mw .cont.personal-account-layout {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 24px;
+  }
+  .personal-account-sidebar,
+  .personal-account-content {
+    width: 100% !important;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
   .paymant_section .mw .cont .sidebar {
     width: 100%;
   }
@@ -1479,6 +1507,17 @@ select {
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+  }
+  .paymant_section .mw .cont.personal-account-layout {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 24px;
+  }
+  .personal-account-sidebar,
+  .personal-account-content {
+    width: 100% !important;
+    max-width: 100%;
+    flex: 0 0 auto;
   }
   .paymant_section .mw .cont .sidebar {
     width: 100%;

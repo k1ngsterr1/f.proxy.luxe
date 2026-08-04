@@ -24,6 +24,7 @@
     "prolongBatchError": "Select at least one proxy to prolong",
     "prolongBatchResult": "Prolongation completed successfully",
     "prolongCost": "Total Cost",
+    "residentTariff": "Plan",
     "residentPackageCostDetails": "{{tariff}} package for 1 month",
     "balance": "Balance",
     "insufficientFunds": "Insufficient funds for prolongation. Required: ${{required}}, balance: ${{balance}}, shortfall: ${{shortfall}}",

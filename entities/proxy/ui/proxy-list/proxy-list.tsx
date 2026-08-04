@@ -23,6 +23,11 @@ import { useProlongProxy } from "@/entities/residental-proxy/api/hooks/mutations
 import { useTranslations, useLocale } from "next-intl";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { apiClient } from "@/shared/config/apiClient";
+import {
+  RESIDENT_TARIFF_PRICES,
+  RESIDENT_TARIFFS,
+  type ResidentTariffName,
+} from "@/shared/config/resident-tariffs";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -91,6 +96,8 @@ const ProxyList: React.FC<Props> = ({
 
   const [prolongProxy, setProlongProxy] = useState<Proxy | null>(null);
   const [prolongPeriod, setProlongPeriod] = useState<string>("1m");
+  const [residentTariff, setResidentTariff] =
+    useState<ResidentTariffName>("1 Gb");
 
   const [internalSelectedProxies, setInternalSelectedProxies] = useState<
     Set<string>
@@ -183,6 +190,26 @@ const ProxyList: React.FC<Props> = ({
       setUniqueProxies(Array.from(uniqueProxiesMap.values()));
     }
   }, [proxies]);
+
+  useEffect(() => {
+    if (type !== "resident") return;
+
+    const currentTariff = proxies?.[0]?.tariff as ResidentTariffName | undefined;
+    if (currentTariff && currentTariff in RESIDENT_TARIFF_PRICES) {
+      setResidentTariff(currentTariff);
+    }
+  }, [proxies, type]);
+
+  const handleResidentPackageProlong = () => {
+    const residentPackage = uniqueProxies[0];
+    if (!residentPackage) return;
+
+    setProlongProxy({
+      ...residentPackage,
+      tariff: residentTariff,
+      prolong_price: RESIDENT_TARIFF_PRICES[residentTariff],
+    });
+  };
 
   const sortedProxies = [...uniqueProxies].sort((a, b) => {
     const dateA = a.date_end ? new Date(a.date_end).getTime() : Number.NaN;
@@ -640,6 +667,8 @@ const ProxyList: React.FC<Props> = ({
         type: prolongProxy.type,
         id: idForSingleProlongHook as any,
         periodId: prolongPeriod,
+        tariff:
+          prolongProxy.type === "resident" ? prolongProxy.tariff : undefined,
       },
       {
         onSuccess: () => {
@@ -1152,6 +1181,7 @@ const ProxyList: React.FC<Props> = ({
   };
   const tableStyle: React.CSSProperties = {
     width: "100%",
+    minWidth: type === "resident" ? "980px" : "900px",
     borderCollapse: "separate",
     borderSpacing: 0,
   };
@@ -1320,13 +1350,17 @@ const ProxyList: React.FC<Props> = ({
   .proxy-table-container::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 4px; }
   .proxy-table-container::-webkit-scrollbar-thumb { background: rgba(243, 214, 117, 0.3); border-radius: 4px; }
   .proxy-table-container::-webkit-scrollbar-thumb:hover { background: rgba(243, 214, 117, 0.5); }
-  @container (max-width: 1050px) {
+  @container (max-width: 720px) {
     .proxy-list-header {
       align-items: flex-start !important;
       flex-wrap: wrap;
       padding: 16px !important;
     }
     .proxy-list-header-actions {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .resident-renewal-controls {
       width: 100%;
       flex-wrap: wrap;
     }
@@ -1338,6 +1372,9 @@ const ProxyList: React.FC<Props> = ({
     .proxy-table tbody {
       display: block;
       width: 100%;
+    }
+    .proxy-table {
+      min-width: 0 !important;
     }
     .proxy-table thead {
       display: none;
@@ -1571,9 +1608,53 @@ const ProxyList: React.FC<Props> = ({
         </div>{" "}
         <div
           className="proxy-list-header-actions"
-          style={{ display: "flex", gap: "10px" }}
+          style={{ display: "flex", alignItems: "center", gap: "10px" }}
         >
           {" "}
+          {type === "resident" && (
+            <div
+              className="resident-renewal-controls"
+              style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            >
+              <label
+                htmlFor="resident-renewal-tariff"
+                style={{ color: "#f3d675", fontSize: "13px" }}
+              >
+                {t("residentTariff")}
+              </label>
+              <select
+                id="resident-renewal-tariff"
+                value={residentTariff}
+                onChange={(event) =>
+                  setResidentTariff(event.target.value as ResidentTariffName)
+                }
+                style={{
+                  ...popupSelectStyle,
+                  width: "auto",
+                  minWidth: "150px",
+                  padding: "8px 10px",
+                  flex: "1 1 150px",
+                }}
+              >
+                {RESIDENT_TARIFFS.map((tariff) => (
+                  <option key={tariff.name} value={tariff.name}>
+                    {tariff.name} - ${tariff.price.toFixed(2)}
+                  </option>
+                ))}
+              </select>
+              <button
+                style={batchActionButtonStyle}
+                onClick={handleResidentPackageProlong}
+                disabled={isProlonging}
+              >
+                {isProlonging
+                  ? t("prolongProcessing")
+                  : `${t("prolongConfirm")} ($${RESIDENT_TARIFF_PRICES[
+                      residentTariff
+                    ].toFixed(2)})`}
+              </button>
+            </div>
+          )}{" "}
           {type !== "resident" && selectedProxies.length > 0 && (
             <button
               style={batchActionButtonStyle}
@@ -1891,29 +1972,31 @@ const ProxyList: React.FC<Props> = ({
                           >
                             <Key size={14} />
                           </button>{" "}
-                          <button
-                            style={actionButtonStyle}
-                            onClick={() => handleProlongClick(proxy)}
-                            title={`${t(
-                              "table.buttons.prolong"
-                            )} - $${calculateProlongationCost(
-                              proxy.type || type,
-                              prolongPeriod,
-                              1,
-                              proxy.prolong_price
-                            ).toFixed(2)}`}
-                          >
-                            <span>
-                              {t("prolongConfirm")} ($
-                              {calculateProlongationCost(
+                          {type !== "resident" && (
+                            <button
+                              style={actionButtonStyle}
+                              onClick={() => handleProlongClick(proxy)}
+                              title={`${t(
+                                "table.buttons.prolong"
+                              )} - $${calculateProlongationCost(
                                 proxy.type || type,
                                 prolongPeriod,
                                 1,
                                 proxy.prolong_price
-                              ).toFixed(2)}
-                              )
-                            </span>
-                          </button>{" "}
+                              ).toFixed(2)}`}
+                            >
+                              <span>
+                                {t("prolongConfirm")} ($
+                                {calculateProlongationCost(
+                                  proxy.type || type,
+                                  prolongPeriod,
+                                  1,
+                                  proxy.prolong_price
+                                ).toFixed(2)}
+                                )
+                              </span>
+                            </button>
+                          )}{" "}
                         </div>
                       )}{" "}
                     </td>{" "}

@@ -8,15 +8,7 @@ import { useRouter } from "next/navigation";
 import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-order.mutation";
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { ChevronDown, Loader2 } from "lucide-react";
-
-const TARIFF_PRICES = {
-  "1 Gb": 2.4,
-  "3 Gb": 7,
-  "10 Gb": 21,
-  "25 Gb": 50,
-  "50 Gb": 90,
-  "100 Gb": 170,
-};
+import { RESIDENT_TARIFF_PRICES } from "@/shared/config/resident-tariffs";
 
 export const ResidentalProxyBuyCard = () => {
   const i18n = useTranslations("proxy-cards.residential");
@@ -32,8 +24,8 @@ export const ResidentalProxyBuyCard = () => {
   const { mutate: createOrder, isPending: isLoadingOrder } = useCreateOrder();
 
   useEffect(() => {
-    if (Object.keys(TARIFF_PRICES).length > 0 && !selectedTariff) {
-      const firstTariffName = Object.keys(TARIFF_PRICES)[0];
+    if (Object.keys(RESIDENT_TARIFF_PRICES).length > 0 && !selectedTariff) {
+      const firstTariffName = Object.keys(RESIDENT_TARIFF_PRICES)[0];
       setTariffId(0);
       setSelectedTariff({ id: 0, name: firstTariffName });
     }
@@ -43,7 +35,7 @@ export const ResidentalProxyBuyCard = () => {
     const id = Number(e.target.value);
     setTariffId(id);
     // Create a synthetic tariff object based on the selected option
-    const tariffName = Object.keys(TARIFF_PRICES)[id];
+    const tariffName = Object.keys(RESIDENT_TARIFF_PRICES)[id];
     setSelectedTariff({ id, name: tariffName });
   };
 
@@ -51,7 +43,11 @@ export const ResidentalProxyBuyCard = () => {
     // Extract the GB value from the tariff name (e.g., "Тариф 10 GB" -> "10 GB")
     const gbMatch = tariffName.match(/(\d+)\s*GB/i);
     if (gbMatch && gbMatch[0]) {
-      return TARIFF_PRICES[gbMatch[0] as keyof typeof TARIFF_PRICES] || 2.4;
+      return (
+        RESIDENT_TARIFF_PRICES[
+          gbMatch[0] as keyof typeof RESIDENT_TARIFF_PRICES
+        ] || 2.4
+      );
     }
     return 2.4; // Default to the lowest price if no match
   };
@@ -221,7 +217,7 @@ export const ResidentalProxyBuyCard = () => {
               onChange={handleTariffChange}
               style={selectStyle}
             >
-              {Object.entries(TARIFF_PRICES).map(
+              {Object.entries(RESIDENT_TARIFF_PRICES).map(
                 ([tariffName, price], index) => (
                   <option key={index} value={index}>
                     {tariffName} - ${price}/{i18n("month")}

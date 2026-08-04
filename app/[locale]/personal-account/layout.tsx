@@ -24,14 +24,11 @@ export default async function Layout({ children, params }: LayoutProps) {
     <>
       <div className="header_offset"></div>
       <section className="personal_account paymant_section">
-        <div className="mw">
-          <div
-            className="cont"
-            style={{ display: "flex", flexDirection: "row" }}
-          >
+        <div className="mw personal-account-shell-width">
+          <div className="cont personal-account-layout">
             <ClientLayout messages={messages} locale={locale}>
               <Sidebar />
-              {children}
+              <main className="personal-account-content">{children}</main>
             </ClientLayout>
           </div>
         </div>

@@ -251,8 +251,7 @@ export default function ProxyPage() {
     }
   }, [allProxies, selectedProxies]);
 
-  const containerStyle = "1280px";
-  const containerPadding = isMobile ? "0px" : "0 16px";
+  const containerPadding = "0px";
   const containerWidth = isMobile ? "100%" : "100%";
   const titleFontSize = isMobile ? "20px" : "32px";
   const buttonPadding = isMobile ? "8px 10px" : "10px 20px";
@@ -269,8 +268,9 @@ export default function ProxyPage() {
         width: containerWidth,
         padding: containerPadding,
         marginTop: marginTop,
-        maxWidth: containerStyle as any,
-        margin: "0 auto",
+        maxWidth: "none",
+        minWidth: 0,
+        margin: 0,
         backgroundColor: "#000000",
         boxSizing: "border-box",
       }}

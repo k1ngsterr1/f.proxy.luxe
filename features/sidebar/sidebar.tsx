@@ -606,7 +606,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <div style={sidebarStyle}>
+    <div className="personal-account-sidebar" style={sidebarStyle}>
       <div style={sidebarHeaderStyle}>
         <UserIcon />
         {i18n("title")}

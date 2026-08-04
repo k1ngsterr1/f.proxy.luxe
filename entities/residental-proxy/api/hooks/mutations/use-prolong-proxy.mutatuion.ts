@@ -9,6 +9,7 @@ interface ProlongProxyParams {
   type: string;
   id: number | string;
   periodId: string;
+  tariff?: string;
 }
 
 /**
@@ -23,6 +24,7 @@ const prolongProxyRequest = async (params: ProlongProxyParams) => {
       {
         orderId: params.orderId,
         packageKey: String(params.id),
+        tariff: params.tariff,
       }
     );
     return data;
