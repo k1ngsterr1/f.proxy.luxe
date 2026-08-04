@@ -31,6 +31,12 @@
     "export": "Export",
     "exportHttp": "Save HTTP(s)",
     "exportSocks": "Save SOCKS",
+    "copy": "Copy list",
+    "copyHttp": "Copy HTTP(s)",
+    "copySocks": "Copy SOCKS5",
+    "copyProxySuccess": "Proxy copied to clipboard",
+    "copyListSuccess": "Proxy list copied to clipboard",
+    "copyError": "Unable to copy: proxy data or ports are missing",
     "residentExportError": "Unable to download the list: proxy data or ports are missing",
     "editProxy": {
       "title": "Edit Proxy",
@@ -83,6 +89,7 @@
         "ports": "Ports"
       },
       "buttons": {
+        "copy": "Copy proxy",
         "edit": "Edit",
         "delete": "Delete",
         "downloadList": "Download separate list",

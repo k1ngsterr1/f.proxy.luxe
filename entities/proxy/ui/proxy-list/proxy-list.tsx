@@ -6,6 +6,7 @@ import {
   AlertCircle,
   ArrowDown,
   ArrowUp,
+  Copy,
   Download,
   Edit,
   FileJson,
@@ -28,6 +29,10 @@ import {
   RESIDENT_TARIFFS,
   type ResidentTariffName,
 } from "@/shared/config/resident-tariffs";
+import {
+  getProxyCopyLines,
+  type ProxyCopyProtocol,
+} from "./proxy-copy";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -83,6 +88,7 @@ const ProxyList: React.FC<Props> = ({
   const locale = useLocale();
   const { data: userData } = useGetUser(); // Получаем данные пользователя с балансом
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const [copyMenuOpen, setCopyMenuOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [editingProxy, setEditingProxy] = useState<Proxy | null>(null);
   const [notification, setNotification] = useState<{
@@ -862,6 +868,106 @@ const ProxyList: React.FC<Props> = ({
     URL.revokeObjectURL(url);
   };
 
+  const copyTextToClipboard = async (content: string) => {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(content);
+        return;
+      } catch {
+        // Fall back for browsers that expose Clipboard API but deny access.
+      }
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = content;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.setAttribute("aria-hidden", "true");
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    let copied = false;
+
+    try {
+      copied = document.execCommand("copy");
+    } finally {
+      document.body.removeChild(textarea);
+    }
+
+    if (!copied) throw new Error("Clipboard API is unavailable");
+  };
+
+  const copyProxy = async (proxy: Proxy) => {
+    const protocol =
+      proxy.protocol?.toLowerCase().includes("socks") &&
+      !proxy.protocol?.toLowerCase().includes("http")
+        ? "socks5"
+        : "http";
+    const lines = getProxyCopyLines(proxy, protocol);
+
+    if (lines.length === 0) {
+      setNotification({
+        show: true,
+        message: t("copyError"),
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
+    try {
+      await copyTextToClipboard(lines.join("\n"));
+      setNotification({
+        show: true,
+        message: t("copyProxySuccess"),
+        type: "success",
+        showRefresh: false,
+      });
+    } catch {
+      setNotification({
+        show: true,
+        message: t("copyError"),
+        type: "error",
+        showRefresh: false,
+      });
+    }
+  };
+
+  const copyProxyList = async (protocol: ProxyCopyProtocol) => {
+    const proxyLines = sortedProxies.map((proxy) =>
+      getProxyCopyLines(proxy, protocol)
+    );
+    const lines = proxyLines.flat();
+    setCopyMenuOpen(false);
+
+    if (lines.length === 0 || proxyLines.some((items) => items.length === 0)) {
+      setNotification({
+        show: true,
+        message: t("copyError"),
+        type: "error",
+        showRefresh: false,
+      });
+      return;
+    }
+
+    try {
+      await copyTextToClipboard(lines.join("\n"));
+      setNotification({
+        show: true,
+        message: t("copyListSuccess"),
+        type: "success",
+        showRefresh: false,
+      });
+    } catch {
+      setNotification({
+        show: true,
+        message: t("copyError"),
+        type: "error",
+        showRefresh: false,
+      });
+    }
+  };
+
   const exportResidentProxyToTxt = (proxy: Proxy) => {
     const portCount = Number(proxy.export?.ports);
 
@@ -1276,6 +1382,10 @@ const ProxyList: React.FC<Props> = ({
     minWidth: "150px",
     display: exportMenuOpen ? "block" : "none",
   };
+  const copyMenuStyle: React.CSSProperties = {
+    ...exportMenuStyle,
+    display: copyMenuOpen ? "block" : "none",
+  };
   const exportMenuItemStyle: React.CSSProperties = {
     padding: "8px 16px",
     color: "#FFFFFF",
@@ -1674,10 +1784,54 @@ const ProxyList: React.FC<Props> = ({
             </button>
           )}{" "}
           <div style={{ position: "relative" }}>
+            <button
+              type="button"
+              style={exportButtonStyle}
+              onClick={() => {
+                setCopyMenuOpen(!copyMenuOpen);
+                setExportMenuOpen(false);
+              }}
+              aria-expanded={copyMenuOpen}
+            >
+              <Copy size={16} /> <span>{t("copy")}</span>
+            </button>
+            <div style={copyMenuStyle}>
+              <div
+                style={exportMenuItemStyle}
+                onClick={() => copyProxyList("http")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
+              >
+                <Copy size={16} /> <span>{t("copyHttp")}</span>
+              </div>
+              <div
+                style={exportMenuItemStyle}
+                onClick={() => copyProxyList("socks5")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor =
+                    "rgba(243, 214, 117, 0.1)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
+              >
+                <Copy size={16} /> <span>{t("copySocks")}</span>
+              </div>
+            </div>
+          </div>{" "}
+          <div style={{ position: "relative" }}>
             {" "}
             <button
               style={exportButtonStyle}
-              onClick={() => setExportMenuOpen(!exportMenuOpen)}
+              onClick={() => {
+                setExportMenuOpen(!exportMenuOpen);
+                setCopyMenuOpen(false);
+              }}
             >
               {" "}
               <Download size={16} /> <span>{t("export")}</span>{" "}
@@ -1925,6 +2079,14 @@ const ProxyList: React.FC<Props> = ({
                       ) : (
                         <div style={actionButtonsContainerStyle}>
                           {" "}
+                          <button
+                            type="button"
+                            style={actionButtonStyle}
+                            onClick={() => copyProxy(proxy)}
+                            title={t("table.buttons.copy")}
+                          >
+                            <Copy size={14} />
+                          </button>{" "}
                           {type === "resident" && (
                             <button
                               style={actionButtonStyle}
