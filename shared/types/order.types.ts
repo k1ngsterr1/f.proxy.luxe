@@ -3,7 +3,7 @@ export interface Orders {
   quantity: number;
   periodDays: string;
   totalPrice: number;
-  proxyType?: string;
+  proxyType?: "HTTPS" | "SOCKS5";
   tariff?: string;
   type: string;
 }

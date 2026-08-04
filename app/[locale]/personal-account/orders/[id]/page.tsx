@@ -35,7 +35,7 @@ export default function OrderDetailPage() {
   const { data: user } = useGetUser();
   const [couponCode, setCouponCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState<number | null>(null);
-  const [proxyType, setProxyType] = useState<"HTTP" | "SOCKS5">("HTTP");
+  const [proxyType, setProxyType] = useState<"HTTPS" | "SOCKS5">("HTTPS");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -53,6 +53,12 @@ export default function OrderDetailPage() {
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
+
+  useEffect(() => {
+    if (order?.proxyType === "HTTPS" || order?.proxyType === "SOCKS5") {
+      setProxyType(order.proxyType);
+    }
+  }, [order?.proxyType]);
   const { mutate: finishOrder, isPending: isFinishing } = useFinishOrder();
   const { mutate: checkCouponValidity, isPending: isCheckingCoupon } =
     useCheckCouponValidity();
@@ -131,6 +137,7 @@ export default function OrderDetailPage() {
     const payload = {
       orderId: orderId,
       promocode: couponCode,
+      proxyType: order?.type === "ipv6" ? proxyType : undefined,
     };
 
     finishOrder(payload, {
@@ -868,6 +875,7 @@ export default function OrderDetailPage() {
 
           <div
             style={{
+              display: order?.type === "ipv6" ? "block" : "none",
               padding: isMobile ? "12px" : "16px",
               borderTop: "1px solid rgba(243, 214, 117, 0.2)",
             }}
@@ -896,8 +904,8 @@ export default function OrderDetailPage() {
                 <input
                   type="radio"
                   name="proxyType"
-                  checked={proxyType === "HTTP"}
-                  onChange={() => setProxyType("HTTP")}
+                  checked={proxyType === "HTTPS"}
+                  onChange={() => setProxyType("HTTPS")}
                   style={{
                     accentColor: "#f3d675",
                   }}

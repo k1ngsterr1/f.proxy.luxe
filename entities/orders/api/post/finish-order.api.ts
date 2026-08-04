@@ -7,6 +7,7 @@ export const finishOrder = async (data: FinishOrderDTO): Promise<any> => {
     const response = await apiClient.post("/api/v1/orders/finish", {
       orderId: data.orderId,
       promocode: data.promocode,
+      proxyType: data.proxyType,
     });
 
     return response.data;

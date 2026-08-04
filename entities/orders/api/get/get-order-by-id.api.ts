@@ -11,7 +11,7 @@ export interface OrderDetail {
   periodDays: string;
   totalPrice: number;
   status: "PENDING" | "ACTIVE" | "EXPIRED";
-  proxyType: "HTTP" | "SOCKS5";
+  proxyType: "HTTPS" | "SOCKS5";
   country: string;
   createdAt: string;
   updatedAt: string;

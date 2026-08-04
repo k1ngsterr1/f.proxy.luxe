@@ -27,7 +27,7 @@
       "apply": "Apply"
     },
     "proxy-type": {
-      "label": "Proxy type can be changed in your personal account after purchase.",
+      "label": "The selected protocol will be used when issuing the IPv6 proxies.",
       "http": "HTTP(s)",
       "socks5": "SOCKS5"
     },
