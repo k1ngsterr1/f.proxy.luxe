@@ -1,9 +1,9 @@
 "use client";
 import Logo from "@/assets/images/logo.png";
 import TelegramIcon from "@/assets/images/telegram.png";
+import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
 import { FC } from "react";
 
 export const Footer: FC = () => {

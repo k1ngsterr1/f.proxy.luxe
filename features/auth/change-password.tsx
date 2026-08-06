@@ -1,10 +1,8 @@
 "use client";
 import type React from "react";
-import { Eye, EyeOff, Lock, KeyRound, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Lock, ArrowRight } from "lucide-react";
 
 interface Props {
-  emailCode: string;
-  setEmailCode: (val: string) => void;
   newPassword: string;
   setNewPassword: (val: string) => void;
   confirmPassword: string;
@@ -18,14 +16,11 @@ interface Props {
   error?: string | null;
   success?: string | null;
   i18n: ReturnType<typeof import("next-intl").useTranslations>;
-  codeError?: string | null;
   passwordError?: string | null;
   confirmPasswordError?: string | null;
 }
 
 export const ChangePasswordForm = ({
-  emailCode,
-  setEmailCode,
   newPassword,
   setNewPassword,
   confirmPassword,
@@ -36,8 +31,9 @@ export const ChangePasswordForm = ({
   setShowConfirmPassword,
   isLoading,
   handleSubmit,
+  error,
+  success,
   i18n,
-  codeError,
   passwordError,
   confirmPasswordError,
 }: Props) => {
@@ -131,24 +127,12 @@ export const ChangePasswordForm = ({
 
   return (
     <form onSubmit={handleSubmit} style={formStyle} autoComplete="off">
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>
-          {i18n("verificationCode")} <span style={{ color: "#f3d675" }}>*</span>
-        </label>
-        <div style={inputContainerStyle}>
-          <KeyRound style={iconStyle} />
-          <input
-            type="text"
-            value={emailCode}
-            onChange={(e) => setEmailCode(e.target.value)}
-            placeholder={i18n("codePlaceholder")}
-            style={getInputStyle(!!codeError)}
-          />
-        </div>
-        {codeError && (
-          <p style={{ ...helperTextStyle, color: "#ff4d4f" }}>{codeError}</p>
-        )}
-      </div>
+      {error && (
+        <p style={{ ...helperTextStyle, color: "#ff4d4f" }}>{error}</p>
+      )}
+      {success && (
+        <p style={{ ...helperTextStyle, color: "#52c41a" }}>{success}</p>
+      )}
 
       <div style={fieldGroupStyle}>
         <label style={labelStyle}>

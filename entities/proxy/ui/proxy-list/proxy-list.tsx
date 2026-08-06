@@ -1151,17 +1151,19 @@ const ProxyList: React.FC<Props> = ({
     borderColor: "rgba(243, 214, 117, 0.4)",
   };
   const batchActionButtonStyle: React.CSSProperties = {
-    backgroundColor: "rgba(243, 214, 117, 0.1)",
-    border: "1px solid rgba(243, 214, 117, 0.2)",
+    backgroundColor: "#f3d675",
+    border: "1px solid #f3d675",
     borderRadius: "4px",
-    color: "#f3d675",
+    color: "#111111",
     padding: "8px 12px",
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    cursor: selectedProxies.length > 0 ? "pointer" : "not-allowed",
+    cursor: "pointer",
     fontSize: "14px",
-    opacity: selectedProxies.length > 0 ? 1 : 0.5,
+    fontWeight: 600,
+    opacity: 1,
+    transition: "opacity 0.2s ease, background-color 0.2s ease",
   };
   const popupOverlayStyle: React.CSSProperties = {
     position: "fixed",
@@ -1753,7 +1755,11 @@ const ProxyList: React.FC<Props> = ({
                 ))}
               </select>
               <button
-                style={batchActionButtonStyle}
+                style={{
+                  ...batchActionButtonStyle,
+                  cursor: isProlonging ? "not-allowed" : "pointer",
+                  opacity: isProlonging ? 0.55 : 1,
+                }}
                 onClick={handleResidentPackageProlong}
                 disabled={isProlonging}
               >

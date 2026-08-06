@@ -2,34 +2,35 @@
 
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useSendResetEmail } from "@/entities/auth/hooks/mutations/use-reset-email.mutations";
 import { useChangePassword } from "@/entities/auth/hooks/mutations/use-change-password.mutation";
 import { ChangePasswordForm } from "@/features/auth/change-password";
 import { Mail, ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 
-export default function ChangePasswordPage() {
+function ChangePasswordPageContent() {
   const isMobile = useIsMobile();
   const t = useTranslations("forgot-password-page");
   const i18n = useTranslations();
+  const locale = useLocale();
   const navigate = useRouter();
+  const searchParams = useSearchParams();
+  const resetToken = searchParams.get("token")?.trim() || "";
 
   const [email, setEmail] = useState("");
-  const [emailCode, setEmailCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [isEmailSent, setIsEmailSent] = useState(false);
 
   const [emailError, setEmailError] = useState<string | null>(null);
-  const [codeError, setCodeError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<
     string | null
@@ -58,11 +59,10 @@ export default function ChangePasswordPage() {
     }
 
     sendResetEmailMutation(
-      { email },
+      { email, lang: locale === "ru" ? "ru" : "en" },
       {
         onSuccess: () => {
-          setIsEmailSent(true);
-          setSuccess(t("success.reset-code-sent"));
+          setSuccess(t("success.reset-link-sent"));
         },
         onError: (err) => {
           setEmailError(t("errors.generic-error"));
@@ -76,18 +76,13 @@ export default function ChangePasswordPage() {
     setError(null);
     setSuccess(null);
     setEmailError(null);
-    setCodeError(null);
     setPasswordError(null);
     setConfirmPasswordError(null);
 
     let hasError = false;
 
-    if (!email) {
-      setEmailError(t("errors.email-required"));
-      hasError = true;
-    }
-    if (!emailCode) {
-      setCodeError(t("errors.code-required"));
+    if (!resetToken) {
+      setError(t("errors.invalid-link"));
       hasError = true;
     }
     if (!newPassword) {
@@ -113,17 +108,13 @@ export default function ChangePasswordPage() {
 
     changePassword(
       {
-        code: emailCode,
+        token: resetToken,
         newPassword,
-        //@ts-ignore
-        confirmPassword,
-        email,
       },
       {
         onSuccess: () => {
           setSuccess(t("success.password-changed"));
           setEmail("");
-          setEmailCode("");
           setNewPassword("");
           setConfirmPassword("");
           navigate.push("/");
@@ -133,10 +124,11 @@ export default function ChangePasswordPage() {
             err?.response?.data?.message ||
             err?.message ||
             t("errors.generic-error");
-          if (err?.response?.data?.message === "Invalid code") {
-            message = t("errors.invalid-code");
+          if (
+            err?.response?.data?.message === "Invalid or expired reset token"
+          ) {
+            message = t("errors.invalid-link");
           }
-          setCodeError(message);
           setError(message);
         },
       }
@@ -203,7 +195,7 @@ export default function ChangePasswordPage() {
             backdropFilter: "blur(8px)",
           }}
         >
-          {!isEmailSent ? (
+          {!resetToken ? (
             <div
               style={{
                 display: "flex",
@@ -332,16 +324,19 @@ export default function ChangePasswordPage() {
                   </>
                 ) : (
                   <>
-                    <span>{t("sendCode") || "SEND VERIFICATION CODE"}</span>
+                    <span>{t("sendLink") || "SEND RESET LINK"}</span>
                     <ArrowRight style={{ height: "16px", width: "16px" }} />
                   </>
                 )}
               </button>
+              {success && (
+                <p style={{ color: "#52c41a", fontSize: "13px", margin: 0 }}>
+                  {success}
+                </p>
+              )}
             </div>
           ) : (
             <ChangePasswordForm
-              emailCode={emailCode}
-              setEmailCode={setEmailCode}
               newPassword={newPassword}
               setNewPassword={setNewPassword}
               confirmPassword={confirmPassword}
@@ -355,7 +350,6 @@ export default function ChangePasswordPage() {
               error={error}
               success={success}
               i18n={t}
-              codeError={codeError}
               passwordError={passwordError}
               confirmPasswordError={confirmPasswordError}
             />
@@ -385,5 +379,13 @@ export default function ChangePasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ChangePasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ChangePasswordPageContent />
+    </Suspense>
   );
 }

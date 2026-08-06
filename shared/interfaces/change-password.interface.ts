@@ -1,5 +1,4 @@
 export interface ChangePassword {
-  email: string;
-  code: string;
+  token: string;
   newPassword: string;
 }

@@ -9,4 +9,5 @@ export interface SendVerifyCodeDTO {
 
 export interface SendResetEmailDTO {
   email: string;
+  lang: "ru" | "en";
 }

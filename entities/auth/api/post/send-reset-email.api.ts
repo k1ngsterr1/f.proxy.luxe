@@ -12,11 +12,11 @@ export const sendResetEmail = async (data: SendResetEmailDTO) => {
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       console.error(
-        "Send reset code failed with status:",
+        "Send reset link failed with status:",
         error.response.status
       );
     } else {
-      console.error("Send reset code error:", error);
+      console.error("Send reset link error:", error);
     }
     throw error;
   }

@@ -4,8 +4,8 @@
     "title": "ПРОФИЛЬ",
     "email": "E-mail:",
     "email-required": "*",
-    "email-change-hint": "Для изменения e-mail укажите код из письма",
-    "button-request-code": "ЗАПРОСИТЬ КОД",
+    "password-reset-hint": "Мы отправим на ваш e-mail одноразовую ссылку для смены пароля",
+    "button-request-link": "ОТПРАВИТЬ ССЫЛКУ",
     "code": "Код из письма:",
     "code-required": "*",
     "code-placeholder": "Введите код из письма",
@@ -22,7 +22,7 @@
     },
     "success": {
       "password-changed": "Пароль успешно изменен",
-      "reset-code-sent": "Код для сброса пароля отправлен на вашу почту"
+      "reset-link-sent": "Ссылка для смены пароля отправлена на вашу почту"
     },
     "verification-warning": "Вам необходимо подтвердить свой email введя код, указанной в письме."
   }

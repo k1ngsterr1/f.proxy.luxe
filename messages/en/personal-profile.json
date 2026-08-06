@@ -4,8 +4,8 @@
     "title": "PROFILE",
     "email": "E-mail:",
     "email-required": "*",
-    "email-change-hint": "To change your e-mail, enter the code from the email",
-    "button-request-code": "REQUEST CODE",
+    "password-reset-hint": "We will send a one-time password reset link to your email",
+    "button-request-link": "SEND RESET LINK",
     "code": "Code from email:",
     "code-required": "*",
     "code-placeholder": "Enter code from email",
@@ -22,7 +22,7 @@
     },
     "success": {
       "password-changed": "Password successfully changed",
-      "reset-code-sent": "Password reset code sent to your email"
+      "reset-link-sent": "A password reset link has been sent to your email"
     },
     "verification-warning": "You need to verify your email by entering the code specified in the email."
   }
