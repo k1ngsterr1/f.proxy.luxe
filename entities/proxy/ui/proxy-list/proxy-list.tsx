@@ -2128,6 +2128,7 @@ const ProxyList: React.FC<Props> = ({
                             onClick={() => {
                               if (proxy.order_number) {
                                 openPopup("ip-auth-enter", {
+                                  orderId: proxy.orderId || "",
                                   order_number: proxy.order_number,
                                 });
                               }

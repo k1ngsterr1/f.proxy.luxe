@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useIpAuth } from "@/entities/auth/hooks/mutations/use-ip-auth.mutation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { useTranslations } from "next-intl";
+import { IpAuthorizationList } from "./ip-authorization-list";
 
 export default function IpAuthorizationForm() {
   const t = useTranslations('proxyList.ipAuth');
@@ -12,11 +13,11 @@ export default function IpAuthorizationForm() {
   const [ip, setIp] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const { mutate: authByIp, isPending } = useIpAuth();
-
-  // Get popup params to access the order_number
+  // Get popup params to access the provider order number and internal order ID.
   const getParams = usePopupStore((state) => state.getParams);
   const params = getParams("ip-auth-enter");
+  const orderId = typeof params?.orderId === "string" ? params.orderId : "";
+  const { mutate: authByIp, isPending } = useIpAuth(orderId);
 
   // Set the order number from popup params when component mounts
   useEffect(() => {
@@ -203,6 +204,7 @@ export default function IpAuthorizationForm() {
             </button>
           </form>
         </div>
+        {orderId && <IpAuthorizationList orderId={orderId} />}
       </div>
     </div>
   );

@@ -112,7 +112,17 @@
       "authSuccess": "Авторизация успешна",
       "authError": "Ошибка авторизации",
       "authInProgress": "Авторизация...",
-      "authButton": "АВТОРИЗАЦИЯ"
+      "authButton": "АВТОРИЗАЦИЯ",
+      "currentAuthorizations": "Текущие IP",
+      "emptyAuthorizations": "IP-авторизации не добавлены",
+      "loadError": "Не удалось загрузить IP-авторизации",
+      "remove": "Удалить {ip}",
+      "confirmRemove": "Подтвердить удаление",
+      "cancelRemove": "Отменить",
+      "removeSuccess": "IP-авторизация отключена",
+      "removeError": "Не удалось отключить IP-авторизацию",
+      "active": "Активна",
+      "inactive": "Отключена"
     }
   }
 }

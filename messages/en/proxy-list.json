@@ -112,7 +112,17 @@
       "authSuccess": "Authorization successful",
       "authError": "Authorization error",
       "authInProgress": "Authorizing...",
-      "authButton": "AUTHORIZE"
+      "authButton": "AUTHORIZE",
+      "currentAuthorizations": "Current IPs",
+      "emptyAuthorizations": "No IP authorizations have been added",
+      "loadError": "Could not load IP authorizations",
+      "remove": "Remove {ip}",
+      "confirmRemove": "Confirm removal",
+      "cancelRemove": "Cancel",
+      "removeSuccess": "IP authorization disabled",
+      "removeError": "Could not disable IP authorization",
+      "active": "Active",
+      "inactive": "Inactive"
     }
   }
 }
