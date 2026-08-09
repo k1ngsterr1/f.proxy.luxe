@@ -20,7 +20,10 @@ export const PopupLayout: React.FC<IPopupLayout> = ({ children, text, id }) => {
         top: 0,
         left: 0,
         width: "100%",
-        height: "100%",
+        height: "100dvh",
+        boxSizing: "border-box",
+        overflowY: "auto",
+        padding: "16px",
         backgroundColor: "rgba(0, 0, 0, 0.8)", // Глубокий чёрный фон
         display: "flex",
         justifyContent: "center",
@@ -34,8 +37,12 @@ export const PopupLayout: React.FC<IPopupLayout> = ({ children, text, id }) => {
           position: "relative",
           backgroundColor: "#121212", // Глубокий тёмный цвет
           padding: "20px",
-          borderRadius: "12px",
+          borderRadius: "8px",
           width: "400px",
+          maxWidth: "100%",
+          maxHeight: "calc(100dvh - 32px)",
+          boxSizing: "border-box",
+          overflowY: "auto",
           boxShadow: "0 0 15px rgba(255, 255, 255, 0.2)", // Лёгкий белый светящийся эффект
           border: "1px solid rgba(255, 255, 255, 0.1)", // Тонкий белый контур
           color: "#fff", // Белый текст
