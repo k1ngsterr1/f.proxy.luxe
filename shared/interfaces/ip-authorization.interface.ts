@@ -12,3 +12,14 @@ export interface IpAuthResponse {
     status: "ACTIVE" | "INACTIVE";
   };
 }
+
+export interface IpAuthorization {
+  id: string;
+  ip: string;
+  active: boolean;
+  orderNumber: string;
+}
+
+export interface IpAuthorizationListResponse {
+  items: IpAuthorization[];
+}
