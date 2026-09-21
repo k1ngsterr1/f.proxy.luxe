@@ -29,6 +29,11 @@
       "continue": "continue",
       "processing": "processing...",
       "agreement": "I have read the FAQ section. I know what I'm buying and agree to the terms of use",
+      "supportPayment": {
+        "label": "Payment via support",
+        "message": "Hello! I would like to pay via support.",
+        "messageWithUserId": "Hello! I would like to pay via support. User ID: {userId}."
+      },
       "popup": {
         "copyUserIdText": "You need to copy this code and paste it in the \"User ID\" field:",
         "cancel": "Cancel",

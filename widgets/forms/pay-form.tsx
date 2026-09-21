@@ -13,6 +13,7 @@ import { Button } from "@/shared/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import { usePayeerPayment } from "@/entities/payments/hooks/general/use-payeer-payment";
 import { useDigisellerPayment } from "@/entities/payments/hooks/general/use-digiseller-payment";
+import { Send } from "lucide-react";
 
 // const PayFormValidation = () => {
 //   const i18n = useTranslations("forms.payment.errors");
@@ -42,6 +43,12 @@ export const PayForm = ({ userId }: { userId?: string }) => {
   const errorI18n = useTranslations("forms.payment.errors");
   const popupI18n = useTranslations("forms.payment.popup");
   const locale = useLocale();
+  const supportMessage = userId
+    ? i18n("supportPayment.messageWithUserId", { userId })
+    : i18n("supportPayment.message");
+  const telegramSupportUrl = `https://t.me/andreyproxy?text=${encodeURIComponent(
+    supportMessage
+  )}`;
 
   const formik = useFormik({
     initialValues: {
@@ -232,6 +239,26 @@ export const PayForm = ({ userId }: { userId?: string }) => {
                 </span>
               </label>
             ))}
+            <a
+              className="method"
+              href={telegramSupportUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={i18n("supportPayment.label")}
+              style={{ textDecoration: "none" }}
+            >
+              <span className="method_cont">
+                <span className="img">
+                  <Send
+                    size={80}
+                    strokeWidth={1.4}
+                    color="#757575"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="txt">{i18n("supportPayment.label")}</span>
+              </span>
+            </a>
           </div>
         </div>
 
