@@ -33,6 +33,7 @@ import {
   getProxyCopyLines,
   type ProxyCopyProtocol,
 } from "./proxy-copy";
+import { canManageIpAuthorization } from "./ip-authorization-eligibility";
 
 interface ProxyListItem {
   export: { ports: number; ext: string };
@@ -2119,22 +2120,33 @@ const ProxyList: React.FC<Props> = ({
                           <button
                             style={{
                               ...actionButtonStyle,
-                              opacity: proxy.order_number ? 1 : 0.45,
-                              cursor: proxy.order_number
+                              opacity: canManageIpAuthorization(
+                                type,
+                                proxy.orderId
+                              )
+                                ? 1
+                                : 0.45,
+                              cursor: canManageIpAuthorization(
+                                type,
+                                proxy.orderId
+                              )
                                 ? "pointer"
                                 : "not-allowed",
                             }}
-                            disabled={!proxy.order_number}
+                            disabled={
+                              !canManageIpAuthorization(type, proxy.orderId)
+                            }
                             onClick={() => {
-                              if (proxy.order_number) {
+                              if (
+                                canManageIpAuthorization(type, proxy.orderId)
+                              ) {
                                 openPopup("ip-auth-enter", {
-                                  orderId: proxy.orderId || "",
-                                  order_number: proxy.order_number,
+                                  orderId: proxy.orderId,
                                 });
                               }
                             }}
                             title={
-                              proxy.order_number
+                              canManageIpAuthorization(type, proxy.orderId)
                                 ? t("table.buttons.auth")
                                 : t("table.buttons.authUnavailable")
                             }

@@ -1,30 +1,22 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useIpAuth } from "@/entities/auth/hooks/mutations/use-ip-auth.mutation";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { useTranslations } from "next-intl";
 import { IpAuthorizationList } from "./ip-authorization-list";
 
 export default function IpAuthorizationForm() {
-  const t = useTranslations('proxyList.ipAuth');
-  const [orderNumber, setOrderNumber] = useState("");
+  const t = useTranslations("proxyList.ipAuth");
   const [ip, setIp] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  // Get popup params to access the provider order number and internal order ID.
+  // The backend resolves the provider order number from this internal order ID.
   const getParams = usePopupStore((state) => state.getParams);
   const params = getParams("ip-auth-enter");
   const orderId = typeof params?.orderId === "string" ? params.orderId : "";
   const { mutate: authByIp, isPending } = useIpAuth(orderId);
-
-  // Set the order number from popup params when component mounts
-  useEffect(() => {
-    if (params?.order_number) {
-      setOrderNumber(params.order_number);
-    }
-  }, [params]);
 
   const isValidIp = (value: string): boolean => {
     const normalizedValue = value.trim();
@@ -53,30 +45,29 @@ export default function IpAuthorizationForm() {
     e.preventDefault();
     setError(null);
 
-    if (!orderNumber.trim() || !ip.trim()) {
-      setError(t('requiredFields'));
+    if (!orderId || !ip.trim()) {
+      setError(t("requiredFields"));
       return;
     }
 
     if (!isValidIp(ip)) {
-      setError(t('invalidIp'));
+      setError(t("invalidIp"));
       return;
     }
 
     authByIp(
       {
-        orderNumber: orderNumber.trim(),
         ip: ip.trim(),
       },
       {
         onSuccess: () => {
-          setSuccess(t('authSuccess'));
+          setSuccess(t("authSuccess"));
           setIp("");
         },
         onError: (err) => {
-          setError(err.message || t('authError'));
+          setError(err.message || t("authError"));
         },
-      }
+      },
     );
   };
 
@@ -111,13 +102,6 @@ export default function IpAuthorizationForm() {
               gap: "24px",
             }}
           >
-            {/* Hidden input for order number */}
-            <input
-              type="hidden"
-              value={orderNumber}
-              onChange={(e) => setOrderNumber(e.target.value)}
-            />
-
             <div
               style={{
                 display: "flex",
@@ -133,7 +117,8 @@ export default function IpAuthorizationForm() {
                   color: "#FFFFFF",
                 }}
               >
-                {t('ipAddressLabel')} <span style={{ color: "#f3d675" }}>*</span>
+                {t("ipAddressLabel")}{" "}
+                <span style={{ color: "#f3d675" }}>*</span>
               </label>
               <input
                 type="text"
@@ -142,7 +127,7 @@ export default function IpAuthorizationForm() {
                   setIp(e.target.value);
                   setError(null); // Сбрасываем ошибку при изменении
                 }}
-                placeholder={t('ipAddressPlaceholder')}
+                placeholder={t("ipAddressPlaceholder")}
                 style={{
                   width: "100%",
                   padding: "10px 16px",
@@ -200,7 +185,7 @@ export default function IpAuthorizationForm() {
                 transition: "all 0.2s ease",
               }}
             >
-              {isPending ? t('authInProgress') : t('authButton')}
+              {isPending ? t("authInProgress") : t("authButton")}
             </button>
           </form>
         </div>

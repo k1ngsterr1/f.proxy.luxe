@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("@/shared/config/apiClient", () => ({
   apiClient: {
     get: vi.fn(),
+    post: vi.fn(),
     delete: vi.fn(),
   },
 }));
@@ -13,6 +14,28 @@ import { ipAuthorizations } from "./ip-authorization.api";
 describe("ipAuthorizations", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("creates an authorization through the order-scoped endpoint", async () => {
+    vi.mocked(apiClient.post).mockResolvedValue({
+      data: {
+        status: "success",
+        data: {
+          id: "auth-1",
+          ip: "2001:db8::1",
+          active: true,
+          orderNumber: "5094738_108303894",
+        },
+      },
+    } as never);
+
+    await expect(
+      ipAuthorizations.create("app/order 1", "2001:db8::1"),
+    ).resolves.toMatchObject({ status: "success" });
+    expect(apiClient.post).toHaveBeenCalledWith(
+      "/api/v1/user/orders/app%2Forder%201/ip-authorizations",
+      { ip: "2001:db8::1" },
+    );
   });
 
   it("loads authorizations for an application order", async () => {
@@ -29,7 +52,9 @@ describe("ipAuthorizations", () => {
   });
 
   it("URL-encodes an order ID when loading authorizations", async () => {
-    vi.mocked(apiClient.get).mockResolvedValue({ data: { items: [] } } as never);
+    vi.mocked(apiClient.get).mockResolvedValue({
+      data: { items: [] },
+    } as never);
 
     await ipAuthorizations.list("app/order 1");
 

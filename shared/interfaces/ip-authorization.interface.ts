@@ -23,3 +23,8 @@ export interface IpAuthorization {
 export interface IpAuthorizationListResponse {
   items: IpAuthorization[];
 }
+
+export interface IpAuthorizationCreateResponse {
+  status: "success";
+  data: IpAuthorization;
+}

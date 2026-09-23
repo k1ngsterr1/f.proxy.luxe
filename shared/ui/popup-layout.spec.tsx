@@ -22,8 +22,15 @@ describe("PopupLayout", () => {
     const { container } = render(
       createElement(
         PopupLayout,
-        { id: "popup-test", text: "Popup title" },
-        createElement("div", { style: { height: "2000px" } }, "Long content"),
+        {
+          id: "popup-test",
+          text: "Popup title",
+          children: createElement(
+            "div",
+            { style: { height: "2000px" } },
+            "Long content",
+          ),
+        },
       ),
     );
     const overlay = container.firstElementChild as HTMLElement;
@@ -49,8 +56,11 @@ describe("PopupLayout", () => {
     const { container } = render(
       createElement(
         PopupLayout,
-        { id: "popup-test", text: "Popup title" },
-        createElement("span", null, "Content"),
+        {
+          id: "popup-test",
+          text: "Popup title",
+          children: createElement("span", null, "Content"),
+        },
       ),
     );
     const overlay = container.firstElementChild as HTMLElement;
