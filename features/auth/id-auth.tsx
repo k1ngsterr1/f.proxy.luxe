@@ -16,7 +16,14 @@ export default function IpAuthorizationForm() {
   const getParams = usePopupStore((state) => state.getParams);
   const params = getParams("ip-auth-enter");
   const orderId = typeof params?.orderId === "string" ? params.orderId : "";
-  const { mutate: authByIp, isPending } = useIpAuth(orderId);
+  const providerProxyId =
+    typeof params?.providerProxyId === "string"
+      ? params.providerProxyId
+      : undefined;
+  const { mutate: authByIp, isPending } = useIpAuth(
+    orderId,
+    providerProxyId,
+  );
 
   const isValidIp = (value: string): boolean => {
     const normalizedValue = value.trim();
@@ -189,7 +196,12 @@ export default function IpAuthorizationForm() {
             </button>
           </form>
         </div>
-        {orderId && <IpAuthorizationList orderId={orderId} />}
+        {orderId && (
+          <IpAuthorizationList
+            orderId={orderId}
+            providerProxyId={providerProxyId}
+          />
+        )}
       </div>
     </div>
   );

@@ -30,11 +30,11 @@ describe("ipAuthorizations", () => {
     } as never);
 
     await expect(
-      ipAuthorizations.create("app/order 1", "2001:db8::1"),
+      ipAuthorizations.create("app/order 1", "2001:db8::1", "proxy/id 2"),
     ).resolves.toMatchObject({ status: "success" });
     expect(apiClient.post).toHaveBeenCalledWith(
       "/api/v1/user/orders/app%2Forder%201/ip-authorizations",
-      { ip: "2001:db8::1" },
+      { ip: "2001:db8::1", providerProxyId: "proxy/id 2" },
     );
   });
 
@@ -43,11 +43,13 @@ describe("ipAuthorizations", () => {
       data: { items: [{ id: "auth-1", ip: "203.0.113.10", active: true }] },
     } as never);
 
-    await expect(ipAuthorizations.list("app-order-1")).resolves.toEqual({
+    await expect(
+      ipAuthorizations.list("app-order-1", "proxy-2"),
+    ).resolves.toEqual({
       items: [{ id: "auth-1", ip: "203.0.113.10", active: true }],
     });
     expect(apiClient.get).toHaveBeenCalledWith(
-      "/api/v1/user/orders/app-order-1/ip-authorizations",
+      "/api/v1/user/orders/app-order-1/ip-authorizations?providerProxyId=proxy-2",
     );
   });
 
@@ -79,10 +81,14 @@ describe("ipAuthorizations", () => {
       data: { success: true },
     } as never);
 
-    await ipAuthorizations.delete("app/order 1", "auth/id 1");
+    await ipAuthorizations.delete(
+      "app/order 1",
+      "auth/id 1",
+      "proxy/id 2",
+    );
 
     expect(apiClient.delete).toHaveBeenCalledWith(
-      "/api/v1/user/orders/app%2Forder%201/ip-authorizations/auth%2Fid%201",
+      "/api/v1/user/orders/app%2Forder%201/ip-authorizations/auth%2Fid%201?providerProxyId=proxy%2Fid%202",
     );
   });
 });

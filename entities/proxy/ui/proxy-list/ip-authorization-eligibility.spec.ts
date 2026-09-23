@@ -10,6 +10,7 @@ describe("canManageIpAuthorization", () => {
           type,
           "app-order-1",
           type === "resident" ? "provider-order-1" : undefined,
+          type === "resident" ? undefined : "proxy-1",
         ),
       ).toBe(true);
     },
@@ -29,4 +30,11 @@ describe("canManageIpAuthorization", () => {
   it("rejects a legacy resident order without a provider order number", () => {
     expect(canManageIpAuthorization("resident", "app-order-1")).toBe(false);
   });
+
+  it.each(["ipv6", "isp"])(
+    "rejects a %s row without a provider proxy ID",
+    (type) => {
+      expect(canManageIpAuthorization(type, "app-order-1")).toBe(false);
+    },
+  );
 });

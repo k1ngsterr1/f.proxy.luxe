@@ -2124,6 +2124,7 @@ const ProxyList: React.FC<Props> = ({
                                 type,
                                 proxy.orderId,
                                 proxy.order_number,
+                                proxy.id,
                               )
                                 ? 1
                                 : 0.45,
@@ -2131,6 +2132,7 @@ const ProxyList: React.FC<Props> = ({
                                 type,
                                 proxy.orderId,
                                 proxy.order_number,
+                                proxy.id,
                               )
                                 ? "pointer"
                                 : "not-allowed",
@@ -2140,6 +2142,7 @@ const ProxyList: React.FC<Props> = ({
                                 type,
                                 proxy.orderId,
                                 proxy.order_number,
+                                proxy.id,
                               )
                             }
                             onClick={() => {
@@ -2148,10 +2151,14 @@ const ProxyList: React.FC<Props> = ({
                                   type,
                                   proxy.orderId,
                                   proxy.order_number,
+                                  proxy.id,
                                 )
                               ) {
                                 openPopup("ip-auth-enter", {
                                   orderId: proxy.orderId,
+                                  ...(type.toLowerCase() !== "resident" && {
+                                    providerProxyId: proxy.id,
+                                  }),
                                 });
                               }
                             }}
@@ -2160,6 +2167,7 @@ const ProxyList: React.FC<Props> = ({
                                 type,
                                 proxy.orderId,
                                 proxy.order_number,
+                                proxy.id,
                               )
                                 ? t("table.buttons.auth")
                                 : t("table.buttons.authUnavailable")

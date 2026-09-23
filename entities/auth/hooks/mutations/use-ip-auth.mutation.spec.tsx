@@ -30,9 +30,12 @@ describe("useIpAuth", () => {
         queries: { retry: false },
       },
     });
-    queryClient.setQueryData(["ip-authorizations", "app-order-1"], {
+    queryClient.setQueryData(
+      ["ip-authorizations", "app-order-1", "proxy-2"],
+      {
       items: [],
-    });
+      },
+    );
     createAuthorization.mockResolvedValue({ status: "success" });
     legacyCreateAuthorization.mockRejectedValue(
       new Error("legacy endpoint must not be called"),
@@ -42,7 +45,10 @@ describe("useIpAuth", () => {
   it("creates by internal order ID and invalidates that order's list", async () => {
     const wrapper = ({ children }: PropsWithChildren) =>
       createElement(QueryClientProvider, { client: queryClient }, children);
-    const { result } = renderHook(() => useIpAuth("app-order-1"), { wrapper });
+    const { result } = renderHook(
+      () => useIpAuth("app-order-1", "proxy-2"),
+      { wrapper },
+    );
 
     await act(async () => {
       await result.current.mutateAsync({ ip: "2001:db8::1" } as never);
@@ -51,12 +57,16 @@ describe("useIpAuth", () => {
     expect(createAuthorization).toHaveBeenCalledWith(
       "app-order-1",
       "2001:db8::1",
+      "proxy-2",
     );
     expect(legacyCreateAuthorization).not.toHaveBeenCalled();
     await waitFor(() => {
       expect(
-        queryClient.getQueryState(["ip-authorizations", "app-order-1"])
-          ?.isInvalidated,
+        queryClient.getQueryState([
+          "ip-authorizations",
+          "app-order-1",
+          "proxy-2",
+        ])?.isInvalidated,
       ).toBe(true);
     });
   });

@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 
 interface IpAuthorizationListProps {
   orderId: string;
+  providerProxyId?: string;
 }
 
 const rowStyle = {
@@ -34,10 +35,16 @@ const iconButtonStyle = {
   width: "36px",
 } as const;
 
-export function IpAuthorizationList({ orderId }: IpAuthorizationListProps) {
+export function IpAuthorizationList({
+  orderId,
+  providerProxyId,
+}: IpAuthorizationListProps) {
   const t = useTranslations("proxyList.ipAuth");
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
-  const { data, error, isLoading } = useIpAuthorizations(orderId);
+  const { data, error, isLoading } = useIpAuthorizations(
+    orderId,
+    providerProxyId,
+  );
   const deleteMutation = useDeleteIpAuthorization();
 
   const renderActions = (authorizationId: string, ip: string) => {
@@ -77,7 +84,11 @@ export function IpAuthorizationList({ orderId }: IpAuthorizationListProps) {
           disabled: isMutationSettled,
           key: "confirm",
           onClick: () => {
-            deleteMutation.mutate({ orderId, authorizationId });
+            deleteMutation.mutate({
+              orderId,
+              authorizationId,
+              ...(providerProxyId && { providerProxyId }),
+            });
           },
           style: { ...iconButtonStyle, opacity: isMutationSettled ? 0.55 : 1 },
           title: t("confirmRemove"),

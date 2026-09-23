@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ipAuthorizations } from "../../api/ip-authorization.api";
 
-export const useIpAuth = (orderId: string) => {
+export const useIpAuth = (orderId: string, providerProxyId?: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ ip }: { ip: string }) =>
-      ipAuthorizations.create(orderId, ip),
+      ipAuthorizations.create(orderId, ip, providerProxyId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["ip-authorizations", orderId],
+        queryKey: ["ip-authorizations", orderId, providerProxyId],
       });
     },
     onError: (error: Error) => {
