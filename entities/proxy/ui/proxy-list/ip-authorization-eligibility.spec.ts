@@ -5,7 +5,13 @@ describe("canManageIpAuthorization", () => {
   it.each(["ipv6", "isp", "resident"])(
     "allows %s orders with an internal order ID",
     (type) => {
-      expect(canManageIpAuthorization(type, "app-order-1")).toBe(true);
+      expect(
+        canManageIpAuthorization(
+          type,
+          "app-order-1",
+          type === "resident" ? "provider-order-1" : undefined,
+        ),
+      ).toBe(true);
     },
   );
 
@@ -18,5 +24,9 @@ describe("canManageIpAuthorization", () => {
 
   it("rejects a supported type without an internal order ID", () => {
     expect(canManageIpAuthorization("resident", undefined)).toBe(false);
+  });
+
+  it("rejects a legacy resident order without a provider order number", () => {
+    expect(canManageIpAuthorization("resident", "app-order-1")).toBe(false);
   });
 });

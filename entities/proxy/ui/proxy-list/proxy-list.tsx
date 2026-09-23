@@ -2122,23 +2122,33 @@ const ProxyList: React.FC<Props> = ({
                               ...actionButtonStyle,
                               opacity: canManageIpAuthorization(
                                 type,
-                                proxy.orderId
+                                proxy.orderId,
+                                proxy.order_number,
                               )
                                 ? 1
                                 : 0.45,
                               cursor: canManageIpAuthorization(
                                 type,
-                                proxy.orderId
+                                proxy.orderId,
+                                proxy.order_number,
                               )
                                 ? "pointer"
                                 : "not-allowed",
                             }}
                             disabled={
-                              !canManageIpAuthorization(type, proxy.orderId)
+                              !canManageIpAuthorization(
+                                type,
+                                proxy.orderId,
+                                proxy.order_number,
+                              )
                             }
                             onClick={() => {
                               if (
-                                canManageIpAuthorization(type, proxy.orderId)
+                                canManageIpAuthorization(
+                                  type,
+                                  proxy.orderId,
+                                  proxy.order_number,
+                                )
                               ) {
                                 openPopup("ip-auth-enter", {
                                   orderId: proxy.orderId,
@@ -2146,7 +2156,11 @@ const ProxyList: React.FC<Props> = ({
                               }
                             }}
                             title={
-                              canManageIpAuthorization(type, proxy.orderId)
+                              canManageIpAuthorization(
+                                type,
+                                proxy.orderId,
+                                proxy.order_number,
+                              )
                                 ? t("table.buttons.auth")
                                 : t("table.buttons.authUnavailable")
                             }
