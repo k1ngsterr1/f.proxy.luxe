@@ -12,6 +12,7 @@ import {
   FileJson,
   FileText,
   Key,
+  RefreshCw,
   Trash2,
   Check,
   X,
@@ -1352,13 +1353,15 @@ const ProxyList: React.FC<Props> = ({
     border: "1px solid rgba(243, 214, 117, 0.2)",
     borderRadius: "4px",
     color: "#f3d675",
-    padding: "6px 10px",
+    width: "32px",
+    height: "32px",
+    padding: 0,
     display: "flex",
     alignItems: "center",
-    gap: "6px",
+    justifyContent: "center",
+    flex: "0 0 32px",
     cursor: "pointer",
     fontSize: "12px",
-    marginRight: "6px",
   };
   const actionButtonDangerStyle: React.CSSProperties = {
     ...actionButtonStyle,
@@ -1369,7 +1372,7 @@ const ProxyList: React.FC<Props> = ({
   const actionButtonsContainerStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
-    flexWrap: "wrap",
+    flexWrap: "nowrap",
     gap: "6px",
   };
   const exportMenuStyle: React.CSSProperties = {
@@ -2179,6 +2182,7 @@ const ProxyList: React.FC<Props> = ({
                             <button
                               style={actionButtonStyle}
                               onClick={() => handleProlongClick(proxy)}
+                              aria-label={t("table.buttons.prolong")}
                               title={`${t(
                                 "table.buttons.prolong"
                               )} - $${calculateProlongationCost(
@@ -2188,16 +2192,7 @@ const ProxyList: React.FC<Props> = ({
                                 proxy.prolong_price
                               ).toFixed(2)}`}
                             >
-                              <span>
-                                {t("prolongConfirm")} ($
-                                {calculateProlongationCost(
-                                  proxy.type || type,
-                                  prolongPeriod,
-                                  1,
-                                  proxy.prolong_price
-                                ).toFixed(2)}
-                                )
-                              </span>
+                              <RefreshCw size={14} />
                             </button>
                           )}{" "}
                         </div>
