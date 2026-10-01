@@ -9,19 +9,23 @@ import {
   Clipboard,
   Gift,
   Trash2,
+  RefreshCw,
 } from "lucide-react";
 import { useGetUser } from "@/entities/user/api/hooks/use-get-user.query";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/shared/config/apiClient";
 import { useIsTablet } from "@/shared/utils/use-is-tablet";
 import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
+import { parsePartnerDetails, formatPartnerMoney, type ReferralStatistics } from './partner-statistics';
 
-const useGetPartnerDetails = () => {
+const useGetPartnerDetails = (userId?: string | number) => {
   return useQuery({
-    queryKey: ["partner-details"],
+    queryKey: ["partner-details", userId],
+    enabled: !!userId,
+    retry: false,
     queryFn: async () => {
       const { data } = await apiClient.get("/api/v1/user/partner/details");
-      return data;
+      return parsePartnerDetails(data);
     },
     staleTime: 60 * 1000,
   });
@@ -30,8 +34,8 @@ const useGetPartnerDetails = () => {
 export default function PartnerPage() {
   const i18n = useTranslations();
   const t = useTranslations("personal-partner");
-  const { data: partnerDetails, isLoading } = useGetPartnerDetails();
   const { data: user, refetch: refetchUser } = useGetUser();
+  const { data: partnerDetails, isPending, isError, refetch: refetchStatistics } = useGetPartnerDetails(user?.id);
   const queryClient = useQueryClient();
   const [couponCreated, setCouponCreated] = useState(false);
   const [showCopyNotification, setShowCopyNotification] = useState<
@@ -99,6 +103,7 @@ export default function PartnerPage() {
       await apiClient.post("/api/v1/user/partner/payout", { wallet });
       setPayoutPopupOpen(false);
       setWallet("");
+      await queryClient.invalidateQueries({ queryKey: ['partner-details', user?.id] });
     } catch (err: any) {
       if (err.response.data.message) {
         setPayoutError(t("error.pending-request"));
@@ -181,7 +186,13 @@ export default function PartnerPage() {
   };
 
   const id = user?.id;
-  const referralLink = `${window.location.origin}/register?ref=${id}`;
+  const referralLink = id && typeof window !== 'undefined' ? `${window.location.origin}/register?ref=${id}` : '';
+  const commissionText = (referral: ReferralStatistics) => {
+    if (referral.commissionComplete && referral.commissionAmount !== null) return `${formatPartnerMoney(referral.commissionAmount, true)} $`;
+    return /[1-9]/.test(referral.recordedCommission)
+      ? `${formatPartnerMoney(referral.recordedCommission, true)} $ (${t('stats.partial')})`
+      : t('stats.no-breakdown');
+  };
 
   // Referral data
   const referralLinks = [
@@ -443,6 +454,9 @@ export default function PartnerPage() {
                 />
                 <button
                   onClick={() => copyToClipboard(link.value, `link${index}`)}
+                  disabled={!link.value}
+                  aria-label={t('referral.copy-button')}
+                  title={t('referral.copy-button')}
                   style={{
                     padding: isMobile ? "10px" : "12px",
                     backgroundColor: "rgba(243, 214, 117, 0.1)",
@@ -706,6 +720,13 @@ export default function PartnerPage() {
             {t("stats.title")}
           </h2>
 
+          {isError ? <div role="alert" style={{ color: '#ff7070', padding: '16px 0' }}>
+            <p>{t('stats.load-error')}</p>
+            <button type="button" onClick={() => refetchStatistics()} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 12, padding: '8px 12px', border: '1px solid #555', borderRadius: 4, background: 'transparent', color: '#fff', cursor: 'pointer' }}>
+              <RefreshCw size={16} />{t('stats.retry')}
+            </button>
+          </div> : isPending ? <p role="status">{t('stats.loading')}</p> : null}
+          {!isError && partnerDetails && <>
           {/* Statistics table - Mobile version */}
           {isMobile && (
             <div>
@@ -759,7 +780,7 @@ export default function PartnerPage() {
                       >
                         {t("referrals.table.purchases")}:
                       </span>
-                      <span style={{ color: "#fff", fontSize: "13px" }}>—</span>
+                      <span style={{ color: "#fff", fontSize: "13px" }}>{`${referral.purchasesCount} / ${formatPartnerMoney(referral.purchasesTotal)} $`}</span>
                     </div>
                     <div>
                       <span
@@ -771,8 +792,8 @@ export default function PartnerPage() {
                       >
                         {t("referrals.table.commission")}:
                       </span>
-                      <span style={{ color: "#f3d675", fontSize: "13px" }}>
-                        —
+                      <span style={{ color: "#f3d675", fontSize: "13px" }} title={!referral.commissionComplete ? t('stats.no-breakdown') : undefined}>
+                        {commissionText(referral)}
                       </span>
                     </div>
                   </div>
@@ -863,8 +884,8 @@ export default function PartnerPage() {
                             {new Date(referral.createdAt).toLocaleDateString()}
                           </td>
                           <td style={tdStyle}>{referral.userId}</td>
-                          <td style={tdStyle}>—</td>
-                          <td style={tdStyle}>—</td>
+                          <td style={tdStyle}>{`${referral.purchasesCount} / ${formatPartnerMoney(referral.purchasesTotal)} $`}</td>
+                          <td style={tdStyle} title={!referral.commissionComplete ? t('stats.no-breakdown') : undefined}>{commissionText(referral)}</td>
                         </tr>
                       )
                     )
@@ -941,7 +962,7 @@ export default function PartnerPage() {
                   fontWeight: "500",
                 }}
               >
-                {partnerDetails?.allTimeEarn || "0.00"} $
+                {formatPartnerMoney(partnerDetails.allTimeEarn)} $
               </span>
             </div>
             <div>
@@ -961,10 +982,11 @@ export default function PartnerPage() {
                   fontWeight: "500",
                 }}
               >
-                {partnerDetails?.availableBalance || "0.00"} $
+                {formatPartnerMoney(partnerDetails.availableBalance)} $
               </span>
             </div>
           </div>
+          </>}
         </div>
         <div
           style={{
@@ -975,9 +997,9 @@ export default function PartnerPage() {
           }}
         >
           <button
+            disabled={!partnerDetails || isError}
             onClick={() => {
-              console.log("HERE", partnerDetails?.availableBalance);
-              if (partnerDetails?.availableBalance >= 5) {
+              if (Number(partnerDetails?.availableBalance) >= 5) {
                 setPayoutPopupOpen(true);
               } else {
                 setPayoutError(t("error.min-payout"));

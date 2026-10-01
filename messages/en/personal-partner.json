@@ -27,6 +27,11 @@
       "error": "Such promocode already exist"
     },
     "stats": {
+      "no-breakdown": "No breakdown available",
+      "partial": "partial",
+      "loading": "Loading statistics...",
+      "load-error": "Could not load statistics. Please try again.",
+      "retry": "Retry",
       "clients": "CLIENTS CHOSE US",
       "proxies-sold": "PROXIES SOLD",
       "proxies-active": "ACTIVE PROXIES",
