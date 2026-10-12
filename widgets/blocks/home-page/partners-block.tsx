@@ -77,7 +77,7 @@ export const PartnersBlock = () => {
           }}
         >
           <a
-            href="https://dolphin-anty.net/?utm_source=media&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=banner1"
+            href="https://dolphin-anty.net/?utm_source=media&utm_medium=cpc&utm_campaign=proxy_luxe&utm_content=banner2"
             target="_blank"
             rel="noopener noreferrer"
             style={{
