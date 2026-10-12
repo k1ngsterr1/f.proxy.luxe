@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
+import { requestRefreshedTokens } from "./auth-refresh";
 
 // DEV SERVER
 // const BASE_URL = "https://aproxyluxe-production.up.railway.app";
@@ -35,17 +36,22 @@ const isTokenExpired = (token: string): boolean => {
 
 // Refresh JWT Token function
 const refreshJwtToken = async (): Promise<string | null> => {
+  const refreshToken = typeof window !== "undefined"
+    ? localStorage.getItem("refresh-token")
+    : null;
+  if (!refreshToken) {
+    useAuthStore.getState().removeAccessToken();
+    return null;
+  }
   try {
-    const response = await axios.get(`${BASE_URL}/auth/refresh`, {
-      withCredentials: true,
-    });
-
-    const { jwt } = response.data;
-    useAuthStore.getState().saveAccessToken(jwt); // Persist new token in Zustand
-    return jwt;
+    const tokens = await requestRefreshedTokens(BASE_URL, refreshToken);
+    useAuthStore.getState().saveAccessToken(tokens.accessToken);
+    useAuthStore.getState().saveRefreshToken(tokens.refreshToken);
+    return tokens.accessToken;
   } catch (error) {
     console.error("Unable to refresh JWT:", error);
     useAuthStore.getState().removeAccessToken();
+    useAuthStore.getState().removeRefreshToken();
     return null;
   }
 };
@@ -77,7 +83,7 @@ apiClient.interceptors.response.use(
 
     if (
       error.response?.status === 401 &&
-      !originalRequest.url?.includes("/auth/refresh") &&
+      !originalRequest.url?.includes("/api/v1/auth/refresh") &&
       !(originalRequest as any)._retry
     ) {
       (originalRequest as any)._retry = true;

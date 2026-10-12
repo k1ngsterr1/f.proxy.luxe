@@ -76,6 +76,7 @@ export const LoginAuthForm = () => {
         // captchaToken,
       });
       saveAccessToken(loginData.accessToken);
+      saveRefreshToken(loginData.refreshToken);
       closePopup("auth-enter");
       navigate.push("/personal-account");
     } catch {
