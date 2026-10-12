@@ -27,7 +27,8 @@
       },
       "errors": {
         "goalRequired": "Please select a usage goal",
-        "login-required": "You need to login or register to buy proxy"
+        "login-required": "You need to login or register to buy proxy",
+        "purchase-failed": "Could not create the order. Please try again or contact support."
       }
     },
     "residential": {
@@ -58,7 +59,8 @@
       },
       "errors": {
         "goalRequired": "Please select a usage goal",
-        "login-required": "You need to login or register to buy proxy"
+        "login-required": "You need to login or register to buy proxy",
+        "purchase-failed": "Could not create the order. Please try again or contact support."
       },
       "price": "PRICE",
       "buy": "Buy"
@@ -87,7 +89,8 @@
       },
       "errors": {
         "goalRequired": "Please select a usage goal",
-        "login-required": "You need to login or register to buy proxy"
+        "login-required": "You need to login or register to buy proxy",
+        "purchase-failed": "Could not create the order. Please try again or contact support."
       },
       "price": "PRICE",
       "processing": "Processing...",

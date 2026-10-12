@@ -9,11 +9,12 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { PureRangeSlider } from "@/shared/ui/range-slider";
+import { getPurchaseErrorKey } from "@/entities/orders/lib/purchase-error";
 
 export const ISPBuyCard = () => {
   const router = useRouter();
   const i18n = useTranslations("proxy-cards.isp");
-  const [countryId, setCountryId] = useState<string>("3758");
+  const [countryId, setCountryId] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("1");
   const [period, setPeriod] = useState<string>("1m");
   const [goal, setGoal] = useState<string>("surfing");
@@ -37,10 +38,8 @@ export const ISPBuyCard = () => {
   const handleBuyClick = () => {
     // Validate goal is selected
 
-    const selectedCountry = preferences?.isp.country.find((c) => {
-      console.log(c);
-      return c.id == countryId;
-    });
+    const selectedCountry = preferences?.isp.country.find((c) => c.id == countryId);
+    if (!selectedCountry) return;
 
     const orderData = {
       country: selectedCountry?.name,
@@ -54,8 +53,8 @@ export const ISPBuyCard = () => {
     createOrder(orderData, {
       onSuccess: (order: any) =>
         router.push(`/personal-account/orders/${order.id}`),
-      onError: () => {
-        alert(i18n("errors.login-required"));
+      onError: (error) => {
+        alert(i18n(`errors.${getPurchaseErrorKey(error)}`));
       },
     });
   };

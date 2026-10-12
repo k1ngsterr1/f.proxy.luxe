@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { PureRangeSlider } from "@/shared/ui/range-slider";
+import { getPurchaseErrorKey } from "@/entities/orders/lib/purchase-error";
 
 export const IPV6BuyCard = () => {
   const router = useRouter();
@@ -73,8 +74,8 @@ export const IPV6BuyCard = () => {
     createOrder(orderData, {
       onSuccess: (order: any) =>
         router.push(`/personal-account/orders/${order.id}`),
-      onError: () => {
-        alert(i18n("errors.login-required"));
+      onError: (error) => {
+        alert(i18n(`errors.${getPurchaseErrorKey(error)}`));
       },
     });
   };

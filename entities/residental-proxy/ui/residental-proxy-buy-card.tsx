@@ -9,6 +9,7 @@ import { useCreateOrder } from "@/entities/orders/hooks/mutation/use-create-orde
 import { useGetPreferences } from "@/entities/preferences/hooks/queries/use-get-preferences.query";
 import { ChevronDown, Loader2 } from "lucide-react";
 import { RESIDENT_TARIFF_PRICES } from "@/shared/config/resident-tariffs";
+import { getPurchaseErrorKey, normalizeResidentTariff } from "@/entities/orders/lib/purchase-error";
 
 export const ResidentalProxyBuyCard = () => {
   const i18n = useTranslations("proxy-cards.residential");
@@ -68,7 +69,7 @@ export const ResidentalProxyBuyCard = () => {
     console.log(selectedTariff);
 
     const orderData = {
-      tariff: selectedTariff.name,
+      tariff: normalizeResidentTariff(selectedTariff.name),
       quantity: 1,
       periodDays: "1m",
       goal,
@@ -81,8 +82,8 @@ export const ResidentalProxyBuyCard = () => {
     createOrder(orderData, {
       onSuccess: (order: any) =>
         router.push(`/personal-account/orders/${order.id}`),
-      onError: () => {
-        alert(i18n("errors.login-required"));
+      onError: (error) => {
+        alert(i18n(`errors.${getPurchaseErrorKey(error)}`));
       },
     });
   };
