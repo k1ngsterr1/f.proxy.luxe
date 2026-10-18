@@ -42,7 +42,7 @@ interface ProxyListItem {
   password: string;
 }
 
-interface Proxy {
+export interface Proxy {
   id: string;
   ip: string;
   type: string;
@@ -67,6 +67,7 @@ interface Proxy {
 
 export interface Props {
   proxies: Proxy[] | undefined;
+  residentPackage?: Proxy;
   type: string; // "isp", "ipv6", "resident", etc.
   onDelete?: (proxyId: string, packageKey?: string) => void;
   onEdit?: (proxy: Proxy) => void;
@@ -78,6 +79,7 @@ export interface Props {
 
 const ProxyList: React.FC<Props> = ({
   proxies,
+  residentPackage,
   type,
   onDelete,
   onEdit,
@@ -202,18 +204,20 @@ const ProxyList: React.FC<Props> = ({
   useEffect(() => {
     if (type !== "resident") return;
 
-    const currentTariff = proxies?.[0]?.tariff as ResidentTariffName | undefined;
+    const currentTariff = (residentPackage?.tariff || proxies?.[0]?.tariff) as
+      | ResidentTariffName
+      | undefined;
     if (currentTariff && currentTariff in RESIDENT_TARIFF_PRICES) {
       setResidentTariff(currentTariff);
     }
-  }, [proxies, type]);
+  }, [proxies, residentPackage, type]);
 
   const handleResidentPackageProlong = () => {
-    const residentPackage = uniqueProxies[0];
-    if (!residentPackage) return;
+    const renewalTarget = residentPackage || uniqueProxies[0];
+    if (!renewalTarget) return;
 
     setProlongProxy({
-      ...residentPackage,
+      ...renewalTarget,
       tariff: residentTariff,
       prolong_price: RESIDENT_TARIFF_PRICES[residentTariff],
     });
@@ -1639,7 +1643,7 @@ const ProxyList: React.FC<Props> = ({
     );
   }
 
-  if (uniqueProxies?.length === 0) {
+  if (uniqueProxies?.length === 0 && !residentPackage) {
     return (
       <div style={cardStyle}>
         {" "}
@@ -1727,7 +1731,8 @@ const ProxyList: React.FC<Props> = ({
           style={{ display: "flex", alignItems: "center", gap: "10px" }}
         >
           {" "}
-          {type === "resident" && (
+          {type === "resident" &&
+            (residentPackage || uniqueProxies.length > 0) && (
             <div
               className="resident-renewal-controls"
               style={{ display: "flex", alignItems: "center", gap: "8px" }}
@@ -1881,7 +1886,13 @@ const ProxyList: React.FC<Props> = ({
         </div>{" "}
       </div>{" "}
       <div style={cardContentStyle}>
-        {" "}
+        {uniqueProxies.length === 0 ? (
+          <div style={emptyStateContainerStyle}>
+            <AlertCircle style={emptyStateIconStyle} />
+            <h3 style={emptyStateTitleStyle}>{t("emptyTitle")}</h3>
+            <p style={emptyStateDescriptionStyle}>{t("emptyDescription")}</p>
+          </div>
+        ) : (
         <div className="proxy-table-container" style={tableContainerStyle}>
           {" "}
           <table className="proxy-table" style={tableStyle}>
@@ -2203,7 +2214,8 @@ const ProxyList: React.FC<Props> = ({
               })}{" "}
             </tbody>{" "}
           </table>{" "}
-        </div>{" "}
+        </div>
+        )}
       </div>{" "}
       {prolongProxy && (
         <div

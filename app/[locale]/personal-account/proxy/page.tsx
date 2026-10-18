@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Loader2 } from "lucide-react";
-import ProxyList from "@/entities/proxy/ui/proxy-list/proxy-list";
+import ProxyList, {
+  type Proxy as ProxyListProxy,
+} from "@/entities/proxy/ui/proxy-list/proxy-list";
 import { useProxyList } from "@/entities/proxy/hooks/queries/use-get-all-proxies.queries";
 import type { Proxy as ApiProxy } from "@/entities/proxy/api/get/get-all-proxies.api";
 import { AlertMessage } from "@/shared/ui/alert";
@@ -57,6 +59,40 @@ export default function ProxyPage() {
 
   const { data } = useGetUser();
   const { data: proxies, isLoading, isError, error } = useProxyList(proxyType);
+  const rawResidentPackage =
+    proxyType === "resident" ? proxies?.data?.items?.[0] : undefined;
+  const residentPackage: ProxyListProxy | undefined = rawResidentPackage
+    ? {
+        id:
+          rawResidentPackage.id ||
+          String(
+            rawResidentPackage.orderId ||
+              rawResidentPackage.order_id ||
+              rawResidentPackage.package_info?.package_key ||
+              "resident-package",
+          ),
+        ip: rawResidentPackage.ip || "",
+        type: "resident",
+        ports: rawResidentPackage.ports || [],
+        protocol: rawResidentPackage.protocol || "",
+        port_http: rawResidentPackage.port_http,
+        port_socks: rawResidentPackage.port_socks,
+        country: rawResidentPackage.geo?.[0]?.country || "",
+        login: rawResidentPackage.login || "",
+        password: rawResidentPackage.password || "",
+        package_list: [],
+        order_number: rawResidentPackage.order_number || "",
+        order_id: String(rawResidentPackage.order_id || ""),
+        orderId: String(rawResidentPackage.orderId || ""),
+        package_key: rawResidentPackage.package_info?.package_key,
+        date_end:
+          rawResidentPackage.date_end ||
+          rawResidentPackage.package_info?.expired_at?.date ||
+          "",
+        tariff: rawResidentPackage.tariff,
+        prolong_price: rawResidentPackage.prolong_price,
+      }
+    : undefined;
 
   // Calculate total traffic limit and find max expiry date
   const trafficData =
@@ -403,11 +439,14 @@ export default function ProxyPage() {
         </div>
       )}
 
-      {!isLoading && !isError && allProxies.length > 0 ? (
+      {!isLoading &&
+      !isError &&
+      (allProxies.length > 0 || residentPackage) ? (
         <div style={{ marginBottom: isMobile ? "16px" : "24px" }}>
           <div>
             <ProxyList
               proxies={allProxies}
+              residentPackage={residentPackage}
               type={proxyType}
               onEdit={handleEditProxy}
               selectedProxies={selectedProxies}

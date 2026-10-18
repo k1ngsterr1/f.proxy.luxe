@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import ProxyList from "./proxy-list";
 
@@ -35,6 +35,46 @@ vi.mock("@/entities/user/api/hooks/use-get-user.query", () => ({
 }));
 
 describe("ProxyList action layout", () => {
+  it("keeps resident package renewal available when the package has no proxy lists", async () => {
+    const residentPackage = {
+      id: "resident-package-1",
+      orderId: "app-order-1",
+      order_id: "provider-order-1",
+      ip: "",
+      type: "resident",
+      protocol: "",
+      country: "",
+      login: "",
+      password: "",
+      package_list: [],
+      package_key: "resident-package-key",
+      tariff: "10 Gb",
+      prolong_price: 21,
+      date_end: "2026-11-18",
+    };
+
+    render(
+      <ProxyList
+        type="resident"
+        proxies={[]}
+        residentPackage={residentPackage}
+      />,
+    );
+
+    expect(
+      await screen.findByLabelText("residentTariff"),
+    ).toHaveValue("10 Gb");
+    const prolongButton = screen.getByRole("button", {
+      name: "prolongConfirm ($21.00)",
+    });
+    expect(prolongButton).toBeInTheDocument();
+    expect(screen.getByText("emptyTitle")).toBeInTheDocument();
+
+    fireEvent.click(prolongButton);
+    expect(screen.getByText("prolongTitle")).toBeInTheDocument();
+    expect(screen.getByText("$21.00")).toBeInTheDocument();
+  });
+
   it("keeps every row action in one stable icon-button group", async () => {
     render(
       <ProxyList
