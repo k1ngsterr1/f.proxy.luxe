@@ -75,6 +75,7 @@ export interface Props {
   selectedProxies?: string[];
   onSelectProxy?: (proxyId: string) => void;
   onSelectAll?: () => void;
+  onRenewalSuccess?: (proxyIds: string[]) => void;
 }
 
 const ProxyList: React.FC<Props> = ({
@@ -87,6 +88,7 @@ const ProxyList: React.FC<Props> = ({
   selectedProxies: externalSelectedProxies,
   onSelectProxy,
   onSelectAll,
+  onRenewalSuccess,
 }) => {
   const t = useTranslations("proxyList");
   const locale = useLocale();
@@ -181,6 +183,9 @@ const ProxyList: React.FC<Props> = ({
         break;
       case "3m":
         periodMultiplier = 3;
+        break;
+      case "6m":
+        periodMultiplier = 6;
         break;
       default:
         periodMultiplier = 1;
@@ -283,13 +288,18 @@ const ProxyList: React.FC<Props> = ({
   const directProlongCall = async (params: {
     orderId: string;
     type: string;
-    id: string;
+    id: string[];
     periodId: string;
   }): Promise<void> => {
     console.log("directProlongCall called with params:", params);
 
     try {
       const response = await apiClient.post("/api/v1/products/prolong", params);
+      if (response.data?.status !== "success") {
+        throw Object.assign(new Error("Renewal was not confirmed"), {
+          response: { status: response.status },
+        });
+      }
       console.log("API response data:", response.data);
     } catch (error) {
       console.error("API error:", error);
@@ -414,7 +424,7 @@ const ProxyList: React.FC<Props> = ({
     );
 
     let itemsToProlong: {
-      identifier: string; // This will be orderId or proxyId depending on type
+      identifier: string[];
       representativeProxy: Proxy;
     }[] = [];
 
@@ -431,7 +441,7 @@ const ProxyList: React.FC<Props> = ({
       itemsToProlong = Array.from(orderMap.entries()).map(([orderId, ids]) => {
         const rep = selectedProxiesArray.find((p) => p.order_id === orderId)!;
         return {
-          identifier: ids.join(", "), // e.g. "isp1, isp2, isp3"
+          identifier: ids,
           representativeProxy: rep,
         };
       });
@@ -440,7 +450,7 @@ const ProxyList: React.FC<Props> = ({
         "ISP – grouped IDs by orderId:",
         itemsToProlong.map(
           (item) =>
-            `order ${item.representativeProxy.order_id}: ${item.identifier}`
+            `order ${item.representativeProxy.order_id}: ${item.identifier.length} proxies`
         )
       );
     } else if (type === "ipv6") {
@@ -457,7 +467,7 @@ const ProxyList: React.FC<Props> = ({
         // representativeProxy — первый прокси из этой группы (если нужен)
         const rep = selectedProxiesArray.find((p) => p.order_id === orderId)!;
         return {
-          identifier: ids.join(", "),
+          identifier: ids,
           representativeProxy: rep,
         };
       });
@@ -466,7 +476,7 @@ const ProxyList: React.FC<Props> = ({
         "IPv6 – grouped IDs by orderId:",
         itemsToProlong.map(
           (item) =>
-            `order ${item.representativeProxy.order_id}: ${item.identifier}`
+            `order ${item.representativeProxy.order_id}: ${item.identifier.length} proxies`
         )
       );
     } else {
@@ -481,54 +491,39 @@ const ProxyList: React.FC<Props> = ({
 
     let successCount = 0;
     let failCount = 0;
+    let needsVerification = false;
     const results: { success: string[]; failed: string[] } = {
       success: [],
       failed: [],
     };
 
-    const prolongPromises = itemsToProlong.map(async (item) => {
-      const { identifier, representativeProxy } = item;
-      const idForProlongHook = identifier;
-
-      return new Promise<void>(async (resolve) => {
+    try {
+      for (const { identifier, representativeProxy } of itemsToProlong) {
         try {
-          console.log(`Starting prolongation for item: ${identifier}`);
-          console.log(
-            "Using orderId:",
-            representativeProxy.orderId || representativeProxy.order_id
-          );
-
-          // Use direct API call instead of hook for batch operations
           await directProlongCall({
             orderId:
               representativeProxy.orderId ||
               (representativeProxy.order_id as string),
             type: representativeProxy.type,
-            id: idForProlongHook as any,
+            id: identifier,
             periodId: prolongPeriod,
           });
-
-          console.log(`Successfully prolonged item ${identifier}`);
-          results.success.push(identifier);
-          resolve();
+          results.success.push(...identifier);
         } catch (error) {
-          console.error(`Failed to prolong item ${identifier}:`, error);
-          console.error("Error details:", {
-            identifier,
-            representativeProxy,
-            prolongPeriod,
-            error: error instanceof Error ? error.message : error,
+          if (
+            (error as { response?: { status?: number } })?.response?.status ===
+            409
+          ) {
+            needsVerification = true;
+          }
+          console.error("Batch renewal failed", {
+            orderId: representativeProxy.orderId,
+            count: identifier.length,
+            message: error instanceof Error ? error.message : "Unknown error",
           });
-          results.failed.push(identifier);
-          resolve();
+          results.failed.push(...identifier);
         }
-      });
-    });
-
-    try {
-      console.log(`Starting Promise.all for ${prolongPromises.length} items`);
-      await Promise.all(prolongPromises);
-      console.log("Promise.all completed successfully");
+      }
 
       successCount = results.success.length;
       failCount = results.failed.length;
@@ -549,18 +544,28 @@ const ProxyList: React.FC<Props> = ({
       // Show notification
       setNotification({
         show: true,
-        message: t("prolongBatchResult", {
-          success: successCount,
-          fail: failCount,
-        }),
+        message: t(
+          successCount === 0
+            ? needsVerification
+              ? "prolongBatchVerify"
+              : "prolongBatchFailed"
+            : failCount === 0
+              ? "prolongBatchResult"
+              : "prolongBatchPartial",
+          { success: successCount, fail: failCount }
+        ),
         type: successCount > 0 ? "success" : "error",
-        showRefresh: true,
+        showRefresh: successCount > 0,
       });
       if (successCount > 0) {
-        if (onSelectAll) {
-          onSelectAll();
+        if (onRenewalSuccess) {
+          onRenewalSuccess(results.success);
         } else {
-          setInternalSelectedProxies(new Set());
+          setInternalSelectedProxies((previous) => {
+            const remaining = new Set(previous);
+            results.success.forEach((id) => remaining.delete(id));
+            return remaining;
+          });
         }
       }
     } catch (error) {
@@ -655,7 +660,7 @@ const ProxyList: React.FC<Props> = ({
     } else if (prolongProxy.type === "resident") {
       idForSingleProlongHook = prolongProxy.package_key;
     } else {
-      idForSingleProlongHook = prolongProxy.order_id || prolongProxy.orderId;
+      idForSingleProlongHook = prolongProxy.id;
     }
 
     const orderIdForSingleProlong =
@@ -2262,8 +2267,8 @@ const ProxyList: React.FC<Props> = ({
                 >
                   {" "}
                   <option value="1m">{t("table.period.1month")}</option>{" "}
-                  <option value="2m">{t("table.period.2months")}</option>{" "}
                   <option value="3m">{t("table.period.3months")}</option>{" "}
+                  <option value="6m">{t("table.period.6months")}</option>{" "}
                 </select>{" "}
               </div>
             )}{" "}

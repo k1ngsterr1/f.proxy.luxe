@@ -22,7 +22,10 @@
     "prolongConfirm": "Prolong",
     "prolongProcessing": "Processing...",
     "prolongBatchError": "Select at least one proxy to prolong",
-    "prolongBatchResult": "Prolongation completed successfully",
+    "prolongBatchResult": "Proxies renewed: {{success}}",
+    "prolongBatchPartial": "Renewed: {{success}}, failed: {{fail}}. Check the list before retrying.",
+    "prolongBatchFailed": "Renewal was not confirmed. Check the proxy expiry and balance before retrying or contact support.",
+    "prolongBatchVerify": "Renewal may already be complete or awaiting confirmation. Refresh the list and check expiry and balance before retrying.",
     "prolongCost": "Total Cost",
     "residentTariff": "Plan",
     "residentPackageCostDetails": "{{tariff}} package for 1 month",
@@ -100,7 +103,8 @@
       "period": {
         "1month": "1 month",
         "2months": "2 months",
-        "3months": "3 months"
+        "3months": "3 months",
+        "6months": "6 months"
       }
     },
     "ipAuth": {

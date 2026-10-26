@@ -22,7 +22,10 @@
     "prolongConfirm": "Продлить",
     "prolongProcessing": "Обработка...",
     "prolongBatchError": "Выберите хотя бы один прокси для продления",
-    "prolongBatchResult": "Продление завершено успешно",
+    "prolongBatchResult": "Продлено прокси: {{success}}",
+    "prolongBatchPartial": "Продлено: {{success}}, не удалось продлить: {{fail}}. Проверьте список перед повтором.",
+    "prolongBatchFailed": "Продление не подтверждено. Проверьте срок прокси и баланс перед повтором или обратитесь в поддержку.",
+    "prolongBatchVerify": "Продление уже может быть выполнено или ожидает проверки. Обновите список и проверьте срок и баланс перед повтором.",
     "prolongCost": "Общая стоимость",
     "residentTariff": "Тариф",
     "residentPackageCostDetails": "Пакет {{tariff}} на 1 месяц",
@@ -100,7 +103,8 @@
       "period": {
         "1month": "1 месяц",
         "2months": "2 месяца",
-        "3months": "3 месяца"
+        "3months": "3 месяца",
+        "6months": "6 месяцев"
       }
     },
     "ipAuth": {

@@ -465,6 +465,12 @@ export default function ProxyPage() {
                 }
               }}
               onSelectAll={handleSelectAll}
+              onRenewalSuccess={(renewedIds) => {
+                setSelectedProxies((previous) =>
+                  previous.filter((id) => !renewedIds.includes(id))
+                );
+                setSelectedOrderIds([]);
+              }}
             />
           </div>
         </div>

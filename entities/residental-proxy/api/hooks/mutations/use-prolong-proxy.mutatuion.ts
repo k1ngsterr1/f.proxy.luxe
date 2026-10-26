@@ -17,7 +17,7 @@ interface ProlongProxyParams {
  * @param params - The proxy data for prolongation
  * @returns Promise with the response data
  */
-const prolongProxyRequest = async (params: ProlongProxyParams) => {
+export const prolongProxyRequest = async (params: ProlongProxyParams) => {
   if (params.type === "resident") {
     const { data } = await apiClient.post(
       "/api/v1/products/prolong/resident",
@@ -27,12 +27,18 @@ const prolongProxyRequest = async (params: ProlongProxyParams) => {
         tariff: params.tariff,
       }
     );
+    if (data?.status !== "success") {
+      throw new Error("Resident renewal was not confirmed");
+    }
     return data;
   }
 
   const { data } = await apiClient.post("/api/v1/products/prolong", {
     ...params,
   });
+  if (data?.status !== "success") {
+    throw new Error("Proxy renewal was not confirmed");
+  }
   return data;
 };
 
