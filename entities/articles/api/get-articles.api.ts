@@ -9,6 +9,8 @@ export interface Article {
   updatedAt?: string;
   publishedAt?: string;
   slug?: string;
+  lang: "ru" | "en";
+  translation?: { id: string; slug: string; lang: "ru" | "en" } | null;
 }
 
 export interface CreateArticleDto {

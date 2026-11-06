@@ -15,6 +15,8 @@ import Enter from "@/assets/images/enter.svg";
 import { useAuthStore } from "@/entities/auth/store/use-auth-store";
 import { usePopupStore } from "@/shared/store/use-popup.store";
 import { BurgerMenu } from "@/features/menu/ui/burger-menu";
+import { getArticleById } from "@/entities/articles/api/get-articles.api";
+import { articleLanguagePath } from "../lib/article-language-path";
 
 export const Header: FC = () => {
   const i18n = useTranslations();
@@ -40,7 +42,18 @@ export const Header: FC = () => {
     return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
-  const changeLanguage = (lang: string) => {
+  const changeLanguage = async (lang: "ru" | "en") => {
+    if (lang === locale) return;
+    const articleMatch = pathname.match(/^\/articles\/([^/]+)$/);
+    if (articleMatch) {
+      try {
+        const article = await getArticleById(articleMatch[1], locale as "ru" | "en");
+        router.replace(articleLanguagePath(article, lang), { locale: lang });
+      } catch {
+        router.replace("/articles", { locale: lang });
+      }
+      return;
+    }
     router.replace(pathname, { locale: lang });
   };
 

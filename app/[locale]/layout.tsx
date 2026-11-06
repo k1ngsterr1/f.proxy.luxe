@@ -15,8 +15,18 @@ import { Loader } from "@/shared/ui/loader";
 import { NonAuthorizedPopup } from "@/entities/auth/ui/non-authorized-popup/non-authorized-popup";
 import ClientLayout from "./client-layout";
 import Script from "next/script";
+import type { Metadata } from "next";
 import { IpAuthForm } from "@/widgets/forms/id-auth-form";
 import YandexMetrika from "@/components/yandex-metrika/yandex-metrika";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: locale === "ru"
+      ? "Резидентские прокси купить: домашние IP-адреса | Proxy.Luxe"
+      : "Buy Residential Proxies: Home IP Addresses | Proxy.Luxe",
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -35,17 +45,10 @@ export default async function LocaleLayout({
   // 2. Load translation messages for the current locale
   const messages = await getMessages();
 
-  // 3. Define page titles based on locale
-  const pageTitle =
-    locale === "ru"
-      ? "Резидентские прокси купить: домашние IP-адреса | Proxy.Luxe"
-      : "Buy Residential Proxies: Home IP Addresses | Proxy.Luxe";
-
   return (
     <html lang={locale}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{pageTitle}</title>
         <meta name="yandex-verification" content="ff41c4cfcb5e125c" />
         <link rel="icon" href="/favicon.ico" />
         <Script
