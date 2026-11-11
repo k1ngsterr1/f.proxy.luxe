@@ -6,11 +6,11 @@ export interface ProxyOrder {
   userId: string;
   country: string;
   quantity: number;
-  periodDays: string;
+  periodDays: string | null;
   tariff: string | null;
   proxyType: string;
   type: string;
-  status: "PENDING" | "ACTIVE" | "EXPIRED"; // Assuming possible statuses
+  status: "PENDING" | "PAID" | "PROCESSING" | "CANCELED";
   totalPrice: string;
   createdAt: string;
   updatedAt: string;

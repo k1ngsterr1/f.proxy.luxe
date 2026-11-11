@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
 import { useIsSmallerTablet } from "@/shared/utils/use-is-smaller-tablet";
 import { useIsTablet } from "@/shared/utils/use-is-tablet";
+import { getOrderStatusPresentation } from "./order-status";
 
 export default function OrdersPage() {
   const navigate = useRouter();
@@ -195,7 +196,9 @@ export default function OrdersPage() {
                     <td style={{ padding: "12px 16px" }}>{order.country}</td>
                     <td style={{ padding: "12px 16px" }}>{order.quantity}</td>
                     <td style={{ padding: "12px 16px" }}>
-                      {order.periodDays} {i18n("personal-orders.table.days")}
+                      {order.periodDays
+                        ? `${order.periodDays} ${i18n("personal-orders.table.days")}`
+                        : "—"}
                     </td>
                     <td style={{ padding: "12px 16px" }}>{order.proxyType}</td>
                     <td style={{ padding: "12px 16px" }}>
@@ -206,25 +209,11 @@ export default function OrdersPage() {
                           fontSize: "12px",
                           display: "flex",
                           fontWeight: "500",
-                          backgroundColor:
-                            order.status === "ACTIVE"
-                              ? "rgba(76, 175, 80, 0.1)"
-                              : order.status === "PENDING"
-                              ? "rgba(255, 193, 7, 0.1)"
-                              : "rgba(255, 82, 82, 0.1)",
-                          color:
-                            order.status === "ACTIVE"
-                              ? "#4CAF50"
-                              : order.status === "PENDING"
-                              ? "#FFC107"
-                              : "#FF5252",
+                          backgroundColor: getOrderStatusPresentation(order.status).backgroundColor,
+                          color: getOrderStatusPresentation(order.status).color,
                         }}
                       >
-                        {order.status === "ACTIVE"
-                          ? `${i18n("personal-orders.status.active")}`
-                          : order.status === "PENDING"
-                          ? `${i18n("personal-orders.status.pending")}`
-                          : `${i18n("personal-orders.status.expired")}`}
+                        {i18n(`personal-orders.status.${getOrderStatusPresentation(order.status).label}`)}
                       </span>
                     </td>
                     <td style={{ padding: "12px 16px", marginRight: "16px" }}>

@@ -11,8 +11,12 @@
     "1m": "30 days",
     "status": {
       "active": "Active",
-      "pending": "Pending",
-      "expired": "Expired"
+      "pending": "Awaiting payment",
+      "processing": "Processing",
+      "paid": "Paid",
+      "canceled": "Canceled",
+      "expired": "Expired",
+      "unknown": "Unknown"
     },
     "table": {
       "id": "ID",

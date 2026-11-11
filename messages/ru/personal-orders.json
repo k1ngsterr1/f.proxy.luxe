@@ -11,8 +11,12 @@
     "1m": "30 дней",
     "status": {
       "active": "Активен",
-      "pending": "Обработка",
-      "expired": "Истек"
+      "pending": "Ожидает оплаты",
+      "processing": "Обрабатывается",
+      "paid": "Оплачен",
+      "canceled": "Отменён",
+      "expired": "Истек",
+      "unknown": "Неизвестен"
     },
     "table": {
       "id": "ID",
