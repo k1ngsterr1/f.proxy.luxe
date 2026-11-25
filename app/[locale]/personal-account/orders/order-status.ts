@@ -20,3 +20,7 @@ const presentations: Record<string, StatusPresentation> = {
 export function getOrderStatusPresentation(status: string): StatusPresentation {
   return presentations[status] ?? { label: "unknown", ...red };
 }
+
+export function canManagePendingOrder(status: string): boolean {
+  return status === "PENDING";
+}

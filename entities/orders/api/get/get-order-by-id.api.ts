@@ -10,7 +10,7 @@ export interface OrderDetail {
   quantity: number;
   periodDays: string;
   totalPrice: number;
-  status: "PENDING" | "ACTIVE" | "EXPIRED";
+  status: "PENDING" | "PROCESSING" | "PAID" | "CANCELED";
   proxyType: "HTTPS" | "SOCKS5";
   country: string;
   createdAt: string;

@@ -19,6 +19,7 @@ import { useDeleteOrder } from "@/entities/orders/hooks/mutation/use-delete-orde
 import { useTranslations } from "next-intl";
 import { useCheckCouponValidity } from "@/entities/orders/hooks/mutation/use-check-coupong.mutation";
 import { useIsMobile } from "@/shared/utils/use-is-mobile";
+import { canManagePendingOrder, getOrderStatusPresentation } from "../order-status";
 
 export default function OrderDetailPage() {
   const i18n = useTranslations();
@@ -956,19 +957,27 @@ export default function OrderDetailPage() {
               flexDirection: isMobile ? "column" : "row",
             }}
           >
-            <Button
-              onClick={handleContinue}
-              disabled={isFinishing}
-              name={isFinishing ? t("buttons.loading") : t("buttons.pay")}
-              variant="medium"
-              style={{ width: isMobile ? "100%" : "auto" }}
-            />
-            <Button
-              onClick={handleDelete}
-              name={isDeleting ? t("buttons.deleting") : t("buttons.delete")}
-              variant="medium"
-              style={{ width: isMobile ? "100%" : "auto" }}
-            />
+            {canManagePendingOrder(order.status) ? (
+              <>
+                <Button
+                  onClick={handleContinue}
+                  disabled={isFinishing}
+                  name={isFinishing ? t("buttons.loading") : t("buttons.pay")}
+                  variant="medium"
+                  style={{ width: isMobile ? "100%" : "auto" }}
+                />
+                <Button
+                  onClick={handleDelete}
+                  name={isDeleting ? t("buttons.deleting") : t("buttons.delete")}
+                  variant="medium"
+                  style={{ width: isMobile ? "100%" : "auto" }}
+                />
+              </>
+            ) : (
+              <span style={{ color: "#f3d675" }}>
+                {i18n(`personal-orders.status.${getOrderStatusPresentation(order.status).label}`)}
+              </span>
+            )}
           </div>
         </div>
       )}
